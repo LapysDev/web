@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html charset=UTF-8 dir=ltr encoding=UTF-8 itemtype=https://schema.org/WebPage lang=en-US language=English prefix=og:https://ogp.me/ns>
-  <head prefix=lapys:https://www.lapys.dev/>
+<html charset=UTF-8 encoding=UTF-8 lang=en-US language=English>
+  <head>
     <!-- Document Metadata -->
     <meta charset="UTF-8"/>
     <meta content="height=device-height, initial-scale=1.0, maximum-scale=1.0, minimal-ui, minimum-scale=1.0, user-scalable=no, width=device-width" name="viewport"/>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
 
     <!-- Document Favorite Icon -->
-    <link href=favicon.ico rel="shortcut icon"/>
+    <link href=../../favicon.ico rel="shortcut icon"/>
+
+    <!-- Document ... -->
+    <link href=../../stylesheets/base.css media=all rel=stylesheet type="text/css"/>
+    <script language=javascript src=../../scripts/base.js type=text/javascript> </script>
 
     <!-- Document Stylesheet -->
-    <link href=../../stylesheets/base.css media=all rel=stylesheet type="text/css"/>
     <style media=all type=text/css>@charset "utf-8";
+      /* Features > Carousel */
       #carousel {}
     </style>
 
@@ -25,38 +29,107 @@
       <table id=carousel>
         <tbody>
           <tr>
-            <td>
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <h1> Games Design </h1>
-                      <h2> South Essex College </h2>
-                      <code> Hello, World! </code>
-                      <footer> &mdash; sponsored by University of the Arts: London </footer>
-                    </td>
-                  </tr>
-                </tbody>
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    <table>
+                      <tbody>
+                        <tr>
+                          <td>
+                            <h1> Games Design </h1>
+                            <h2> South Essex College </h2>
+                            <footer> &mdash; sponsored by University of the Arts: London </footer>
+                          </td>
+                        </tr>
+                      </tbody>
 
-                <tfoot>
-                  <tr>
-                    <td>
-                      <button> Scroll down </button>
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </td>
-            <td>
-              Lorem<sup>superscript</sup> ipsum<sub>subscript</sub> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </td>
+                      <tfoot>
+                        <tr>
+                          <td>
+                            <button> Scroll down </button>
+                          </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </td>
+
+                  <td>
+                    Lorem<sup>superscript</sup> ipsum<sub>subscript</sub> dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table>
+              <tbody>
+                <tr>
+                  <td class=active> </td>
+                  <td class=hidden> </td>
+                  <td class=filter> </td>
+
+                  <!-- <iframe allow="camera 'none'; display-capture 'none'; fullscreen 'none'; geolocation 'none'; microphone 'none'" allowfullscreen=false allowpaymentrequest=false name=list_of_best_selling_video_games referrerpolicy=origin sandbox=allow-same-origin src=https://en.wikipedia.org/wiki/List_of_best-selling_video_games> </iframe> -->
+
+                  <script language=javascript type=text/javascript>
+                    void function(elements) {
+                      var frameDocument = document.getElementsByTagName("iframe").item(0).contentDocument;
+
+                      // ...
+                      if (frameDocument.readyState !== "complete")
+                      waitFor(function() { return frameDocument.readyState === "complete" }, function() {
+                        if (frameDocument.readyState === "complete")
+                        cancelInterval();
+                      });
+
+                      // setTimeout(function() {
+                      //   console.log(document.getElementsByTagName("iframe").item(0).contentDocument)
+                      // }, 3000)
+                      // var canvas   = document.createElement("canvas");
+                      // var image    = document.createElement("img");
+                      // var renderer = "function" === typeof canvas.getContext ? canvas.getContext("2d", {"alpha": false, "desynchronized": true}) : null;
+
+                      // var collection = ["Minecraft", "Grand Theft Auto V", "Tetris Ultimate", "Nintendo Switch - Wii Sports", "PlayerUnknown's Battlegrounds", "Super Mario Odyssey", "Mario Kart 8 Deluxe", "Overwatch", "Pokémon", "Red Dead Redemption"];
+                      // var index      = 0;
+
+                      // var current = elements.item(elements.length - 4).style;
+                      // var recent  = elements.item(elements.length - 3).style;
+                      // var script  = document.scripts.item(document.scripts.length - 1);
+
+                      // /* ... */
+                      // function next() { index = collection.length !== index + 1 ? index + 1 : 0; update() }
+                      // function previous() { index = 0 !== index ? index - 1 : collection.length; update() }
+
+                      // function update() {
+                      //   var artwork = collection[index];
+                      // }
+
+                      // // ...
+                      // script.parentNode.removeChild(script);
+
+                      // for (var index = collection.length; index--; ) {
+                      //   var image = document.createElement("img");
+
+                      //   collection[index] = image;
+                      //   image.src         = "../../images/showcases/" + collection[index] + ".jpg"
+                      // }
+
+                      // update();
+                      // setInterval(function() {
+                      //   recent.backgroundImage  = current.backgroundImage;
+                      //   current.backgroundImage = "url(\"../../images/showcases/" + collection[index] + "\")";
+                      //   if (false == recent.backgroundImage) recent.backgroundImage = current.backgroundImage;
+                      // }, 500)
+                    }(document.getElementsByTagName('*'))
+                  </script>
+                </tr>
+              </tbody>
+            </table>
           </tr>
         </tbody>
       </table>
     </main>
 
     <!-- Document Script -->
-    <script language=javascript src=../../scripts/base.js type=text/javascript> </script>
     <script language=javascript type=text/javascript> </script>
   </body>
 </html>
