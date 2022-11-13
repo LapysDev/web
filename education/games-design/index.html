@@ -72,14 +72,14 @@
 
                   <script language=javascript type=text/javascript>
                     void function(elements) {
-                      var frameDocument = document.getElementsByTagName("iframe").item(0).contentDocument;
+                      // var frameDocument = document.getElementsByTagName("iframe")[0].contentDocument;
 
-                      // ...
-                      if (frameDocument.readyState !== "complete")
-                      waitFor(function() { return frameDocument.readyState === "complete" }, function() {
-                        if (frameDocument.readyState === "complete")
-                        cancelInterval();
-                      });
+                      // // ...
+                      // if (frameDocument.readyState !== "complete")
+                      // waitFor(function() { return frameDocument.readyState === "complete" }, function() {
+                      //   if (frameDocument.readyState === "complete")
+                      //   cancelInterval();
+                      // });
 
                       // setTimeout(function() {
                       //   console.log(document.getElementsByTagName("iframe").item(0).contentDocument)

@@ -302,14 +302,11 @@
   /* <button>, <hr>, <input> */
   button, hr, input { overflow: visible }
 
-  /* <button>, <input> ... */
+  /* <button>, <input> */
   button,
   input[type=button],
   input[type=reset],
-  input[type=submit],
-  input ::-webkit-file-upload-button {
-    -webkit-appearance: button
-  }
+  input[type=submit] { -webkit-appearance: button }
     /* :-moz-focus-inner */
     button:-moz-focusring,
     input[type=button]:-moz-focusring,
@@ -417,7 +414,10 @@
     input[type=search]::-webkit-search-decoration { -webkit-appearance: none }
 
     /* ::-webkit-file-upload-button */
-    input ::-webkit-file-upload-button { font: inherit }
+    input ::-webkit-file-upload-button {
+      font              : inherit;
+      -webkit-appearance: button
+    }
 
   /* <input>, <legend> */
   input[type=checkbox],
