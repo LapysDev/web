@@ -77,8 +77,8 @@ var Event = {
 void function() {
   /* Constant > ... */
   var COMPLETED = false;
-  var ERROR     = new PseudoError;
-  var GLOBAL    = this; // --> "undefined" !== typeof frames ? frames : "undefined" !== typeof self ? self : "undefined" !== typeof window ? window : "undefined" !== typeof global ? global : "undefined" !== typeof globalThis ? globalThis : (function() { return this })();
+  var ERROR     = new PseudoError; // WARN (Lapys) -> Subject to change when exception raised
+  var GLOBAL    = this;            // CODE (Lapys) -> "undefined" !== typeof frames ? frames : "undefined" !== typeof self ? self : "undefined" !== typeof window ? window : "undefined" !== typeof global ? global : "undefined" !== typeof globalThis ? globalThis : (function() { return this })();
   var VOID      = new function VOID() {};
 
   var RECURSION_OVERFLOW_ERROR = null;
@@ -98,11 +98,14 @@ void function() {
         length: 0,
 
         assign: function assign(index, value) {
-          return (this[index] = value)
+          if (index < this.length)
+          this[index] = value;
+
+          return value
         },
 
         at: function at(index) {
-          return this[index]
+          return index > this.length ? VOID : this[index]
         },
 
         includes: function includes(element) {
@@ -113,8 +116,7 @@ void function() {
         },
 
         pop: function pop() {
-          if (0 === this.length) return;
-          return this[--this.length]
+          return 0 === this.length ? VOID : this[--this.length]
         },
 
         push: function push(elements) {
@@ -168,11 +170,8 @@ void function() {
     setTimeout(function() { Constant.MAXIMUM_DEPTH_ARRAY_LENGTH = 3 });
 
     function DepthArray(elements) {
-      Object.defineProperty(this, "depth",  {enumerable: false, value: 0,    writable: true});
-      Object.defineProperty(this, "parent", {enumerable: false, value: null, writable: true});
-
       for (var length = arguments.length, index = 0; index !== length; ++index)
-      this.push(arguments[index])
+      this.push(arguments[index]) // ->> Assumed `Constant.MAXIMUM_DEPTH_ARRAY_LENGTH > 1`
     }
       DepthArray.prototype = {
         0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null, 13: null, 14: null, 15: null, 16: null, 17: null, 18: null, 19: null, 20: null, 21: null, 22: null, 23: null, 24: null, 25: null, 26: null, 27: null, 28: null, 29: null, 30: null, 31: null, 32: null, 33: null, 34: null, 35: null, 36: null, 37: null, 38: null, 39: null, 40: null, 41: null, 42: null, 43: null, 44: null, 45: null, 46: null, 47: null, 48: null, 49: null, 50: null, 51: null, 52: null, 53: null, 54: null, 55: null, 56: null, 57: null, 58: null, 59: null, 60: null, 61: null, 62: null, 63: null, 64: null, 65: null, 66: null, 67: null, 68: null, 69: null, 70: null, 71: null, 72: null, 73: null, 74: null, 75: null, 76: null, 77: null, 78: null, 79: null, 80: null, 81: null, 82: null, 83: null, 84: null, 85: null, 86: null, 87: null, 88: null, 89: null, 90: null, 91: null, 92: null, 93: null, 94: null, 95: null, 96: null, 97: null, 98: null, 99: null, 100: null, 101: null, 102: null, 103: null, 104: null, 105: null, 106: null, 107: null, 108: null, 109: null, 110: null, 111: null, 112: null, 113: null, 114: null, 115: null, 116: null, 117: null, 118: null, 119: null, 120: null, 121: null, 122: null, 123: null, 124: null, 125: null, 126: null, 127: null, 128: null, 129: null, 130: null, 131: null, 132: null, 133: null, 134: null, 135: null, 136: null, 137: null, 138: null, 139: null, 140: null, 141: null, 142: null, 143: null, 144: null, 145: null, 146: null, 147: null, 148: null, 149: null, 150: null, 151: null, 152: null, 153: null, 154: null, 155: null, 156: null, 157: null, 158: null, 159: null, 160: null, 161: null, 162: null, 163: null, 164: null, 165: null, 166: null, 167: null, 168: null, 169: null, 170: null, 171: null, 172: null, 173: null, 174: null, 175: null, 176: null, 177: null, 178: null, 179: null, 180: null, 181: null, 182: null, 183: null, 184: null, 185: null, 186: null, 187: null, 188: null, 189: null, 190: null, 191: null, 192: null, 193: null, 194: null, 195: null, 196: null, 197: null, 198: null, 199: null, 200: null, 201: null, 202: null, 203: null, 204: null, 205: null, 206: null, 207: null, 208: null, 209: null, 210: null, 211: null, 212: null, 213: null, 214: null, 215: null, 216: null, 217: null, 218: null, 219: null, 220: null, 221: null, 222: null, 223: null, 224: null, 225: null, 226: null, 227: null, 228: null, 229: null, 230: null, 231: null, 232: null, 233: null, 234: null, 235: null, 236: null, 237: null, 238: null, 239: null, 240: null, 241: null, 242: null, 243: null, 244: null, 245: null, 246: null, 247: null, 248: null, 249: null, 250: null, 251: null, 252: null, 253: null, 254: null, 255: null,
@@ -180,10 +179,73 @@ void function() {
         length: 0,
         parent: null,
 
-        assign  : function assign() {},
-        at      : function at() {},
+        assign: function assign() {},
+
+        at: function at(index) {
+          if (index > this.length) return VOID;
+
+          var array    = this;
+          var capacity = Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+
+          // ...
+          while (capacity < this.length)
+          capacity *= Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+
+          while (array.depth) {
+            capacity /= Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+            array     = array[Mathematics.trunc(index / capacity)];
+            index    -= capacity * Mathematics.trunc(index / capacity)
+          }
+
+          return array[index]
+        },
+
         includes: function includes() {},
-        pop     : function pop() {},
+
+        pop: function pop() {
+          if (0 === this.length) return VOID;
+          if (Constant.MAXIMUM_DEPTH_ARRAY_LENGTH > this.length) return this[--this.length];
+
+          /* ... */
+          var array    = this;
+          var capacity = Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+          var element  = VOID;
+
+          // ...
+          while (capacity < this.length)
+          capacity *= Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+
+          if (this.length - (capacity / Constant.MAXIMUM_DEPTH_ARRAY_LENGTH) === 1) {
+            element      = this[1];
+            this.depth  -= 1;
+            this.length -= 1;
+
+            for (var depth = element.depth; depth--; ) element = element[0];
+            for (var index = Constant.MAXIMUM_DEPTH_ARRAY_LENGTH; index--; ) this[index] = this[0][index];
+
+            return element[0]
+          }
+
+          for (var depth = this.depth; depth--; ) {
+            var lastIndex = array.length === capacity ? Constant.MAXIMUM_DEPTH_ARRAY_LENGTH - 1 : -1;
+
+            // ...
+            capacity /= Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+            lastIndex = lastIndex === -1 ? Mathematics.trunc(array.length / capacity) : lastIndex;
+
+            array = array[lastIndex]
+          }
+
+          element                 = array[array.length - 1]
+          array[array.length - 1] = VOID;
+
+          while (null !== array) {
+            --array.length;
+            array = array.parent
+          }
+
+          return element
+        },
 
         push: function push(elements) {
           for (var length = arguments.length, index = 0; index !== length; ++index, ++this.length) {
@@ -207,7 +269,6 @@ void function() {
               if (VOID === array[lastIndex]) {
                 var subarray = new DepthArray;
 
-                // ...
                 subarray[0]      = VOID;
                 subarray.depth   = depth;
                 subarray.parent  = array;
@@ -218,18 +279,19 @@ void function() {
             }
 
             if (Constant.MAXIMUM_DEPTH_ARRAY_LENGTH === array.length) {
-              var maximized = false;
-              var maximum   = Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
-              var subarray  = new DepthArray;
+              var full     = false;
+              var subarray = new DepthArray;
 
               // ...
-              while (maximum === array.length) {
-                if (this === array) { maximized = true; break }
-                array    = array.parent;
-                maximum *= Constant.MAXIMUM_DEPTH_ARRAY_LENGTH
+              capacity = Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+
+              while (capacity === array.length) {
+                if (this === array) { full = true; break }
+                array     = array.parent;
+                capacity *= Constant.MAXIMUM_DEPTH_ARRAY_LENGTH
               }
 
-              if (maximized) {
+              if (full) {
                 array           = new DepthArray;
                 array.depth     = subarray.depth  = this.depth;
                 array.parent    = subarray.parent = this;
@@ -251,32 +313,18 @@ void function() {
                   array    = subarray
                 }
               }
-
-              else for (var depth = array.depth; depth--; ) {
-                subarray        = new DepthArray;
-                subarray.parent = array;
-                subarray.depth  = depth;
-
-                array[array.length] = subarray;
-                array               = subarray
-              }
             }
 
-            array[array.length] = arguments[index];
-
-            if (Constant.MAXIMUM_DEPTH_ARRAY_LENGTH !== array.length + 1)
-            array[array.length + 1] = VOID;
-
-            while (this !== array) {
-              ++array.length;
-              array = array.parent
-            }
+            if (Constant.MAXIMUM_DEPTH_ARRAY_LENGTH !== array.length + 1) array[array.length + 1] = VOID;
+            for (array[array.length] = arguments[index]; this !== array; array = array.parent) ++array.length
           }
 
           return this.length
         },
 
-        splice: function splice() {}
+        splice: function splice(index, elements) {
+          /* TODO (Lapys) */
+        }
       };
 
     /* DOM Tree */
