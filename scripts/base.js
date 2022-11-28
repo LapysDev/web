@@ -11,7 +11,10 @@
       • Prefer declared function arguments over the exotic `arguments` object
 
   --- WARN ---
-      #Lapys: Side effects
+      #Lapys:
+        Negligibly ignored errors:
+        • Out-of-Memory errors
+
         Notably ignored legacy features:
         • Array.observe(…)
         • Array.unobserve(…)
@@ -81,9 +84,9 @@ void function() {
   var GLOBAL    = this;            // CODE (Lapys) -> "undefined" !== typeof frames ? frames : "undefined" !== typeof self ? self : "undefined" !== typeof window ? window : "undefined" !== typeof global ? global : "undefined" !== typeof globalThis ? globalThis : (function() { return this })();
   var VOID      = new function VOID() {};
 
-  var RECURSION_OVERFLOW_ERROR = null;
-  var REFERENCE_ERROR          = null;
-  var TYPE_ERROR               = null;
+  var RECURSION_OVERFLOW_ERROR = VOID;
+  var REFERENCE_ERROR          = VOID;
+  var TYPE_ERROR               = VOID;
 
   /* Class */
     /* Static Array ->> Array alternative before evaluating `Array.prototype.push(…)` */
@@ -97,11 +100,11 @@ void function() {
         0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null, 13: null, 14: null, 15: null, 16: null, 17: null, 18: null, 19: null, 20: null, 21: null, 22: null, 23: null, 24: null, 25: null, 26: null, 27: null, 28: null, 29: null, 30: null, 31: null, 32: null, 33: null, 34: null, 35: null, 36: null, 37: null, 38: null, 39: null, 40: null, 41: null, 42: null, 43: null, 44: null, 45: null, 46: null, 47: null, 48: null, 49: null, 50: null, 51: null, 52: null, 53: null, 54: null, 55: null, 56: null, 57: null, 58: null, 59: null, 60: null, 61: null, 62: null, 63: null, 64: null, 65: null, 66: null, 67: null, 68: null, 69: null, 70: null, 71: null, 72: null, 73: null, 74: null, 75: null, 76: null, 77: null, 78: null, 79: null, 80: null, 81: null, 82: null, 83: null, 84: null, 85: null, 86: null, 87: null, 88: null, 89: null, 90: null, 91: null, 92: null, 93: null, 94: null, 95: null, 96: null, 97: null, 98: null, 99: null, 100: null, 101: null, 102: null, 103: null, 104: null, 105: null, 106: null, 107: null, 108: null, 109: null, 110: null, 111: null, 112: null, 113: null, 114: null, 115: null, 116: null, 117: null, 118: null, 119: null, 120: null, 121: null, 122: null, 123: null, 124: null, 125: null, 126: null, 127: null, 128: null, 129: null, 130: null, 131: null, 132: null, 133: null, 134: null, 135: null, 136: null, 137: null, 138: null, 139: null, 140: null, 141: null, 142: null, 143: null, 144: null, 145: null, 146: null, 147: null, 148: null, 149: null, 150: null, 151: null, 152: null, 153: null, 154: null, 155: null, 156: null, 157: null, 158: null, 159: null, 160: null, 161: null, 162: null, 163: null, 164: null, 165: null, 166: null, 167: null, 168: null, 169: null, 170: null, 171: null, 172: null, 173: null, 174: null, 175: null, 176: null, 177: null, 178: null, 179: null, 180: null, 181: null, 182: null, 183: null, 184: null, 185: null, 186: null, 187: null, 188: null, 189: null, 190: null, 191: null, 192: null, 193: null, 194: null, 195: null, 196: null, 197: null, 198: null, 199: null, 200: null, 201: null, 202: null, 203: null, 204: null, 205: null, 206: null, 207: null, 208: null, 209: null, 210: null, 211: null, 212: null, 213: null, 214: null, 215: null, 216: null, 217: null, 218: null, 219: null, 220: null, 221: null, 222: null, 223: null, 224: null, 225: null, 226: null, 227: null, 228: null, 229: null, 230: null, 231: null, 232: null, 233: null, 234: null, 235: null, 236: null, 237: null, 238: null, 239: null, 240: null, 241: null, 242: null, 243: null, 244: null, 245: null, 246: null, 247: null, 248: null, 249: null, 250: null, 251: null, 252: null, 253: null, 254: null, 255: null,
         length: 0,
 
-        assign: function assign(index, value) {
+        assign: function assign(index, element) {
           if (index < this.length)
-          this[index] = value;
+          this[index] = element;
 
-          return value
+          return element
         },
 
         at: function at(index) {
@@ -109,10 +112,14 @@ void function() {
         },
 
         includes: function includes(element) {
-          for (var index = this.length; index; )
-          if (element === this[--index]) return true;
+          return VOID !== this.index(element)
+        },
 
-          return false
+        index: function index(element) {
+          for (var index = this.length; index; )
+          if (element === this[--index]) return index;
+
+          return VOID
         },
 
         pop: function pop() {
@@ -134,7 +141,7 @@ void function() {
           if (Constant.MAXIMUM_STATIC_ARRAY_LENGTH >= arguments.length + this.length) {
             arguments.length -= 1;
 
-            for (var end = arguments.length + this.length, start = this.length; index !== start--; )
+            for (var start = this.length, end = start + arguments.length; index !== start--; )
             this[--end] = this[start];
 
             index       += arguments.length;
@@ -156,19 +163,18 @@ void function() {
     /* CSS Selector */
     function CSSSelector(source) {
       this.attributes = new StaticArray;
-      this.classList  = new StaticArray
+      this.classList  = new StaticArray;
+      this.source     = source
     }
       CSSSelector.prototype = {
         attributes: new StaticArray,
         classList : new StaticArray,
         id        : null,
+        source    : "",
         tagName   : null
       };
 
     /* Depth Array ->> Alternative to `StaticArray` for variable length beyond `Constant.MAXIMUM_STATIC_ARRAY_LENGTH` */
-    window.DepthArray = DepthArray;
-    setTimeout(function() { Constant.MAXIMUM_DEPTH_ARRAY_LENGTH = 3 });
-
     function DepthArray(elements) {
       for (var length = arguments.length, index = 0; index !== length; ++index)
       this.push(arguments[index]) // ->> Assumed `Constant.MAXIMUM_DEPTH_ARRAY_LENGTH > 1`
@@ -179,9 +185,28 @@ void function() {
         length: 0,
         parent: null,
 
-        assign: function assign() {},
+        assign: function assign(index, element) /* ->> Repeated code: see `DepthArray.prototype.at(…)` */ {
+          if (index < this.length) {
+            var array    = this;
+            var capacity = Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
 
-        at: function at(index) {
+            // ...
+            while (capacity < this.length)
+            capacity *= Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+
+            while (array.depth) {
+              capacity /= Constant.MAXIMUM_DEPTH_ARRAY_LENGTH;
+              array     = array[Mathematics.trunc(index / capacity)];
+              index    -= capacity * Mathematics.trunc(index / capacity)
+            }
+
+            array[index] = element
+          }
+
+          return element
+        },
+
+        at: function at(index) /* ->> Repeated code: see `DepthArray.prototype.assign(…)` */ {
           if (index > this.length) return VOID;
 
           var array    = this;
@@ -200,7 +225,16 @@ void function() {
           return array[index]
         },
 
-        includes: function includes() {},
+        includes: function includes(element) {
+          return VOID !== this.index(element)
+        },
+
+        index: function index(element) {
+          for (var index = this.length; index; )
+          if (element === this.at(--index)) return index;
+
+          return VOID
+        },
 
         pop: function pop() {
           if (0 === this.length) return VOID;
@@ -322,8 +356,20 @@ void function() {
           return this.length
         },
 
-        splice: function splice(index, elements) {
-          /* TODO (Lapys) */
+        splice: function splice(index, elements) /* ->> Expects `index <= this.length` */ {
+          arguments.length -= 1;
+          index            += arguments.length;
+
+          for (var count = arguments.length, subindex = this.length - count; count; --count, ++subindex)
+          this.push(this.at(subindex));
+
+          for (var subindex = this.length - arguments.length; index <= subindex; --subindex)
+          this.assign(subindex, this.at(subindex - arguments.length));
+
+          while (arguments.length)
+          this.assign(--index, arguments[arguments.length--]);
+
+          return this
         }
       };
 
@@ -384,7 +430,7 @@ void function() {
     function RecursionOverflowError(message, name) {
       ERROR = RECURSION_OVERFLOW_ERROR;
 
-      if (null === RECURSION_OVERFLOW_ERROR) {
+      if (VOID === RECURSION_OVERFLOW_ERROR) {
         try { ERROR = new RecursionOverflowError(arguments.length ? message : "") }
         catch (error) { ERROR = error }
       }
@@ -399,7 +445,7 @@ void function() {
     function ReferenceError(message, name) {
       ERROR = REFERENCE_ERROR;
 
-      if (null === REFERENCE_ERROR) {
+      if (VOID === REFERENCE_ERROR) {
         try { ඞ } // WARN (Lapys) -> Identifier must be non-deducible and non-defined
         catch (error) { ERROR = error }
       }
@@ -412,15 +458,16 @@ void function() {
     }
 
     function StaticString(characters) {
-      var string = this.toString();
+      var string = "";
 
       // ...
-      this.length = arguments.length;
+      this.length   = arguments.length;
+      this.toString = function toString() { return string };
 
-      while (arguments.length--) // ->> Assumed `arguments.length < 256`
-      this[arguments.length] = arguments[arguments.length];
-
-      this.toString = function toString() { return string }
+      while (arguments.length--) /* ->> Assumed `arguments.length < 256` */ {
+        string                 = arguments[arguments.length] + string;
+        this[arguments.length] = arguments[arguments.length]
+      }
     }
       StaticString.prototype = {
         0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null, 8: null, 9: null, 10: null, 11: null, 12: null, 13: null, 14: null, 15: null, 16: null, 17: null, 18: null, 19: null, 20: null, 21: null, 22: null, 23: null, 24: null, 25: null, 26: null, 27: null, 28: null, 29: null, 30: null, 31: null, 32: null, 33: null, 34: null, 35: null, 36: null, 37: null, 38: null, 39: null, 40: null, 41: null, 42: null, 43: null, 44: null, 45: null, 46: null, 47: null, 48: null, 49: null, 50: null, 51: null, 52: null, 53: null, 54: null, 55: null, 56: null, 57: null, 58: null, 59: null, 60: null, 61: null, 62: null, 63: null, 64: null, 65: null, 66: null, 67: null, 68: null, 69: null, 70: null, 71: null, 72: null, 73: null, 74: null, 75: null, 76: null, 77: null, 78: null, 79: null, 80: null, 81: null, 82: null, 83: null, 84: null, 85: null, 86: null, 87: null, 88: null, 89: null, 90: null, 91: null, 92: null, 93: null, 94: null, 95: null, 96: null, 97: null, 98: null, 99: null, 100: null, 101: null, 102: null, 103: null, 104: null, 105: null, 106: null, 107: null, 108: null, 109: null, 110: null, 111: null, 112: null, 113: null, 114: null, 115: null, 116: null, 117: null, 118: null, 119: null, 120: null, 121: null, 122: null, 123: null, 124: null, 125: null, 126: null, 127: null, 128: null, 129: null, 130: null, 131: null, 132: null, 133: null, 134: null, 135: null, 136: null, 137: null, 138: null, 139: null, 140: null, 141: null, 142: null, 143: null, 144: null, 145: null, 146: null, 147: null, 148: null, 149: null, 150: null, 151: null, 152: null, 153: null, 154: null, 155: null, 156: null, 157: null, 158: null, 159: null, 160: null, 161: null, 162: null, 163: null, 164: null, 165: null, 166: null, 167: null, 168: null, 169: null, 170: null, 171: null, 172: null, 173: null, 174: null, 175: null, 176: null, 177: null, 178: null, 179: null, 180: null, 181: null, 182: null, 183: null, 184: null, 185: null, 186: null, 187: null, 188: null, 189: null, 190: null, 191: null, 192: null, 193: null, 194: null, 195: null, 196: null, 197: null, 198: null, 199: null, 200: null, 201: null, 202: null, 203: null, 204: null, 205: null, 206: null, 207: null, 208: null, 209: null, 210: null, 211: null, 212: null, 213: null, 214: null, 215: null, 216: null, 217: null, 218: null, 219: null, 220: null, 221: null, 222: null, 223: null, 224: null, 225: null, 226: null, 227: null, 228: null, 229: null, 230: null, 231: null, 232: null, 233: null, 234: null, 235: null, 236: null, 237: null, 238: null, 239: null, 240: null, 241: null, 242: null, 243: null, 244: null, 245: null, 246: null, 247: null, 248: null, 249: null, 250: null, 251: null, 252: null, 253: null, 254: null, 255: null,
@@ -440,7 +487,7 @@ void function() {
     function TypeError(message, name) {
       ERROR = TYPE_ERROR;
 
-      if (null === TYPE_ERROR) {
+      if (VOID === TYPE_ERROR) {
         try { null() }
         catch (error) { ERROR = error }
       }
@@ -503,10 +550,14 @@ void function() {
 
     /* Functions ->> Convenience/ safe abstractions over native features */
     var Functions = {
+      defineProperty  : VOID,
+      describeProperty: VOID,
+      describeSelector: VOID,
       numberIsFinite  : VOID,
       numberIsNaN     : VOID,
       numberIsSafe    : VOID,
-      numberToFraction: VOID
+      numberToFraction: VOID,
+      stringAt        : VOID
     };
 
     /* Mathematics */
@@ -682,27 +733,27 @@ void function() {
 
               // ...
               if (
-                null !== Native.Function$prototype$apply && null !== Native.Function$prototype$toString &&
+                VOID !== Native.Function$prototype$apply && VOID !== Native.Function$prototype$toString &&
                 false === (PROMISE.object === Native.Function$prototype$apply && PROMISE.propertyKey === "apply")
               ) {
-                if (null !== Native.Function$prototype$bind)
+                if (VOID !== Native.Function$prototype$bind)
                   source = Native.Function$prototype$apply(Native.Function$prototype$toString, [PROMISE.native]);
 
                 // TODO (Lapys) -> Check `nativeof(Function.prototype.apply.apply)`
-                if (delete Native.Function$prototype$apply["apply"]) { // WARN (Lapys) -> Possibly spoofed by `Proxy` — including calling it
+                else if (delete Native.Function$prototype$apply["apply"]) { // WARN (Lapys) -> Possibly spoofed by `Proxy` — including calling it
                   Native.Function$prototype$apply.apply = Native.Function$prototype$apply;
 
                   if (Native.Function$prototype$apply === Native.Function$prototype$apply.apply) {
                     // ... --- WARN (Lapys) ->> Assume unchanged since property access in (strict) comparison conditional
                     source = Native.Function$prototype$apply.apply(Native.Function$prototype$toString, [PROMISE.native]);
 
-                    if ("string" !== typeof source || source.length < (18 /* --> Math.max(...Constant.NATIVE_FUNCTION_SOURCE.map(x => x.length)) */) + (
+                    if ("string" !== typeof source || source.length < (18 /* --> Mathematics.max(...Constant.NATIVE_FUNCTION_SOURCE.map(x => x.length)) */) + (
                       PROMISE.options & Enumeration.AS_CLASS_FUNCTION     ? "class{}"      .length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length + ' '.length : 0) :
                       PROMISE.options & Enumeration.AS_GENERATOR_FUNCTION ? "function*(){}".length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length + ' '.length : 0) :
                       PROMISE.options & Enumeration.AS_GETTER_FUNCTION    ? "get _(){}"    .length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length - '_'.length : 0) :
                       PROMISE.options & Enumeration.AS_OBJECT_FUNCTION    ? "function(){}" .length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length + ' '.length : 0) :
                       PROMISE.options & Enumeration.AS_SETTER_FUNCTION    ? "set _(){}"    .length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length - '_'.length : 0) :
-                      PROMISE.options & Enumeration.AS_FUNCTION           ? 13 /* --> Math.max(…) */ : 0
+                      PROMISE.options & Enumeration.AS_FUNCTION           ? 13 /* --> Mathematics.max(…) */ : 0
                     )) return PROMISE["throw"]()
                   }
                 }
@@ -711,6 +762,7 @@ void function() {
                 if (null === source)
                 return PROMISE["throw"]();
 
+                // ... ->> Directly compare source to native defaults
                 for (var index = Constant.NATIVE_FUNCTION_SOURCE.length; index && false === sourceMatch; ) {
                   var nativeSource = Constant.NATIVE_FUNCTION_SOURCE[--index].toString();
 
@@ -728,26 +780,18 @@ void function() {
                   )
                 }
 
+                // ... ->> Programmatically parse source to assert as native default
                 if (false === sourceMatch) {
-                  var at = null;
-
-                  // ...
-                  if (null !== Native.String$prototype$charAt) {
-                    if (null !== Native.Function$prototype$bind)
-                      at = function at(string, index) { return Native.Function$prototype$apply(Native.String$prototype$charAt, [string, [index]]) };
-
-                    // WARN (Lapys) ->> Assume unchanged since property access in comparison conditional
-                    else if (Native.Function$prototype$apply === Native.Function$prototype$apply.apply)
-                      at = function at(string, index) { return Native.Function$prototype$apply.apply(Native.String$prototype$charAt, [string, [index]]) }
-                  }
+                  assert(Functions.stringAt);
 
                   if (null !== at) {
+                    var delimiters  = new DepthArray();
                     var declarators = [
                       new StaticString('c', 'l', 'a', 's', 's'),
                       new StaticString('f', 'u', 'n', 'c', 't', 'i', 'o', 'n'),
                       new StaticString('g', 'e', 't'),
                       new StaticString('s', 'e', 't')
-                    ], delimiters = ""; // ->> Array of delimiter IDs
+                    ];
 
                     // ...
                     if (PROMISE.options & (Enumeration.NAMED_FUNCTION | Enumeration.UNNAMED_FUNCTION)) {
@@ -761,10 +805,10 @@ void function() {
                         var sourceOffset     = 0;
 
                         // ...
-                        while (at(source, sourceOffset++) === declarator[declaratorOffset++]) {
+                        while (Functions.stringAt(source, sourceOffset++) === declarator[declaratorOffset++]) {
                           if (declaratorOffset === declarator.length) {
                             var commented                = false;
-                            var name                     = ["", ""];
+                            var name                     = ["", ""]; // ->> `name[0]` is the (trimmed) function name; `name[1]` is the trimmed whitespace
                             var generatorDeclaratorMatch = false;
 
                             // ...
@@ -821,36 +865,33 @@ void function() {
                     parse_body:
                     for (var sourceIndex = 0; sourceIndex !== source.length; ++sourceIndex) {
                       var character = at(source, sourceIndex);
-                      var delimiter = delimiters.length ? at(delimiters, 0) : null;
+                      var delimiter = delimiters.length ? delimiters.at(0) : null;
 
                       // ...
                       do {
-                        var delimited = "";
-
-                        // ...
                         switch (delimiter) {
                           case '\"': case '\'': if (character !== delimiter) continue parse_body; break;
                           case '/':             if (character !== '*' || at(source, sourceIndex + 1) !== '/') continue parse_body
                         }
 
                         switch (character) {
-                          case '(': delimiters = (delimiter = '(') + delimiters; continue;
-                          case '[': delimiters = (delimiter = '[') + delimiters; continue;
-                          case '{': delimiters = (delimiter = '{') + delimiters; continue;
-                          case '/': if (at(source, sourceIndex + 1) === '*') delimiters = (delimiter = '/') + delimiters; continue;
+                          case '(': delimiters.splice(0, delimiter = '('); continue;
+                          case '[': delimiters.splice(0, delimiter = '['); continue;
+                          case '{': delimiters.splice(0, delimiter = '{'); continue;
+                          case '/': if (Functions.stringAt(source, sourceIndex + 1) === '*') delimiters.splice(0, delimiter = '/'); continue;
 
-                          case '*':                     if (at(source, sourceIndex + 1) !== '/') continue; break;
-                          case '\"': case '\'':         if (character !== delimiter) { delimiters = character + delimiters; continue } break;
+                          case '*':                     if (Functions.stringAt(source, sourceIndex + 1) !== '/') continue; break;
+                          case '\"': case '\'':         if (character !== delimiter) { delimiters.splice(0, character); continue } break;
                           case ')': case ']': case '}': if ((character !== ')' || delimiter !== '(') && (character !== ']' || delimiter !== '[') && (character !== '}' || delimiter !== '{')) continue; break;
 
                           default: continue
                         }
 
                         // ...
-                        for (var index = delimiters.length; --index; )
-                        delimited = at(delimiters, index) + delimited;
+                        for (var length = delimiters.length, index = 1; index < length; ++index)
+                        delimiters.assign(index - 1, delimiters.at(index - 0));
 
-                        delimiters = delimited
+                        delimiters.pop()
                       } while (false);
 
                       for (var nativeSourcesIndex = Constant.NATIVE_FUNCTION_SOURCE.length; nativeSourcesIndex; ) {
@@ -859,7 +900,7 @@ void function() {
                         var sourceOffset       = sourceIndex;
 
                         // ...
-                        while (at(source, sourceOffset++) === nativeSource[nativeSourceOffset++]) {
+                        while (Functions.stringAt(source, sourceOffset++) === nativeSource[nativeSourceOffset++]) {
                           if (nativeSourceOffset === nativeSource.length) {
                             if (delimiter === '[') {
                               sourceMatch = true;
@@ -881,7 +922,7 @@ void function() {
               }
 
               else if ("toString" in Native.Function$prototype && "toString" in Native.Object$prototype) {
-                var native = null !== Native.Function$prototype$toString ? PROMISE.object === Native.Function$prototype && PROMISE.propertyKey === "toString" ? PROMISE.native : Native.Function$prototype$toString : Native.Function$prototype.toString;
+                var native = VOID !== Native.Function$prototype$toString ? PROMISE.object === Native.Function$prototype && PROMISE.propertyKey === "toString" ? PROMISE.native : Native.Function$prototype$toString : Native.Function$prototype.toString; // --> Function.prototype.toString(…)
 
                 // ...
                 if (false === (delete Native.Function$prototype["toString"] && delete Native.Object$prototype["toString"] && delete PROMISE.native["toString"])) {
@@ -896,7 +937,7 @@ void function() {
                   source                             = PROMISE.native.toString();
 
                   for (var index = Constant.NATIVE_FUNCTION_SOURCE.length; index && false === sourceMatch; ) {
-                    var nativeSource = Constant.NATIVE_FUNCTION_SOURCE[--index];
+                    var nativeSource = Constant.NATIVE_FUNCTION_SOURCE[--index].toString();
 
                     sourceMatch = (
                       (((PROMISE.options & Enumeration.UNNAMED_FUNCTION) || false == (PROMISE.options & Enumeration.NAMED_FUNCTION)) && (
@@ -913,7 +954,7 @@ void function() {
                   }
                 } catch (error) {}
 
-                Native.Object$prototype.toString   = Native.Object$prototype$toString$;
+                Native.Object$prototype.toString = Native.Object$prototype$toString$;
                 if (false === sourceMatch) return PROMISE["throw"]()
               }
 
@@ -996,35 +1037,35 @@ void function() {
       },
 
       // ...
-      Object$prototype$toString$               : null,
+      Object$prototype$toString$               : VOID,
       RecursionOverflowError$                  : RecursionOverflowError,
       TypeError$                               : TypeError,
 
-      clearInterval                            : null,
-      clearTimeout                             : null,
-      document                                 : null,
-      Error$prototype                          : null,
-      EventTarget$prototype$addEventListener   : null,
-      EventTarget$prototype$attachEvent        : null,
-      EventTarget$prototype$detachEvent        : null,
-      EventTarget$prototype$removeEventListener: null,
-      Function$prototype                       : null,
-      Function$prototype$apply                 : null,
-      Function$prototype$bind                  : null,
-      Function$prototype$toString              : null,
-      Object$defineProperty                    : null,
-      Object$getOwnPropertyDescriptor          : null,
-      Object$prototype                         : null,
-      Object$prototype$__defineGetter__        : null,
-      Object$prototype$__defineGetter__        : null,
-      Object$prototype$__lookupGetter__        : null,
-      Object$prototype$__lookupSetter__        : null,
-      RecursionOverflowError$prototype         : null,
-      requestAnimationFrame                    : null,
-      setInterval                              : null,
-      setTimeout                               : null,
-      String$prototype$charAt                  : null,
-      TypeError$prototype                      : null
+      clearInterval                            : VOID,
+      clearTimeout                             : VOID,
+      document                                 : VOID,
+      Error$prototype                          : VOID,
+      EventTarget$prototype$addEventListener   : VOID,
+      EventTarget$prototype$attachEvent        : VOID,
+      EventTarget$prototype$detachEvent        : VOID,
+      EventTarget$prototype$removeEventListener: VOID,
+      Function$prototype                       : VOID,
+      Function$prototype$apply                 : VOID,
+      Function$prototype$bind                  : VOID,
+      Function$prototype$toString              : VOID,
+      Object$defineProperty                    : VOID,
+      Object$getOwnPropertyDescriptor          : VOID,
+      Object$prototype                         : VOID,
+      Object$prototype$__defineGetter__        : VOID,
+      Object$prototype$__defineGetter__        : VOID,
+      Object$prototype$__lookupGetter__        : VOID,
+      Object$prototype$__lookupSetter__        : VOID,
+      RecursionOverflowError$prototype         : VOID,
+      requestAnimationFrame                    : VOID,
+      setInterval                              : VOID,
+      setTimeout                               : VOID,
+      String$prototype$charAt                  : VOID,
+      TypeError$prototype                      : VOID
     };
 
     /* Support ->> Supported native APIs and features */
@@ -1034,181 +1075,17 @@ void function() {
     };
 
   /* Function > ... */
-  function at(object, index) {
-    if ("string" === typeof object) {
-      if (Support.STRING_CHARACTER_ACCESS_BRACKET_NOTATION) {
-        at = function at(object, index) { return object[index] };
-        return at(object, index)
-      }
+  function assert(condition) {
+    if (condition === Functions.stringAt) {
+      if (VOID !== Native.String$prototype$charAt)
+      return;
 
-      if (null === Native.String$prototype$charAt)
-      return ERROR;
-
-      if (null !== Native.Function$prototype$bind) {
-        at = function at(object, index) { return Native.Function$prototype$apply(Native.String$prototype$charAt, [object, [index]]) };
-        return at(object, index)
-      }
-
-      if (delete Native.Function$prototype$apply["apply"]) { // WARN (Lapys) -> Possibly spoofed by `Proxy`
-        Native.Function$prototype$apply.apply = Native.Function$prototype$apply;
-
-        if (Native.Function$prototype$apply === Native.Function$prototype$apply.apply) {
-          // ... --- WARN (Lapys) ->> Assume unchanged since property access in (strict) comparison conditional
-          var value = Native.Function$prototype$apply.apply(Native.String$prototype$charAt, [object, [index]]);
-          if ("string" === typeof value && value.length === 1) return value
-        }
-      }
-
-      return ERROR
+      try { '\0' === Functions.stringAt('\0', 0) }
+      catch (error) { throw new AssertionError("String subscript indexing feature required") }
     }
 
-    return object[index]
-  }
-
-  function cssof(selector) {}
-
-  function define(object, key, descriptor) /* --> Expects `descriptor` to be the same format as `describe(…)` */ {
-    if (descriptor.own) try {
-      if (null === Native.Object$defineProperty && null === Native.Object$prototype$__lookupGetter__ && null === Native.Object$prototype$__lookupSetter__)
-        ERROR !== descriptor.value ? object[key] = descriptor.value : undefined;
-
-      else if (null !== Native.Object$defineProperty)
-        Native.Object$defineProperty(descriptor, key, ERROR === descriptor.value
-          ? {configurable: descriptor.configurable, enumerable: descriptor.enumerable, get: descriptor.get, set: descriptor.set}
-          : {configurable: descriptor.configurable, enumerable: descriptor.enumerable, value: descriptor.value, writable: descriptor.writable}
-        );
-
-      else {
-        // TODO
-        if (null !== Native.Object$prototype$__defineGetter__) {}
-        if (null !== Native.Object$prototype$__defineSetter__) {}
-      }
-
-      return true
-    } catch (error) {}
-
-    return false
-  }
-
-  function describe(object, key) {
-    var descriptor = {
-      configurable: ERROR,
-      enumerable  : ERROR,
-      get         : ERROR,
-      own         : true,
-      set         : ERROR,
-      value       : ERROR,
-      writable    : ERROR
-    };
-
-    // ...
-    if (null === object || undefined === object)
-      descriptor.own = false;
-
-    else if (null === Native.Object$getOwnPropertyDescriptor && null === Native.Object$prototype$__lookupGetter__ && null === Native.Object$prototype$__lookupSetter__) {
-      var computedProperty = false;
-      var value;
-
-      // ...
-      for (var subkey in object)
-      if (key === subkey) {
-        descriptor.enumerable = true;
-        break
-      }
-
-      try {
-        var hasProperty;
-        var redefineProperty;
-
-        // ...
-        descriptor.configurable = true;
-        value                   = object[key];
-
-        try { hasProperty = key in object }  // WARN (Lapys) -> Can be spoofed by the `Proxy::has(…)` trap
-        catch (error) { hasProperty = true } // NOTE (Lapys) -> Presumed
-
-        try {
-          descriptor.configurable = delete object[key]; // WARN (Lapys) -> Can be spoofed by the `Proxy::deleteProperty(…)` trap
-
-          try { redefineProperty = descriptor.configurable || (hasProperty && false === key in object) }
-          catch (error) { redefineProperty = false }
-
-          if (redefineProperty) {
-            try { object[key] = value }
-            catch (error) { computedProperty = true }
-          }
-        } catch (error) { descriptor.configurable = false }
-
-        descriptor.own = false === descriptor.configurable || hasProperty;
-
-        if (false === computedProperty && descriptor.configurable) try {
-          var subvalue;
-
-          // ...
-          object[key]      = VOID;         // ->> Exception throwable from (owned/ non-owned) possible setter
-          subvalue         = object[key]; // ->> Exception throwable from (owned/ non-owned) possible getter
-          redefineProperty = false;
-
-          if (subvalue === value) descriptor.writable = false;
-          else if (VOID !== subvalue) computedProperty = true;
-          else try {
-            object[key] = value;
-            subvalue    = object[key];
-
-            if (subvalue === value) descriptor.writable = true;
-            else { descriptor.writable = false; value = subvalue }
-          } catch (error) { computedProperty = true }
-        } catch (error) { redefineProperty = true }
-
-        if (redefineProperty) {
-          computedProperty = true;
-          try { object[key] = value } catch (error) {}
-        }
-      } catch (error) { computedProperty = true }
-
-      // ... ->> Evaluated as own property
-      if (computedProperty) {
-        descriptor.configurable = ERROR;
-        descriptor.get          = null;
-        descriptor.set          = null;
-        descriptor.value        = ERROR;
-        descriptor.writable     = ERROR
-      }
-
-      else {
-        descriptor.get   = ERROR;
-        descriptor.set   = ERROR;
-        descriptor.value = value
-      }
-    }
-
-    else if (null !== Native.Object$getOwnPropertyDescriptor) {
-      var subdescriptor = Native.Object$getOwnPropertyDescriptor(object, key);
-
-      // ...
-      if (subdescriptor !== undefined) {
-        descriptor.configurable = subdescriptor.configurable;
-        descriptor.enumerable   = subdescriptor.enumerable;
-
-        if ("value" in subdescriptor) {
-          descriptor.value    = subdescriptor.value;
-          descriptor.writable = subdescriptor.writable
-        }
-
-        else {
-          descriptor.get = subdescriptor.get;
-          descriptor.set = subdescriptor.set
-        }
-      }
-    }
-
-    else {
-      // TODO
-      if (null !== Native.Object$prototype$__lookupGetter__) {}
-      if (null !== Native.Object$prototype$__lookupSetter__) {}
-    }
-
-    return descriptor
+    if (false == condition)
+    throw new AssertionError()
   }
 
   function nativeof(object, key, options, name) {
@@ -1228,7 +1105,7 @@ void function() {
     Native.TypeError$prototype = Pseudo.prototype
   } catch (error) {}
 
-  if (null !== Native.TypeError$prototype)
+  if (VOID !== Native.TypeError$prototype)
   try {
     Pseudo.prototype = GLOBAL.Error.prototype;
 
@@ -1236,7 +1113,7 @@ void function() {
     Native.Error$prototype = Native.TypeError$prototype === Pseudo.prototype ? null : Pseudo.prototype
   } catch (error) {}
 
-  if (null !== Native.Error$prototype)
+  if (VOID !== Native.Error$prototype)
   try {
     try           { Pseudo.prototype = GLOBAL.InternalError.prototype }
     catch (error) { Pseudo.prototype = GLOBAL.RangeError.prototype }
@@ -1252,49 +1129,6 @@ void function() {
     Native.Object$prototype = Pseudo.prototype
   } catch (error) { throw new NativeAssertionError("Unable to evaluate `Object.prototype` as native built-in") }
 
-  /* ... ->> Define `name` properties for `...ERROR`s */
-  if (null !== Native.Error$prototype && null !== Native.Object$prototype && null !== Native.TypeError$prototype) {
-    var descriptors = {Error$prototype$name: ERROR, Object$prototype$name: ERROR};
-
-    // ...
-    do {
-      var count = 0;
-      var key;
-
-      // ...
-      descriptors.Object$prototype$name = describe(Native.Object$prototype, "name");
-      if (false === descriptors.Object$prototype$name.configurable || ERROR === descriptors.Object$prototype$name.value) break;
-
-      descriptors.Error$prototype$name = describe(Native.Error$prototype, "name");
-      if (false === descriptors.Error$prototype$name.configurable || ERROR === descriptors.Error$prototype$name.value) break;
-
-      // ... ->> Allow guaranteed definition as own properties
-      delete Native.Error$prototype["name"];
-      delete Native.Object$prototype["name"];
-
-      for (key in {RecursionOverflowError: null, TypeError: null})
-      if (++count <= 2) {
-        var descriptor = describe(Native[key + "$prototype"], "name");
-
-        // ...
-        if (descriptor.configurable && ERROR !== descriptor.value)
-        if (delete descriptor["name"]) {
-          var constructor = Native[key + '$'];
-          var error       = new constructor(); // ->> Capture `...ERROR`
-
-          // ...
-          constructor.prototype = error; // ->> Assert `name` as own property
-          error.name            = descriptor.value;
-
-          define(Native[key + "$prototype"], "name", descriptor.value)
-        }
-      }
-
-      define(Native.Error$prototype, "name", descriptors.Error$prototype$name);
-      define(Native.Object$prototype, "name", descriptors.Object$prototype$name)
-    } while (false)
-  }
-
   /* Modification */
     /* Constant > ... */
     Constant.MAXIMUM_BITWISE_INTEGER      = 2147483647;
@@ -1309,6 +1143,155 @@ void function() {
     ];
 
     /* Functions > ... */
+    Functions.defineProperty = function defineProperty(object, key, descriptor) /* --> Expects `descriptor` to be the same format as `Functions.describeProperty(…)` */ {
+      if (descriptor.own) try {
+        if (VOID === Native.Object$defineProperty && VOID === Native.Object$prototype$__lookupGetter__ && VOID === Native.Object$prototype$__lookupSetter__)
+          ERROR !== descriptor.value ? object[key] = descriptor.value : undefined;
+
+        else if (VOID !== Native.Object$defineProperty)
+          Native.Object$defineProperty(descriptor, key, ERROR === descriptor.value
+            ? {configurable: descriptor.configurable, enumerable: descriptor.enumerable, get: descriptor.get, set: descriptor.set}
+            : {configurable: descriptor.configurable, enumerable: descriptor.enumerable, value: descriptor.value, writable: descriptor.writable}
+          );
+
+        else {
+          // TODO
+          if (VOID !== Native.Object$prototype$__defineGetter__) {}
+          if (VOID !== Native.Object$prototype$__defineSetter__) {}
+        }
+
+        return true
+      } catch (error) {}
+
+      return false
+    };
+
+    Functions.describeProperty = function describeProperty(object, key) {
+      var descriptor = {
+        configurable: ERROR,
+        enumerable  : ERROR,
+        get         : ERROR,
+        own         : true,
+        set         : ERROR,
+        value       : ERROR,
+        writable    : ERROR
+      };
+
+      // ...
+      if (null === object || undefined === object)
+        descriptor.own = false;
+
+      else if (VOID === Native.Object$getOwnPropertyDescriptor && VOID === Native.Object$prototype$__lookupGetter__ && VOID === Native.Object$prototype$__lookupSetter__) {
+        var computedProperty = false;
+        var value;
+
+        // ...
+        for (var subkey in object)
+        if (key === subkey) {
+          descriptor.enumerable = true;
+          break
+        }
+
+        try {
+          var hasProperty;
+          var redefineProperty;
+
+          // ...
+          descriptor.configurable = true;
+          value                   = object[key];
+
+          try { hasProperty = key in object }  // WARN (Lapys) -> Can be spoofed by the `Proxy::has(…)` trap
+          catch (error) { hasProperty = true } // NOTE (Lapys) -> Presumed
+
+          try {
+            descriptor.configurable = delete object[key]; // WARN (Lapys) -> Can be spoofed by the `Proxy::deleteProperty(…)` trap
+
+            try { redefineProperty = descriptor.configurable || (hasProperty && false === key in object) }
+            catch (error) { redefineProperty = false }
+
+            if (redefineProperty) {
+              try { object[key] = value }
+              catch (error) { computedProperty = true }
+            }
+          } catch (error) { descriptor.configurable = false }
+
+          descriptor.own = false === descriptor.configurable || hasProperty;
+
+          if (false === computedProperty && descriptor.configurable) try {
+            var subvalue;
+
+            // ...
+            object[key]      = VOID;        // ->> Exception throwable from (owned/ non-owned) possible setter
+            subvalue         = object[key]; // ->> Exception throwable from (owned/ non-owned) possible getter
+            redefineProperty = false;
+
+            if (subvalue === value) descriptor.writable = false;
+            else if (VOID !== subvalue) computedProperty = true;
+            else try {
+              object[key] = value;
+              subvalue    = object[key];
+
+              if (subvalue === value) descriptor.writable = true;
+              else { descriptor.writable = false; value = subvalue }
+            } catch (error) { computedProperty = true }
+          } catch (error) { redefineProperty = true }
+
+          if (redefineProperty) {
+            computedProperty = true;
+            try { object[key] = value } catch (error) {}
+          }
+        } catch (error) { computedProperty = true }
+
+        // ... ->> Evaluated as own property
+        if (computedProperty) {
+          descriptor.configurable = ERROR;
+          descriptor.get          = null;
+          descriptor.set          = null;
+          descriptor.value        = ERROR;
+          descriptor.writable     = ERROR
+        }
+
+        else {
+          descriptor.get   = ERROR;
+          descriptor.set   = ERROR;
+          descriptor.value = value
+        }
+      }
+
+      else if (VOID !== Native.Object$getOwnPropertyDescriptor) {
+        var subdescriptor = Native.Object$getOwnPropertyDescriptor(object, key);
+
+        // ...
+        if (subdescriptor !== undefined) {
+          descriptor.configurable = subdescriptor.configurable;
+          descriptor.enumerable   = subdescriptor.enumerable;
+
+          if ("value" in subdescriptor) {
+            descriptor.value    = subdescriptor.value;
+            descriptor.writable = subdescriptor.writable
+          }
+
+          else {
+            descriptor.get = subdescriptor.get;
+            descriptor.set = subdescriptor.set
+          }
+        }
+      }
+
+      else {
+        // TODO (Lapys)
+        if (VOID !== Native.Object$prototype$__lookupGetter__) {}
+        if (VOID !== Native.Object$prototype$__lookupSetter__) {}
+      }
+
+      return descriptor
+    };
+
+    Functions.describeSelector = function describeSelector(selector) {
+      // TODO (Lapys)
+      return new CSSSelector(selector)
+    };
+
     Functions.numberIsFinite = function numberIsFinite(number) {
       return +Infinity !== number && -Infinity !== number
     };
@@ -1341,6 +1324,37 @@ void function() {
       }
 
       return fraction
+    };
+
+    Functions.stringAt = function stringAt(string, index) {
+      if ("string" === typeof string) {
+        if (Support.STRING_CHARACTER_ACCESS_BRACKET_NOTATION) {
+          Functions.stringAt = function stringAt(string, index) { return string[index] };
+          return Functions.stringAt(string, index)
+        }
+
+        if (VOID === Native.String$prototype$charAt)
+        return VOID;
+
+        if (VOID !== Native.Function$prototype$bind) {
+          Functions.stringAt = function stringAt(string, index) { return Native.Function$prototype$apply(Native.String$prototype$charAt, [string, [index]]) };
+          return Functions.stringAt(string, index)
+        }
+
+        if (delete Native.Function$prototype$apply["apply"]) { // WARN (Lapys) -> Possibly spoofed by `Proxy` — including calling it
+          Native.Function$prototype$apply.apply = Native.Function$prototype$apply;
+
+          if (Native.Function$prototype$apply === Native.Function$prototype$apply.apply) {
+            // ... --- WARN (Lapys) ->> Assume unchanged since property access in (strict) comparison conditional
+            var value = Native.Function$prototype$apply.apply(Native.String$prototype$charAt, [string, [index]]);
+            if ("string" === typeof value && value.length === 1) return value
+          }
+        }
+
+        return VOID
+      }
+
+      return string[index]
     };
 
     /* Mathematics > ... */
@@ -1858,6 +1872,51 @@ void function() {
     Support.STRING_CHARACTER_ACCESS_BRACKET_NOTATION = false === Support.STRICT_MODE && false === delete 'ඞ'[0]; // ->> Unable to assert on strict mode
 
     /* Native > ... */
+    if (VOID !== Native.Error$prototype && VOID !== Native.Object$prototype && VOID !== Native.TypeError$prototype) {
+      var descriptors = {
+        Error$prototype$name : ERROR,
+        Object$prototype$name: ERROR
+      };
+
+      // ... ->> Define `name` properties for `...ERROR`s
+      do {
+        var count = 0;
+        var key;
+
+        // ...
+        descriptors.Object$prototype$name = Functions.describeProperty(Native.Object$prototype, "name");
+        if (false === descriptors.Object$prototype$name.configurable || ERROR === descriptors.Object$prototype$name.value) break;
+
+        descriptors.Error$prototype$name = Functions.describeProperty(Native.Error$prototype, "name");
+        if (false === descriptors.Error$prototype$name.configurable || ERROR === descriptors.Error$prototype$name.value) break;
+
+        // ... ->> Allow guaranteed definition as own properties
+        delete Native.Error$prototype["name"];
+        delete Native.Object$prototype["name"];
+
+        for (key in {RecursionOverflowError: null, TypeError: null})
+        if (++count <= 2) {
+          var descriptor = Functions.describeProperty(Native[key + "$prototype"], "name");
+
+          // ...
+          if (descriptor.configurable && ERROR !== descriptor.value)
+          if (delete descriptor["name"]) {
+            var constructor = Native[key + '$'];
+            var error       = new constructor(); // ->> Capture `...ERROR`
+
+            // ...
+            constructor.prototype = error; // ->> Assert `name` as own property
+            error.name            = descriptor.value;
+
+            Functions.defineProperty(Native[key + "$prototype"], "name", descriptor.value)
+          }
+        }
+
+        Functions.defineProperty(Native.Error$prototype, "name", descriptors.Error$prototype$name);
+        Functions.defineProperty(Native.Object$prototype, "name", descriptors.Object$prototype$name)
+      } while (false)
+    }
+
     try { Native.Object$prototype$toString$ = Native.Object$prototype.toString }
     catch (error) { throw new NativeAssertionError("Unable to evaluate `Object.prototype.toString()`") }
 
@@ -1923,7 +1982,7 @@ void function() {
     });
 
     Native.String$prototype$charAt = (function() { return false === delete 'ඞ'[0] })() ? (
-      (at = function at(string, index) { return string[index] }),
+      (Functions.stringAt = function stringAt(string, index) { return string[index] }),
       (function charAt(index) {
         var string = this + "";
 
@@ -1938,7 +1997,7 @@ void function() {
     })["catch"](null)["finally"](function(native) {
       if (ERROR === native) return null;
 
-      if (null !== Native.Function$prototype$bind)
+      if (VOID !== Native.Function$prototype$bind)
         at = function at(string, index) { return Native.Function$prototype$apply(Native.String$prototype$charAt, [string + "", [index]]) };
       else {
         if (false === delete native["apply"]) throw new NativeAssertionError("Unable to evaluate `String.prototype.charAt(...)` as native built-in");
@@ -1956,33 +2015,17 @@ void function() {
     console.log(Native);
 
     /* DOM > ... */
-    function assert(condition) {
-      if (condition === at) {
-        if (null !== Native.String$prototype$charAt)
-        return;
-
-        try { '\0' === at('\0', 0) }
-        catch (error) {
-          if (error.message === new UnreachableStateError(null).message) throw error;
-          throw new TypeError("String subscript indexing feature required for `DOM.createElement(...)` function argument")
-        }
-      }
-
-      if (false == condition)
-      throw new AssertionError()
-    }
-
     DOM.createElement = function createElement(selector) {
-      assert(at);
+      assert(Functions.stringAt);
 
-      for (var index = 0, length = selector.length; index !== length; ++index)
+      // for (var index = 0, length = selector.length; index !== length; ++index)
 
-      CSSSelector
-      DOMTree
+      // CSSSelector
+      // DOMTree
     };
 
     /* Event > ... */
-    Event.addListener = null === Native.EventTarget$prototype$addEventListener ? function addListener(node, type) {
+    Event.addListener = VOID === Native.EventTarget$prototype$addEventListener ? function addListener(node, type) {
     } : function addListener(node, type) {}
 
     // getElementByClassName : null,
