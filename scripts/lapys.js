@@ -545,7 +545,7 @@ void function() {
       // ... ->> Computable enumerators
       DEFAULT: {
         valueOf: function valueOf() { return Enumeration.AS_BIGINT | Enumeration.AS_BOOLEAN | Enumeration.AS_NUMBER | Enumeration.AS_NULL | Enumeration.AS_OBJECT_FUNCTION | Enumeration.AS_PROPERTY | Enumeration.AS_OBJECT | Enumeration.AS_STRING | Enumeration.AS_SYMBOL | Enumeration.NAMED_FUNCTION | Enumeration.STRICT | Enumeration.UNNAMED_FUNCTION }
-      },
+      }
     };
 
     /* Functions ->> Convenience/ safe abstractions over native features */
@@ -819,11 +819,11 @@ void function() {
                             else if (PROMISE.options & (Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_OBJECT_FUNCTION)) { if (declarator.toString() !== "function") break }
 
                             for (var sourceIndex = sourceOffset; sourceIndex !== source.length; ++sourceIndex) {
-                              var character = at(source, sourceIndex);
+                              var character = Functions.stringAt(source, sourceIndex);
 
                               // ...
-                              if (commented) { commented = false === (character === '*' && at(source, sourceIndex + 1) === '/'); continue }
-                              if (character === '/' && at(source, sourceIndex + 1) === '*') { commented = true; continue }
+                              if (commented) { commented = false === (character === '*' && Functions.stringAt(source, sourceIndex + 1) === '/'); continue }
+                              if (character === '/' && Functions.stringAt(source, sourceIndex + 1) === '*') { commented = true; continue }
 
                               if (character === '*') {
                                 if (generatorDeclaratorMatch || false === (PROMISE.options & (Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION))) break;
@@ -864,14 +864,14 @@ void function() {
 
                     parse_body:
                     for (var sourceIndex = 0; sourceIndex !== source.length; ++sourceIndex) {
-                      var character = at(source, sourceIndex);
+                      var character = Functions.stringAt(source, sourceIndex);
                       var delimiter = delimiters.length ? delimiters.at(0) : null;
 
                       // ...
                       do {
                         switch (delimiter) {
                           case '\"': case '\'': if (character !== delimiter) continue parse_body; break;
-                          case '/':             if (character !== '*' || at(source, sourceIndex + 1) !== '/') continue parse_body
+                          case '/':             if (character !== '*' || Functions.stringAt(source, sourceIndex + 1) !== '/') continue parse_body
                         }
 
                         switch (character) {
@@ -1076,10 +1076,8 @@ void function() {
 
   /* Function > ... */
   function assert(condition) {
-    if (condition === Functions.stringAt) {
-      if (VOID !== Native.String$prototype$charAt)
-      return;
-
+    if (condition === Functions.stringAt)
+    if (VOID === Native.String$prototype$charAt) {
       try { '\0' === Functions.stringAt('\0', 0) }
       catch (error) { throw new AssertionError("String subscript indexing feature required") }
     }
@@ -1088,7 +1086,7 @@ void function() {
     throw new AssertionError()
   }
 
-  function nativeof(object, key, options, name) {
+  function nativeof(object, key, options, name) /* WARN (Lapys) -> Fails to guard against `Proxy` functions with `apply`, `constructor`, and/ or `deleteProperty` traps */{
     Native.PROMISE.object      = object;
     Native.PROMISE.objectName  = arguments.length > 3 ? name : null;
     Native.PROMISE.options     = arguments.length > 2 ? options | 0x000000 : Enumeration.DEFAULT.valueOf();
@@ -1155,7 +1153,7 @@ void function() {
           );
 
         else {
-          // TODO
+          // TODO (Lapys)
           if (VOID !== Native.Object$prototype$__defineGetter__) {}
           if (VOID !== Native.Object$prototype$__defineSetter__) {}
         }
@@ -1422,7 +1420,7 @@ void function() {
         recent = angle;
         angle += (termNumerator / termDenominator) * (termNumerand / (index + 1));
 
-        // ... --- TODO (Lapys) -> Requires a better halt to the series used here.
+        // ... --- WARN (Lapys) -> Requires a better halt to the series used here.
         if (false === Functions.numberIsSafe(angle)) {
           angle = recent;
           break
@@ -1908,7 +1906,7 @@ void function() {
             constructor.prototype = error; // ->> Assert `name` as own property
             error.name            = descriptor.value;
 
-            Functions.defineProperty(Native[key + "$prototype"], "name", descriptor.value)
+            Functions.defineProperty(Native[key + "$prototype"], "name", descriptor)
           }
         }
 
@@ -1927,16 +1925,6 @@ void function() {
       Native.Function$prototype = Pseudo.prototype
     } catch (error) { throw new NativeAssertionError("Unable to evaluate `Function.prototype` as native built-in") }
 
-    Function.prototype.toString = (function(native) {
-      var toString = new Proxy(() => {}, /* --> (function() {}).bind({}) */ {
-        apply         : function apply(object, that, arguments) { return toString === that.toString ? that === toString ? "function toString() { [native code] }" : native.apply(that, arguments) : that.toString.apply(that, arguments) },
-        construct     : function construct(object, arguments) { return new toString(...arguments) },
-        deleteProperty: function deleteProperty(object, key) { return true }
-      });
-
-      return toString
-    })(Function.prototype.toString);
-
     Native.Function$prototype$toString = nativeof(Native.Function$prototype, "toString", Enumeration.AS_FUNCTION | Enumeration.AS_PROPERTY | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "Function.prototype").get()["finally"](function(native) {
       var constructible = false;
 
@@ -1945,10 +1933,10 @@ void function() {
       try { ({"toString": native}).toString(); constructible = true } catch (error) {}
 
       if (false === constructible && delete Native.Object$prototype["toString"]) {
-        if (false === constructible)
         try {
-          switch ((function() { 'ඞ' }).toString()) { // WARN (Lapys) -> Function source must be non-deducible
-            case "function () {\n  'ඞ';\n}": // WARN (Lapys) -> Fails in JavaScript implementations that de-compile function sources in a non-standard way
+          switch ((function() { 'ඞ' }).toString()) {
+            case "function () {\n  'ඞ';\n}": // WARN (Lapys) -> Function source must be non-deducible
+            case "(function() { 'ඞ' })":     // WARN (Lapys) -> Fails in JavaScript implementations that de-compile function sources in a non-standard way
             case "function() { 'ඞ' }":       // NOTE (Lapys) -> Confirmed use of `Function.prototype.toString()`
               Native.Object$prototype.toString = Native.Object$prototype$toString$;
               return native

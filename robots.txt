@@ -1,0 +1,10 @@
+User-agent: *
+User-agent: AdIdxBot
+User-agent: Bingbot
+User-agent: BingPreview
+User-agent: MicrosoftPreview
+Disallow: /fonts/
+Disallow: /images/
+Disallow: /scripts/lapys.js      # Prevent redundant indexing
+Disallow: /stylesheets/lapys.css # alternatively cite to `https://github.com/LapysDev/LapysJS`
+Crawl-delay: 5
