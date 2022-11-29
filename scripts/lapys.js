@@ -427,6 +427,374 @@ void function() {
       return new Error(message, arguments.length > 1 ? name : "NativeAssertionError")
     }
 
+    function NativeAssertionPromise(object, key, options, name) {
+      this.object      = object;
+      this.objectName  = arguments.length > 3 ? name : null;
+      this.options     = arguments.length > 2 ? options | 0x000000 : Enumeration.DEFAULT.valueOf();
+      this.propertyKey = key
+    }
+      NativeAssertionPromise.prototype = {
+        native     : VOID,
+        object     : VOID,
+        objectName : null,
+        onerror    : function onerror(object, key, options, native) { return ERROR },
+        onfail     : null,
+        onpass     : null,
+        options    : 0x000000,
+        propertyKey: null,
+
+        "catch": (function() {
+          // ... ->> Directly compare function source to its native defaults
+          function isNativeFunctionSource(promise, source) {
+            for (var index = Constant.NATIVE_FUNCTION_SOURCE.length; index; ) {
+              var nativeSource = Constant.NATIVE_FUNCTION_SOURCE[--index].toString();
+
+              if (
+                (((promise.options & Enumeration.UNNAMED_FUNCTION) || false == (promise.options & Enumeration.NAMED_FUNCTION)) && (
+                  source === "function() { "        + nativeSource + " }"  ||
+                  source === "function() {\n    "   + nativeSource + "\n}" ||
+                  source === "\nfunction() {\n    " + nativeSource + "\n}\n"
+                )) ||
+                (((promise.options & Enumeration.NAMED_FUNCTION) || false == (promise.options & Enumeration.UNNAMED_FUNCTION)) && (
+                  source === "function "   + promise.propertyKey + "() { "      + nativeSource + " }"  ||
+                  source === "function "   + promise.propertyKey + "() {\n    " + nativeSource + "\n}" ||
+                  source === "\nfunction " + promise.propertyKey + "() {\n    " + nativeSource + "\n}\n"
+                ))
+              ) return true
+            }
+
+            return false
+          }
+
+          // ...
+          return function(handler) {
+            this.onfail = handler;
+
+            try { this.native = this.onpass(this.object, this.propertyKey, this.options, this.native) }
+            catch (error) { this.native = ERROR }
+
+            this.onpass = null;
+
+            // ... ->> `NativeAssertionPromise::onpass(…)` failed
+            if (ERROR === this.native)
+            return this["throw"]();
+
+            // ... ->> Basic native assertion
+            if (false === (
+              ((this.options & Enumeration.AS_BIGINT)             && ("bigint"    === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_BOOLEAN)            && ("boolean"   === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_CLASS_FUNCTION)     && ("function"  === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_FUNCTION)           && ("function"  === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_GENERATOR_FUNCTION) && ("function"  === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_GETTER_FUNCTION)    && ("function"  === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_NUMBER)             && ("number"    === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_OBJECT)             && ("object"    === typeof this.native && null !== this.native))            ||
+              ((this.options & Enumeration.AS_OBJECT_FUNCTION)    && ("function"  === typeof this.native || "object" === typeof this.native)) ||
+              ((this.options & Enumeration.AS_SETTER_FUNCTION)    && ("function"  === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_STRING)             && ("string"    === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_SYMBOL)             && ("symbol"    === typeof this.native))                                    ||
+              ((this.options & Enumeration.AS_UNDEFINED)          && ("undefined" === typeof this.native))                                    ||
+
+              ((this.options & Enumeration.AS_NULL)     && null === this.native) ||
+              ((this.options & Enumeration.AS_PROPERTY) && false === this.propertyKey in this.object)
+            )) return this["throw"]();
+
+            // ... ->> Stricter native assertion
+            if (this.options & Enumeration.STRICT) {
+              var descriptor = null;
+
+              // ...
+              if (this.options & Enumeration.AS_GETTER) {
+                descriptor = null === descriptor ? Functions.describeProperty(this.object, this.propertyKey) : descriptor;
+                if (ERROR === descriptor || ERROR === descriptor.get) return this["throw"]()
+              }
+
+              if (this.options & Enumeration.AS_SETTER) {
+                descriptor = null === descriptor ? Functions.describeProperty(this.object, this.propertyKey) : descriptor;
+                if (ERROR === descriptor || ERROR === descriptor.set) return this["throw"]()
+              }
+
+              // ...
+              if (this.options & (Enumeration.AS_CLASS_FUNCTION | Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_GETTER_FUNCTION | Enumeration.AS_OBJECT_FUNCTION | Enumeration.AS_SETTER_FUNCTION)) {
+                var prototyped  = false;
+                var source      = null;
+
+                // ... ->> Fails in JavaScript implementations that have built-in functions with the `prototype` property
+                try {
+                  // ... --> Proxy::deleteProperty(…) || Proxy::has(…)
+                  if (this.options & (Enumeration.AS_CLASS_FUNCTION | Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_OBJECT_FUNCTION))
+                  if ("prototype" in this.native || false === delete this.native["prototype"]) return this["throw"]()
+                } catch (error) { prototyped = true }
+
+                if (prototyped)
+                return this["throw"]();
+
+                // ... ->> `Function.prototype.toString(…)` function native source comparison
+                if (
+                  VOID !== Native.Function$prototype$apply && VOID !== Native.Function$prototype$toString &&
+                  false === (this.propertyKey === "apply" && (this.object === Native.Function$prototype || this.object === Native.Function$prototype$apply))
+                ) {
+                  if (VOID !== Native.Function$prototype$bind)
+                    // ... --> Function.prototype.apply.bind(Function.prototype.apply)(Function.prototype.toString, […])
+                    source = Native.Function$prototype$apply(Native.Function$prototype$toString, [this.native]);
+
+                  else if (assert(Native.Function$prototype$apply, Enumeration.STRICT)) {
+                    // ... --> Function.prototype.apply.apply(Function.prototype.toString, […])
+                    source = Native.Function$prototype$apply.apply(Native.Function$prototype$toString, [this.native]);
+
+                    if ("string" !== typeof source || source.length < Mathematics.max(Constant.NATIVE_FUNCTION_SOURCE[0], Constant.NATIVE_FUNCTION_SOURCE[1] /* , ... */) + (
+                      this.options & Enumeration.AS_CLASS_FUNCTION     ? "class{}"      .length + (this.options & Enumeration.NAMED_FUNCTION ? this.propertyKey.length + ' '.length : 0) :
+                      this.options & Enumeration.AS_GENERATOR_FUNCTION ? "function*(){}".length + (this.options & Enumeration.NAMED_FUNCTION ? this.propertyKey.length + ' '.length : 0) :
+                      this.options & Enumeration.AS_GETTER_FUNCTION    ? "get _(){}"    .length + (this.options & Enumeration.NAMED_FUNCTION ? this.propertyKey.length - '_'.length : 0) :
+                      this.options & Enumeration.AS_OBJECT_FUNCTION    ? "function(){}" .length + (this.options & Enumeration.NAMED_FUNCTION ? this.propertyKey.length + ' '.length : 0) :
+                      this.options & Enumeration.AS_SETTER_FUNCTION    ? "set _(){}"    .length + (this.options & Enumeration.NAMED_FUNCTION ? this.propertyKey.length - '_'.length : 0) :
+                      this.options & Enumeration.AS_FUNCTION           ? 13 : 0
+                    )) throw new NativeAssertionError("Unable to evaluate `Function.prototype.apply(...)` as built-in native")
+                  }
+
+                  else
+                    // ... ->> could not acquire function source using `Function.prototype.apply(…)` and `Function.prototype.toString(…)`
+                    return this["throw"]();
+
+                  // ... ->> Programmatically compare function source to its native defaults
+                  if (false === isNativeFunctionSource(this, source)) {
+                    var delimiters = new DepthArray();
+                    var match      = false;
+
+                    assert(Functions.stringAt, Enumeration.STRICT);
+
+                    // ... ->> Inspect the source of the function head
+                    if (this.options & (Enumeration.NAMED_FUNCTION | Enumeration.UNNAMED_FUNCTION)) {
+                      var declarators = [
+                        new StaticString('c', 'l', 'a', 's', 's'),
+                        new StaticString('f', 'u', 'n', 'c', 't', 'i', 'o', 'n'),
+                        new StaticString('g', 'e', 't'),
+                        new StaticString('s', 'e', 't')
+                      ];
+
+                      // ...
+                      parse_head:
+                      for (var declaratorsIndex = declarators.length; declaratorsIndex; ) {
+                        var declarator       = declarators[--declaratorsIndex];
+                        var declaratorOffset = 0;
+                        var sourceOffset     = 0;
+
+                        // ...
+                        while (Functions.stringAt(source, sourceOffset++) === declarator[declaratorOffset++]) {
+                          // ... ->> Source substring match found for `declarator`
+                          if (declaratorOffset === declarator.length) {
+                            var commentMatch             = false;    // ->> Ignore multi-line comment
+                            var name                     = ["", ""]; // ->> `name[0]` is the (trimmed) function name; `name[1]` is the trimmed whitespace
+                            var generatorDeclaratorMatch = false;    // ->> Note generator function declarator
+
+                            // ... ->> Ensure `declarator` matches expected function source
+                            if (this.options & Enumeration.AS_FUNCTION) { if (declarator.toString() !== "class" && declarator.toString() !== "function" && declarator.toString() !== "get" && declarator.toString() !== "set") break }
+                            else if (this.options & Enumeration.AS_CLASS_FUNCTION)  { if (declarator.toString() !== "class") break }
+                            else if (this.options & Enumeration.AS_GETTER_FUNCTION) { if (declarator.toString() !== "get")   break }
+                            else if (this.options & Enumeration.AS_SETTER_FUNCTION) { if (declarator.toString() !== "set")   break }
+                            else if (this.options & (Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_OBJECT_FUNCTION)) { if (declarator.toString() !== "function") break }
+
+                            // ... ->> Parse source of the function name
+                            for (var sourceIndex = sourceOffset; sourceIndex !== source.length; ++sourceIndex) {
+                              var character = Functions.stringAt(source, sourceIndex);
+
+                              // ... ->> Ignore multi-line comment
+                              if (commentMatch) { commentMatch = false === (character === '*' && Functions.stringAt(source, sourceIndex + 1) === '/'); continue }
+                              if (character === '/' && Functions.stringAt(source, sourceIndex + 1) === '*') { commentMatch = true; continue }
+
+                              // ... ->> Note generator function declarator
+                              if (character === '*') {
+                                if (generatorDeclaratorMatch || false === (this.options & (Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION))) break;
+                                generatorDeclaratorMatch = true
+                              }
+
+                              // ... ->> Found function parameter list declarator
+                              if (character === '(') {
+                                match = (this.options & Enumeration.NAMED_FUNCTION) && (this.options & Enumeration.UNNAMED_FUNCTION)
+                                  ? name[0] === this.propertyKey || "" === name[0]
+                                  : name[0] === (this.options & Enumeration.NAMED_FUNCTION ? this.propertyKey : "");
+                                break parse_head
+                              }
+
+                              // ...
+                              if (Functions.stringIsWhitespace(character)) name[1] += "" === name[0] ? "" : character;
+                              else { name[0] += name[1] + character; name[1] = "" }
+                            }
+
+                            break
+                          }
+
+                          // ...
+                          if (sourceOffset === source.length)
+                          break
+                        }
+                      }
+
+                      if (false === match)
+                      return this["throw"]()
+                    }
+
+                    // ... ->> Inspect the source of the function body
+                    parse_body:
+                    for (var sourceIndex = 0; sourceIndex !== source.length; ++sourceIndex) {
+                      var character = Functions.stringAt(source, sourceIndex);
+                      var delimiter = delimiters.length ? delimiters.at(0) : null;
+
+                      // ...
+                      do {
+                        // ... ->> Ignore multi-line comments or string literals
+                        switch (delimiter) {
+                          case '\"': case '\'': if (character !== delimiter) continue parse_body; break;
+                          case '/':             if (character !== '*' || Functions.stringAt(source, sourceIndex + 1) !== '/') continue parse_body
+                        }
+
+                        // ... ->> Note delimiter starts (and endings)
+                        switch (character) {
+                          case '(': delimiters.splice(0, delimiter = '('); continue;
+                          case '[': delimiters.splice(0, delimiter = '['); continue;
+                          case '{': delimiters.splice(0, delimiter = '{'); continue;
+                          case '/': if (Functions.stringAt(source, sourceIndex + 1) === '*') delimiters.splice(0, delimiter = '/'); continue;
+
+                          case '*':                     if (Functions.stringAt(source, sourceIndex + 1) !== '/') continue; break;
+                          case '\"': case '\'':         if (character !== delimiter) { delimiters.splice(0, character); continue } break;
+                          case ')': case ']': case '}': if ((character !== ')' || delimiter !== '(') && (character !== ']' || delimiter !== '[') && (character !== '}' || delimiter !== '{')) continue; break;
+
+                          default: continue
+                        }
+
+                        // ... ->> Note delimiter endings
+                        for (var length = delimiters.length, index = 1; index < length; ++index)
+                        delimiters.assign(index - 1, delimiters.at(index - 0));
+
+                        delimiters.pop()
+                      } while (false);
+
+                      // ... ->> Source substring match found for native function source
+                      for (var nativeSourcesIndex = Constant.NATIVE_FUNCTION_SOURCE.length; nativeSourcesIndex; ) {
+                        var nativeSource       = Constant.NATIVE_FUNCTION_SOURCE[--nativeSourcesIndex];
+                        var nativeSourceOffset = 0;
+                        var sourceOffset       = sourceIndex;
+
+                        // ...
+                        while (Functions.stringAt(source, sourceOffset++) === nativeSource[nativeSourceOffset++]) {
+                          if (nativeSourceOffset === nativeSource.length)
+                          if (delimiter === '[') {
+                            match = true;
+                            break parse_body
+                          }
+
+                          // ...
+                          if (sourceOffset === source.length)
+                          break
+                        }
+                      }
+                    }
+
+                    // ...
+                    if (false === match)
+                    return this["throw"]()
+                  }
+                }
+
+                else if ("toString" in Native.Function$prototype && "toString" in Native.Object$prototype) {
+                  var Function$prototype$toString = VOID !== Native.Function$prototype$toString ? this.object === Native.Function$prototype && this.propertyKey === "toString" ? this.native : Native.Function$prototype$toString : Native.Function$prototype.toString; // --> Function.prototype.toString(…)
+
+                  // ...
+                  if (false === (delete Native.Function$prototype["toString"] && delete Native.Object$prototype["toString"] && delete this.native["toString"])) {
+                    Native.Function$prototype.toString = Function$prototype$toString;
+                    Native.Object$prototype.toString   = Native.Object$prototype$toString$;
+
+                    return this["throw"]()
+                  }
+
+                  Native.Function$prototype.toString = Function$prototype$toString;
+                  try { source = this.native.toString() } catch (error) {}
+
+                  Native.Object$prototype.toString = Native.Object$prototype$toString$;
+                  if (false === isNativeFunctionSource(this, source)) return this["throw"]()
+                }
+
+                else
+                  // ... ->> could not acquire function source
+                  return this["throw"]()
+              }
+            }
+
+            // ... ->> Primed for calls to only `NativeAssertionPromise.prototype.finally(…)`, `NativeAssertionPromise.prototype.throw(…)`, and `NativeAssertionPromise.prototype.valueOf(…)`
+            this["catch"] = null;
+            this["get"]   = null;
+            this["try"]   = null;
+
+            return this
+          }
+        })(),
+
+        "finally": function(handler) {
+          var value = ERROR;
+
+          // ...
+          try { value = handler(this.native) } catch (error) {}
+          if (ERROR === value) { this.onfail = this.onerror; return this["throw"]() }
+
+          // ... ->> Primed for no more method calls
+          this["finally"] = null;
+          this["onfail"]  = null;
+          this["throw"]   = null;
+          this["valueOf"] = null;
+
+          return value
+        },
+
+        get: function get(handler) {
+          if (null === this.onpass) {
+            if (null === handler) return this["try"](null)["catch"](null);
+            return this["try"](arguments.length ? handler : this.valueOf)["catch"](this.onerror)
+          }
+
+          throw new NativeAssertionError("Encountered invalid use of `nativeof(...)` assertion")
+        },
+
+        "throw": function() {
+          if (null === this.onfail) {
+            this.native = ERROR;
+            return this.subpromise
+          }
+
+          if (ERROR === this.onfail(this.object, this.propertyKey, this.options, this.native)) {
+            this.native = ERROR;
+            throw new NativeAssertionError("Unable to evaluate " + ("symbol" !== typeof this.propertyKey ? '`' + (null !== this.objectName ? this.objectName + '.' : "") + this.propertyKey + (
+              (this.options & (Enumeration.AS_CLASS_FUNCTION | Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_GETTER_FUNCTION | Enumeration.AS_OBJECT_FUNCTION | Enumeration.AS_SETTER_FUNCTION)) &&
+              false == (this.options & (Enumeration.AS_BIGINT | Enumeration.AS_BOOLEAN | Enumeration.AS_NUMBER | Enumeration.AS_NULL | Enumeration.AS_OBJECT | Enumeration.AS_STRING | Enumeration.AS_SYMBOL | Enumeration.AS_UNDEFINED)) ? "()" : ""
+            ) + '`' : "feature") + " as built-in native")
+          }
+
+          return this
+        },
+
+        "try": function(handler) {
+          if (null === this.onpass) {
+            this.onpass = null === handler ? this.valueOf : handler;
+            return this
+          }
+
+          throw new NativeAssertionError("Encountered invalid use of `nativeof(...)` assertion")
+        },
+
+        valueOf: function valueOf(object /* , key*/) {
+          if (VOID === this.native) {
+            var key = arguments[1];
+
+            // ... --> Proxy::has(…)
+            try { if (key in object) return object[key] }
+            catch (error) {}
+
+            return ERROR
+          }
+
+          return this.native
+        }
+      };
+
     function RecursionOverflowError(message, name) {
       ERROR = RECURSION_OVERFLOW_ERROR;
 
@@ -550,14 +918,15 @@ void function() {
 
     /* Functions ->> Convenience/ safe abstractions over native features */
     var Functions = {
-      defineProperty  : VOID,
-      describeProperty: VOID,
-      describeSelector: VOID,
-      numberIsFinite  : VOID,
-      numberIsNaN     : VOID,
-      numberIsSafe    : VOID,
-      numberToFraction: VOID,
-      stringAt        : VOID
+      defineProperty    : VOID,
+      describeProperty  : VOID,
+      describeSelector  : VOID,
+      numberIsFinite    : VOID,
+      numberIsNaN       : VOID,
+      numberIsSafe      : VOID,
+      numberToFraction  : VOID,
+      stringAt          : VOID,
+      stringIsWhitespace: VOID
     };
 
     /* Mathematics */
@@ -664,382 +1033,9 @@ void function() {
 
     /* Native ->> Native APIs and features */
     var Native = {
-      PROMISE: {
-        native     : VOID,
-        object     : null,
-        objectName : null,
-        onerror    : function onerror(object, key, options, native) { return ERROR },
-        onfail     : null,
-        onpass     : null,
-        options    : 0x000000,
-        propertyKey: null,
-        subpromise : {
-          "finally": function(handler) {
-            var value = ERROR;
-
-            // ...
-            try { value = handler(Native.PROMISE.native) }
-            catch (error) {}
-
-            if (ERROR === value) {
-              Native.PROMISE.onfail = Native.PROMISE.onerror;
-              return Native.PROMISE["throw"]()
-            }
-
-            // ...
-            return value
-          },
-
-          valueOf: (function(handler) {
-            return function valueOf() { return Native.PROMISE.subpromise["finally"](handler) }
-          })(function(native) { return native })
-        },
-
-        "catch": function(handler) {
-          var PROMISE = Native.PROMISE;
-
-          /* ... */
-          PROMISE.onfail = handler;
-
-          try { PROMISE.native = PROMISE.onpass(PROMISE.object, PROMISE.propertyKey, PROMISE.options, PROMISE.native) }
-          catch (error) { PROMISE.native = ERROR }
-
-          PROMISE.onpass = null;
-
-          // ...
-          if (ERROR === PROMISE.native)
-          return PROMISE["throw"]();
-
-          if (PROMISE.options & Enumeration.STRICT) {
-            if (PROMISE.options & Enumeration.AS_GETTER) {}
-            if (PROMISE.options & Enumeration.AS_SETTER) {}
-
-            if (
-              ("object"   === typeof PROMISE.native && (PROMISE.options & (Enumeration.AS_OBJECT_FUNCTION))) ||
-              ("function" === typeof PROMISE.native && (PROMISE.options & (Enumeration.AS_CLASS_FUNCTION | Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_GETTER_FUNCTION | Enumeration.AS_OBJECT_FUNCTION | Enumeration.AS_SETTER_FUNCTION)))
-            ) {
-              var sourceMatch = false;
-              var source      = null;
-              var prototyped  = false;
-
-              // ... --- WARN (Lapys) -> Fails in JavaScript implementations that have built-in functions with the `prototype` property
-              try {
-                if (PROMISE.options & (Enumeration.AS_CLASS_FUNCTION | Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_OBJECT_FUNCTION))
-                if ("prototype" in PROMISE.native || false === delete PROMISE.native["prototype"]) return PROMISE["throw"]()
-              } catch (error) { prototyped = true }
-
-              if (prototyped)
-              return PROMISE["throw"]();
-
-              // ...
-              if (
-                VOID !== Native.Function$prototype$apply && VOID !== Native.Function$prototype$toString &&
-                false === (PROMISE.object === Native.Function$prototype$apply && PROMISE.propertyKey === "apply")
-              ) {
-                if (VOID !== Native.Function$prototype$bind)
-                  source = Native.Function$prototype$apply(Native.Function$prototype$toString, [PROMISE.native]);
-
-                // TODO (Lapys) -> Check `nativeof(Function.prototype.apply.apply)`
-                else if (delete Native.Function$prototype$apply["apply"]) { // WARN (Lapys) -> Possibly spoofed by `Proxy` — including calling it
-                  Native.Function$prototype$apply.apply = Native.Function$prototype$apply;
-
-                  if (Native.Function$prototype$apply === Native.Function$prototype$apply.apply) {
-                    // ... --- WARN (Lapys) ->> Assume unchanged since property access in (strict) comparison conditional
-                    source = Native.Function$prototype$apply.apply(Native.Function$prototype$toString, [PROMISE.native]);
-
-                    if ("string" !== typeof source || source.length < (18 /* --> Mathematics.max(...Constant.NATIVE_FUNCTION_SOURCE.map(x => x.length)) */) + (
-                      PROMISE.options & Enumeration.AS_CLASS_FUNCTION     ? "class{}"      .length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length + ' '.length : 0) :
-                      PROMISE.options & Enumeration.AS_GENERATOR_FUNCTION ? "function*(){}".length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length + ' '.length : 0) :
-                      PROMISE.options & Enumeration.AS_GETTER_FUNCTION    ? "get _(){}"    .length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length - '_'.length : 0) :
-                      PROMISE.options & Enumeration.AS_OBJECT_FUNCTION    ? "function(){}" .length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length + ' '.length : 0) :
-                      PROMISE.options & Enumeration.AS_SETTER_FUNCTION    ? "set _(){}"    .length + (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey.length - '_'.length : 0) :
-                      PROMISE.options & Enumeration.AS_FUNCTION           ? 13 /* --> Mathematics.max(…) */ : 0
-                    )) return PROMISE["throw"]()
-                  }
-                }
-
-                // ...
-                if (null === source)
-                return PROMISE["throw"]();
-
-                // ... ->> Directly compare source to native defaults
-                for (var index = Constant.NATIVE_FUNCTION_SOURCE.length; index && false === sourceMatch; ) {
-                  var nativeSource = Constant.NATIVE_FUNCTION_SOURCE[--index].toString();
-
-                  sourceMatch = (
-                    ((PROMISE.options & Enumeration.NAMED_FUNCTION) && (
-                      source === "function "   + PROMISE.propertyKey + "() { "      + nativeSource + " }"  ||
-                      source === "function "   + PROMISE.propertyKey + "() {\n    " + nativeSource + "\n}" ||
-                      source === "\nfunction " + PROMISE.propertyKey + "() {\n    " + nativeSource + "\n}\n"
-                    )) ||
-                    ((PROMISE.options & Enumeration.UNNAMED_FUNCTION) && (
-                      source === "function() { "        + nativeSource + " }"  ||
-                      source === "function() {\n    "   + nativeSource + "\n}" ||
-                      source === "\nfunction() {\n    " + nativeSource + "\n}\n"
-                    ))
-                  )
-                }
-
-                // ... ->> Programmatically parse source to assert as native default
-                if (false === sourceMatch) {
-                  assert(Functions.stringAt);
-
-                  if (null !== at) {
-                    var delimiters  = new DepthArray();
-                    var declarators = [
-                      new StaticString('c', 'l', 'a', 's', 's'),
-                      new StaticString('f', 'u', 'n', 'c', 't', 'i', 'o', 'n'),
-                      new StaticString('g', 'e', 't'),
-                      new StaticString('s', 'e', 't')
-                    ];
-
-                    // ...
-                    if (PROMISE.options & (Enumeration.NAMED_FUNCTION | Enumeration.UNNAMED_FUNCTION)) {
-                      var subsourceMatch = false;
-
-                      // ...
-                      parse_head:
-                      for (var declaratorsIndex = declarators.length; declaratorsIndex; ) {
-                        var declarator       = declarators[--declaratorsIndex];
-                        var declaratorOffset = 0;
-                        var sourceOffset     = 0;
-
-                        // ...
-                        while (Functions.stringAt(source, sourceOffset++) === declarator[declaratorOffset++]) {
-                          if (declaratorOffset === declarator.length) {
-                            var commented                = false;
-                            var name                     = ["", ""]; // ->> `name[0]` is the (trimmed) function name; `name[1]` is the trimmed whitespace
-                            var generatorDeclaratorMatch = false;
-
-                            // ...
-                            if (PROMISE.options & Enumeration.AS_FUNCTION) { if (declarator.toString() !== "class" && declarator.toString() !== "function" && declarator.toString() !== "get" && declarator.toString() !== "set") break }
-                            else if (PROMISE.options & Enumeration.AS_CLASS_FUNCTION)  { if (declarator.toString() !== "class") break }
-                            else if (PROMISE.options & Enumeration.AS_GETTER_FUNCTION) { if (declarator.toString() !== "get")   break }
-                            else if (PROMISE.options & Enumeration.AS_SETTER_FUNCTION) { if (declarator.toString() !== "set")   break }
-                            else if (PROMISE.options & (Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_OBJECT_FUNCTION)) { if (declarator.toString() !== "function") break }
-
-                            for (var sourceIndex = sourceOffset; sourceIndex !== source.length; ++sourceIndex) {
-                              var character = Functions.stringAt(source, sourceIndex);
-
-                              // ...
-                              if (commented) { commented = false === (character === '*' && Functions.stringAt(source, sourceIndex + 1) === '/'); continue }
-                              if (character === '/' && Functions.stringAt(source, sourceIndex + 1) === '*') { commented = true; continue }
-
-                              if (character === '*') {
-                                if (generatorDeclaratorMatch || false === (PROMISE.options & (Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION))) break;
-                                generatorDeclaratorMatch = true
-                              }
-
-                              if (character === '(') {
-                                subsourceMatch = (PROMISE.options & Enumeration.NAMED_FUNCTION) && (PROMISE.options & Enumeration.UNNAMED_FUNCTION)
-                                  ? name[0] === PROMISE.propertyKey || "" === name[0]
-                                  : name[0] === (PROMISE.options & Enumeration.NAMED_FUNCTION ? PROMISE.propertyKey : "");
-                                break parse_head
-                              }
-
-                              switch (character) {
-                                case ' ':
-                                case '\f': case '\n': case '\r': case '\t': case '\v':
-                                case '\u00A0': case '\u1680': case '\u2000': case '\u2001': case '\u2002': case '\u2003': case '\u2004': case '\u2005': case '\u2006': case '\u2007': case '\u2008': case '\u2009': case '\u200A': case '\u202F': case '\u205F': case '\u3000':
-                                  name[1] += "" === name[0] ? "" : character;
-                                  break;
-
-                                default:
-                                  name[0] += name[1] + character;
-                                  name[1]  = ""
-                              }
-                            }
-
-                            break
-                          }
-
-                          if (sourceOffset === source.length)
-                          break
-                        }
-                      }
-
-                      if (false === subsourceMatch)
-                      return PROMISE["throw"]()
-                    }
-
-                    parse_body:
-                    for (var sourceIndex = 0; sourceIndex !== source.length; ++sourceIndex) {
-                      var character = Functions.stringAt(source, sourceIndex);
-                      var delimiter = delimiters.length ? delimiters.at(0) : null;
-
-                      // ...
-                      do {
-                        switch (delimiter) {
-                          case '\"': case '\'': if (character !== delimiter) continue parse_body; break;
-                          case '/':             if (character !== '*' || Functions.stringAt(source, sourceIndex + 1) !== '/') continue parse_body
-                        }
-
-                        switch (character) {
-                          case '(': delimiters.splice(0, delimiter = '('); continue;
-                          case '[': delimiters.splice(0, delimiter = '['); continue;
-                          case '{': delimiters.splice(0, delimiter = '{'); continue;
-                          case '/': if (Functions.stringAt(source, sourceIndex + 1) === '*') delimiters.splice(0, delimiter = '/'); continue;
-
-                          case '*':                     if (Functions.stringAt(source, sourceIndex + 1) !== '/') continue; break;
-                          case '\"': case '\'':         if (character !== delimiter) { delimiters.splice(0, character); continue } break;
-                          case ')': case ']': case '}': if ((character !== ')' || delimiter !== '(') && (character !== ']' || delimiter !== '[') && (character !== '}' || delimiter !== '{')) continue; break;
-
-                          default: continue
-                        }
-
-                        // ...
-                        for (var length = delimiters.length, index = 1; index < length; ++index)
-                        delimiters.assign(index - 1, delimiters.at(index - 0));
-
-                        delimiters.pop()
-                      } while (false);
-
-                      for (var nativeSourcesIndex = Constant.NATIVE_FUNCTION_SOURCE.length; nativeSourcesIndex; ) {
-                        var nativeSource       = Constant.NATIVE_FUNCTION_SOURCE[--nativeSourcesIndex];
-                        var nativeSourceOffset = 0;
-                        var sourceOffset       = sourceIndex;
-
-                        // ...
-                        while (Functions.stringAt(source, sourceOffset++) === nativeSource[nativeSourceOffset++]) {
-                          if (nativeSourceOffset === nativeSource.length) {
-                            if (delimiter === '[') {
-                              sourceMatch = true;
-                              break parse_body
-                            }
-                          }
-
-                          if (sourceOffset === source.length)
-                          break
-                        }
-                      }
-                    }
-
-                    // ...
-                    if (false === sourceMatch)
-                    return PROMISE["throw"]()
-                  }
-                }
-              }
-
-              else if ("toString" in Native.Function$prototype && "toString" in Native.Object$prototype) {
-                var native = VOID !== Native.Function$prototype$toString ? PROMISE.object === Native.Function$prototype && PROMISE.propertyKey === "toString" ? PROMISE.native : Native.Function$prototype$toString : Native.Function$prototype.toString; // --> Function.prototype.toString(…)
-
-                // ...
-                if (false === (delete Native.Function$prototype["toString"] && delete Native.Object$prototype["toString"] && delete PROMISE.native["toString"])) {
-                  Native.Function$prototype.toString = native;
-                  Native.Object$prototype.toString   = Native.Object$prototype$toString$;
-
-                  return PROMISE["throw"]()
-                }
-
-                try {
-                  Native.Function$prototype.toString = native;
-                  source                             = PROMISE.native.toString();
-
-                  for (var index = Constant.NATIVE_FUNCTION_SOURCE.length; index && false === sourceMatch; ) {
-                    var nativeSource = Constant.NATIVE_FUNCTION_SOURCE[--index].toString();
-
-                    sourceMatch = (
-                      (((PROMISE.options & Enumeration.UNNAMED_FUNCTION) || false == (PROMISE.options & Enumeration.NAMED_FUNCTION)) && (
-                        source === "function() { "        + nativeSource + " }"  ||
-                        source === "function() {\n    "   + nativeSource + "\n}" ||
-                        source === "\nfunction() {\n    " + nativeSource + "\n}\n"
-                      )) ||
-                      (((PROMISE.options & Enumeration.NAMED_FUNCTION) || false == (PROMISE.options & Enumeration.UNNAMED_FUNCTION)) && (
-                        source === "function "   + PROMISE.propertyKey + "() { "      + nativeSource + " }"  ||
-                        source === "function "   + PROMISE.propertyKey + "() {\n    " + nativeSource + "\n}" ||
-                        source === "\nfunction " + PROMISE.propertyKey + "() {\n    " + nativeSource + "\n}\n"
-                      ))
-                    )
-                  }
-                } catch (error) {}
-
-                Native.Object$prototype.toString = Native.Object$prototype$toString$;
-                if (false === sourceMatch) return PROMISE["throw"]()
-              }
-
-              else
-                return PROMISE["throw"]()
-            }
-          }
-
-          if (false === (
-            ((PROMISE.options & Enumeration.AS_BIGINT)             && ("bigint"    === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_BOOLEAN)            && ("boolean"   === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_CLASS_FUNCTION)     && ("function"  === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_FUNCTION)           && ("function"  === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_GENERATOR_FUNCTION) && ("function"  === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_GETTER_FUNCTION)    && ("function"  === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_NUMBER)             && ("number"    === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_OBJECT)             && ("object"    === typeof PROMISE.native && null !== PROMISE.native))            ||
-            ((PROMISE.options & Enumeration.AS_OBJECT_FUNCTION)    && ("function"  === typeof PROMISE.native || "object" === typeof PROMISE.native)) ||
-            ((PROMISE.options & Enumeration.AS_SETTER_FUNCTION)    && ("function"  === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_STRING)             && ("string"    === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_SYMBOL)             && ("symbol"    === typeof PROMISE.native))                                       ||
-            ((PROMISE.options & Enumeration.AS_UNDEFINED)          && ("undefined" === typeof PROMISE.native))                                       ||
-
-            ((PROMISE.options & Enumeration.AS_NULL)     && null === PROMISE.native) ||
-            ((PROMISE.options & Enumeration.AS_PROPERTY) && false === PROMISE.propertyKey in PROMISE.object)
-          )) return PROMISE["throw"]();
-
-          // ...
-          return PROMISE.subpromise
-        },
-
-        get: function get(handler) {
-          var PROMISE = Native.PROMISE;
-
-          /* ... */
-          if (null === PROMISE.onpass) {
-            if (null === handler) return PROMISE["try"](null)["catch"](null);
-            return PROMISE["try"](arguments.length ? handler : PROMISE.valueOf)["catch"](PROMISE.onerror)
-          }
-
-          throw new NativeAssertionError("Encountered invalid use of `nativeof(...)` assertion")
-        },
-
-        "throw": function() {
-          var PROMISE = Native.PROMISE;
-
-          /* ... */
-          if (null === PROMISE.onfail) {
-            PROMISE.native = ERROR;
-            return PROMISE.subpromise
-          }
-
-          if (ERROR === PROMISE.onfail(PROMISE.object, PROMISE.propertyKey, PROMISE.options, PROMISE.native)) {
-            PROMISE.native = ERROR;
-            throw new NativeAssertionError("Unable to evaluate " + ("symbol" !== typeof PROMISE.propertyKey ? '`' + (null !== PROMISE.objectName ? PROMISE.objectName + '.' : "") + PROMISE.propertyKey + (
-              (PROMISE.options & (Enumeration.AS_CLASS_FUNCTION | Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_GETTER_FUNCTION | Enumeration.AS_OBJECT_FUNCTION | Enumeration.AS_SETTER_FUNCTION)) &&
-              false == (PROMISE.options & (Enumeration.AS_BIGINT | Enumeration.AS_BOOLEAN | Enumeration.AS_NUMBER | Enumeration.AS_NULL | Enumeration.AS_OBJECT | Enumeration.AS_STRING | Enumeration.AS_SYMBOL | Enumeration.AS_UNDEFINED)) ? "()" : ""
-            ) + '`' : "feature") + " as built-in native")
-          }
-
-          return PROMISE.subpromise
-        },
-
-        "try": function(handler) {
-          var PROMISE = Native.PROMISE;
-
-          /* ... */
-          if (null === PROMISE.onpass) { PROMISE.onpass = null === handler ? PROMISE.valueOf : handler; return PROMISE }
-          throw new NativeAssertionError("Encountered invalid use of `nativeof(...)` assertion")
-        },
-
-        valueOf: function valueOf(object, key) {
-          try {
-            if (key in object)
-            return object[key]
-          } catch (error) {}
-
-          return ERROR
-        }
-      },
-
-      // ...
-      Object$prototype$toString$               : VOID,
-      RecursionOverflowError$                  : RecursionOverflowError,
-      TypeError$                               : TypeError,
+      Object$prototype$toString$: VOID,
+      RecursionOverflowError$   : RecursionOverflowError,
+      TypeError$                : TypeError,
 
       clearInterval                            : VOID,
       clearTimeout                             : VOID,
@@ -1075,24 +1071,51 @@ void function() {
     };
 
   /* Function > ... */
-  function assert(condition) {
-    if (condition === Functions.stringAt)
-    if (VOID === Native.String$prototype$charAt) {
-      try { '\0' === Functions.stringAt('\0', 0) }
-      catch (error) { throw new AssertionError("String subscript indexing feature required") }
+  function assert(condition, options) {
+    options = arguments.length < 2 ? 0x000000 : options;
+    switch (condition) {
+      case Native.Function$prototype$apply: {
+        if (VOID !== Native.Function$prototype$bind)
+        return true;
+
+        try {
+          return nativeof(Native.Function$prototype, "apply", Enumeration.AS_FUNCTION | Enumeration.AS_PROPERTY | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "Function.prototype").get()["finally"](function(native) {
+            return nativeof(native, "apply", Enumeration.AS_FUNCTION | Enumeration.AS_PROPERTY | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "Function.prototype").get()["finally"](function(subnative) {
+              if (native === subnative && (VOID === Native.Function$prototype$apply ? false === "apply" in Native.Object$prototype && delete Native.Function$prototype["apply"] : Native.Function$prototype$apply === native)) {
+                if (false === "apply" in Native.Function$prototype)
+                Native.Function$prototype.apply = native;
+
+                return true
+              }
+
+              return ERROR
+            })
+          })
+        } catch (error) /* --> NativeAssertionError */ {
+          if (options & Enumeration.STRICT)
+          throw new AssertionError(error.message)
+        }
+
+        return false
+      } break;
+
+      case Functions.stringAt: {
+        try { return VOID !== Native.String$prototype$charAt || 'ඞ' === Functions.stringAt('ඞ', 0) }
+        catch (error) { if (options & Enumeration.STRICT) throw new AssertionError("String subscript indexing feature required") }
+
+        return false
+      }
     }
 
-    if (false == condition)
-    throw new AssertionError()
+    condition = false != condition;
+    if (false === condition && (options & Enumeration.STRICT)) throw new AssertionError();
+
+    return condition
   }
 
-  function nativeof(object, key, options, name) /* WARN (Lapys) -> Fails to guard against `Proxy` functions with `apply`, `constructor`, and/ or `deleteProperty` traps */{
-    Native.PROMISE.object      = object;
-    Native.PROMISE.objectName  = arguments.length > 3 ? name : null;
-    Native.PROMISE.options     = arguments.length > 2 ? options | 0x000000 : Enumeration.DEFAULT.valueOf();
-    Native.PROMISE.propertyKey = key;
-
-    return Native.PROMISE
+  function nativeof(object, key, options, name) {
+    // ... --- WARN (Lapys) -> Fails to guard against `Proxy` functions with `apply`, `constructor`, and/ or `deleteProperty` traps
+    return new NativeAssertionPromise(object, key, options, name)
   }
 
   /* Modification > Native > ... */
@@ -1353,6 +1376,14 @@ void function() {
       }
 
       return string[index]
+    };
+
+    Functions.stringIsWhitespace = function stringIsWhitespace(string) {
+      return (
+        string === ' ' ||
+        string === '\f' || string === '\n' || string === '\r' || string === '\t' || string === '\v' ||
+        string === '\u00A0' || string === '\u1680' || string === '\u2000' || string === '\u2001' || string === '\u2002' || string === '\u2003' || string === '\u2004' || string === '\u2005' || string === '\u2006' || string === '\u2007' || string === '\u2008' || string === '\u2009' || string === '\u200A' || string === '\u202F' || string === '\u205F' || string === '\u3000'
+      )
     };
 
     /* Mathematics > ... */
@@ -1950,61 +1981,54 @@ void function() {
     });
 
     Native.Function$prototype$apply = nativeof(Native.Function$prototype, "apply", Enumeration.AS_FUNCTION | Enumeration.AS_PROPERTY | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "Function.prototype").get()["finally"](function(native) {
-      return nativeof(native, "apply", Enumeration.AS_FUNCTION | Enumeration.AS_PROPERTY | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "Function.prototype").get()["finally"](function(subnative) {
-        if (native === subnative && false === "apply" in Native.Object$prototype && delete Native.Function$prototype["apply"]) {
-          Native.Function$prototype.apply = native;
-          return native
-        }
-
-        return ERROR
-      })
+      return assert(Native.Function$prototype$apply) ? native : ERROR
     });
 
     Native.Function$prototype$bind = nativeof(Native.Function$prototype, "bind", Enumeration.AS_FUNCTION | Enumeration.AS_PROPERTY | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "Function.prototype").get(null)["finally"](function(native) {
-      if (ERROR === native) return null;
-      if (Native.Function$prototype$apply !== Native.Function$prototype$apply.apply) return null;
+      assert(Native.Function$prototype$apply, Enumeration.STRICT);
+      if (ERROR === native) return VOID;
 
-      // WARN (Lapys) ->> Assume unchanged since property access in comparison conditional
+      // test bind(...)
       Native.Function$prototype$apply = Native.Function$prototype$apply.apply(native, [Native.Function$prototype$apply, [Native.Function$prototype$apply]]);
       return native
     });
 
-    Native.String$prototype$charAt = (function() { return false === delete 'ඞ'[0] })() ? (
-      (Functions.stringAt = function stringAt(string, index) { return string[index] }),
-      (function charAt(index) {
-        var string = this + "";
+    // Native.String$prototype$charAt = (function() { return false === delete 'ඞ'[0] })() ? (
+    //   (Functions.stringAt = function stringAt(string, index) { return string[index] }),
+    //   (function charAt(index) {
+    //     var string = this + "";
 
-        // ...
-        if (null === this || undefined === this) throw new TypeError("String.prototype.charAt called on incompatible null or undefined");
-        if (index < string.length) { string = string[index]; return "string" !== typeof string || string.length !== 1 ? "" : string }
+    //     // ...
+    //     if (null === this || undefined === this) throw new TypeError("String.prototype.charAt called on incompatible null or undefined");
+    //     if (index < string.length) { string = string[index]; return "string" !== typeof string || string.length !== 1 ? "" : string }
 
-        return ""
-      })
-    ) : nativeof("", "charAt", Enumeration.AS_FUNCTION | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "String.prototype")["try"](function() {
-      return "".charAt
-    })["catch"](null)["finally"](function(native) {
-      if (ERROR === native) return null;
+    //     return ""
+    //   })
+    // ) : nativeof("", "charAt", Enumeration.AS_FUNCTION | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "String.prototype")["try"](function() {
+    //   return "".charAt
+    // })["catch"](null)["finally"](function(native) {
+    //   if (ERROR === native) return null;
 
-      if (VOID !== Native.Function$prototype$bind)
-        at = function at(string, index) { return Native.Function$prototype$apply(Native.String$prototype$charAt, [string + "", [index]]) };
-      else {
-        if (false === delete native["apply"]) throw new NativeAssertionError("Unable to evaluate `String.prototype.charAt(...)` as native built-in");
-        native.apply = Native.Function$prototype$apply;
-        at = function at(string, index) {
-          // WARN (Lapys) ->> Assume unchanged since property access in comparison conditional
-          if (Native.Function$prototype$apply === Native.Function$prototype$apply.apply)
-          return Native.Function$prototype$apply.apply(Native.String$prototype$charAt, [string + "", [index]]);
-        }
-      }
+    //   if (VOID !== Native.Function$prototype$bind)
+    //     at = function at(string, index) { return Native.Function$prototype$apply(Native.String$prototype$charAt, [string + "", [index]]) };
+    //   else {
+    //     if (false === delete native["apply"]) throw new NativeAssertionError("Unable to evaluate `String.prototype.charAt(...)` as native built-in");
+    //     native.apply = Native.Function$prototype$apply;
+    //     at = function at(string, index) {
+    //       // WARN (Lapys) ->> Assume unchanged since property access in (strict) comparison conditional
+    //       if (Native.Function$prototype$apply === Native.Function$prototype$apply.apply)
+    //       return Native.Function$prototype$apply.apply(Native.String$prototype$charAt, [string + "", [index]]);
+    //     }
+    //   }
 
-      return native
-    });
+    //   return native
+    // });
 
     console.log(Native);
 
     /* DOM > ... */
     DOM.createElement = function createElement(selector) {
-      assert(Functions.stringAt);
+      assert(Functions.stringAt, Enumeration.STRICT);
 
       // for (var index = 0, length = selector.length; index !== length; ++index)
 
