@@ -6,39 +6,52 @@
 
   --- RULES ---
     #Lapys:
-      • Code indirection should be minimal (due to prototype-chain lookup)
-      • Function arity is a maximum of 255
+      • Enforce maximum of 255 arguments per function
+      • Minimize code indirection (due to prototype-chain lookup)
       • Prefer declared function arguments over the exotic `arguments` object
 
+  --- UPDATE ---
+    #Lapys:
+      Validate `Function.prototype.toString()` against this spoof:
+        Function.prototype.toString = (function(native, invoke) {
+          var subnative = new Proxy(native, {
+            apply: function apply(target, that, arguments) {
+              return invoke(native, [subnative === that ? native : that, arguments])
+            }
+          });
+
+          return subnative
+        })(Function.prototype.toString, Function.prototype.apply.bind(Function.prototype.apply));
+
   --- WARN ---
-      #Lapys:
-        Must be evaluated in "Sloppy Mode"
+    #Lapys:
+      Must be evaluated in "Sloppy Mode"
 
-        Negligibly ignored errors:
-        • Out-of-Memory errors
+      Negligibly ignored errors:
+      • Out-of-Memory errors
 
-        Notably ignored legacy features:
-        • Array.observe(…)
-        • Array.unobserve(…)
-        • Object.getNotifier(…)
-        • Object.observe(…)
-        • Object.prototype.__count__
-        • Object.prototype.__iterator__
-        • Object.prototype.__noSuchMethod__
-        • Object.prototype.toSource(…)
-        • Object.prototype.unwatch(…)
-        • Object.prototype.watch(…)
-        • Object.unobserve(…)
-        • Proxy::hasOwn(…)
+      Notably ignored legacy features:
+      • Array.observe(…)
+      • Array.unobserve(…)
+      • Object.getNotifier(…)
+      • Object.observe(…)
+      • Object.prototype.__count__
+      • Object.prototype.__iterator__
+      • Object.prototype.__noSuchMethod__
+      • Object.prototype.toSource(…)
+      • Object.prototype.unwatch(…)
+      • Object.prototype.watch(…)
+      • Object.unobserve(…)
+      • Proxy::hasOwn(…)
 
-        Possibly modified objects:
-        • Error.prototype.name
-        • Function.prototype.toString(…)
-        • InternalError.prototype.name
-        • Object.prototype.name
-        • Object.prototype.toString(…)
-        • RangeError.prototype.name
-        • TypeError.prototype.name
+      Possibly modified objects:
+      • Error.prototype.name
+      • Function.prototype.toString(…)
+      • InternalError.prototype.name
+      • Object.prototype.name
+      • Object.prototype.toString(…)
+      • RangeError.prototype.name
+      • TypeError.prototype.name
 */
 var Lapys = (function() {
   var description = "General-purpose standard library for JavaScript";
@@ -63,6 +76,10 @@ var Lapys = (function() {
 })();
 
 /* Namespace > ... */
+var Console = {
+  print: null
+};
+
 var DOM = {
   createElement         : null,
   getElementByClassName : null,
@@ -86,14 +103,14 @@ void function() {
   var COMPLETED = false;
   var ERROR     = new PseudoError; // WARN (Lapys) -> Subject to modification when exception raised
   var GLOBAL    = "undefined" !== typeof this ? this : "undefined" !== typeof globalThis ? globalThis : "undefined" !== typeof frames ? frames : "undefined" !== typeof self ? self : "undefined" !== typeof window ? window : "undefined" !== typeof global ? global : (function() { return this })();
-  var VOID      = /void/;
+  var VOID      = /void/; // NOTE (Lapys) -> Invalidity or nullity
 
   var RECURSION_OVERFLOW_ERROR = VOID;
   var REFERENCE_ERROR          = VOID;
   var TYPE_ERROR               = VOID;
 
   /* Class */
-    /* Static Array ->> Array alternative before evaluating `Array.prototype.push(…)` */
+    /* Static Array ->> Array alternative before validating `Array.prototype.push(…)` */
     function StaticArray(elements) {
       this.length = arguments.length;
 
@@ -166,8 +183,8 @@ void function() {
 
     /* CSS Selector Descriptor */
     function CSSSelectorDescriptor(source) {
-      this.attributes = new StaticArray;
-      this.classList  = new StaticArray;
+      this.attributes = new DepthArray;
+      this.classList  = new DepthArray;
       this.source     = source
     }
       CSSSelectorDescriptor.prototype = {
@@ -379,7 +396,7 @@ void function() {
 
     /* DOM Tree */
     function DOMTree() {}
-      DOMTree.prototype = StaticArray.prototype;
+      DOMTree.prototype = DepthArray.prototype;
 
     /* Error ->> Abstraction wrapper over `class Error` */
     function Error(message, name) {
@@ -398,10 +415,8 @@ void function() {
         whole      : 0,
 
         toImproper: function toImproper() {
-          if (0 !== this.whole) {
-            this.numerator += this.denominator * this.whole;
-            this.whole      = 0
-          }
+          this.numerator += this.denominator * this.whole;
+          this.whole      = 0;
 
           return this
         },
@@ -419,7 +434,7 @@ void function() {
         }
       };
 
-    /* Pseudo ->> Dummy class type for specific native checks */
+    /* Pseudo ->> Dummy class type for specific native validations */
     function Pseudo() {}
 
     /* Pseudo Error ->> Dummy exception for triggering `catch` blocks only */
@@ -454,12 +469,12 @@ void function() {
         propertyKey: null,
 
         "catch": (function() {
-          // ... ->> Directly compare function source to its native defaults
+          // ... ->> Strictly compare function `source` to its native defaults
           function isNativeFunctionSource(promise, source) {
             for (var index = Constant.NATIVE_FUNCTION_SOURCE.length; index; ) {
               var nativeSource = Constant.NATIVE_FUNCTION_SOURCE[--index].toString();
 
-              if (
+              if ( // ->> Expects `promise.options & (Enumeration.NAMED_FUNCTION | Enumeration.UNNAMED_FUNCTION)`
                 (((promise.options & Enumeration.UNNAMED_FUNCTION) || false == (promise.options & Enumeration.NAMED_FUNCTION)) && (
                   source === "function() { "        + nativeSource + " }"  ||
                   source === "function() {\n    "   + nativeSource + "\n}" ||
@@ -489,7 +504,7 @@ void function() {
             if (ERROR === this.native)
             return this["throw"]();
 
-            // ... ->> Basic native assertion
+            // ... ->> Sloppy native assertion
             if (false === (
               ((this.options & Enumeration.AS_BIGINT)             && ("bigint"    === typeof this.native))                                    ||
               ((this.options & Enumeration.AS_BOOLEAN)            && ("boolean"   === typeof this.native))                                    ||
@@ -509,11 +524,11 @@ void function() {
               ((this.options & Enumeration.AS_PROPERTY) && false === this.propertyKey in this.object)
             )) return this["throw"]();
 
-            // ... ->> Stricter native assertion
+            // ... ->> Strict native assertion
             if (this.options & Enumeration.STRICT) {
               // ... ->> Assert property descriptor
               if (this.options & (Enumeration.CONFIGURABLE_PROPERTY | Enumeration.ENUMERABLE_PROPERTY | Enumeration.GETTER_PROPERTY | Enumeration.OWN_PROPERTY | Enumeration.SETTER_PROPERTY | Enumeration.VALUE_PROPERTY | Enumeration.WRITABLE_PROPERTY)) {
-                var descriptor = Functions.describeProperty(this.object, this.propertyKey)
+                var descriptor = Functions.describeProperty(this.object, this.propertyKey);
 
                 if (
                   ((this.options & Enumeration.CONFIGURABLE_PROPERTY) && (VOID === descriptor.configurable || false === descriptor.configurable)) ||
@@ -526,7 +541,7 @@ void function() {
                 ) return this["throw"]()
               }
 
-              // ... ->> Assert as native built-in
+              // ... ->> Assert as built-in native
               if (this.options & (Enumeration.AS_CLASS_FUNCTION | Enumeration.AS_FUNCTION | Enumeration.AS_GENERATOR_FUNCTION | Enumeration.AS_GETTER_FUNCTION | Enumeration.AS_OBJECT_FUNCTION | Enumeration.AS_SETTER_FUNCTION)) {
                 var prototyped  = false;
                 var source      = null;
@@ -574,7 +589,7 @@ void function() {
                       this.options & Enumeration.AS_OBJECT_FUNCTION    ? "function(){}" .length + (this.options & Enumeration.NAMED_FUNCTION ? this.propertyKey.length + ' '.length : 0) :
                       this.options & Enumeration.AS_SETTER_FUNCTION    ? "set _(){}"    .length + (this.options & Enumeration.NAMED_FUNCTION ? this.propertyKey.length - '_'.length : 0) :
                       this.options & Enumeration.AS_FUNCTION           ? 13 : 0
-                    )) throw new NativeAssertionError("Unable to evaluate `Function.prototype.apply(...)` as built-in native")
+                    )) throw new NativeAssertionError("Unable to evaluate `Function.prototype.apply(\u2026)` as built-in native")
                   }
 
                   else
@@ -766,7 +781,7 @@ void function() {
             return this["throw"]()
           }
 
-          // ... ->> Primed for no more method calls
+          // ... ->> Primed for no more `nativeof(…)` method calls
           this["finally"] = null;
           this["onfail"]  = null;
           this["throw"]   = null;
@@ -781,7 +796,7 @@ void function() {
             return this["try"](arguments.length ? handler : this.valueOf)["catch"](this.onerror)
           }
 
-          throw new NativeAssertionError("Encountered invalid use of `nativeof(...)` assertion")
+          throw new NativeAssertionError("Encountered invalid use of `nativeof(\u2026)` assertion")
         },
 
         "throw": function() {
@@ -807,7 +822,7 @@ void function() {
             return this
           }
 
-          throw new NativeAssertionError("Encountered invalid use of `nativeof(...)` assertion")
+          throw new NativeAssertionError("Encountered invalid use of `nativeof(\u2026)` assertion")
         },
 
         valueOf: function valueOf(/* object, key */) {
@@ -815,7 +830,7 @@ void function() {
             var key    = arguments[1];
             var object = arguments[0];
 
-            // ... --> Proxy::get(…), Proxy::has(…)
+            // ...
             if (null !== object && undefined !== object)
             try {
               if (
@@ -824,8 +839,8 @@ void function() {
                 "number"  === typeof object ||
                 "string"  === typeof object ||
                 "symbol"  === typeof object ||
-                key in object
-              ) return object[key]
+                key in object // --> Proxy::has(…)
+              ) return object[key] // --> Proxy::get(…)
             } catch (error) {}
 
             return ERROR
@@ -974,12 +989,7 @@ void function() {
       OWN_PROPERTY         : 0x0800000,
       SETTER_PROPERTY      : 0x1000000,
       WRITABLE_PROPERTY    : 0x2000000,
-      VALUE_PROPERTY       : 0x4000000,
-
-      // ... ->> Computable enumerators
-      DEFAULT: {
-        valueOf: function valueOf() { return  }
-      }
+      VALUE_PROPERTY       : 0x4000000
     };
 
     /* Functions ->> Convenience/ safe abstractions over native features */
@@ -1183,7 +1193,7 @@ void function() {
 
   function nativeof(object, key, options, name) {
     // ... --- WARN (Lapys) -> Fails to guard against `Proxy` functions with `apply`, `constructor`, and/ or `deleteProperty` traps
-    if ("string" !== typeof key) throw new NativeAssertionError("Encountered invalid use of `nativeof(...)` assertion");
+    if ("string" !== typeof key) throw new NativeAssertionError("Encountered invalid use of `nativeof(\u2026)` assertion");
     return new NativeAssertionPromise(object, key, options | 0x0000000, arguments.length > 3 ? name : null)
   }
 
@@ -1219,14 +1229,14 @@ void function() {
     Pseudo.prototype = Native.Object$prototype;
 
     if (false === new Pseudo instanceof Native.Object$) throw new PseudoError()
-  } catch (error) { throw new NativeAssertionError("Unable to evaluate `class Object` as native built-in") }
+  } catch (error) { throw new NativeAssertionError("Unable to evaluate `class Object` as built-in native") }
 
   try {
     Pseudo.prototype = Native.Object$.prototype;
     if (false === (Pseudo instanceof Pseudo && ({}) instanceof Pseudo)) throw new PseudoError();
 
     Native.Object$prototype = Pseudo.prototype
-  } catch (error) { throw new NativeAssertionError("Unable to evaluate `Object.prototype` as native built-in") }
+  } catch (error) { throw new NativeAssertionError("Unable to evaluate `Object.prototype` as built-in native") }
 
   /* Modification */
     /* Constant > ... */
@@ -1274,110 +1284,138 @@ void function() {
       if (null === object || undefined === object)
         descriptor.own = false;
 
-      else if (VOID === Native.Object$getOwnPropertyDescriptor && VOID === Native.Object$prototype$__lookupGetter__ && VOID === Native.Object$prototype$__lookupSetter__) {
-        var computedProperty = false;
-        var value;
-
-        // ...
+      else {
         for (var subkey in object)
         if (key === subkey) {
           descriptor.enumerable = true;
           break
         }
 
-        try {
-          var hasProperty;
-          var redefineProperty;
+        // ...
+        if (VOID !== Native.Object$getOwnPropertyDescriptor) {
+          var subdescriptor = Native.Object$getOwnPropertyDescriptor(object, key);
 
           // ...
-          descriptor.configurable = true;
-          value                   = object[key];
-
-          try { hasProperty = key in object }  // WARN (Lapys) -> Can be spoofed by the `Proxy::has(…)` trap
-          catch (error) { hasProperty = true } // NOTE (Lapys) -> Presumed
-
-          try {
-            descriptor.configurable = delete object[key]; // WARN (Lapys) -> Can be spoofed by the `Proxy::deleteProperty(…)` trap
-
-            try { redefineProperty = descriptor.configurable || (hasProperty && false === key in object) }
-            catch (error) { redefineProperty = false }
-
-            if (redefineProperty) {
-              try { object[key] = value }
-              catch (error) { computedProperty = true }
-            }
-          } catch (error) { descriptor.configurable = false }
-
-          descriptor.own = false === descriptor.configurable || hasProperty;
-
-          if (false === computedProperty && descriptor.configurable) try {
-            var subvalue;
-
-            // ...
-            object[key]      = VOID;        // ->> Exception throwable from (owned/ non-owned) possible setter
-            subvalue         = object[key]; // ->> Exception throwable from (owned/ non-owned) possible getter
-            redefineProperty = false;
-
-            if (subvalue === value) descriptor.writable = false;
-            else if (VOID !== subvalue) computedProperty = true;
-            else try {
-              object[key] = value;
-              subvalue    = object[key];
-
-              if (subvalue === value) descriptor.writable = true;
-              else { descriptor.writable = false; value = subvalue }
-            } catch (error) { computedProperty = true }
-          } catch (error) { redefineProperty = true }
-
-          if (redefineProperty) {
-            computedProperty = true;
-            try { object[key] = value } catch (error) {}
-          }
-        } catch (error) { computedProperty = true }
-
-        // ... ->> Evaluated as own property
-        if (computedProperty) {
-          descriptor.configurable = VOID;
-          descriptor.get          = null;
-          descriptor.set          = null;
-          descriptor.value        = VOID;
-          descriptor.writable     = VOID
-        }
-
-        else {
-          descriptor.get   = VOID;
-          descriptor.set   = VOID;
-          descriptor.value = value
-        }
-      }
-
-      else if (VOID !== Native.Object$getOwnPropertyDescriptor) {
-        var subdescriptor = Native.Object$getOwnPropertyDescriptor(object, key);
-
-        // ...
-        if (undefined === subdescriptor)
           descriptor.own = false;
 
-        else {
-          descriptor.configurable = subdescriptor.configurable;
-          descriptor.enumerable   = subdescriptor.enumerable;
+          if (undefined !== subdescriptor) {
+            descriptor.configurable = subdescriptor.configurable;
+            descriptor.enumerable   = subdescriptor.enumerable;
+            descriptor.own          = true;
 
-          if ("value" in subdescriptor) {
-            descriptor.value    = subdescriptor.value;
-            descriptor.writable = subdescriptor.writable
+            if ("value" in descriptor) {
+              descriptor.value    = subdescriptor.value;
+              descriptor.writable = subdescriptor.writable
+            }
+
+            else {
+              descriptor.get = subdescriptor.get;
+              descriptor.set = subdescriptor.set
+            }
+          }
+        }
+
+        else if ("string" === typeof key && (VOID !== Native.Object$prototype$__lookupGetter__ && VOID !== Native.Object$prototype$__lookupSetter__)) {
+          var functor  = function() {};
+          var functors = new StaticArray(undefined, undefined);
+
+          // ...
+          if (VOID !== Native.Function$prototype$bind || assert(Native.Function$prototype$apply, Enumeration.STRICT))
+          for (var
+            __define__ = new StaticArray(Native.Object$prototype$__defineGetter__, Native.Object$prototype$__defineSetter__),
+            __lookup__ = new StaticArray(Native.Object$prototype$__lookupGetter__, Native.Object$prototype$__lookupSetter__),
+            index      = 2
+          ; index--; ) {
+            functors[index] = VOID !== Native.Function$prototype$bind ? Native.Function$prototype$apply(__lookup__[index], [object, [key]]) : Native.Function$prototype$apply.apply(__lookup__[index], [object, [key]]);
+            if (descriptor.configurable && undefined === functors[index] || VOID === __define__[index]) continue;
+
+            for (var subfunctors = new StaticArray(functors[index], functor), subindex = 2; subindex--; ) {
+              try {
+                subfunctors[subindex] = VOID !== Native.Function$prototype$bind
+                ? Native.Function$prototype$apply      (__define__[index], [object, [key, subfunctors[subindex]]])
+                : Native.Function$prototype$apply.apply(__define__[index], [object, [key, subfunctors[subindex]]])
+              } catch (error) { descriptor.configurable = false; break }
+
+              if (subfunctors[subindex] !== (
+                VOID !== Native.Function$prototype$bind
+                ? Native.Function$prototype$apply      (__lookup__[index], [object, [key]])
+                : Native.Function$prototype$apply.apply(__lookup__[index], [object, [key]])
+              )) throw new NativeAssertionError("Unable to evaluate `Object.prototype." + (__define__[index] === Native.Object$prototype$__defineGetter__ ? "__defineGetter__" : __define__[index] === Native.Object$prototype$__defineSetter__ ? "__defineSetter__" : "") + "(\u2026)` and `Object.prototype." + (__lookup__[index] === Native.Object$prototype$__lookupGetter__ ? "__lookupGetter__" : __lookup__[index] === Native.Object$prototype$__lookupSetter__ ? "__lookupSetter__" : "") + "(\u2026)` as built-in native")
+            }
+          }
+
+          descriptor.get = functors[0];
+          descriptor.set = functors[1]
+        }
+
+        else {
+          var computedProperty = false;
+          var hasProperty;
+          var redefineProperty;
+          var value;
+
+          // ...
+          try {
+            descriptor.configurable = true;
+            value                   = object[key];
+
+            try { hasProperty = key in object }  // --> Proxy::has(…)
+            catch (error) { hasProperty = true } // ->> Presumed
+
+            try {
+              descriptor.configurable = delete object[key]; // --> Proxy::deleteProperty(…)
+
+              try { redefineProperty = descriptor.configurable || (hasProperty && false === key in object) }
+              catch (error) { redefineProperty = false }
+
+              if (redefineProperty) {
+                try { object[key] = value }
+                catch (error) { computedProperty = true }
+              }
+            } catch (error) { descriptor.configurable = false }
+
+            descriptor.own = false === descriptor.configurable || hasProperty;
+
+            if (false === computedProperty && descriptor.configurable) try {
+              var subvalue;
+
+              // ...
+              object[key]      = VOID;        // ->> Exception throwable from possible setter
+              subvalue         = object[key]; // ->> Exception throwable from possible getter
+              redefineProperty = false;
+
+              if (subvalue === value) descriptor.writable = false;
+              else if (VOID !== subvalue) computedProperty = true;
+              else try {
+                object[key] = value;
+                subvalue    = object[key];
+
+                if (subvalue === value) descriptor.writable = true;
+                else { descriptor.writable = false; value = subvalue }
+              } catch (error) { computedProperty = true }
+            } catch (error) { redefineProperty = true }
+
+            if (redefineProperty) {
+              computedProperty = true;
+              try { object[key] = value } catch (error) {}
+            }
+          } catch (error) { computedProperty = true }
+
+          // ... ->> Evaluated as own property
+          if (computedProperty) {
+            descriptor.configurable = VOID;
+            descriptor.get          = null;
+            descriptor.set          = null;
+            descriptor.value        = VOID;
+            descriptor.writable     = VOID
           }
 
           else {
-            descriptor.get = subdescriptor.get;
-            descriptor.set = subdescriptor.set
+            descriptor.get   = VOID;
+            descriptor.set   = VOID;
+            descriptor.value = value
           }
         }
-      }
-
-      else {
-        // TODO (Lapys)
-        if (VOID !== Native.Object$prototype$__lookupGetter__) {}
-        if (VOID !== Native.Object$prototype$__lookupSetter__) {}
       }
 
       return descriptor
@@ -2034,7 +2072,7 @@ void function() {
 
       Native.Function$prototype               = Pseudo.prototype;
       Support.FUNCTION_INHERITS_NAME_PROPERTY = Native.Function$prototype.name === "" && false === "name" in Native.Object$prototype
-    } catch (error) { throw new NativeAssertionError("Unable to evaluate `Function.prototype` as native built-in") }
+    } catch (error) { throw new NativeAssertionError("Unable to evaluate `Function.prototype` as built-in native") }
 
     Native.Function$prototype$toString = nativeof(Native.Function$prototype, "toString", Enumeration.AS_FUNCTION | Enumeration.AS_PROPERTY | Enumeration.NAMED_FUNCTION | Enumeration.STRICT, "Function.prototype").get()["finally"](function(native) {
       var assertion = true;
@@ -2283,7 +2321,7 @@ void function() {
     }
 
     else if (VOID === Native.Object$getOwnPropertyDescriptor && VOID === Native.Object$prototype$__lookupGetter__ && VOID === Native.Object$prototype$__lookupSetter__)
-      throw new NativeAssertionError("Required `Object.getOwnPropertyDescriptor(...)` (or `Object.prototype.__lookupGetter__(...)` & `Object.prototype.__lookupSetter__(...)`) as built-in native");
+      throw new NativeAssertionError("Required `Object.getOwnPropertyDescriptor(\u2026)` (or `Object.prototype.__lookupGetter__(\u2026)` & `Object.prototype.__lookupSetter__(\u2026)`) as built-in native");
 
     console.log("Function.prototype.apply", Native.Function$prototype$apply);
     console.log("Function.prototype.bind", Native.Function$prototype$bind);
@@ -2343,7 +2381,7 @@ void function() {
     // });
 
     // if (VOID !== Native.Object$defineProperty) Native.Object$prototype$__defineGetter__ = VOID;
-    // else if (VOID === Native.Object$defineProperty && VOID === Native.Object$prototype$__defineGetter__) throw new NativeAssertionError("Requires `Object.defineProperty(...)` or `Object.prototype.__defineGetter__(...)` as built-in native");
+    // else if (VOID === Native.Object$defineProperty && VOID === Native.Object$prototype$__defineGetter__) throw new NativeAssertionError("Requires `Object.defineProperty(\u2026)` or `Object.prototype.__defineGetter__(\u2026)` as built-in native");
 
     Native.Object$prototype$__defineSetter__ = VOID;
     Native.Object$prototype$__lookupGetter__ = VOID;
