@@ -2,6 +2,7 @@ User-agent: *
 User-agent: AdIdxBot
 User-agent: Bingbot
 User-agent: BingPreview
+User-agent: googlebot
 User-agent: GPTBot
 User-agent: MicrosoftPreview
 Disallow: /fonts/
