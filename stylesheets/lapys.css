@@ -392,7 +392,10 @@
   body, button, code, input, kbd, optgroup, pre, samp, select, textarea { font-size: 100% }
 
   /* <body>, <html> */
-  body, html { width: 100% }
+  body, html {
+    touch-action: pan-x pan-y;
+    width       : 100%
+  }
 
   /* <blockquote>, <q> */
   blockquote, q {
@@ -533,6 +536,7 @@
   }
 
   /* <input> */
+  input { font-size: 16px /* ->> Prevent automatic zoom on mobile Web browsers  */ }
   input[type=search] {
     outline-offset    : -2px;
     -webkit-appearance: textfield
