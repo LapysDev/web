@@ -1,7 +1,132 @@
 @charset "utf-8";
 
 /* At Rules > @font-face */
-@font-face {
+@font-face /* CITE (Lapys) -> Christian Schwartz, CSTM Fonts, Ilya Ruderman @ `https://type.today/en/Graphik`, `https://type.today/en/journal/graphikcondensed` */ {
+  font-family: Graphik;
+  font-weight: 400;
+  src        : local("Graphik Comp Regular Trial"), url("../fonts/graphik.otf") format("opentype")
+}
+  @font-face {
+    font-family: Graphik;
+    font-weight: 100;
+    src        : local("Graphik Comp Thin Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-thin.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-style  : italic;
+    font-weight : 100;
+    src         : local("Graphik Comp Thin Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-thin-italic.otf") format("opentype")
+  }
+
+  @font-face {
+    font-family: Graphik;
+    font-weight: 200;
+    src        : local("Graphik Comp Exlight Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-extralight.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-style  : italic;
+    font-weight : 200;
+    src         : local("Graphik Comp Exlight Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-extralight-italic.otf") format("opentype")
+  }
+
+  @font-face {
+    font-family: Graphik;
+    font-weight: 300;
+    src        : local("Graphik Comp Light Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-light.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-style  : italic;
+    font-weight : 300;
+    src         : local("Graphik Comp Light Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-light-italic.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-style  : italic;
+    font-weight : 400;
+    src         : local("Graphik Comp Regular Trial"), url("../fonts/graphik-italic.otf") format("opentype")
+  }
+
+  @font-face {
+    font-family: Graphik;
+    font-weight: 500;
+    src        : local("Graphik Comp Medium Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-medium.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-style  : italic;
+    font-weight : 500;
+    src         : local("Graphik Comp Medium Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-medium-italic.otf") format("opentype")
+  }
+
+  @font-face {
+    font-family: Graphik;
+    font-weight: 600;
+    src        : local("Graphik Comp Semibold Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-semibold.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-style  : italic;
+    font-weight : 600;
+    src         : local("Graphik Comp Semibold Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-semibold-italic.otf") format("opentype")
+  }
+
+  @font-face {
+    font-family: Graphik;
+    font-weight: 700;
+    src        : local("Graphik Comp Bold Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-bold.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-weight : 700;
+    font-style  : italic;
+    src         : local("Graphik Comp Bold Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-bold-italic.otf") format("opentype")
+  }
+
+  @font-face {
+    font-family: Graphik;
+    font-weight: 800;
+    src        : local("Graphik Comp Black Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-black.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-style  : italic;
+    font-weight : 800;
+    src         : local("Graphik Comp Black Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-black-italic.otf") format("opentype")
+  }
+
+  @font-face {
+    font-family: Graphik;
+    font-weight: 900;
+    src        : local("Graphik Comp Super Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-super.otf") format("opentype")
+  }
+
+  @font-face {
+    font-display: fallback;
+    font-family : Graphik;
+    font-style  : italic;
+    font-weight : 900;
+    src         : local("Graphik Comp Super Trial"), local("Graphik Comp Regular Trial"), url("../fonts/graphik-super-italic.otf") format("opentype")
+  }
+
+@font-face /* CITE (Lapys) -> Belleve (@be5invis) @ `https://typeof.net/Iosevka`, `https://github.com/be5invis` */ {
   font-family: Iosevka;
   font-weight: 400;
   src        : local(Iosevka), url("../fonts/iosevka.ttf") format("truetype")
@@ -9,7 +134,7 @@
   @font-face {
     font-family: Iosevka;
     font-weight: 100;
-    src        : local(Iosevka), url("../fonts/iosevka-thin.ttf") format("truetype")
+    src        : local("Iosevka Thin"), local(Iosevka), url("../fonts/iosevka-thin.ttf") format("truetype")
   }
 
   @font-face {
@@ -17,7 +142,7 @@
     font-family : Iosevka;
     font-style  : italic;
     font-weight : 100;
-    src         : local(Iosevka), url("../fonts/iosevka-thin-italic.ttf") format("truetype")
+    src         : local("Iosevka Thin"), local(Iosevka), url("../fonts/iosevka-thin-italic.ttf") format("truetype")
   }
 
   @font-face {
@@ -25,13 +150,13 @@
     font-family : Iosevka;
     font-style  : oblique;
     font-weight : 100;
-    src         : local(Iosevka), url("../fonts/iosevka-thin-oblique.ttf") format("truetype")
+    src         : local("Iosevka Thin Oblique"), local(Iosevka), url("../fonts/iosevka-thin-oblique.ttf") format("truetype")
   }
 
   @font-face {
     font-family: Iosevka;
     font-weight: 200;
-    src        : local(Iosevka), url("../fonts/iosevka-extralight.ttf") format("truetype")
+    src        : local("Iosevka Extralight"), local(Iosevka), url("../fonts/iosevka-extralight.ttf") format("truetype")
   }
 
   @font-face {
@@ -39,7 +164,7 @@
     font-family : Iosevka;
     font-style  : italic;
     font-weight : 200;
-    src         : local(Iosevka), url("../fonts/iosevka-extralight-italic.ttf") format("truetype")
+    src         : local("Iosevka Extralight"), local(Iosevka), url("../fonts/iosevka-extralight-italic.ttf") format("truetype")
   }
 
   @font-face {
@@ -47,13 +172,13 @@
     font-family : Iosevka;
     font-style  : oblique;
     font-weight : 200;
-    src         : local(Iosevka), url("../fonts/iosevka-extralight-oblique.ttf") format("truetype")
+    src         : local("Iosevka Extralight Oblique"), local(Iosevka), url("../fonts/iosevka-extralight-oblique.ttf") format("truetype")
   }
 
   @font-face {
     font-family: Iosevka;
     font-weight: 300;
-    src        : local(Iosevka), url("../fonts/iosevka-light.ttf") format("truetype")
+    src        : local("Iosevka Light"), local(Iosevka), url("../fonts/iosevka-light.ttf") format("truetype")
   }
 
   @font-face {
@@ -61,7 +186,7 @@
     font-family : Iosevka;
     font-style  : italic;
     font-weight : 300;
-    src         : local(Iosevka), url("../fonts/iosevka-light-italic.ttf") format("truetype")
+    src         : local("Iosevka Light"), local(Iosevka), url("../fonts/iosevka-light-italic.ttf") format("truetype")
   }
 
   @font-face {
@@ -69,7 +194,7 @@
     font-family : Iosevka;
     font-style  : oblique;
     font-weight : 300;
-    src         : local(Iosevka), url("../fonts/iosevka-light-oblique.ttf") format("truetype")
+    src         : local("Iosevka Light Oblique"), local(Iosevka), url("../fonts/iosevka-light-oblique.ttf") format("truetype")
   }
 
   @font-face {
@@ -91,7 +216,7 @@
   @font-face {
     font-family: Iosevka;
     font-weight: 500;
-    src        : local(Iosevka), url("../fonts/iosevka-medium.ttf") format("truetype")
+    src        : local("Iosevka Medium"), local(Iosevka), url("../fonts/iosevka-medium.ttf") format("truetype")
   }
 
   @font-face {
@@ -99,7 +224,7 @@
     font-family : Iosevka;
     font-style  : italic;
     font-weight : 500;
-    src         : local(Iosevka), url("../fonts/iosevka-medium-italic.ttf") format("truetype")
+    src         : local("Iosevka Medium"), local(Iosevka), url("../fonts/iosevka-medium-italic.ttf") format("truetype")
   }
 
   @font-face {
@@ -107,13 +232,13 @@
     font-family : Iosevka;
     font-style  : oblique;
     font-weight : 500;
-    src         : local(Iosevka), url("../fonts/iosevka-medium-oblique.ttf") format("truetype")
+    src         : local("Iosevka Medium Oblique"), local(Iosevka), url("../fonts/iosevka-medium-oblique.ttf") format("truetype")
   }
 
   @font-face {
     font-family: Iosevka;
     font-weight: 600;
-    src        : local(Iosevka), url("../fonts/iosevka-semibold.ttf") format("truetype")
+    src        : local("Iosevka Semibold"), local(Iosevka), url("../fonts/iosevka-semibold.ttf") format("truetype")
   }
 
   @font-face {
@@ -121,7 +246,7 @@
     font-family : Iosevka;
     font-style  : italic;
     font-weight : 600;
-    src         : local(Iosevka), url("../fonts/iosevka-semibold-italic.ttf") format("truetype")
+    src         : local("Iosevka Semibold"), local(Iosevka), url("../fonts/iosevka-semibold-italic.ttf") format("truetype")
   }
 
   @font-face {
@@ -129,7 +254,7 @@
     font-family : Iosevka;
     font-style  : oblique;
     font-weight : 600;
-    src         : local(Iosevka), url("../fonts/iosevka-semibold-oblique.ttf") format("truetype")
+    src         : local("Iosevka Semibold Oblique"), local(Iosevka), url("../fonts/iosevka-semibold-oblique.ttf") format("truetype")
   }
 
   @font-face {
@@ -151,13 +276,13 @@
     font-family : Iosevka;
     font-style  : oblique;
     font-weight : 700;
-    src         : local(Iosevka), url("../fonts/iosevka-bold-oblique.ttf") format("truetype")
+    src         : local("Iosevka Oblique"), local(Iosevka), url("../fonts/iosevka-bold-oblique.ttf") format("truetype")
   }
 
   @font-face {
     font-family: Iosevka;
     font-weight: 800;
-    src        : local(Iosevka), url("../fonts/iosevka-extrabold.ttf") format("truetype")
+    src        : local("Iosevka Extrabold"), local(Iosevka), url("../fonts/iosevka-extrabold.ttf") format("truetype")
   }
 
   @font-face {
@@ -165,7 +290,7 @@
     font-family : Iosevka;
     font-style  : italic;
     font-weight : 800;
-    src         : local(Iosevka), url("../fonts/iosevka-extrabold-italic.ttf") format("truetype")
+    src         : local("Iosevka Extrabold"), local(Iosevka), url("../fonts/iosevka-extrabold-italic.ttf") format("truetype")
   }
 
   @font-face {
@@ -173,13 +298,13 @@
     font-family : Iosevka;
     font-style  : oblique;
     font-weight : 800;
-    src         : local(Iosevka), url("../fonts/iosevka-extrabold-oblique.ttf") format("truetype")
+    src         : local("Iosevka Extrabold Oblique"), local(Iosevka), url("../fonts/iosevka-extrabold-oblique.ttf") format("truetype")
   }
 
   @font-face {
     font-family: Iosevka;
     font-weight: 900;
-    src        : local(Iosevka), url("../fonts/iosevka-heavy.ttf") format("truetype")
+    src        : local("Iosevka Heavy"), local(Iosevka), url("../fonts/iosevka-heavy.ttf") format("truetype")
   }
 
   @font-face {
@@ -187,7 +312,7 @@
     font-family : Iosevka;
     font-style  : italic;
     font-weight : 900;
-    src         : local(Iosevka), url("../fonts/iosevka-heavy-italic.ttf") format("truetype")
+    src         : local("Iosevka Heavy"), local(Iosevka), url("../fonts/iosevka-heavy-italic.ttf") format("truetype")
   }
 
   @font-face {
@@ -195,76 +320,7 @@
     font-family : Iosevka;
     font-style  : oblique;
     font-weight : 900;
-    src         : local(Iosevka), url("../fonts/iosevka-heavy-oblique.ttf") format("truetype")
-  }
-
-@font-face {
-  font-family: "Open Sans";
-  font-weight: 400 500;
-  src        : local(Open Sans), url("../fonts/open_sans.ttf") format("truetype")
-}
-  @font-face {
-    font-family: "Open Sans";
-    font-weight: 300;
-    src        : local(Open Sans), url("../fonts/open_sans-light.ttf") format("truetype")
-  }
-
-  @font-face {
-    font-display: fallback;
-    font-family : "Open Sans";
-    font-style  : italic;
-    font-weight : 300;
-    src         : local(Open Sans), url("../fonts/open_sans-light-italic.ttf") format("truetype")
-  }
-
-  @font-face {
-    font-display: fallback;
-    font-family : "Open Sans";
-    font-style  : italic;
-    font-weight : 400 500;
-    src         : local(Open Sans), url("../fonts/open_sans-italic.ttf") format("truetype")
-  }
-
-  @font-face {
-    font-family: "Open Sans";
-    font-weight: 600;
-    src        : local(Open Sans), url("../fonts/open_sans-semibold.ttf") format("truetype")
-  }
-
-  @font-face {
-    font-display: fallback;
-    font-family : "Open Sans";
-    font-style  : italic;
-    font-weight : 600;
-    src         : local(Open Sans), url("../fonts/open_sans-semibold-italic.ttf") format("truetype")
-  }
-
-  @font-face {
-    font-family: "Open Sans";
-    font-weight: 700;
-    src        : local(Open Sans), url("../fonts/open_sans-bold.ttf") format("truetype")
-  }
-
-  @font-face {
-    font-display: fallback;
-    font-family : "Open Sans";
-    font-weight : 700;
-    font-style  : italic;
-    src         : local(Open Sans), url("../fonts/open_sans-bold-italic.ttf") format("truetype")
-  }
-
-  @font-face {
-    font-family: "Open Sans";
-    font-weight: 800 900;
-    src        : local(Open Sans), url("../fonts/open_sans-extrabold.ttf") format("truetype")
-  }
-
-  @font-face {
-    font-display: fallback;
-    font-family : "Open Sans";
-    font-style  : italic;
-    font-weight : 800 900;
-    src         : local(Open Sans), url("../fonts/open_sans-extrabold-italic.ttf") format("truetype")
+    src         : local("Iosevka Heavy Oblique"), local(Iosevka), url("../fonts/iosevka-heavy-oblique.ttf") format("truetype")
   }
 
 /* DOM Elements */
@@ -283,16 +339,6 @@
 
   /* <article>, <aside>, <details>, <figcaption>, <figure>, <footer>, <header>, <hgroup>, <main>, <menu>, <nav>, <section> */
   article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section { display: block }
-
-  /* <b>, <strong> */
-  b, strong { font-weight: bolder }
-
-  /* <body> */
-  body {
-    font-family: "Open Sans", "Calibri Light", Calibri, sans-serif;
-    line-height: 1.00;
-    height     : 100%
-  }
 
   /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <big>, <blockquote>, <body>, <body>, <button>, <canvas>, <caption>, <center>, <cite>, <code>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dl>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <html>, <i>, <iframe>, <img>, <input>, <ins>, <kbd>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <optgroup>, <output>, <p>, <pre>, <pre>, <q>, <ruby>, <s>, <samp>, <samp>, <section>, <select>, <small>, <span>, <strike>, <strong>, <sub>, <summary>, <sup>, <table>, <tbody>, <td>, <textarea>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <ul>, <var>, <video> */
   a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, body, button, canvas, caption, center, cite, code, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, input, ins, kbd, kbd, label, legend, li, mark, menu, nav, object, ol, optgroup, output, p, pre, pre, q, ruby, s, samp, samp, section, select, small, span, strike, strong, sub, summary, sup, table, tbody, td, textarea, tfoot, th, thead, time, tr, tt, u, ul, var, video { font-size: 100% }
@@ -336,7 +382,7 @@
 
   /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <big>, <blockquote>, <body>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dl>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <html>, <i>, <iframe>, <img>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <output>, <p>, <pre>, <q>, <ruby>, <s>, <samp>, <section>, <small>, <span>, <strike>, <strong>, <sub>, <summary>, <sup>, <table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <ul>, <var>, <video> */
   a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video {
-    font                     : inherit;
+    font-family              : inherit;
     font-feature-settings    : inherit;
     font-kerning             : inherit;
     font-optical-sizing      : inherit;
@@ -357,11 +403,12 @@
     font-variant-position    : inherit;
     font-variation-settings  : inherit;
     font-weight              : inherit;
+    line-height              : inherit;
     -webkit-font-smoothing   : inherit
   }
     /* ::-webkit-file-upload-button */
     input ::-webkit-file-upload-button {
-      font                     : inherit;
+      font-family              : inherit;
       font-feature-settings    : inherit;
       font-kerning             : inherit;
       font-optical-sizing      : inherit;
@@ -382,11 +429,22 @@
       font-variant-position    : inherit;
       font-variation-settings  : inherit;
       font-weight              : inherit;
+      line-height              : inherit;
       -webkit-font-smoothing   : inherit
     }
 
   /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <big>, <blockquote>, <body>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dl>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <html>, <i>, <iframe>, <img>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <output>, <p>, <pre>, <progress>, <q>, <ruby>, <s>, <samp>, <section>, <small>, <span>, <strike>, <strong>, <sub>, <sub>, <summary>, <sup>, <sup>, <table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <ul>, <var>, <video>  */
   a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, progress, q, ruby, s, samp, section, small, span, strike, strong, sub, sub, summary, sup, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video { vertical-align: baseline }
+
+  /* <b>, <strong> */
+  b, strong { font-weight: bolder }
+
+  /* <body> */
+  body {
+    font-family: Graphik, "Open Sans", "Calibri Light", Calibri, sans-serif;
+    line-height: 1.00;
+    height     : 100%
+  }
 
   /* <body>, <button>, <code>, <input>, <kbd>, <optgroup>, <pre>, <samp>, <select>, <textarea> */
   body, button, code, input, kbd, optgroup, pre, samp, select, textarea { font-size: 100% }
@@ -470,6 +528,9 @@
 
   /* <button>, <html>, <input>, <optgroup>, <select>, <textarea> */
   button, html, input, optgroup, select, textarea { line-height: 1.15 }
+
+  /* <em>, <i> */
+  em, i { font-style: italic }
 
   /* <fieldset> */
   fieldset {
