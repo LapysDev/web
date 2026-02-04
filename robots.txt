@@ -73,6 +73,7 @@ User-agent: YouBot                       #
 # User-agent: CCBot                # Common Crawl’s Web crawler that builds large public Web crawl datasets
 # User-agent: ChatGPT-User         # OpenAI user-initiated fetcher used when ChatGPT (or custom GPTs) retrieve a page on request
 # User-agent: Claude-User          # Anthropic user-initiated fetcher used when Claude retrieves a page for a user query
+# User-agent: Discordbot           #
 # User-agent: DuckAssistBot        # DuckDuckGo assistant crawler that fetches pages to generate DuckAssist answers
 # User-agent: facebookexternalhit  # Meta’s link-unfurl crawler that fetches pages for previews when URLs are shared
 # User-agent: googlebot            # Google Search’s main crawler used to discover and index Web pages
