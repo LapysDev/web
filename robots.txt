@@ -36,8 +36,6 @@ User-agent: img2dataset                  # Dataset-building crawler/tooling UA c
 User-agent: Kangaroo Bot                 # Kangaroo LLM crawler used to download data to train Australia-focused open models
 User-agent: meta-externalagent           # Meta crawler used for external Web access tied to Meta services
 User-agent: Meta-ExternalAgent           # Same as `meta-externalagent`, used for Meta external Web crawling
-User-agent: meta-externalfetcher         # Meta fetcher used for retrieval workflows
-User-agent: Meta-ExternalFetcher         # Same as `meta-externalfetcher`
 User-agent: MistralAI-User/1.0           # Mistral user-initiated Web fetcher used when Mistral services retrieve a page
 User-agent: MyCentralAIScraperBot        #
 User-agent: NovaAct                      # Amazon agent-style crawler used for Web interaction and A.I. automation workflows
@@ -71,18 +69,20 @@ User-agent: wpbot                        #
 User-agent: YandexAdditional             #
 User-agent: YandexAdditionalBot          #
 User-agent: YouBot                       #
-# User-agent: BingPreview         # Microsoft crawler that generates image previews for Bing results
-# User-agent: CCBot               # Common Crawl’s Web crawler that builds large public Web crawl datasets
-# User-agent: ChatGPT-User        # OpenAI user-initiated fetcher used when ChatGPT (or custom GPTs) retrieve a page on request
-# User-agent: Claude-User         # Anthropic user-initiated fetcher used when Claude retrieves a page for a user query
-# User-agent: DuckAssistBot       # DuckDuckGo assistant crawler that fetches pages to generate DuckAssist answers
-# User-agent: facebookexternalhit # Meta’s link-unfurl crawler that fetches pages for previews when URLs are shared
-# User-agent: googlebot           # Google Search’s main crawler used to discover and index Web pages
-# User-agent: GoogleOther-Image   # GoogleOther variant optimized for fetching publicly accessible image URLs
-# User-agent: ISSCyberRiskCrawler # Specialized crawler used for cyber risk monitoring and scoring of public Web assets
-# User-agent: MicrosoftPreview    # Microsoft fetcher that retrieves pages to create link previews in Microsoft products
-# User-agent: PhindBot            # Phind A.I. search crawler used to fetch and index content for answer generation
-# User-agent: TikTokSpider        # ByteDance’s TikTok crawler used to fetch pages
+# User-agent: BingPreview          # Microsoft crawler that generates image previews for Bing results
+# User-agent: CCBot                # Common Crawl’s Web crawler that builds large public Web crawl datasets
+# User-agent: ChatGPT-User         # OpenAI user-initiated fetcher used when ChatGPT (or custom GPTs) retrieve a page on request
+# User-agent: Claude-User          # Anthropic user-initiated fetcher used when Claude retrieves a page for a user query
+# User-agent: DuckAssistBot        # DuckDuckGo assistant crawler that fetches pages to generate DuckAssist answers
+# User-agent: facebookexternalhit  # Meta’s link-unfurl crawler that fetches pages for previews when URLs are shared
+# User-agent: googlebot            # Google Search’s main crawler used to discover and index Web pages
+# User-agent: GoogleOther-Image    # GoogleOther variant optimized for fetching publicly accessible image URLs
+# User-agent: ISSCyberRiskCrawler  # Specialized crawler used for cyber risk monitoring and scoring of public Web assets
+# User-agent: meta-externalfetcher # Meta fetcher used for retrieval workflows
+# User-agent: Meta-ExternalFetcher # Same as `meta-externalfetcher`
+# User-agent: MicrosoftPreview     # Microsoft fetcher that retrieves pages to create link previews in Microsoft products
+# User-agent: PhindBot             # Phind A.I. search crawler used to fetch and index content for answer generation
+# User-agent: TikTokSpider         # ByteDance’s TikTok crawler used to fetch pages
 
 Disallow: /fonts/
 Disallow: /scripts/lapys.js      # Prevent redundant indexing
