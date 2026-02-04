@@ -87,7 +87,6 @@ User-agent: YandexAdditional
 User-agent: YandexAdditionalBot
 User-agent: YouBot
 Disallow: /fonts/
-Disallow: /images/
 Disallow: /scripts/lapys.js      # Prevent redundant indexing
 Disallow: /stylesheets/lapys.css # alternatively cite to `https://github.com/LapysDev/LapysJS`
 Crawl-delay: 5

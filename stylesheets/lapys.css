@@ -1,11 +1,24 @@
 @charset "utf-8";
 
+/* At Rules > ... */
+@starting-style { /* Do nothing… */ }
+
 /* DOM Elements */
+  /* All */
+  * {
+    image-orientation: inherit;
+    image-rendering  : inherit;
+    image-resolution : inherit
+  }
+
   /* All, <template> */
   [hidden], template { display: none }
 
   /* <a> */
-  a { background-color: transparent }
+  a {
+    background-color           : transparent;
+    -webkit-tap-highlight-color: transparent
+  }
 
   /* <abbr> */
   abbr[title] {
@@ -66,8 +79,10 @@
     font-palette             : inherit;
     font-size                : inherit;
     font-size-adjust         : inherit;
+    font-smooth              : inherit;
     font-stretch             : inherit;
     font-style               : inherit;
+    font-synthesis           : inherit;
     font-synthesis-small-caps: inherit;
     font-synthesis-style     : inherit;
     font-synthesis-weight    : inherit;
@@ -80,20 +95,34 @@
     font-variant-position    : inherit;
     font-variation-settings  : inherit;
     font-weight              : inherit;
+    hyphenate-character      : inherit;
+    hyphenate-limit-chars    : inherit;
+    line-break               : inherit;
     line-height              : inherit;
-    -webkit-font-smoothing   : inherit
+    line-height-step         : inherit;
+    text-box-edge            : inherit;
+    text-box-trim            : inherit;
+    text-size-adjust         : inherit;
+    text-spacing-trim        : inherit;
+    text-wrap                : inherit;
+    -moz-osx-font-smoothing  : inherit;
+    -webkit-font-smoothing   : inherit;
+    -webkit-text-size-adjust : inherit;
+    -webkit-text-security    : inherit
   }
-    /* ::-webkit-file-upload-button */
-    input ::-webkit-file-upload-button {
+    /* Pseudo > File Selector Button */
+    input::file-selector-button {
       font-family              : inherit;
       font-feature-settings    : inherit;
       font-kerning             : inherit;
       font-optical-sizing      : inherit;
       font-palette             : inherit;
+      font-palette             : inherit;
       font-size                : inherit;
       font-size-adjust         : inherit;
       font-stretch             : inherit;
       font-style               : inherit;
+      font-synthesis           : inherit;
       font-synthesis-small-caps: inherit;
       font-synthesis-style     : inherit;
       font-synthesis-weight    : inherit;
@@ -106,8 +135,82 @@
       font-variant-position    : inherit;
       font-variation-settings  : inherit;
       font-weight              : inherit;
+      hyphenate-character      : inherit;
+      hyphenate-limit-chars    : inherit;
       line-height              : inherit;
-      -webkit-font-smoothing   : inherit
+      line-height-step         : inherit;
+      text-size-adjust         : inherit;
+      text-spacing-trim        : inherit;
+      -moz-osx-font-smoothing  : inherit;
+      -webkit-font-smoothing   : inherit;
+      -webkit-text-size-adjust : inherit
+    }
+
+    /* ... */
+    input ::-ms-browse {
+      font-family              : inherit;
+      font-feature-settings    : inherit;
+      font-kerning             : inherit;
+      font-optical-sizing      : inherit;
+      font-palette             : inherit;
+      font-palette             : inherit;
+      font-size                : inherit;
+      font-size-adjust         : inherit;
+      font-stretch             : inherit;
+      font-style               : inherit;
+      font-synthesis           : inherit;
+      font-synthesis-small-caps: inherit;
+      font-synthesis-style     : inherit;
+      font-synthesis-weight    : inherit;
+      font-variant-alternates  : inherit;
+      font-variant-caps        : inherit;
+      font-variant-east-asian  : inherit;
+      font-variant-emoji       : inherit;
+      font-variant-ligatures   : inherit;
+      font-variant-numeric     : inherit;
+      font-variant-position    : inherit;
+      font-variation-settings  : inherit;
+      font-weight              : inherit;
+      hyphenate-character      : inherit;
+      hyphenate-limit-chars    : inherit;
+      line-height              : inherit;
+      line-height-step         : inherit;
+      text-size-adjust         : inherit;
+      text-spacing-trim        : inherit
+    }
+
+    input ::-webkit-file-upload-button {
+      font-family              : inherit;
+      font-feature-settings    : inherit;
+      font-kerning             : inherit;
+      font-optical-sizing      : inherit;
+      font-palette             : inherit;
+      font-palette             : inherit;
+      font-size                : inherit;
+      font-size-adjust         : inherit;
+      font-stretch             : inherit;
+      font-style               : inherit;
+      font-synthesis           : inherit;
+      font-synthesis-small-caps: inherit;
+      font-synthesis-style     : inherit;
+      font-synthesis-weight    : inherit;
+      font-variant-alternates  : inherit;
+      font-variant-caps        : inherit;
+      font-variant-east-asian  : inherit;
+      font-variant-emoji       : inherit;
+      font-variant-ligatures   : inherit;
+      font-variant-numeric     : inherit;
+      font-variant-position    : inherit;
+      font-variation-settings  : inherit;
+      font-weight              : inherit;
+      hyphenate-character      : inherit;
+      hyphenate-limit-chars    : inherit;
+      line-height              : inherit;
+      line-height-step         : inherit;
+      text-size-adjust         : inherit;
+      text-spacing-trim        : inherit;
+      -webkit-font-smoothing   : inherit;
+      -webkit-text-size-adjust : inherit
     }
 
   /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <big>, <blockquote>, <body>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dl>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <html>, <i>, <iframe>, <img>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <output>, <p>, <pre>, <progress>, <q>, <ruby>, <s>, <samp>, <section>, <small>, <span>, <strike>, <strong>, <sub>, <sub>, <summary>, <sup>, <sup>, <table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <ul>, <var>, <video>  */
@@ -160,7 +263,12 @@
     behavior          : url(pie.htc);
     -webkit-appearance: button
   }
-    /* :-moz-focusring */
+    /* Pseudo > (Focus Visible, -moz-focusring) */
+    button:focus-visible,
+    input[type=button]:focus-visible,
+    input[type=reset]:focus-visible,
+    input[type=submit]:focus-visible { outline: 1px dotted ButtonText }
+
     button:-moz-focusring,
     input[type=button]:-moz-focusring,
     input[type=reset]:-moz-focusring,
@@ -270,8 +378,20 @@
   /* <html> */
   html {
     font-size               : 16px;
+    font-smooth             : always;
+    text-box-edge           : cap alphabetic;
+    text-box-trim           : none; /* ->> `trim-both` otherwise */
+    text-size-adjust        : 100%;
+    text-spacing-trim       : trim-start;
+    text-wrap               : /* wrap */ balance;
+    text-wrap               : /* wrap */ stable;
+    text-wrap               : /* wrap */ pretty;
+    text-wrap               : /* wrap */ pretty;
     zoom                    : 1.0;
-    -webkit-text-size-adjust: 100%
+    -moz-osx-font-smoothing : grayscale;
+    -webkit-font-smoothing  : subpixel-antialiased;
+    -webkit-text-size-adjust: 100%;
+    -webkit-text-security   : none
   }
 
   /* <input> */

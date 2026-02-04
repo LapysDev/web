@@ -496,14 +496,14 @@
 
 /* DOM Elements */
   /* <body> */
-  body { font-family: Graphik, "Open Sans", "Calibri Light", Calibri, sans-serif }
+  body { font-family: Graphik, "Open Sans", Roboto, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif }
 
   /* <code>, <kbd>, <pre>, <samp> */
   code, kbd, pre, samp { font-family: "M PLUS 1 Code", Iosevka, monospace }
 
   /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
   h1, h2, h3, h4, h5, h6 {
-    font-family: Rajdhani, Graphik, "Open Sans", "Calibri Light", Calibri, sans-serif;
+    font-family: Rajdhani, Graphik, "Open Sans", Roboto, "Calibri Light", Calibri, sans-serif;
     font-weight: 500
   }
 
