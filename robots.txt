@@ -34,8 +34,6 @@ User-agent: ICC-Crawler                  # Japanese NICT research crawler collec
 User-agent: ImagesiftBot                 #
 User-agent: img2dataset                  # Dataset-building crawler/tooling UA commonly used to assemble large training datasets
 User-agent: Kangaroo Bot                 # Kangaroo LLM crawler used to download data to train Australia-focused open models
-User-agent: meta-externalagent           # Meta crawler used for external Web access tied to Meta services
-User-agent: Meta-ExternalAgent           # Same as `meta-externalagent`, used for Meta external Web crawling
 User-agent: MistralAI-User/1.0           # Mistral user-initiated Web fetcher used when Mistral services retrieve a page
 User-agent: MyCentralAIScraperBot        #
 User-agent: NovaAct                      # Amazon agent-style crawler used for Web interaction and A.I. automation workflows
@@ -79,6 +77,9 @@ User-agent: YouBot                       #
 # User-agent: googlebot            # Google Search’s main crawler used to discover and index Web pages
 # User-agent: GoogleOther-Image    # GoogleOther variant optimized for fetching publicly accessible image URLs
 # User-agent: ISSCyberRiskCrawler  # Specialized crawler used for cyber risk monitoring and scoring of public Web assets
+# User-agent: LinkedInBot          #
+# User-agent: meta-externalagent   # Meta crawler used for external Web access tied to Meta services
+# User-agent: Meta-ExternalAgent   # Same as `meta-externalagent`, used for Meta external Web crawling
 # User-agent: meta-externalfetcher # Meta fetcher used for retrieval workflows
 # User-agent: Meta-ExternalFetcher # Same as `meta-externalfetcher`
 # User-agent: MicrosoftPreview     # Microsoft fetcher that retrieves pages to create link previews in Microsoft products
