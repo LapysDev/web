@@ -507,6 +507,43 @@
     font-weight: 500
   }
 
+/* Features */
+  /* Main */
+  #main { width: 100% }
+    /* Hero > <table> */
+    #hero table { width: 80% }
+      /* Avatar */
+      #avatar {
+        text-align: center;
+        width     : 35%
+      }
+
+      /* Title */
+      #title {
+        font-size  : 500%;
+        font-weight: 900;
+        text-align : right;
+        width      : 65%
+      }
+        /* … */
+        #title * {
+          font-weight: inherit;
+          margin     : 0
+        }
+
+        /* Subtitle */
+        #subtitle {
+          font-size  : 50%;
+          font-weight: normal
+        }
+          /* Pseudo > After */
+          #subtitle::after {
+            color     : inherit;
+            content   : " since 2016";
+            display   : block;
+            text-align: right
+          }
+
 /* Components */
   /* Button */
   .button {
@@ -522,3 +559,14 @@
 
       /* Focus */
       .button:focus { border-color: red }
+
+  /* Section */
+  .section {
+    margin-left : auto;
+    margin-right: auto
+  }
+    /* <table> */
+    .section table {
+      margin-left : inherit;
+      margin-right: inherit
+    }

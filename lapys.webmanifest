@@ -1,0 +1,24 @@
+{
+  "background_color": "#0000CF",
+  "display"         : "standalone",
+  "description"     : "Lapys’ portfolio",
+  "launch_handler"  : {"client_mode": "focus-existing"},
+  "name"            : "Lapys",
+  "scope"           : "/",
+  "short_name"      : "Lapys",
+  "start_url"       : "/",
+  "theme_color"     : "#0000CF",
+
+  "icons": [
+    {"purpose": "any", "sizes": "256x256",   "src": "/icons/lapys.ico",      "type": "image/x-icon"},
+    {"purpose": "any", "sizes": "144x144",   "src": "/icons/lapys×144.png",  "type": "image/png"},
+    {"purpose": "any", "sizes": "180x180",   "src": "/icons/lapys×180.png",  "type": "image/png"},
+    {"purpose": "any", "sizes": "512x512",   "src": "/icons/lapys×512.png",  "type": "image/png"},
+    {"purpose": "any", "sizes": "1024x1024", "src": "/icons/lapys×1024.png", "type": "image/png"},
+    {"purpose": "any", "sizes": "any",       "src": "/icons/lapys.svg",      "type": "image/svg+xml"}
+  ],
+
+  "screenshots": [
+    {"form_factor": "wide", "sizes": "1200x630", "src": "/images/screenshot.jpg", "type": "image/jpeg"}
+  ]
+}
