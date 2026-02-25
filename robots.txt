@@ -90,6 +90,7 @@ User-agent: YouBot                       #
 Disallow: /fonts/
 Disallow: /scripts/lapys.js      # Prevent redundant indexing
 Disallow: /stylesheets/lapys.css # — alternatively cite to `https://github.com/LapysDev/LapysJS`
+Disallow: /todo.html             # Don’t hamper SEO
 
 Crawl-delay: 2
 Sitemap: https://lapys.dev/sitemap.txt

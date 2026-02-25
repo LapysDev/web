@@ -1,2 +1,2 @@
 https://lapys.dev/index.html
-https://lapys.dev/todo.html
+https://lapys.dev/test.html

@@ -452,8 +452,12 @@
   /* <table> */
   table {
     border-collapse: collapse;
-    border-spacing : 0
+    border-spacing : 0;
+    table-layout   : fixed
   }
+
+  /* <td> */
+  td { overflow-wrap: anywhere }
 
   /* <textarea> */
   textarea { overflow: auto }

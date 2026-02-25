@@ -1,132 +1,11 @@
 @charset "utf-8";
 
+/* Components > (Landscape, Portrait) */
+.landscape {}
+.portrait  { display: none; visibility: collapse }
+
 /* At Rules */
   /* Font Face */
-  @font-face /* CITE (Lapys) -> CSTM Fonts (Christian Schwartz, Ilya Ruderman) @ `https://type.today/en/Graphik`, `https://type.today/en/journal/graphikcondensed` */ {
-    font-family: Graphik;
-    font-weight: 400;
-    src        : local("Graphik Comp Regular Trial"), url(../fonts/graphik.otf) format("opentype")
-  }
-    @font-face {
-      font-family: Graphik;
-      font-weight: 100;
-      src        : local("Graphik Comp Thin Trial"), url(../fonts/graphik-thin.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-style  : italic;
-      font-weight : 100;
-      src         : local("Graphik Comp Thin Trial"), url(../fonts/graphik-thin-italic.otf) format("opentype")
-    }
-
-    @font-face {
-      font-family: Graphik;
-      font-weight: 200;
-      src        : local("Graphik Comp Exlight Trial"), url(../fonts/graphik-extralight.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-style  : italic;
-      font-weight : 200;
-      src         : local("Graphik Comp Exlight Trial"), url(../fonts/graphik-extralight-italic.otf) format("opentype")
-    }
-
-    @font-face {
-      font-family: Graphik;
-      font-weight: 300;
-      src        : local("Graphik Comp Light Trial"), url(../fonts/graphik-light.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-style  : italic;
-      font-weight : 300;
-      src         : local("Graphik Comp Light Trial"), url(../fonts/graphik-light-italic.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-style  : italic;
-      font-weight : 400;
-      src         : local("Graphik Comp Regular Trial"), url(../fonts/graphik-italic.otf) format("opentype")
-    }
-
-    @font-face {
-      font-family: Graphik;
-      font-weight: 500;
-      src        : local("Graphik Comp Medium Trial"), url(../fonts/graphik-medium.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-style  : italic;
-      font-weight : 500;
-      src         : local("Graphik Comp Medium Trial"), url(../fonts/graphik-medium-italic.otf) format("opentype")
-    }
-
-    @font-face {
-      font-family: Graphik;
-      font-weight: 600;
-      src        : local("Graphik Comp Semibold Trial"), url(../fonts/graphik-semibold.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-style  : italic;
-      font-weight : 600;
-      src         : local("Graphik Comp Semibold Trial"), url(../fonts/graphik-semibold-italic.otf) format("opentype")
-    }
-
-    @font-face {
-      font-family: Graphik;
-      font-weight: 700;
-      src        : local("Graphik Comp Bold Trial"), url(../fonts/graphik-bold.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-weight : 700;
-      font-style  : italic;
-      src         : local("Graphik Comp Bold Trial"), url(../fonts/graphik-bold-italic.otf) format("opentype")
-    }
-
-    @font-face {
-      font-family: Graphik;
-      font-weight: 800;
-      src        : local("Graphik Comp Black Trial"), url(../fonts/graphik-black.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-style  : italic;
-      font-weight : 800;
-      src         : local("Graphik Comp Black Trial"), url(../fonts/graphik-black-italic.otf) format("opentype")
-    }
-
-    @font-face {
-      font-family: Graphik;
-      font-weight: 900;
-      src        : local("Graphik Comp Super Trial"), url(../fonts/graphik-super.otf) format("opentype")
-    }
-
-    @font-face {
-      font-display: fallback;
-      font-family : Graphik;
-      font-style  : italic;
-      font-weight : 900;
-      src         : local("Graphik Comp Super Trial"), url(../fonts/graphik-super-italic.otf) format("opentype")
-    }
-
   @font-face /* CITE (Lapys) -> Belleve Invis (@be5invis) @ `https://typeof.net/Iosevka`, `https://github.com/be5invis` */ {
     font-family: Iosevka;
     font-weight: 400;
@@ -494,55 +373,73 @@
     }
   }
 
+  /* Media */
+    /* Hover, Pointer */
+    @media (hover: hover) and (pointer: fine) {
+      /* Element > <a> > Pseudo > (Focus, Hover) */
+      a:focus, a:hover {
+        text-decoration-line     : underline;
+        text-decoration-style    : dashed;
+        text-decoration-thickness: from-font
+      }
+    }
+
+    /* Landscape (e.g. desktops, handhelds, laptops, TVs, …) */
+    @media (min-aspect-ratio: 4/3), (min-width: 769px), (width > 768px) {
+      compact {}
+    }
+
+    /* Portrait (e.g. electronic readers, phones, smart watches, …) */
+    @media (max-aspect-ratio: 3/4), (max-width: 768px), (width <= 768px) {
+      cozy {}
+
+      /* Components > (Landscape, Portrait) */
+      .landscape { display: none;    visibility: collapse }
+      .portrait  { display: initial; visibility: initial }
+    }
+
+    /* Prefers Color Scheme */
+    @media (prefers-color-scheme: dark) {}
+
+    /* Prefers Contrast */
+    @media (prefers-contrast: more) {
+      /* Element > All */
+      * { text-decoration-thickness: 2px }
+    }
+
+    /* Prefers Reduced Motion, Print */
+    @media (prefers-reduced-motion: reduce), print {
+      /* Element > All */
+      * {
+        animation : none !important;
+        transition: none !important
+      }
+    }
+
+  /* Page */
+  @page {
+    margin: 12mm;
+    size  : A4
+  }
+
 /* DOM Elements */
   /* <body> */
-  body { font-family: Graphik, "Open Sans", Roboto, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif }
+  body { font-family: "Open Sans", Roboto, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif }
 
   /* <code>, <kbd>, <pre>, <samp> */
   code, kbd, pre, samp { font-family: "M PLUS 1 Code", Iosevka, monospace }
 
   /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
   h1, h2, h3, h4, h5, h6 {
-    font-family: Rajdhani, Graphik, "Open Sans", Roboto, "Calibri Light", Calibri, sans-serif;
+    font-family: Rajdhani, "Open Sans", Roboto, "Calibri Light", Calibri, sans-serif;
     font-weight: 500
   }
 
-/* Features */
-  /* Main */
-  #main { width: 100% }
-    /* Hero > <table> */
-    #hero table { width: 80% }
-      /* Avatar */
-      #avatar {
-        text-align: center;
-        width     : 35%
-      }
+  /* <html> */
+  html { color-scheme: dark }
 
-      /* Title */
-      #title {
-        font-size  : 500%;
-        font-weight: 900;
-        text-align : right;
-        width      : 65%
-      }
-        /* … */
-        #title * {
-          font-weight: inherit;
-          margin     : 0
-        }
-
-        /* Subtitle */
-        #subtitle {
-          font-size  : 50%;
-          font-weight: normal
-        }
-          /* Pseudo > After */
-          #subtitle::after {
-            color     : inherit;
-            content   : " since 2016";
-            display   : block;
-            text-align: right
-          }
+/* Element > <a> */
+a { cursor: pointer }
 
 /* Components */
   /* Button */

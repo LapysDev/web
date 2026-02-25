@@ -1,0 +1,38 @@
+@charset "utf-8";
+
+/* Features */
+  /* Main */
+  #main { width: 100% }
+    /* Hero > <table> */
+    #hero table { width: 80% }
+      /* Avatar */
+      #avatar {
+        text-align: center;
+        width     : 35%
+      }
+
+      /* Title */
+      #title {
+        font-size  : 500%;
+        font-weight: 900;
+        text-align : right;
+        width      : 65%
+      }
+        /* … */
+        #title * {
+          font-weight: inherit;
+          margin     : 0
+        }
+
+        /* Subtitle */
+        #subtitle {
+          font-size  : 50%;
+          font-weight: normal
+        }
+          /* Pseudo > After */
+          #subtitle::after {
+            color     : inherit;
+            content   : " since 2016";
+            display   : block;
+            text-align: right
+          }

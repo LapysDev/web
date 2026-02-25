@@ -1,3 +1,9 @@
+**/.git
+**/.git/
+**/.gitignore
 *.lnk
 *.url
 [Dd]esktop.ini
+
+!/.gitignore
+
