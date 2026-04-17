@@ -1,4 +1,6 @@
-@charset "utf-8";
+@charset "UTF-8";
+@import    "test.css"; /* ->> Debug only… */
+@namespace url("http://www.w3.org/1999/xhtml");
 
 /* Components > (Landscape, Portrait) */
 .landscape {}
@@ -7,9 +9,10 @@
 /* At Rules */
   /* Font Face */
   @font-face /* CITE (Lapys) -> Belleve Invis (@be5invis) @ `https://typeof.net/Iosevka`, `https://github.com/be5invis` */ {
-    font-family: Iosevka;
-    font-weight: 400;
-    src        : local(Iosevka), url(../fonts/iosevka.ttf) format("truetype")
+    font-family : Iosevka;
+    font-variant: historical-forms;
+    font-weight : 400;
+    src         : local(Iosevka), url(../fonts/iosevka.ttf) format("truetype")
   }
     @font-face {
       font-display: swap;
@@ -212,9 +215,10 @@
     }
 
   @font-face /* CITE (Lapys) -> Underforest Design (Coji Morishita (@coz-m)) @ `https://mplusfonts.github.io` */ {
-    font-family: "M PLUS 1 Code";
-    font-weight: 400;
-    src        : local("M PLUS 1 Code"), url(../fonts/m_plus_1_code.ttf) format("truetype")
+    font-family : "M PLUS 1 Code";
+    font-variant: historical-forms;
+    font-weight : 400;
+    src         : local("M PLUS 1 Code"), url(../fonts/m_plus_1_code.ttf) format("truetype")
   }
     @font-face {
       font-display: swap;
@@ -259,9 +263,10 @@
     }
 
   @font-face /* CITE (Lapys) -> Ascender Corporation (Steve Matteson) @ `https://mattesontypographics.com` */ {
-    font-family: "Open Sans";
-    font-weight: 400;
-    src        : local("Open Sans"), url(../fonts/open_sans.ttf) format("truetype")
+    font-family : "Open Sans";
+    font-variant: historical-forms;
+    font-weight : 400;
+    src         : local("Open Sans"), url(../fonts/open_sans.ttf) format("truetype")
   }
     @font-face {
       font-display: swap;
@@ -331,10 +336,24 @@
       src         : local("Open Sans Extrabold"), url(../fonts/open_sans-extrabold-italic.ttf) format("truetype")
     }
 
+  @font-face /* CITE (Lapys) -> ParaType Ltd (Alexandra Korolkova, Olga Umpeleva, Vladimir Yefimov) @ `https://paratype.com/public` */ {
+    font-family : "PT Sans";
+    font-variant: historical-forms;
+    font-weight : 400;
+    src         : local("PT Sans"), url(../fonts/pt_sans.ttf) format("truetype")
+  }
+    @font-face {
+      font-display: swap;
+      font-family : Rajdhani;
+      font-weight : bold;
+      src         : local("PT Sans Bold"), url(../fonts/pt_sans-bold.ttf) format("truetype")
+    }
+
   @font-face /* CITE (Lapys) -> Indian Type Foundry (Devanagari: Satya Rajpurohit, Jyotish Sonowal, Shiva Nalleperumal) */ {
-    font-family: Rajdhani;
-    font-weight: 400;
-    src        : local(Rajdhani), url(../fonts/rajdhani.ttf) format("truetype")
+    font-family : Rajdhani;
+    font-variant: historical-forms;
+    font-weight : 400;
+    src         : local(Rajdhani), url(../fonts/rajdhani.ttf) format("truetype")
   }
     @font-face {
       font-display: swap;
@@ -365,54 +384,106 @@
     }
 
   /* Keyframes */
-  @keyframes click {
-    50% {
-      border-width: 3px;
-      filter      : brightness(0.8);
-      transform   : translate(-2px, -2px)
+    /* Click */
+    @keyframes click {
+      50% {
+        border-width: 3px;
+        filter           : brightness(0.8);
+        transform        : translate(0, -2px);
+        -ms-filter       : brightness(0.8);
+        -ms-transform    : translate(0, -2px);
+        -o-transform     : translate(0, -2px);
+        -webkit-transform: translate(0, -2px);
+      }
     }
-  }
+
+    /* Page In */
+    @keyframes pageIn {
+      from {
+        mix-blend-mode   : plus-lighter;
+        -ms-transform    : translateY(100%);
+        -o-transform     : translateY(100%);
+        -webkit-transform: translateY(100%)
+      }
+
+      to {
+        mix-blend-mode   : plus-lighter;
+        -ms-transform    : translateY(0%);
+        -o-transform     : translateY(0%);
+        -webkit-transform: translateY(0%)
+      }
+    }
+
+    /* Page Out */
+    @keyframes pageOut {
+      from {
+        mix-blend-mode   : plus-lighter;
+        -ms-transform    : translateY(0%);
+        -o-transform     : translateY(0%);
+        -webkit-transform: translateY(0%)
+      }
+
+      to {
+        mix-blend-mode   : plus-lighter;
+        -ms-transform    : translateY(-100%);
+        -o-transform     : translateY(-100%);
+        -webkit-transform: translateY(-100%)
+      }
+    }
 
   /* Media */
     /* Hover, Pointer */
     @media (hover: hover) and (pointer: fine) {
       /* Element > <a> > Pseudo > (Focus, Hover) */
       a:focus, a:hover {
-        text-decoration-line     : underline;
-        text-decoration-style    : dashed;
-        text-decoration-thickness: from-font
+        text-decoration-line      : underline;
+        text-decoration-style     : dashed;
+        text-decoration-thickness : from-font;
+        -moz-text-decoration-line : underline;
+        -moz-text-decoration-style: dashed
       }
     }
 
-    /* Landscape (e.g. desktops, handhelds, laptops, TVs, …) */
-    @media (min-aspect-ratio: 4/3), (min-width: 769px), (width > 768px) {
-      compact {}
-    }
+    /* Landscape (e.g. desktops, handhelds, laptops, TVs, …) ->> Compact UI */
+    @media (min-aspect-ratio: 4/3), (min-width: 769px), (width > 768px) {}
 
-    /* Portrait (e.g. electronic readers, phones, smart watches, …) */
+    /* Portrait (e.g. electronic readers, phones, smart watches, …) ->> Cozy UI */
     @media (max-aspect-ratio: 3/4), (max-width: 768px), (width <= 768px) {
-      cozy {}
-
       /* Components > (Landscape, Portrait) */
       .landscape { display: none;    visibility: collapse }
       .portrait  { display: initial; visibility: initial }
     }
 
-    /* Prefers Color Scheme */
-    @media (prefers-color-scheme: dark) {}
-
     /* Prefers Contrast */
     @media (prefers-contrast: more) {
-      /* Element > All */
+      /* DOM Elements > All */
       * { text-decoration-thickness: 2px }
     }
 
     /* Prefers Reduced Motion, Print */
     @media (prefers-reduced-motion: reduce), print {
-      /* Element > All */
+      /* DOM Elements > All */
       * {
-        animation : none !important;
-        transition: none !important
+        animation                 : none !important;
+        print-color-adjust        : economy;
+        transition                : none !important;
+        -moz-animation            : none !important;
+        -moz-animation            : none !important;
+        -moz-print-color-adjust   : economy;
+        -ms-animation             : none !important;
+        -ms-animation             : none !important;
+        -o-animation              : none !important;
+        -o-animation              : none !important;
+        -webkit-animation         : none !important;
+        -webkit-color-adjust      : economy;
+        -webkit-print-color-adjust: economy;
+        -webkit-transition        : none !important
+      }
+
+      /* Components > Button */
+      .button {
+        backdrop-filter        : none !important;
+        -webkit-backdrop-filter: none !important
       }
     }
 
@@ -422,40 +493,347 @@
     size  : A4
   }
 
+  /* View Transition */
+  @view-transition { navigation: auto }
+
 /* DOM Elements */
+  /* All */
+  * {
+    accent-color               : #0000CF;
+    background-color           : inherit;
+    background-repeat          : no-repeat;
+    background-size            : contain;
+    border-block-color         : inherit;
+    border-block-end-color     : inherit;
+    border-block-start-color   : inherit;
+    border-bottom-color        : inherit;
+    border-color               : inherit;
+    border-inline-color        : inherit;
+    border-inline-end-color    : inherit;
+    border-inline-start-color  : inherit;
+    border-left-color          : inherit;
+    border-right-color         : inherit;
+    border-top-color           : inherit;
+    box-sizing                 : border-box;
+    caret-color                : inherit;
+    color                      : currentColor;
+    color-scheme               : inherit;
+    column-rule-color          : inherit;
+    cursor                     : default;
+    fill                       : inherit;
+    flood-color                : inherit;
+    lighting-color             : inherit;
+    outline                    : inherit;
+    outline-color              : inherit;
+    scrollbar-color            : inherit;
+    speak                      : never;
+    speak-as                   : normal;
+    stop-color                 : inherit;
+    stroke                     : inherit;
+    text-decoration-color      : inherit;
+    text-emphasis-color        : inherit;
+    -moz-text-decoration-color : inherit;
+    -webkit-box-sizing         : border-box;
+    -webkit-mask-repeat-x      : no-repeat;
+    -webkit-mask-repeat-y      : no-repeat;
+    -webkit-tap-highlight-color: inherit;
+    -webkit-text-emphasis-color: inherit;
+    -webkit-touch-callout      : none;
+    mso-ansi-language          : en-US;
+    mso-bidi-language          : ar-SA;
+    mso-fareast-language       : zh-CN
+  }
+
+  *, ::after, ::before {
+    transition-duration               : 100ms;
+    transition-timing-function        : ease-in-out;
+    transition-property               : opacity;
+    -moz-transition-duration          : 100ms;
+    -moz-transition-property          : opacity;
+    -moz-transition-timing-function   : ease-in-out;
+    -ms-transition-duration           : 100ms;
+    -ms-transition-property           : opacity;
+    -ms-transition-timing-function    : ease-in-out;
+    -o-transition-duration            : 100ms;
+    -o-transition-property            : opacity;
+    -o-transition-timing-function     : ease-in-out;
+    -webkit-transition-duration       : 100ms;
+    -webkit-transition-property       : opacity;
+    -webkit-transition-timing-function: ease-in-out
+  }
+    /* Pseudo */
+      /* Language */
+        /* ->> Arabic */
+        [lang|=ar],
+        :lang(ar) { direction: rtl }
+
+        /* ->> Arabic, Catalan, German, Greek, Spanish, Basque, Persian, French, Galician, Italian, Italian (Swiss), Norwegian (Bokmål, Nynorsk), Portuguese, Romansh --> « » ‹ › */
+        [lang|=ar], [lang|=ca], [lang|=de-CH], [lang|=el], [lang|=es], [lang|=eu], [lang|=fa], [lang|=fr-CH], [lang|=gl], [lang|=it], [lang|=it-CH], [lang|=nb], [lang|=nn], [lang|=pt], [lang|=rm],
+        :lang(afir), :lang(ca), :lang(de-CH), :lang(el), :lang(es), :lang(eu), :lang(fa), :lang(fr-CH), :lang(gl), :lang(it), :lang(it-CH), :lang(nb), :lang(nn), :lang(pt), :lang(rm) { quotes: "\00AB" "\00BB" "\2039" "\203A" }
+
+        /* ->> Belarusian, Macedonian, Russian, Ukrainian --> « » „ " */
+        [lang|=be], [lang|=mk], [lang|=ru], [lang|=uk],
+        :lang(be), :lang(mk), :lang(ru), :lang(uk) { quotes: "\00AB" "\00BB" "\201E" "\201C" }
+
+        /* ->> Bulgarian, Bosnian, Czech, German, Hebrew, Croatian, Slovak, Slovenian, Serbian --> „ " ‚ ' */
+        [lang|=bg], [lang|=bs], [lang|=cs], [lang|=de], [lang|=he], [lang|=hr], [lang|=sk], [lang|=sl], [lang|=sr],
+        :lang(bg), :lang(bs), :lang(cs), :lang(de), :lang(he), :lang(hr), :lang(sk), :lang(sl), :lang(sr) { quotes: "\201E" "\201C" "\201A" "\2018" }
+
+        /* ->> English, English (Australian, New Zealand), Danish, Korean, Dutch, Portuguese (Brazilian), Thai, Turkish, Vietnamese, Chinese, Chinese (Simplified, Singapore) --> “ ” ‘ ’ */
+        [lang|=en], [lang|=en-AU], [lang|=en-NZ], [lang|=da], [lang|=ko], [lang|=nl], [lang|=pt-BR], [lang|=th], [lang|=tr], [lang|=vi], [lang|=zh-CN], [lang|=zh-Hans], [lang|=zh-SG],
+        :lang(en), :lang(en-AU), :lang(en-NZ), :lang(da), :lang(ko), :lang(nl), :lang(pt-BR), :lang(th), :lang(tr), :lang(vi), :lang(zh-CN), :lang(zh-Hans), :lang(zh-SG) { quotes: "\201C" "\201D" "\2018" "\2019" }
+
+        /* ->> Finnish, Swedish --> " " ' ' */
+        [lang|=fi], [lang|=sv],
+        :lang(fi), :lang(sv) { quotes: "\201D" "\201D" "\2019" "\2019" }
+
+        /* ->> French --> « » ‹ › */
+        [lang|=fr], [lang|=fr-BE], [lang|=fr-LU],
+        :lang(fr), :lang(fr-BE), :lang(fr-LU)
+        { quotes: "\00AB\202F" "\202F\00BB" "\2039\202F" "\202F\203A" }
+
+        /* ->> Hungarian, Lithuanian, Latvian, Polish, Romanian --> „ " ‚ ' */
+        [lang|=hu], [lang|=lt], [lang|=lv], [lang|=pl], [lang|=ro],
+        :lang(hu), :lang(lt), :lang(lv), :lang(pl), :lang(ro) { quotes: "\201E" "\201D" "\201A" "\2019" }
+
+        /* ->> Japanese, Chinese (Traditional, Hong Kong, Taiwan) --> 「 」 『 』 */
+        [lang|=ja], [lang|=zh-Hant], [lang|=zh-HK], [lang|=zh-TW],
+        :lang(ja), :lang(zh-Hant), :lang(zh-HK), :lang(zh-TW) { quotes: "\300C" "\300D" "\300E" "\300F" }
+
+        /* ->> Japanese, Korean, Chinese (Simplified) */
+        [lang|=ja], [lang|=ko], [lang|=zh],
+        :lang(ja), :lang(ko), :lang(zh) { line-height: 1.8 }
+
+      /* (Search, Target) Text */
+      ::search-text, /* --> …#:~:text=… */ ::target-text {
+        background-color: rebeccapurple;
+        color           : white
+      }
+
+  /* <a> */
+  a, a[href]:link {
+    color  : dodgerblue;
+    -o-link: dodgerblue
+  }
+    /* Pseudo > Visited */
+    a[href]:visited { color: rebeccapurple }
+
+  /* <a>, <abbr> */
+  a, abbr[title] { text-decoration-skip-ink: auto }
+
+  /* <a>, <button>, <input>, <label>, <select> (> <option>) */
+  a,
+  button,
+  input[type=button],
+  input[type=reset],
+  input[type=submit],
+  label,
+  select,
+  select option { cursor: pointer }
+
+  /* <area> > Pseudo > … */
+  area:any-link         { cursor: pointer }
+  area:-khtml-any-link  { cursor: pointer }
+  area:-moz-any-link    { cursor: pointer }
+  area:-webkit-any-link { cursor: pointer }
+
+  area:any-link, area[href]:any-link:link, area[href]:link {
+    color  : dodgerblue;
+    -o-link: dodgerblue
+  }
+
+  area:-khtml-any-link, area[href]:-khtml-any-link:link {
+    color              : dodgerblue;
+    -khtml-visited-link: dodgerblue
+  }
+
+  area:-webkit-any-link, area[href]:-webkit-any-link:link {
+    color  : dodgerblue;
+    -o-link: dodgerblue
+  }
+    /* Pseudo > Visited */
+    area[href]:any-link:visited         { color: rebeccapurple }
+    area[href]:-khtml-any-link:visited  { color: rebeccapurple }
+    area[href]:-webkit-any-link:visited { color: rebeccapurple }
+
+  /* <area>, <audio>, <canvas>, <embed>, <figure>, <img>, <map>, <object>, <picture>, <source>, <svg>, <track>, <video> */
+  area, audio, canvas, embed, figure, img, map, object, picture, source, svg, track, video {
+    image-rendering                    : smooth;
+    image-resolution                   : from-image;
+    -ah-image-resolution               : from-image;
+    -ah-image-smoothing                : true;
+    -prince-background-image-resolution: auto;
+    -prince-image-resolution           : normal;
+    -ro-image-resolution               : normal
+  }
+
   /* <body> */
-  body { font-family: "Open Sans", Roboto, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif }
+  body {
+    background-color: rgba(0, 0, 0, 0.05);
+    background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(3, 0, 63, 0.05));
+    font-family     : "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif
+  }
+    /* All */
+    body > * { background-color: transparent }
+
+  /* <button>, <input> */
+  button,
+  input[type=button],
+  input[type=reset]
+  input[type=submit] { outline: none }
+
+  /* <code>, <kbd> */
+  code, kbd { font-variant-emoji: emoji }
 
   /* <code>, <kbd>, <pre>, <samp> */
-  code, kbd, pre, samp { font-family: "M PLUS 1 Code", Iosevka, monospace }
+  code, kbd, pre, samp {
+    font-family: "M PLUS 1 Code", Iosevka, monospace;
+    font-family: monospace /* ->> Allow modification with user-agent style */
+  }
+
+  /* <code>, <input>, <kbd>, <pre>, <samp>, <textarea> */
+  code, input, kbd, pre, samp, textarea { cursor: text }
 
   /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
   h1, h2, h3, h4, h5, h6 {
-    font-family: Rajdhani, "Open Sans", Roboto, "Calibri Light", Calibri, sans-serif;
-    font-weight: 500
+    cursor                   : default;
+    font-family              : Rajdhani, "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, sans-serif;
+    font-weight              : 500;
+    -webkit-text-stroke-color: light-dark(#F0F0F0, #3F3F3F)
+  }
+
+  /* <h1> */
+  h1 {
+    font-weight              : bolder;
+    text-shadow              : 0 0 10px rgba(0, 0, 0, 0.1);
+    -webkit-text-stroke-width: 2.5px
+  }
+
+  /* <h1>, Mirrored */
+  h1, .mirrored { -webkit-box-reflect: below 7px linear-gradient(transparent, rgba(255, 255, 255, 0.05)) }
+
+  /* <h2> */
+  h2 { font-weight: 900 }
+
+  /* (<h1>, <h2>) > Pseudo > Selection */
+  h1::selection, h2::selection {
+    text-shadow              : none;
+    -webkit-text-stroke-width: 0
   }
 
   /* <html> */
-  html { color-scheme: dark }
+  html {
+    background-attachment      : fixed;
+    background-blend-mode      : multiply;
+    background-clip            : border-box;
+    background-color           : transparent;
+    background-image           : /* --> ../icons/background-pattern-1.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAQMAAAD58POIAAAABlBMVEUAAABHcEyA51bHAAAAAnRSTlMEABL/CDwAAAE+SURBVHic5dW7kYMwFEbh4yFwSAmUsqVBaSqFEggdMOyix+he6bdnPWQeO+MkfEbSFb/dj28Ix9SFbejCwtwG+GnCDmMTHnBvwgZDE1a4NSEATVjOMPtwPpf35nDEMLmwxzC68Ijh7sIWw+DCGsPNhcgoECqjQKiMAqEyCoTKKBAqo0CojAKhMgoEY2QIxsgQjJEhGCNDMEaGYIwMwRgZgjEyBMdIEBwjQXCMBMExEgTHSBAcI0FwjATBMRIEz4iQZ2FxYY7BPZ+yd8Lhw/RW2H0Yr4ULr73w5/QDhX+/6dovgyyULKUstmwH2TC6pYJjPN+WsnFla8vml+MhB0iPWDDGi2MqB1mOugwDGRcyUHTkhMp4NbZksMnok+Eo41MGrI7gQDek136My6CXq0AuC7lO9MKRK0kurfr74PAH7iLbJ7qk3UMAAAAASUVORK5CYII=);
+    background-origin          : border-box;
+    background-position        : center center;
+    background-position-x      : center;
+    background-position-y      : center;
+    background-repeat          : repeat repeat;
+    background-repeat-x        : repeat;
+    background-repeat-y        : repeat;
+    background-size            : auto;
+    border-block-color         : currentColor;
+    border-block-end-color     : currentColor;
+    border-block-start-color   : currentColor;
+    border-bottom-color        : currentColor;
+    border-color               : currentColor;
+    border-inline-color        : currentColor;
+    border-inline-end-color    : currentColor;
+    border-inline-start-color  : currentColor;
+    border-left-color          : currentColor;
+    border-right-color         : currentColor;
+    border-top-color           : currentColor;
+    caret-color                : currentColor;
+    color                      : CanvasText;
+    color                      : light-dark(#3F3F3F, #F0F0F0);
+    color-scheme               : light dark; /* ->> or otherwise `only dark` */
+    column-rule-color          : currentColor;
+    fill                       : currentColor;
+    flood-color                : currentColor;
+    lighting-color             : currentColor;
+    outline                    : currentColor;
+    outline-color              : currentColor;
+    stop-color                 : currentColor;
+    stroke                     : currentColor;
+    text-decoration-color      : currentColor;
+    text-emphasis-color        : currentColor;
+    -moz-text-decoration-color : currentColor;
+    -webkit-tap-highlight-color: currentColor;
+    -webkit-text-emphasis-color: currentColor
+  }
+    /* At Rules > Media > Prefers Color Scheme */
+    @media (prefers-color-scheme: dark)  { html { background-image: none } }
+    @media (prefers-color-scheme: light) { html { background-image: /* --> ../icons/background-pattern-1.svg */ url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2ZXJzaW9uPSIxLjIiPjxwYXRoIGQ9Im0xNTAuNyAzNy40IDY3LjkgNjcuOWMxMi41IDEyLjYgMTIuNSAzMi44IDAgNDUuNGwtNjcuOSA2Ny45Yy0xMi42IDEyLjUtMzIuOCAxMi41LTQ1LjQgMGwtNjcuOS02Ny45Yy0xMi41LTEyLjYtMTIuNS0zMi44IDAtNDUuNGw2Ny45LTY3LjljMTIuNi0xMi41IDMyLjgtMTIuNSA0NS40IDAiIHN0eWxlPSJmaWxsOnJnYmEoMCwwLDAsLjAxNikiIHRyYW5zZm9ybT0ibWF0cml4KC41MDAgMCAwIC41MDAgLS4wMTYgLS4wMTYpIi8+PC9zdmc+) } }
 
-/* Element > <a> */
-a { cursor: pointer }
+    /* Pseudo > View Transition (New, Old) */
+    html::view-transition-new(root) {
+      animation        : 300ms ease-in both pageIn;
+      -moz-animation   : 300ms ease-in both pageIn;
+      -ms-animation    : 300ms ease-in both pageIn;
+      -o-animation     : 300ms ease-in both pageIn;
+      -webkit-animation: 300ms ease-in both pageIn;
+    }
+
+    html::view-transition-old(root) {
+      animation        : 300ms ease-in both pageOut;
+      -moz-animation   : 300ms ease-in both pageOut;
+      -ms-animation    : 300ms ease-in both pageOut;
+      -o-animation     : 300ms ease-in both pageOut;
+      -webkit-animation: 300ms ease-in both pageOut;
+    }
+
+  /* <input> */
+  input[type=file]::file-selector-button {
+    cursor : pointer;
+    outline: none
+  }
+
+  input[type=file]::-ms-browse {
+    cursor : pointer;
+    outline: none
+  }
+
+  input[type=file]::-webkit-file-upload-button {
+    cursor : pointer;
+    outline: none
+  }
+
+  /* <pre>, <samp> */
+  pre, samp { font-variant-emoji: text }
 
 /* Components */
   /* Button */
   .button {
-    border        : 1px solid rgba(127, 127, 127, 0.5);
-    filter        : brightness(1.0);
-    outline       : none;
-    text-transform: uppercase;
-    transform     : translate(-0px, -0px)
+    backdrop-filter  : blur(10px);
+    border           : 1px solid rgba(127, 127, 127, 0.5);
+    filter           : brightness(1.0);
+    outline          : none;
+    text-transform   : uppercase;
+    transform        : translate(0px, -0px);
+    -ms-filter       : brightness(1.0);
+    -ms-transform    : translate(0px, -0px);
+    -o-transform     : translate(0px, -0px);
+    -webkit-transform: translate(0px, -0px)
   }
     /* Pseudo */
       /* Active */
-      .button:active { animation: click 150ms ease-out }
+      .button:active {
+        animation        : click 150ms ease-out;
+        -moz-animation   : click 150ms ease-out;
+        -ms-animation    : click 150ms ease-out;
+        -o-animation     : click 150ms ease-out;
+        -webkit-animation: click 150ms ease-out
+      }
 
       /* Focus */
       .button:focus { border-color: red }
+
+  /* Counter */
+  .counter { font-variant-numeric: tabular-nums }
 
   /* Section */
   .section {

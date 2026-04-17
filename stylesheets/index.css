@@ -1,4 +1,5 @@
 @charset "utf-8";
+@import  "main.css";
 
 /* Features */
   /* Main */
@@ -29,10 +30,19 @@
           font-size  : 50%;
           font-weight: normal
         }
-          /* Pseudo > After */
-          #subtitle::after {
-            color     : inherit;
-            content   : " since 2016";
-            display   : block;
-            text-align: right
-          }
+          /* Pseudo */
+            /* After */
+            #subtitle::after {
+              color     : inherit;
+              content   : " since 2016";
+              display   : block;
+              opacity   : 0.0;
+              text-align: right;
+              visibility: collapse
+            }
+
+            /* Hover */
+            #subtitle:hover::after {
+              opacity   : 1.0;
+              visibility: initial
+            }

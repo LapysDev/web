@@ -1,63 +1,53 @@
-/* Global > Lapys
-  --- NOTE ---
-    #Lapys:
-      • Code standard built for all JavaScript versions
-      • Native features are validated (or internally shimmed otherwise)
-      • Unique character generated for validation tests: `ඞ` (or `\u0D9E`)
-      • Unique token generated for throwing `ReferenceError`s: `ㅤ` (or `\u3164`)
+/* Global
+  --- NOTE (Lapys) ---
+    • Code standard built for all JavaScript versions
+    • Native features are validated (or internally shimmed otherwise)
 
-  --- RULES ---
-    #Lapys:
-      • Enforce maximum of 255 arguments per function
-      • Minimize code indirection (due to prototype-chain lookup)
-      • Prefer declared function arguments over the exotic `arguments` object
+  --- RULES (Lapys) ---
+    • Code indirection should be minimal (due to prototype-chain lookup)
+    • Function arity is a maximum of 255
+    • Preferred function arguments over the exotic `arguments` object
+    • Strict Mode semantics without explicitly opting into `"use strict";`
 
-  --- TODO ---
-    #Lapys:
-      Validate `Function.prototype.toString()` against this ES6+ spoof:
+  --- TODO (Lapys) ---
+    • `HTMLMeterElement <meter>` support
+    • Validate `Function.prototype.toString()` against this ES6+ spoof:
 
-        Function.prototype.toString = ((native, invoke) => {
-          let subnative = new Proxy(native, {apply: (target, that, arguments) => invoke(native, [subnative === that ? native : that, arguments])});
-          return subnative
-        })(Function.prototype.toString, Function.prototype.apply.bind(Function.prototype.apply));
+      Function.prototype.toString = ((native, invoke) => {
+        let subnative = new Proxy(native, {apply: (target, that, arguments) => invoke(native, [subnative === that ? native : that, arguments])});
+        return subnative
+      })(Function.prototype.toString, Function.prototype.apply.bind(Function.prototype.apply));
 
-  --- WARN ---
-    #Lapys:
-      Must be evaluated in "Sloppy Mode"
+  --- WARN (Lapys) ---
+    Negligibly ignored errors:
+    • Out-of-Memory errors raised by a `RecursionOverflowError` instance
 
-      Negligibly ignored errors:
-      • Out-of-Memory errors raised by a `RecursionOverflowError` instance
+    Notably ignored legacy features:
+    • Array.observe(…)
+    • Array.unobserve(…)
+    • Object.getNotifier(…)
+    • Object.observe(…)
+    • Object.prototype.__count__
+    • Object.prototype.__iterator__
+    • Object.prototype.__noSuchMethod__
+    • Object.prototype.toSource(…)
+    • Object.prototype.unwatch(…)
+    • Object.prototype.watch(…)
+    • Object.unobserve(…)
+    • Proxy::hasOwn(…)
 
-      Notably ignored legacy features:
-      • Array.observe(…)
-      • Array.unobserve(…)
-      • Object.getNotifier(…)
-      • Object.observe(…)
-      • Object.prototype.__count__
-      • Object.prototype.__iterator__
-      • Object.prototype.__noSuchMethod__
-      • Object.prototype.toSource(…)
-      • Object.prototype.unwatch(…)
-      • Object.prototype.watch(…)
-      • Object.unobserve(…)
-      • Proxy::hasOwn(…)
+    Possibly modified enumerables:
+    • Function.prototype.toString(…)
+    • Object.prototype.toString(…)
 
-      Possibly modified enumerables:
-      • Function.prototype.toString(…)
-      • Object.prototype.toString(…)
-
-      Possibly modified values:
-      • Error.prototype.name
-      • InternalError.prototype.name
-      • Object.prototype.name
-      • RangeError.prototype.name
-      • TypeError.prototype.name
+    Possibly modified values:
+    • Error.prototype.name
+    • InternalError.prototype.name
+    • Object.prototype.name
+    • RangeError.prototype.name
+    • TypeError.prototype.name
 */
-var Lapys = (function() {
-  var description = "General-purpose standard library for JavaScript";
-  var version     = "0.0.1";
-
-  // ...
+var Lapys = (function(description, version) {
   return new function(prototype) {
     function Lapys() {}
 
@@ -70,10 +60,10 @@ var Lapys = (function() {
 
     return Lapys
   }({
-    "__proto__": null,
-    toString   : function toString() { /* [private code] */ return "Lapys v" + version + "]: " + description }
+    "__proto__": null, // --> Object.create(null)
+    toString   : function toString() { /* [private code] */ return "[Lapys v" + version + "]: " + description }
   })
-})();
+})("General-purpose standard library for JavaScript", "0.5.402");
 
 /* Namespace > ... */
 var Console = {
@@ -98,11 +88,16 @@ var Event = {
 };
 
 /* ... */
-void function() {
+void function main() {
+  /* Global > ... */
+  var Infinity  = 1.0 / 0.0;
+  var NaN       = 0.0 / 0.0;
+  var undefined = void 0;
+
   /* Constant > ... */
   var COMPLETED = false;
   var ERROR     = new PseudoError; // WARN (Lapys) -> Subject to modification when exception raised
-  var GLOBAL    = "undefined" !== typeof this ? this : "undefined" !== typeof globalThis ? globalThis : "undefined" !== typeof frames ? frames : "undefined" !== typeof self ? self : "undefined" !== typeof window ? window : "undefined" !== typeof global ? global : (function() { return this })();
+  var GLOBAL    = typeof this !== "undefined" ? this : typeof window === "object" ? window : typeof global === "object" ? global : typeof self === "object" ? self : typeof frames === "object" ? frames : null; // --> globalThis
   var VOID      = /void/; // NOTE (Lapys) -> Invalidity or nullity
 
   var RECURSION_OVERFLOW_ERROR = VOID;
@@ -2154,8 +2149,8 @@ void function() {
 
           // ...
           if (
-            functor.apply(functor, [undefined, VOID])                                                        &&
-            (function() { return this === (Support.STRICT_MODE ? null      : GLOBAL) }).apply(null,      []) &&
+            functor.apply(functor, [undefined, VOID])                                                     &&
+            (function() { return this === (Support.STRICT_MODE ? null   : GLOBAL) }).apply(null,   []) &&
             (function() { return this === (Support.STRICT_MODE ? undefined : GLOBAL) }).apply(undefined, []) &&
             (function() { try { return (function() { return 0 === arguments.length }).apply(GLOBAL, {"length": -1}) } catch (error) {} return true })()
           ) return native
@@ -2232,7 +2227,7 @@ void function() {
                 if (delete subnative["name"] && (
                   source === "[object Arguments]" ? (
                     subnative(functor, [functor, {'1': VOID, "length": 2}]) &&
-                    (function() { return Support.STRICT_MODE ? null === this : GLOBAL === this }).apply(null, []) &&
+                    (function() { return Support.STRICT_MODE ? null   === this : GLOBAL === this }).apply(null,   []) &&
                     (function() { return Support.STRICT_MODE ? undefined === this : GLOBAL === this }).apply(undefined, []) &&
                     (function() { try { return subnative(function() { return 0 === arguments.length }, [GLOBAL, {"length": -1}]) } catch (error) {} return true })()
                   ) :

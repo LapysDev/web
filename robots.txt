@@ -1,15 +1,22 @@
-User-agent: Bingbot                      # Microsoft Bing’s primary search crawler
 User-agent: AdIdxBot                     # Microsoft Bing ads crawler that checks ad landing pages for policy and quality compliance
+User-agent: AdsBot-Google                # Google bot that checks landing page quality for Google Ads
 User-agent: AI2Bot                       # Allen Institute for A.I. (AI2) crawler used to collect Web data for LLM research
 User-agent: Ai2Bot-Dolma                 # AI2 crawler used to gather content for the Dolma training dataset pipeline
 User-agent: aiHitBot                     # Third-party A.I. data crawler
+User-agent: Bingbot                      # Microsoft Bing’s primary search crawler
 User-agent: Amazonbot                    # Amazon’s crawler used to collect Web content to improve services
 User-agent: Andibot                      # Andi Search crawler that fetches pages for A.I. answers or search
 User-agent: anthropic-ai                 # Anthropic user agent observed for Claude-related Web activities
 User-agent: Applebot                     # Apple’s crawler used for search across Safari, Siri, Spotlight, and related services
 User-agent: Applebot-Extended            # Apple “A.I. training” agent token used to opt out of foundation-model training usage
+User-agent: Baiduspider                  # Baidu’s primary web crawler for its Chinese search engine
 User-agent: bedrockbot                   # Bot associated with Amazon Web Services Bedrock-related crawling or A.I. data collection
+User-agent: bingbot                      # Microsoft Bing
+User-agent: Bravebot                     # Brave Search
+User-agent: BraveSearchBot               # Brave Search’s primary crawler for indexing web content
+User-agent: Brightbot                    # Third-party crawler branded used for automated content analysis or fetching
 User-agent: Brightbot 1.0                # Third-party crawler branded used for automated content analysis or fetching
+User-agent: ByteDanceSpider              # ByteDance crawler used to fetch and analyze Web content
 User-agent: Bytespider                   # ByteDance crawler used to fetch and analyze Web content
 User-agent: Claude-SearchBot             # Anthropic crawler that navigates the Web to improve Claude’s search result quality
 User-agent: Claude-Web                   # Anthropic Web-fetch user agent used for Claude’s Web browsing and retrieval workflows
@@ -21,25 +28,33 @@ User-agent: Crawlspace                   # Third-party crawler used for automate
 User-agent: Diffbot                      # Commercial extraction crawler that turns webpages into structured data for downstream use
 User-agent: EchoboxBot                   # Echobox crawler that fetches pages
 User-agent: FacebookBot                  # Meta crawler used to fetch Web content for Meta products and A.I.-related needs
+User-agent: Facebot                      # Facebook’s crawler for link previews and Open Graph data
 User-agent: Factset_spyderbot            # FactSet crawler used to gather publicly available Web content for financial data products
 User-agent: FirecrawlAgent               # Firecrawl scraping agent used to extract page content for apps and LLM pipelines
 User-agent: FriendlyCrawler              # Generic third-party crawler identifier
 User-agent: Google-CloudVertexBot        # Google crawler used for site-owner requested crawls for Vertex A.I. Agents
 User-agent: Google-Extended              # Google control token for allowing Gemini training use of crawled content
+User-agent: Googlebot-Mobile             # Google’s mobile user experience crawler (largely superseded by standard Googlebot)
+User-agent: Googlebot-News               # Google’s crawler for Google News content
+User-agent: Googlebot-Video              # Google’s crawler for video search indexing
 User-agent: GoogleOther                  # Google’s generic crawler used by product teams for internal fetches (not Search)
 User-agent: GoogleOther-Video            # GoogleOther variant optimized for fetching publicly accessible video URLs
 User-agent: GPTBot                       # OpenAI crawler used to collect content that may be used for training foundation models
 User-agent: iaskspider/2.0               # iAsk A.I. crawler used for A.I. answer retrieval across the open Web
 User-agent: ICC-Crawler                  # Japanese NICT research crawler collecting Web pages for academic research corpora
-User-agent: ImagesiftBot                 #
+User-agent: ImagesiftBot                 # Image-focused crawler used for visual content analysis
 User-agent: img2dataset                  # Dataset-building crawler/tooling UA commonly used to assemble large training datasets
+User-agent: imgproxy                     # Image processing proxy that fetches images for optimization/ resizing
+User-agent: Kangaroo                     # Kangaroo price comparison and deals crawler
 User-agent: Kangaroo Bot                 # Kangaroo LLM crawler used to download data to train Australia-focused open models
 User-agent: MistralAI-User/1.0           # Mistral user-initiated Web fetcher used when Mistral services retrieve a page
-User-agent: MyCentralAIScraperBot        #
+User-agent: msnbot                       # Microsoft’s legacy crawler (predecessor to bingbot)
+User-agent: MyCentralAIScraperBot        # MyCentral aggregation platform’s A.I. content scraper
 User-agent: NovaAct                      # Amazon agent-style crawler used for Web interaction and A.I. automation workflows
 User-agent: OAI-SearchBot                # OpenAI crawler used to index content for ChatGPT’s search features
-User-agent: omgili                       # Webz.io crawler that collects social content for downstream datasets
-User-agent: omgilibot                    # Variant user agent for Webz.io crawling of discussion content
+User-agent: Omgili                       # Webz.io crawler that collects social content for downstream datasets
+User-agent: OmgiliBot                    # Variant user agent for Webz.io crawling of discussion content
+User-agent: OpenAI                       # OpenAI’s crawler used by ChatGPT browsing or training data collection
 User-agent: Operator                     # Agentic browsing/ surfacing user agent seen in automation
 User-agent: PanguBot                     # A.I. crawler associated with Pangu-branded systems
 User-agent: Panscient                    # Research crawler used to collect Web content for scientific dataset analysis
@@ -48,49 +63,55 @@ User-agent: Perplexity-User              # Perplexity user-initiated fetcher use
 User-agent: PerplexityBot                # Perplexity’s crawler used for A.I. search indexing and answer generation
 User-agent: PetalBot                     # Huawei (Petal Search) crawler used for search indexing and related A.I. retrieval
 User-agent: Poseidon Research Crawler    # Research crawler used to collect public Web data for analysis and model development
-User-agent: QualifiedBot                 #
+User-agent: QualifiedBot                 # Qualified’s business-to-business intent crawler and visitor identification
 User-agent: QuillBot                     # QuillBot-related crawler/ fetcher used to retrieve pages for writing services
 User-agent: quillbot.com                 # QuillBot domain-branded variant of its user agent
-User-agent: SBIntuitionsBot              #
+User-agent: SBIntuitionsBot              # SB Intuitions A.I./ machine-learning data collection crawler
 User-agent: Scrapy                       # Default user agent from the Scrapy framework
 User-agent: SemrushBot                   # Semrush SEO crawler used to audit and index sites for Semrush tools and reports
-User-agent: SemrushBot-BA                #
-User-agent: SemrushBot-CT                #
-User-agent: SemrushBot-OCOB              #
-User-agent: SemrushBot-SI                #
+User-agent: SemrushBot-BA                # Semrush crawler for backlink analysis
+User-agent: SemrushBot-CT                # Semrush crawler for content and topic research
+User-agent: SemrushBot-OCOB              # Semrush crawler for on-crawl/ on-page optimisation data
+User-agent: SemrushBot-SI                # Semrush crawler for site indexing audits
 User-agent: SemrushBot-SWA               # Semrush crawler used by SEO Writing Assistant to verify URL content availability
-User-agent: Sidetrade indexer bot        #
+User-agent: Sidetrade                    # Sidetrade A.I. platform crawler for business-to-business commercial intelligence
 User-agent: Timpibot                     # Timpi decentralized crawler used to build an index that can be used for LLM training
 User-agent: VelenPublicWebCrawler        # Velen’s crawler used to scan public pages and build business datasets
 User-agent: Webzio-Extended              # Webz.io crawler used to maintain a repository of crawl data sold to customers
-User-agent: wpbot                        #
-User-agent: YandexAdditional             #
-User-agent: YandexAdditionalBot          #
-User-agent: YouBot                       #
+User-agent: wpbot                        # WordPress-associated crawler/ ping bot
+User-agent: YandexAdditional             # Yandex supplementary crawler for additional content signals
+User-agent: YandexAdditionalBot          # Yandex extended crawler for enriched metadata and content types
+User-agent: YandexBot                    # Yandex’s primary Web crawler for its global search engine
+User-agent: YouBot                       # You.com’s A.I. search engine crawler
 # User-agent: BingPreview          # Microsoft crawler that generates image previews for Bing results
 # User-agent: CCBot                # Common Crawl’s Web crawler that builds large public Web crawl datasets
 # User-agent: ChatGPT-User         # OpenAI user-initiated fetcher used when ChatGPT (or custom GPTs) retrieve a page on request
 # User-agent: Claude-User          # Anthropic user-initiated fetcher used when Claude retrieves a page for a user query
-# User-agent: Discordbot           #
+# User-agent: Discordbot           # Discord’s link embed/ preview scraper
 # User-agent: DuckAssistBot        # DuckDuckGo assistant crawler that fetches pages to generate DuckAssist answers
 # User-agent: facebookexternalhit  # Meta’s link-unfurl crawler that fetches pages for previews when URLs are shared
-# User-agent: googlebot            # Google Search’s main crawler used to discover and index Web pages
-# User-agent: Googlebot-Image      #
+# User-agent: Googlebot            # Google Search’s main crawler used to discover and index Web pages
+# User-agent: Googlebot-Image      # Google’s crawler specifically for image search indexing
 # User-agent: GoogleOther-Image    # GoogleOther variant optimized for fetching publicly accessible image URLs
+# User-agent: ia_archiver          # Internet Archive (Wayback Machine) crawler
 # User-agent: ISSCyberRiskCrawler  # Specialized crawler used for cyber risk monitoring and scoring of public Web assets
-# User-agent: LinkedInBot          #
+# User-agent: LinkedInBot          # LinkedIn’s crawler for content cards and link previews
 # User-agent: meta-externalagent   # Meta crawler used for external Web access tied to Meta services
 # User-agent: Meta-ExternalAgent   # Same as `meta-externalagent`, used for Meta external Web crawling
-# User-agent: meta-externalfetcher # Meta fetcher used for retrieval workflows
-# User-agent: Meta-ExternalFetcher # Same as `meta-externalfetcher`
+# User-agent: Meta-ExternalFetcher # Meta fetcher used for retrieval workflows
 # User-agent: MicrosoftPreview     # Microsoft fetcher that retrieves pages to create link previews in Microsoft products
 # User-agent: PhindBot             # Phind A.I. search crawler used to fetch and index content for answer generation
+# User-agent: TelegramBot          # Telegram’s link preview and content card fetcher
 # User-agent: TikTokSpider         # ByteDance’s TikTok crawler used to fetch pages
+# User-agent: Twitterbot           # Twitter’s crawler for link card and Open Graph previews
+# User-agent: WhatsApp             # WhatsApp’s link preview scraper
+# User-agent: Xbot                 # Twitter’s platform bot/ crawler
 
 Disallow: /fonts/
 Disallow: /scripts/lapys.js      # Prevent redundant indexing
 Disallow: /stylesheets/lapys.css # — alternatively cite to `https://github.com/LapysDev/LapysJS`
-Disallow: /todo.html             # Don’t hamper SEO
+Disallow: /stylesheets/test.css  # Don’t hamper SEO
+Disallow: /test/                 #
 
 Crawl-delay: 2
 Sitemap: https://lapys.dev/sitemap.txt
