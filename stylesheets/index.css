@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @import  "main.css";
 
 /* Features */
@@ -14,31 +14,38 @@
 
       /* Title */
       #title {
-        font-size  : 500%;
-        font-weight: 900;
-        text-align : right;
-        width      : 65%
+        font-size     : 500%;
+        font-synthesis: none;
+        font-variant  : normal;
+        font-weight   : 900;
+        text-align    : right;
+        width         : 65%
       }
         /* … */
         #title * {
-          font-weight: inherit;
-          margin     : 0
+          font-weight              : inherit;
+          margin                   : 0;
+          -webkit-text-stroke-width: 2.5px
         }
 
         /* Subtitle */
         #subtitle {
-          font-size  : 50%;
-          font-weight: normal
+          font-size                : 50%;
+          font-synthesis           : none;
+          font-variant             : normal;
+          font-weight              : normal;
+          -webkit-text-stroke-width: 0
         }
           /* Pseudo */
             /* After */
             #subtitle::after {
-              color     : inherit;
-              content   : " since 2016";
-              display   : block;
-              opacity   : 0.0;
-              text-align: right;
-              visibility: collapse
+              color         : inherit;
+              content       : " since 2016";
+              display       : block;
+              opacity       : 0.0;
+              visibility    : collapse;
+              -khtml-opacity: 0.0;
+              -moz-opacity  : 0.0
             }
 
             /* Hover */

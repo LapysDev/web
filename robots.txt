@@ -1,9 +1,7 @@
-User-agent: AdIdxBot                     # Microsoft Bing ads crawler that checks ad landing pages for policy and quality compliance
 User-agent: AdsBot-Google                # Google bot that checks landing page quality for Google Ads
 User-agent: AI2Bot                       # Allen Institute for A.I. (AI2) crawler used to collect Web data for LLM research
 User-agent: Ai2Bot-Dolma                 # AI2 crawler used to gather content for the Dolma training dataset pipeline
 User-agent: aiHitBot                     # Third-party A.I. data crawler
-User-agent: Bingbot                      # Microsoft Bing’s primary search crawler
 User-agent: Amazonbot                    # Amazon’s crawler used to collect Web content to improve services
 User-agent: Andibot                      # Andi Search crawler that fetches pages for A.I. answers or search
 User-agent: anthropic-ai                 # Anthropic user agent observed for Claude-related Web activities
@@ -11,9 +9,6 @@ User-agent: Applebot                     # Apple’s crawler used for search acr
 User-agent: Applebot-Extended            # Apple “A.I. training” agent token used to opt out of foundation-model training usage
 User-agent: Baiduspider                  # Baidu’s primary web crawler for its Chinese search engine
 User-agent: bedrockbot                   # Bot associated with Amazon Web Services Bedrock-related crawling or A.I. data collection
-User-agent: bingbot                      # Microsoft Bing
-User-agent: Bravebot                     # Brave Search
-User-agent: BraveSearchBot               # Brave Search’s primary crawler for indexing web content
 User-agent: Brightbot                    # Third-party crawler branded used for automated content analysis or fetching
 User-agent: Brightbot 1.0                # Third-party crawler branded used for automated content analysis or fetching
 User-agent: ByteDanceSpider              # ByteDance crawler used to fetch and analyze Web content
@@ -83,7 +78,11 @@ User-agent: YandexAdditional             # Yandex supplementary crawler for addi
 User-agent: YandexAdditionalBot          # Yandex extended crawler for enriched metadata and content types
 User-agent: YandexBot                    # Yandex’s primary Web crawler for its global search engine
 User-agent: YouBot                       # You.com’s A.I. search engine crawler
+# User-agent: AdIdxBot             # Microsoft Bing ads crawler that checks ad landing pages for policy and quality compliance
+# User-agent: Bingbot              # Microsoft Bing’s primary search crawler
 # User-agent: BingPreview          # Microsoft crawler that generates image previews for Bing results
+# User-agent: Bravebot             # Brave Search
+# User-agent: BraveSearchBot       # Brave Search’s primary crawler for indexing web content
 # User-agent: CCBot                # Common Crawl’s Web crawler that builds large public Web crawl datasets
 # User-agent: ChatGPT-User         # OpenAI user-initiated fetcher used when ChatGPT (or custom GPTs) retrieve a page on request
 # User-agent: Claude-User          # Anthropic user-initiated fetcher used when Claude retrieves a page for a user query

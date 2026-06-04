@@ -5,147 +5,964 @@ var L = Lapys;
 
 /* Main */
 void function main() {
-  var Lazy   = {ATTRIBUTE_NAME: "data-@lazy"};   // ->> Considered `https://github.com/whatwg/html/issues/2271` for underscore attributes
-  var Portal = {ATTRIBUTE_NAME: "data-@portal"}; //     -- but ultimately went with `data-@` custom attribute prefix
+  /* Namespace > ... */
+  var Lazy       = {all: null, attributeName: "data-@lazy", awaiting: null, main: nop, next: nop, observer: null, observed: [], prompted: [], tagNames: ["embed", "iframe", "img", "input", "link", "object", "script", "source", "track", "video"], threshold: 0.0,                                                                                                                                                                                                                                                                  '__proto__': null}; // ->> Considered `https://github.com/whatwg/html/issues/2271` for underscore attributes
+  var Portal     = {all: [],   attributeName: "data-@portal",               main: nop,                                                        tagNames: ['*'] /* --> ['a', "address", 'b', "blockquote", "body", "caption", "cite", "code", "dd", "dfn", "div", "dl", "dt", "em", "form", "h1", "h2", "h3", "h4", "h5", "h6", 'i', "kbd", "li", "map", "ol", "option", 'p', "pre", 'q', "samp", "select", "small", "span", "strong", "sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "tr", "ul", "var"] */, '__proto__': null}; //     — but ultimately went with `data-@` custom attribute prefix
+  var Reflection =            {attributeName: "data-@reflect",                                                                                tagNames: [],                                                                                                                                                                                                                                                                                                                                                                           '__proto__': null};
+  var Zoom       = {all: [],   attributeName: "data-@zoom",                                                                                   tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                                        '__proto__': null};
 
-  var nop                  = function() {};                                                                     // --> () => {}
-  var loopProcedure        = typeof requestAnimationFrame !== "function" ? setInterval : requestAnimationFrame; // --> … ? clearInterval : cancelAnimationFrame
-  var loopCallback         = typeof requestAnimationFrame !== "function" ? nop         : requestAnimationFrame;
-  var backgroundProcedures = {0: checkLazyElements, 1: checkPortalElements, index: 0, length: 2, main: nop};
+  /* Global > ... */
+  function BACKGROUND_PROCEDURE() { /* Do something… */                                   BACKGROUND_PROCEDURES[BACKGROUND_PROCEDURES.index = ++BACKGROUND_PROCEDURES.index % BACKGROUND_PROCEDURES.length](); return void BACKGROUND_HANDLER(BACKGROUND_PROCEDURE) }
+  function LOOP_PROCEDURE      () { LOOP_PROCEDURES.main(), BACKGROUND_PROCEDURES.main(); LOOP_PROCEDURES      [LOOP_PROCEDURES      .index = ++LOOP_PROCEDURES      .index % LOOP_PROCEDURES      .length](); return void LOOP_HANDLER      (LOOP_PROCEDURE) }
 
-  /* Class > Portal Information */
-  function PortalInfo(source, destination) {
-    this.destination = destination;
-    this.source      = source
-  }
-    PortalInfo.prototype = {
-      destination: null,
-      source     : null,
-      "__proto__": null
-    };
+  var TRIM_MATCH       = /^\s+|\s+$/g, TRIM_PASS = "";
+  var STYLE_SHORTHANDS = [
+    // ->> Complete longhand expansions only (NUL terminators delimit special cases e.g. `border`)
+    {name: "animation",              composition: delimit("animation-name              animation-duration animation-timing-function animation-delay animation-iteration-count animation-direction animation-fill-mode animation-play-state animation-timeline"                                        .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "animation-range",        composition: delimit("animation-range-start       animation-range-end"                                                                                                                                                                                           .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "background",             composition: delimit("background-image            background-position-x background-position-y / background-size background-repeat background-origin background-clip background-attachment background-color"                                                      .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "background-position",    composition: delimit("background-position-x       background-position-y"                                                                                                                                                                                         .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "background-repeat",      composition: delimit("background-repeat-x         background-repeat-y"                                                                                                                                                                                           .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border",                 composition: delimit("border-top-width            border-right-width border-bottom-width border-left-width\0border-top-style border-right-style border-bottom-style border-left-style\0border-top-color border-right-color border-bottom-color border-left-color".replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-block",           composition: delimit("border-block-width          border-block-style border-block-color"                                                                                                                                                                         .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-block-color",     composition: delimit("border-block-start-color    border-block-end-color"                                                                                                                                                                                        .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-block-end",       composition: delimit("border-block-end-width      border-block-end-style   border-block-end-color"                                                                                                                                                               .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-block-start",     composition: delimit("border-block-start-width    border-block-start-style border-block-start-color"                                                                                                                                                             .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-block-style",     composition: delimit("border-block-start-style    border-block-end-style"                                                                                                                                                                                        .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-block-width",     composition: delimit("border-block-start-width    border-block-end-width"                                                                                                                                                                                        .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-bottom",          composition: delimit("border-bottom-width         border-bottom-style  border-bottom-color"                                                                                                                                                                      .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-color",           composition: delimit("border-top-color            border-right-color   border-bottom-color  border-left-color"                                                                                                                                                   .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-image",           composition: delimit("border-image-source         border-image-slice / border-image-width / border-image-outset border-image-repeat"                                                                                                                             .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-inline",          composition: delimit("border-inline-width         border-inline-style  border-inline-color"                                                                                                                                                                      .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-inline-color",    composition: delimit("border-inline-start-color   border-inline-end-color"                                                                                                                                                                                       .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-inline-end",      composition: delimit("border-inline-end-width     border-inline-end-style   border-inline-end-color"                                                                                                                                                             .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-inline-start",    composition: delimit("border-inline-start-width   border-inline-start-style border-inline-start-color"                                                                                                                                                           .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-inline-style",    composition: delimit("border-inline-start-style   border-inline-end-style"                                                                                                                                                                                       .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-inline-width",    composition: delimit("border-inline-start-width   border-inline-end-width"                                                                                                                                                                                       .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-left",            composition: delimit("border-left-width           border-left-style       border-left-color"                                                                                                                                                                     .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-radius",          composition: delimit("border-top-left-radius      border-top-right-radius border-bottom-right-radius border-bottom-left-radius"                                                                                                                                  .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-right",           composition: delimit("border-right-width          border-right-style      border-right-color"                                                                                                                                                                    .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-style",           composition: delimit("border-top-style            border-right-style      border-bottom-style border-left-style"                                                                                                                                                 .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-top",             composition: delimit("border-top-width            border-top-style        border-top-color"                                                                                                                                                                      .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "border-width",           composition: delimit("border-top-width            border-right-width      border-bottom-width border-left-width"                                                                                                                                                 .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "caret",                  composition: delimit("caret-color                 caret-shape"                                                                                                                                                                                                   .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "column-rule",            composition: delimit("column-rule-width           column-rule-style column-rule-color"                                                                                                                                                                           .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "columns",                composition: delimit("column-width                column-count"                                                                                                                                                                                                  .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "contain-intrinsic-size", composition: delimit("contain-intrinsic-width     contain-intrinsic-height"                                                                                                                                                                                      .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "container",              composition: delimit("container-name /            container-type"                                                                                                                                                                                                .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "flex",                   composition: delimit("flex-grow                   flex-shrink flex-basis"                                                                                                                                                                                        .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "flex-flow",              composition: delimit("flex-direction              flex-wrap"                                                                                                                                                                                                     .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "font",                   composition: delimit("font-style                  font-variant             font-weight       font-stretch         font-size /             line-height           font-family"                                                                                     .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "font-variant",           composition: delimit("font-variant-ligatures      font-variant-alternates  font-variant-caps font-variant-numeric font-variant-east-asian font-variant-position font-variant-emoji"                                                                              .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "gap",                    composition: delimit("row-gap                     column-gap"                                                                                                                                                                                                    .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "grid",                   composition: delimit("grid-template-rows          grid-template-columns grid-template-areas grid-auto-rows grid-auto-columns grid-auto-flow"                                                                                                                     .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "grid-area",              composition: delimit("grid-row-start     /        grid-column-start /   grid-row-end /      grid-column-end"                                                                                                                                                     .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "grid-column",            composition: delimit("grid-column-start  /        grid-column-end"                                                                                                                                                                                               .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "grid-row",               composition: delimit("grid-row-start     /        grid-row-end"                                                                                                                                                                                                  .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "grid-template",          composition: delimit("grid-template-rows /        grid-template-columns grid-template-areas"                                                                                                                                                                     .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "inset",                  composition: delimit("top                         right                 bottom left"                                                                                                                                                                             .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "inset-block",            composition: delimit("inset-block-start           inset-block-end"                                                                                                                                                                                               .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "inset-inline",           composition: delimit("inset-inline-start          inset-inline-end"                                                                                                                                                                                              .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "list-style",             composition: delimit("list-style-position         list-style-image list-style-type"                                                                                                                                                                              .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "margin",                 composition: delimit("margin-top                  margin-right     margin-bottom margin-left"                                                                                                                                                                    .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "margin-block",           composition: delimit("margin-block-start          margin-block-end"                                                                                                                                                                                              .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "margin-inline",          composition: delimit("margin-inline-start         margin-inline-end"                                                                                                                                                                                             .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "marker",                 composition: delimit("marker-start                marker-mid          marker-end"                                                                                                                                                                                .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "mask",                   composition: delimit("mask-image                  mask-position     / mask-size           mask-repeat        mask-origin        mask-clip mask-composite mask-mode"                                                                                              .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "mask-border",            composition: delimit("mask-border-source          mask-border-slice / mask-border-width / mask-border-outset mask-border-repeat mask-border-mode"                                                                                                                .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "offset",                 composition: delimit("offset-position             offset-path         offset-distance     offset-rotate /    offset-anchor"                                                                                                                                      .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "outline",                composition: delimit("outline-width               outline-style       outline-color"                                                                                                                                                                             .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "overflow",               composition: delimit("overflow-x                  overflow-y"                                                                                                                                                                                                    .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "overscroll-behavior",    composition: delimit("overscroll-behavior-x       overscroll-behavior-y"                                                                                                                                                                                         .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "padding",                composition: delimit("padding-top                 padding-right padding-bottom padding-left"                                                                                                                                                                     .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "padding-block",          composition: delimit("padding-block-start         padding-block-end"                                                                                                                                                                                             .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "padding-inline",         composition: delimit("padding-inline-start        padding-inline-end"                                                                                                                                                                                            .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "place-content",          composition: delimit("align-content               justify-content"                                                                                                                                                                                               .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "place-items",            composition: delimit("align-items                 justify-items"                                                                                                                                                                                                 .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "place-self",             composition: delimit("align-self                  justify-self"                                                                                                                                                                                                  .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "scroll-margin",          composition: delimit("scroll-margin-top           scroll-margin-right scroll-margin-bottom scroll-margin-left"                                                                                                                                                   .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "scroll-margin-block",    composition: delimit("scroll-margin-block-start   scroll-margin-block-end"                                                                                                                                                                                       .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "scroll-margin-inline",   composition: delimit("scroll-margin-inline-start  scroll-margin-inline-end"                                                                                                                                                                                      .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "scroll-padding",         composition: delimit("scroll-padding-top          scroll-padding-right scroll-padding-bottom scroll-padding-left"                                                                                                                                                .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "scroll-padding-block",   composition: delimit("scroll-padding-block-start  scroll-padding-block-end"                                                                                                                                                                                      .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "scroll-padding-inline",  composition: delimit("scroll-padding-inline-start scroll-padding-inline-end"                                                                                                                                                                                     .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "scroll-timeline",        composition: delimit("scroll-timeline-name        scroll-timeline-axis"                                                                                                                                                                                          .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "text-box",               composition: delimit("text-box-trim               text-box-edge"                                                                                                                                                                                                 .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "text-decoration",        composition: delimit("text-decoration-line        text-decoration-style text-decoration-color text-decoration-thickness"                                                                                                                                         .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "text-emphasis",          composition: delimit("text-emphasis-style         text-emphasis-color"                                                                                                                                                                                           .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "text-wrap",              composition: delimit("text-wrap-mode              text-wrap-style"                                                                                                                                                                                               .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "transition",             composition: delimit("transition-property         transition-duration transition-timing-function transition-delay transition-behavior"                                                                                                                           .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "view-timeline",          composition: delimit("view-timeline-name          view-timeline-axis  view-timeline-inset"                                                                                                                                                                       .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
+    {name: "white-space",            composition: delimit("white-space-collapse        text-wrap-mode"                                                                                                                                                                                                .replace(/\s+/g, ' '), /[,\/\s\0]+/g)}
+  ],  STYLE_RULES               = getCSSStyleRules(document, false);
+  var STYLE_GROUPING_PREDICATES = {container: {name: [], query: []}, layer: null, media: null, scope: [], supports: null};
+  var PROBE_ELEMENT             = document.createElement("canvas", {"customElementRegistry": null} /* ->> or {"is": null} */);
+  var LOOP_PROCEDURES           = {main: nop, index: 0, '__proto__': [nop]};
+  var LOOP_HANDLER              = typeof requestAnimationFrame !== "function" ? nop /* --> clearTimeout */ : requestAnimationFrame;
+  var COMPONENTS_HANDLER        = null;
+  var COMPONENTS_CACHE          = []; // --> [...createComponentCache(…)]
+  var BACKGROUND_PROCEDURES     = {main: nop, index: 0, '__proto__': [function lazy() { Lazy.main() }, function portal() { Portal.main() }]};
+  var BACKGROUND_HANDLER        = nop;
+
+  var pend = typeof queueMicrotask === "function" ? function pend(callback) { return queueMicrotask(callback) } : function pend(callback) { return void setTimeout(callback, 0.0e3) };
 
   /* Function > ... */
-  function backgroundProcedure() { backgroundProcedures[0 === ++backgroundProcedures.index % backgroundProcedures.length ? backgroundProcedures.index = 0 : backgroundProcedures.index]() }
-
-  function checkLazyElements() {
-    var lazyElements = getLazyElements();
-
-    // TODO (Lapys) -> Check if CSS-visible and scrolled past
-    // const io = new IntersectionObserver((entries, obs) => {
-    //     for (const e of entries) {
-    //       if (!e.isIntersecting) continue;
-    //       const img = e.target;
-    //       img.src = img.getAttribute("_lazy");
-    //       obs.unobserve(img);
-    //     }
-    //   }, { rootMargin: "0px", threshold: 0.01 });
-    //
-    //   document.querySelectorAll("img[_lazy]").forEach(img => io.observe(img));
-    void lazyElements
+  function createComponentCache(component) {
+    return {component: component, cssText: "", elements: [], xpathText: ""}
   }
 
-  function checkPortalElements() {
-    var portalElements = getPortalElements();
+  function delimit(string, delimiter) /* ->> `string.split(…)` that ignores parenthesized/ quoted content */ {
+    var substring = "";
+    var value     = [];
 
-    for (var index = 0, length = portalElements.length; index !== length; ++index) {
-      var portalElement  = portalElements[index]; // --> portalElements instanceof NodeList ? portalElements.item(index) : …
-      var portalTargetId = portalElement.getAttribute(Portal.ATTRIBUTE_NAME);
-
-      // ...
-      if (null !== portalTargetId && "" !== portalTargetId) {
-        var portalTarget = document.getElementById(portalTargetId);
-
-        // TODO (Lapys) -> Check if CSS-visible or scroll-offscreen
-        // isVisibleByCSS()value
-        void portalTarget
-      }
-    }
-  }
-
-  function getComponentsByAttributeName(name, filtered) {
-    if (typeof document.querySelectorAll === "function") {
-      var escapedName = ""; // --> CSS.escape(name)
+    // ...
+    for (var depth = 0, index = 0, quoted = null; index !== string.length; ++index) {
+      var character = string.charAt(index);
 
       // ...
-      if (typeof "".charCodeAt !== "function") escapedName = name;
-      else {
-        var entryCodeUnit = name.charCodeAt(0);
+      if (null !== quoted) {
+        substring += character;
 
-        if (entryCodeUnit === 0x002D && name.length === 1) escapedName = "\\-";
-        else for (var index = 0; index !== name.length; ++index) {
-          var codeUnit = name.charCodeAt(index);
-          escapedName += (
-            // ->> NUL
-            codeUnit === 0x0000 ? '\uFFFD' :
-
-            // ->> Control characters or leading digits (e.g. `-2`)
-            (
-              (codeUnit >=  0x0030 && codeUnit <= 0x0039 && entryCodeUnit === 0x002D && index === 1) ||
-              (codeUnit >=  0x0030 && codeUnit <= 0x0039                             && index === 0) ||
-              (codeUnit >=  0x0001 && codeUnit <= 0x001F)                                            ||
-              (codeUnit === 0x007F)
-            ) ? '\\' + codeUnit.toString(16) + ' ' :
-
-            // ->> Identifier characters
-            (
-              (codeUnit >=  0x0030 && codeUnit <= 0x0039) || // --> [0-9]
-              (codeUnit >=  0x0041 && codeUnit <= 0x005A) || // --> [A-Z]
-              (codeUnit >=  0x0061 && codeUnit <= 0x007A) || // --> [a-z]
-              (codeUnit >=  0x0080) ||                       //
-              (codeUnit === 0x002D) ||                       // --> [-]
-              (codeUnit === 0x005F)                          // --> [_]
-            ) ? name[index] :
-
-            // ->> …
-            '\\' + name[index]
-          )
+        switch (character) {
+          case '\\':   substring += string[++index]; break;
+          case quoted: quoted = null
         }
       }
 
-      try { return document.querySelectorAll('[' + escapedName + ']') }
-      catch (error) {} // --> DOMException | SyntaxError
-    }
+      else switch (character) {
+        case '(':            ++depth;            substring += character; break;
+        case ')':            --depth;            substring += character; break;
+        case '"': case '\'': quoted = character; substring += character; break;
+        default: if (0 === depth) {
+          var match = null;
 
-    else {
-      var elements       = filtered || document.getElementsByTagName('*');
-      var portalElements = [];
+          // ...
+          delimiter.lastIndex = index;
+          match               = delimiter.exec(string);
 
-      // ...
-      for (var index = 0, length = elements.length; index !== length; ++index) {
-        var element = elements[index]; // --> elements.item(index)
+          if (null !== match && match.index === index && match[0] !== "") {
+            substring = substring.replace(TRIM_MATCH, TRIM_PASS);
+            if (substring !== "") void value.push({delimiter: match[0].replace(TRIM_MATCH, TRIM_PASS) || ' ', value: substring});
 
-        // ...
-        if (null !== element.getAttribute(name))
-        void portalElements.push(element)
+            index    += match[0].length - 1;
+            substring = ""
+          } else substring += character
+        }   else substring += character
       }
-
-      return portalElements
     }
 
-    return [] // --> document.evaluate("//*[@*[name()='" + name + "']]", document.documentElement, null, /* --> XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE */ 0x6, null) === XPathResult {snapshotItem(index), snapshotLength}
+    substring = substring.replace(TRIM_MATCH, TRIM_PASS);
+    if (substring !== "") void value.push({delimiter: "", value: substring});
+
+    // ...
+    return value
   }
 
-  function getCSSPropertyValue(element, property, rules, strict) /* ->> Value canonicalization and `revert` value resolution partially implemented; `@container` and `@keyframes` at-rules unsupported */ {
-    var CASCADED   = 0x80;
-    var UNCASCADED = 0x00;
+  function extendComponentCache(element, componentCache) {
+    void componentCache.elements.push(element)
+  }
 
-    var alternateProperty = property.replace(/^-+[a-z]/, function(match) { return match.replace(/-/g, '+') }).replace(/-([a-z])/g, function(match, matchGroup) { return matchGroup.toUpperCase() }).replace(/^\++/, function(match) { return match.replace(/\+/g, '-') });
-    var cascaded          = 0x00;
-    var information       = null; // --> {matches: false, order: < 0, priority: "", specificity: {0: 0, 1: 0, 2: 0}, value: null}
-    var layers            = [""];
-    var rules             = null; // --> CSSRuleList | DOMCSSRuleList | Object {layer: String, order: Number, rule: CSSRule}[] --- TODO (Lapys) -> Candidates for cache
-    var style             = null; //                                                                                                               ^^^
-    var styleMap          = null; //                                                                                                               ^^^
-    var styleSheets       = [];   // ->> Iterated/ updated in reverse
-    var value             = null;
+  function getCSSPropertyValue(element, propertyName, styleRules /* = null */, groupingPredicates /* = null */, strict /* = false, $ = null */) /* ->> Non-standards consistent; doesn’t acknowledge vendor extensions */ {
+    var $ = arguments.length > 5 ? arguments[5] || null : null;
+
+    var ACTUAL_BOUNDING_BOX_ASCENT_METRIC = 0x01, WIDTH_METRIC             = 0x02,                                                                      NO_METRIC     = 0x00;
+    var ANIMATION_DESCRIPTOR              = 0x01, CSS_ANIMATION_DESCRIPTOR = 0x03, CSS_TRANSITION_DESCRIPTOR = 0x02, VIEW_TRANSITION_DESCRIPTOR = 0x04, NO_DESCRIPTOR = 0x00;
+    var DEPTH_AXIS                        = 0x03, HORIZONTAL_AXIS          = 0x01, VERTICAL_AXIS             = 0x02,                                    NO_AXIS       = 0x00;
+    var DROPDOWN_BOX                      = 0x00, LIST_BOX                 = 0x01;
+    var GRID_TEMPLATE_COLUMNS             = 0x01, GRID_TEMPLATE_ROWS       = 0x02;
+    var PRESENTATIONAL_HINT               = true, USER_AGENT               = true;
+    var MEASUREMENTS                      = {
+      '%'                 : /^([-+]?(?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(%)$/,
+      "angle"             : /^([-+]?(?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(deg|grad|rad|turn)$/i,
+      "color"             : /^((?:currentColor|transparent|AccentColor|AccentColorText|ActiveText|ButtonBorder|ButtonFace|ButtonText|Canvas|CanvasText|Field|FieldText|GrayText|Highlight|HighlightText|LinkText|Mark|MarkText|SelectedItem|SelectedItemText|VisitedText)|(?:aliceblue|antiquewhite|aqua|aquamarine|azure|beige|bisque|black|blanchedalmond|blue|blueviolet|brown|burlywood|cadetblue|chartreuse|chocolate|coral|cornflowerblue|cornsilk|crimson|cyan|darkblue|darkcyan|darkgoldenrod|darkgray|darkgreen|darkgrey|darkkhaki|darkmagenta|darkolivegreen|darkorange|darkorchid|darkred|darksalmon|darkseagreen|darkslateblue|darkslategray|darkslategrey|darkturquoise|darkviolet|deeppink|deepskyblue|dimgray|dimgrey|dodgerblue|firebrick|floralwhite|forestgreen|fuchsia|gainsboro|ghostwhite|gold|goldenrod|gray|green|greenyellow|grey|honeydew|hotpink|indianred|indigo|ivory|khaki|lavender|lavenderblush|lawngreen|lemonchiffon|lightblue|lightcoral|lightcyan|lightgoldenrodyellow|lightgray|lightgreen|lightgrey|lightpink|lightsalmon|lightseagreen|lightskyblue|lightslategray|lightslategrey|lightsteelblue|lightyellow|lime|limegreen|linen|magenta|maroon|mediumaquamarine|mediumblue|mediumorchid|mediumpurple|mediumseagreen|mediumslateblue|mediumspringgreen|mediumturquoise|mediumvioletred|midnightblue|mintcream|mistyrose|moccasin|navajowhite|navy|oldlace|olive|olivedrab|orange|orangered|orchid|palegoldenrod|palegreen|paleturquoise|palevioletred|papayawhip|peachpuff|peru|pink|plum|powderblue|purple|rebeccapurple|red|rosybrown|royalblue|saddlebrown|salmon|sandybrown|seagreen|seashell|sienna|silver|skyblue|slateblue|slategray|slategrey|snow|springgreen|steelblue|tan|teal|thistle|tomato|turquoise|violet|wheat|white|whitesmoke|yellow|yellowgreen)|(?:#[A-F\d]{3,4}|#[A-F\d]{6}|#[A-F\d]{8}))$/i,
+      "duration"          : /^((?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(ms|s)$/i,
+      "frequency"         : /^((?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(kHz|Hz)$/i,
+      "function-color"    : /^(color|color-mix|contrast-color|device-cmyk|hdr-color|hsl|hsla|hwb|ictcp|jzazbz|jzczhz|lab|lch|light-dark|oklab|oklch|rgb|rgba)\(\s*([\S\s]+)\s*\)$/,
+      "function-transform": /^(?:(matrix)\(\s*((?:@n\s*,\s*){5}@n)\s*\)|(matrix3d)\(\s*((?:@n\s*,\s*){15}@n)\s*\)|(perspective)\(\s*(@n)\s*\)|(rotate[XYZ]?)\(\s*(@0|@n(?:deg))\s*\)|(rotate3d)\(\s*((?:@n\s*,\s*){3}(?:@0|@n(?:deg)))\s*\)|(scale)\(\s*(@n(?:\s*,\s*@n)?)\s*\)|(scale[XYZ])\(\s*(@n)\s*\)|(scale3d)\(\s*((?:@n\s*,\s*){2}@n)\s*\)|(skew)\(\s*((?:@0|@n(?:deg))(?:\s*,\s*(?:@0|@n(?:deg)))?)\s*\)|(skew[XY])\(\s*(@0|@n(?:deg))\s*\)|(translate)\(\s*((?:@0|@n<length>)(?:\s*,\s*(?:@0|@n<length>))?)\s*\)|(translate[XYZ])\(\s*(@0|@n<length>)\s*\)|(translate3d)\(\s*((?:(?:@0|@n<length>)\s*,\s*){2}(?:@0|@n<length>))\s*\))$/,
+      "function-value"    : /^(abs|acos|asin|atan|atan2|calc|calc-size|clamp|cos|exp|hypot|log|max|min|mod|pow|progress|rem|round|sign|sin|sqrt|tan)\(\s*([\S\s]+)\s*\)$/,
+      "length"            : /^([-+]?(?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(%|cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvmax|dvmin|dvw|em|ex|ic|ic|in|lh|lvb|lvh|lvi|lvmax|lvmin|lvw|mm|pc|pt|px|Q|rcap|rch|rem|rex|ric|rlh|svb|svh|svi|svmax|svmin|svw|vb|vh|vi|vmax|vmin|vw)$/i,
+      "resolution"        : /^((?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(dpcm|dpi|dppx|x)$/i
+    }, CANON_PASS = function(match, $1, $2, $3, $4) { return $4 ? $4 : match }, CANON_ONLY = "$4", CANON_MATCH = /^(?=([-+]?(?:0+(?:\.0*)?|\.0+)(?:[Ee][-+]?\d+)?)$|([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?)(deg|dppx|Hz|px|s)$)(\1|\2)\3$|^[\S\s]*$/i;
+
+    var document           = element.ownerDocument || (function() { return this || globalThis })().document;
+    var groupingPredicates = arguments.length <= 3 || null === groupingPredicates ? getCSSGroupingPredicates()           : groupingPredicates;
+    var styleRules         = arguments.length <= 2 || null === styleRules         ? getCSSStyleRules(document, !!strict) : styleRules;
+    var styleDeclaration   = getCSSStyleDeclaration(element);
 
     /* ... */
+    function alt(propertyName) {
+      return propertyName.replace(/^-+[a-z]/, function(match) { return match.replace(/-/g, '+') }).replace(/-([a-z])/g, function(match, $1) { return $1.toUpperCase() }).replace(/^\++/, function(match) { return match.replace(/\+/g, '-') })
+    }
+
+    function bézier(pointAX, pointAY, pointBX, pointBY, progress) /* ->> For `KeyframeEffect::getKeyframes().easing` */ {
+      var value = progress;
+
+      // ...
+      for (var estimation, precision = 0; precision !== 8; ++precision) /* ->> Newton’s method */ {
+        estimation = ((pointAX * (1.00 - value) * (1.00 - value) * value * 3) + (pointBX * (1.00 - value) * value * value * 3) + (value * value * value)) - progress;
+        if (Math.abs(estimation) < 1.00e-4) break;
+
+        value -= estimation / (((pointAX * (1.00 - (value * 3.00)) * (1.00 - (value * 1.00)) * 3) + (pointBX * (2.00 - (value * 3.00)) * value * 3.00) + (value * value * 3.00)) || 1.00)
+      }
+
+      return (pointAY * (1.00 - value) * (1.00 - value) * value * 3.00) + (pointBY * (1.00 - value) * value * value * 3.00) + (value * value * value)
+    }
+
+    function block(writingMode) {
+      switch (writingMode) {
+        case "vertical-rl":                                    // --> right → left
+        case "vertical-lr":                                    // --> left  → right
+        case "sideways-rl":                                    // --> right → left
+        case "sideways-lr":            return HORIZONTAL_AXIS; // --> left  → right
+        case "horizontal-tb": default: return VERTICAL_AXIS    // --> top   → bottom
+      }
+    }
+
+    function box(select) {
+      return select.multiple || select.size > 1 ? LIST_BOX : DROPDOWN_BOX
+    }
+
+    function canonicalize(element, propertyName, propertyValue, axis, styleRules, groupingPredicates) {
+      function canon(element, propertyName, propertyValue, axis, property, properties) {
+        if (null !== property)
+        property.priors = [];
+
+        return (void properties.push({
+          axis      : axis,
+          canonValue: "",
+          element   : element,
+          name      : propertyName,
+          origin    : 0 !== properties.length ? properties[properties.length - 1] : null,
+          priors    : [],
+          value     : propertyValue
+        }), properties)
+      }
+
+      canonicalize: // ->> Quietly failing stack overflow errors here is acceptable because `@container`s are a pain to traverse, especially after evaluating the recursion’s limit worth of container elements
+      for (var properties = canon(element, propertyName, propertyValue, axis, null, properties = [ /* ... */ ]); properties.length; ) {
+        var canonicalized = false;
+        var property      = properties[properties.length - 1];
+        var values        = delimit(property.value.toLowerCase(), /[,\/\s]+/g);
+
+        // ... --> values = […]
+        if (property.name === "gap" && values.length === 1)
+        values = [values[0], {delimiter: ' ', value: values[0].value}];
+
+        // ...
+        for (var index = 0; index !== values.length; ++index) {
+          var measurement  = values[index];
+          var measurements = {"angle": null, "color": null, "duration": null, "frequency": null, "function-color": null, "function-transform": null, "function-value": null, "length": null, "resolution": null};
+
+          // ... --> .axis = enum …
+          for (var axis = {index: index, names: [property.name], values: values}; NO_AXIS === property.axis && axis.names.length; )
+          switch (axis.names.pop()) /* ->> Only for `axis`-dependent properties */ {
+            case "background-position":
+            case "mask-position": case "mask-size":
+            case "object-position": {
+              var indexes = {begin: axis.index, end: axis.index};
+
+              // ...
+              while (indexes.begin--)                      { if (/\s*,\s*/.test(axis.values[indexes.begin].delimiter)) break } ++indexes.begin;
+              while (++indexes.end !== axis.values.length) { if (/\s*,\s*/.test(axis.values[indexes.end]  .delimiter)) break }
+
+              switch (indexes.end - indexes.begin) {
+                case 1: property.axis = HORIZONTAL_AXIS;                                                                                              break;
+                case 2: switch (axis.index - indexes.begin) { case 0: property.axis = HORIZONTAL_AXIS; break; case 1: property.axis = VERTICAL_AXIS } break;
+                case 3: case 4:
+                  for (var offsets = [axis.values[axis.index - indexes.begin - 0]], once = false; offsets.length; once = true)
+                  switch (offsets.pop()) {
+                    case "bottom": case "top":   property.axis = VERTICAL_AXIS;   break;
+                    case "left":   case "right": property.axis = HORIZONTAL_AXIS; break;
+                    default:                     offsets       = !once ? [axis.values[axis.index - indexes.begin - 1].value] : []
+                  }
+              }
+            } break;
+
+            case "background-position-y":    case "border-bottom": case "border-bottom-width": case "border-top": case "border-top-width": case "bottom":
+            case "contain-intrinsic-height": case "height":
+            case "max-height":               case "min-height":
+            case "row-gap":                  case "top":
+              property.axis = VERTICAL_AXIS;
+              break;
+
+            case "background-position-x": case "border-left": case "border-left-width": case "border-right": case "border-right-width":
+            case "column-gap":            case "contain-intrinsic-width":
+            case "left":
+            case "max-width": case "min-width":
+            case "right":     case "width":
+              property.axis = HORIZONTAL_AXIS;
+              break;
+
+            case "block-size": case "border-block": case "border-block-end": case "border-block-end-width": case "border-block-start": case "border-block-start-width": case "border-block-width":
+            case "contain-intrinsic-block-size":
+            case "grid-auto-columns":    case "grid-template-columns":
+            case "inset-block":          case "inset-block-end":          case "inset-block-start":
+            case "margin":               case "margin-block":             case "margin-block-end":           case "margin-block-start":  case "margin-bottom":  case "margin-inline":  case "margin-inline-end":  case "margin-inline-start":  case "margin-left":  case "margin-right":  case "margin-top": case "max-block-size": case "min-block-size":
+            case "padding":              case "padding-block":            case "padding-block-end":          case "padding-block-start": case "padding-bottom": case "padding-inline": case "padding-inline-end": case "padding-inline-start": case "padding-left": case "padding-right": case "padding-top":
+            case "scroll-padding-block": case "scroll-padding-block-end": case "scroll-padding-block-start": case "shape-margin":
+            case "text-indent": {
+              try { property.axis = block(getCSSPropertyValue(property.element, "writing-mode", styleRules, groupingPredicates, false, $)) }
+              catch (error) { /* --> InternalError | RangeError */ }
+            } break;
+
+            case "border-image-width": case "border-width":
+            case "mask-border-outset": switch (axis.values.length) {
+              case 1:                 property.axis = HORIZONTAL_AXIS; break;
+              case 2: case 3: case 4: void axis.names.push("inset")
+            } break;
+
+            case "border-inline":         case "border-inline-end": case "border-inline-end-width": case "border-inline-start": case "border-inline-start-width": case "border-inline-width":
+            case "column-width":          case "contain-intrinsic-inline-size":
+            case "grid-auto-rows":        case "grid-template-rows":
+            case "inline-size":           case "inset-inline": case "inset-inline-end": case "inset-inline-start":
+            case "letter-spacing":        case "line-height":
+            case "max-inline-size":       case "min-inline-size":
+            case "scroll-padding-inline": case "scroll-padding-inline-end": case "scroll-padding-inline-start":
+            case "tab-size":              case "word-spacing": {
+              try { property.axis = inline(getCSSPropertyValue(property.element, "writing-mode", styleRules, groupingPredicates, false, $)) }
+              catch (error) { /* --> InternalError | RangeError */ }
+            } break;
+
+            case "contain-intrinsic-size":
+              property.axis = axis.values.length !== 1 ? axis.index < axis.values.length / 2 ? HORIZONTAL_AXIS : VERTICAL_AXIS : NO_AXIS;
+              break;
+
+            case "flex": case "flex-basis": try {
+              switch (getCSSPropertyValue(property.element, "flex-direction", styleRules, groupingPredicates, false, $)) {
+                // ->> Reversed directions when `-reverse`’d
+                case "column": case "column-reverse": void axis.names.push("block-size"); break;
+                case "row":    case "row-reverse":    void axis.names.push("inline-size")
+              }
+            } catch (error) { /* --> InternalError | RangeError */ } break;
+
+            case "grid": case "grid-template": {
+              var gridTemplate = GRID_TEMPLATE_ROWS;
+
+              // ...
+              for (var subindex = axis.index; subindex--; )
+              if (/\s*\/\s*/.test(axis.values[subindex].delimiter)) {
+                gridTemplate = GRID_TEMPLATE_COLUMNS;
+                break
+              }
+
+              switch (gridTemplate) {
+                case GRID_TEMPLATE_COLUMNS: void axis.names.push("block-size"); break;
+                case GRID_TEMPLATE_ROWS:    void axis.names.push("inline-size")
+              }
+            } break;
+
+            case "inset":
+            case "mask-border-slice": case "mask-border-width":
+            case "scroll-padding": switch (axis.values.length) {
+              // --> top, right, bottom, left
+              case 2: case 3: case 4:
+              switch (axis.index) {
+                case 0: case 2: property.axis = VERTICAL_AXIS; break;
+                case 1: case 3: property.axis = HORIZONTAL_AXIS
+              }
+            } break;
+
+            case "gap": switch (axis.index) {
+              case 0: property.axis = VERTICAL_AXIS; break;
+              case 1: property.axis = HORIZONTAL_AXIS
+            } break;
+
+            case "mask": {
+              var indexes = {begin: axis.index, end: axis.index};
+
+              // ...
+              while (indexes.begin--)                      { if (/\s*[,\/]\s*/.test(axis.values[indexes.begin].delimiter)) break } ++indexes.begin;
+              while (++indexes.end !== axis.values.length) { if (/\s*,\s*/    .test(axis.values[indexes.end]  .delimiter)) break }
+
+              void axis.names.push(0 === indexes.begin || /\s*,\s*/.test(axis.values[indexes.begin - 1].delimiter) ? "mask-position" : "mask-size");
+
+              axis.index -= indexes.begin;
+              axis.values = [];
+
+              while (indexes.begin !== indexes.end && axis.values.length <= 4)
+              void axis.values.push(values[indexes.begin++])
+            }
+          }
+
+          // ... --> measurement.value = "…"
+          if (property.name === "font-size" || property.name === "font")
+          switch (measurement.value) {
+            case "large":     measurement.value = "1.20rem"; break;
+            case "medium":    measurement.value = "1.00rem"; break;
+            case "small":     measurement.value = "0.89rem"; break;
+            case "x-large":   measurement.value = "1.50rem"; break;
+            case "x-small":   measurement.value = "0.75rem"; break;
+            case "xx-large":  measurement.value = "2.00rem"; break;
+            case "xx-small":  measurement.value = "0.60rem"; break;
+            case "xxx-large": measurement.value = "3.00rem"; break;
+            default: // --> larger, math, smaller, …
+          }
+
+          if (property.name === "line-height" || (property.name === "font" && property.delimiter.replace(TRIM_MATCH, TRIM_PASS) === '/'))
+          switch (measurement.value) { case "normal": /* --> measurement.value = "1.2" */ }
+
+          // ... ->> Compute `measurement.value` (as necessary) --- TODO (Lapys)
+          if (measurements["function-color"]     = measurement.value.match(MEASUREMENTS["function-color"]))     void measurements; // ->> Parser required e.g. `hwb(0.50turn 10% 0% / 0.50)`                                  is `rgb(26 255 255 / 0.50)`
+          if (measurements["function-transform"] = measurement.value.match(MEASUREMENTS["function-transform"])) void measurements; // ->> Parser required e.g. `perspective(500px) rotateY(30deg) translate3d(10px, 0, 20px)` is `matrix3d(0.87, 0.00, -0.50, 0.05, 0.00, 1.00, 0.00, 0.00, 0.50, 0.00, 0.87, -0.05, 10.00, 0.00, 20.00, 0.96)`
+          if (measurements["function-value"]     = measurement.value.match(MEASUREMENTS["function-value"]))     void measurements; // ->> Parser required e.g. `calc((3em + 5lh) / 2)`                                  could be `54px` (`calc(1.50em + 2.50lh)`)
+
+          // ... ->> Canonicalize `measurement.value`
+          if (measurements["angle"] = measurement.value.match(MEASUREMENTS["angle"]))
+          switch (measurements["angle"][2]) {
+            case "deg":  measurement.value = (measurements["angle"][1])                      + "deg"; break;
+            case "grad": measurement.value = (measurements["angle"][1] * 0.90)               + "deg"; break;
+            case "rad" : measurement.value = (measurements["angle"][1] * (180.00 / Math.PI)) + "deg"; break;
+            case "turn": measurement.value = (measurements["angle"][1] * 360.00)             + "deg"
+          }
+
+          else if (measurements["color"] = measurement.value.match(MEASUREMENTS["color"]))
+          switch (measurements["color"][1].toLowerCase()) {
+            case "accentcolor":  case "accentcolortext": case "activetext":
+            case "buttonborder": case "buttonface":      case "buttontext":
+            case "canvas":       case "canvastext":
+            case "field":        case "fieldtext":
+            case "graytext":
+            case "highlight": case "highlighttext":
+            case "linktext":
+            case "mark":         case "marktext":
+            case "selecteditem": case "selecteditemtext":
+            case "visitedtext":
+
+            case "activeborder": case "activecaption":   case "appworkspace":
+            case "background":   case "buttonhighlight": case "buttonshadow":
+            case "captiontext":
+            case "inactiveborder": case "inactivecaption": case "inactivecaptiontext": case "infobackground": case "infotext":
+            case "menu":           case "menutext":
+            case "scrollbar":
+            case "threeddarkshadow": case "threedface":  case "threedhighlight": case "threedlightshadow": case "threedshadow":
+            case "window":           case "windowframe": case "windowtext":
+              // NOTE (Lapys) -> `getComputedStyle(…)` or such required
+              break;
+
+            case "aliceblue":            measurement.value = "rgba(240, 248, 255, 1.0)"; break;
+            case "antiquewhite":         measurement.value = "rgba(250, 235, 215, 1.0)"; break;
+            case "aqua":                 measurement.value = "rgba(0, 255, 255, 1.0)";   break;
+            case "aquamarine":           measurement.value = "rgba(127, 255, 212, 1.0)"; break;
+            case "azure":                measurement.value = "rgba(240, 255, 255, 1.0)"; break;
+            case "beige":                measurement.value = "rgba(245, 245, 220, 1.0)"; break;
+            case "bisque":               measurement.value = "rgba(255, 228, 196, 1.0)"; break;
+            case "black":                measurement.value = "rgba(0, 0, 0, 1.0)";       break;
+            case "blanchedalmond":       measurement.value = "rgba(255, 235, 205, 1.0)"; break;
+            case "blue":                 measurement.value = "rgba(0, 0, 255, 1.0)";     break;
+            case "blueviolet":           measurement.value = "rgba(138, 43, 226, 1.0)";  break;
+            case "brown":                measurement.value = "rgba(165, 42, 42, 1.0)";   break;
+            case "burlywood":            measurement.value = "rgba(222, 184, 135, 1.0)"; break;
+            case "cadetblue":            measurement.value = "rgba(95, 158, 160, 1.0)";  break;
+            case "chartreuse":           measurement.value = "rgba(127, 255, 0, 1.0)";   break;
+            case "chocolate":            measurement.value = "rgba(210, 105, 30, 1.0)";  break;
+            case "coral":                measurement.value = "rgba(255, 127, 80, 1.0)";  break;
+            case "cornflowerblue":       measurement.value = "rgba(100, 149, 237, 1.0)"; break;
+            case "cornsilk":             measurement.value = "rgba(255, 248, 220, 1.0)"; break;
+            case "crimson":              measurement.value = "rgba(220, 20, 60, 1.0)";   break;
+            case "cyan":                 measurement.value = "rgba(0, 255, 255, 1.0)";   break;
+            case "darkblue":             measurement.value = "rgba(0, 0, 139, 1.0)";     break;
+            case "darkcyan":             measurement.value = "rgba(0, 139, 139, 1.0)";   break;
+            case "darkgoldenrod":        measurement.value = "rgba(184, 134, 11, 1.0)";  break;
+            case "darkgray":             measurement.value = "rgba(169, 169, 169, 1.0)"; break;
+            case "darkgreen":            measurement.value = "rgba(0, 100, 0, 1.0)";     break;
+            case "darkgrey":             measurement.value = "rgba(169, 169, 169, 1.0)"; break;
+            case "darkkhaki":            measurement.value = "rgba(189, 183, 107, 1.0)"; break;
+            case "darkmagenta":          measurement.value = "rgba(139, 0, 139, 1.0)";   break;
+            case "darkolivegreen":       measurement.value = "rgba(85, 107, 47, 1.0)";   break;
+            case "darkorange":           measurement.value = "rgba(255, 140, 0, 1.0)";   break;
+            case "darkorchid":           measurement.value = "rgba(153, 50, 204, 1.0)";  break;
+            case "darkred":              measurement.value = "rgba(139, 0, 0, 1.0)";     break;
+            case "darksalmon":           measurement.value = "rgba(233, 150, 122, 1.0)"; break;
+            case "darkseagreen":         measurement.value = "rgba(143, 188, 143, 1.0)"; break;
+            case "darkslateblue":        measurement.value = "rgba(72, 61, 139, 1.0)";   break;
+            case "darkslategray":        measurement.value = "rgba(47, 79, 79, 1.0)";    break;
+            case "darkslategrey":        measurement.value = "rgba(47, 79, 79, 1.0)";    break;
+            case "darkturquoise":        measurement.value = "rgba(0, 206, 209, 1.0)";   break;
+            case "darkviolet":           measurement.value = "rgba(148, 0, 211, 1.0)";   break;
+            case "deeppink":             measurement.value = "rgba(255, 20, 147, 1.0)";  break;
+            case "deepskyblue":          measurement.value = "rgba(0, 191, 255, 1.0)";   break;
+            case "dimgray":              measurement.value = "rgba(105, 105, 105, 1.0)"; break;
+            case "dimgrey":              measurement.value = "rgba(105, 105, 105, 1.0)"; break;
+            case "dodgerblue":           measurement.value = "rgba(30, 144, 255, 1.0)";  break;
+            case "firebrick":            measurement.value = "rgba(178, 34, 34, 1.0)";   break;
+            case "floralwhite":          measurement.value = "rgba(255, 250, 240, 1.0)"; break;
+            case "forestgreen":          measurement.value = "rgba(34, 139, 34, 1.0)";   break;
+            case "fuchsia":              measurement.value = "rgba(255, 0, 255, 1.0)";   break;
+            case "gainsboro":            measurement.value = "rgba(220, 220, 220, 1.0)"; break;
+            case "ghostwhite":           measurement.value = "rgba(248, 248, 255, 1.0)"; break;
+            case "gold":                 measurement.value = "rgba(255, 215, 0, 1.0)";   break;
+            case "goldenrod":            measurement.value = "rgba(218, 165, 32, 1.0)";  break;
+            case "gray":                 measurement.value = "rgba(128, 128, 128, 1.0)"; break;
+            case "green":                measurement.value = "rgba(0, 128, 0, 1.0)";     break;
+            case "greenyellow":          measurement.value = "rgba(173, 255, 47, 1.0)";  break;
+            case "grey":                 measurement.value = "rgba(128, 128, 128, 1.0)"; break;
+            case "honeydew":             measurement.value = "rgba(240, 255, 240, 1.0)"; break;
+            case "hotpink":              measurement.value = "rgba(255, 105, 180, 1.0)"; break;
+            case "indianred":            measurement.value = "rgba(205, 92, 92, 1.0)";   break;
+            case "indigo":               measurement.value = "rgba(75, 0, 130, 1.0)";    break;
+            case "ivory":                measurement.value = "rgba(255, 255, 240, 1.0)"; break;
+            case "khaki":                measurement.value = "rgba(240, 230, 140, 1.0)"; break;
+            case "lavender":             measurement.value = "rgba(230, 230, 250, 1.0)"; break;
+            case "lavenderblush":        measurement.value = "rgba(255, 240, 245, 1.0)"; break;
+            case "lawngreen":            measurement.value = "rgba(124, 252, 0, 1.0)";   break;
+            case "lemonchiffon":         measurement.value = "rgba(255, 250, 205, 1.0)"; break;
+            case "lightblue":            measurement.value = "rgba(173, 216, 230, 1.0)"; break;
+            case "lightcoral":           measurement.value = "rgba(240, 128, 128, 1.0)"; break;
+            case "lightcyan":            measurement.value = "rgba(224, 255, 255, 1.0)"; break;
+            case "lightgoldenrodyellow": measurement.value = "rgba(250, 250, 210, 1.0)"; break;
+            case "lightgray":            measurement.value = "rgba(211, 211, 211, 1.0)"; break;
+            case "lightgreen":           measurement.value = "rgba(144, 238, 144, 1.0)"; break;
+            case "lightgrey":            measurement.value = "rgba(211, 211, 211, 1.0)"; break;
+            case "lightpink":            measurement.value = "rgba(255, 182, 193, 1.0)"; break;
+            case "lightsalmon":          measurement.value = "rgba(255, 160, 122, 1.0)"; break;
+            case "lightseagreen":        measurement.value = "rgba(32, 178, 170, 1.0)";  break;
+            case "lightskyblue":         measurement.value = "rgba(135, 206, 250, 1.0)"; break;
+            case "lightslategray":       measurement.value = "rgba(119, 136, 153, 1.0)"; break;
+            case "lightslategrey":       measurement.value = "rgba(119, 136, 153, 1.0)"; break;
+            case "lightsteelblue":       measurement.value = "rgba(176, 196, 222, 1.0)"; break;
+            case "lightyellow":          measurement.value = "rgba(255, 255, 224, 1.0)"; break;
+            case "lime":                 measurement.value = "rgba(0, 255, 0, 1.0)";     break;
+            case "limegreen":            measurement.value = "rgba(50, 205, 50, 1.0)";   break;
+            case "linen":                measurement.value = "rgba(250, 240, 230, 1.0)"; break;
+            case "magenta":              measurement.value = "rgba(255, 0, 255, 1.0)";   break;
+            case "maroon":               measurement.value = "rgba(128, 0, 0, 1.0)";     break;
+            case "mediumaquamarine":     measurement.value = "rgba(102, 205, 170, 1.0)"; break;
+            case "mediumblue":           measurement.value = "rgba(0, 0, 205, 1.0)";     break;
+            case "mediumorchid":         measurement.value = "rgba(186, 85, 211, 1.0)";  break;
+            case "mediumpurple":         measurement.value = "rgba(147, 112, 219, 1.0)"; break;
+            case "mediumseagreen":       measurement.value = "rgba(60, 179, 113, 1.0)";  break;
+            case "mediumslateblue":      measurement.value = "rgba(123, 104, 238, 1.0)"; break;
+            case "mediumspringgreen":    measurement.value = "rgba(0, 250, 154, 1.0)";   break;
+            case "mediumturquoise":      measurement.value = "rgba(72, 209, 204, 1.0)";  break;
+            case "mediumvioletred":      measurement.value = "rgba(199, 21, 133, 1.0)";  break;
+            case "midnightblue":         measurement.value = "rgba(25, 25, 112, 1.0)";   break;
+            case "mintcream":            measurement.value = "rgba(245, 255, 250, 1.0)"; break;
+            case "mistyrose":            measurement.value = "rgba(255, 228, 225, 1.0)"; break;
+            case "moccasin":             measurement.value = "rgba(255, 228, 181, 1.0)"; break;
+            case "navajowhite":          measurement.value = "rgba(255, 222, 173, 1.0)"; break;
+            case "navy":                 measurement.value = "rgba(0, 0, 128, 1.0)";     break;
+            case "oldlace":              measurement.value = "rgba(253, 245, 230, 1.0)"; break;
+            case "olive":                measurement.value = "rgba(128, 128, 0, 1.0)";   break;
+            case "olivedrab":            measurement.value = "rgba(107, 142, 35, 1.0)";  break;
+            case "orange":               measurement.value = "rgba(255, 165, 0, 1.0)";   break;
+            case "orangered":            measurement.value = "rgba(255, 69, 0, 1.0)";    break;
+            case "orchid":               measurement.value = "rgba(218, 112, 214, 1.0)"; break;
+            case "palegoldenrod":        measurement.value = "rgba(238, 232, 170, 1.0)"; break;
+            case "palegreen":            measurement.value = "rgba(152, 251, 152, 1.0)"; break;
+            case "paleturquoise":        measurement.value = "rgba(175, 238, 238, 1.0)"; break;
+            case "palevioletred":        measurement.value = "rgba(219, 112, 147, 1.0)"; break;
+            case "papayawhip":           measurement.value = "rgba(255, 239, 213, 1.0)"; break;
+            case "peachpuff":            measurement.value = "rgba(255, 218, 185, 1.0)"; break;
+            case "peru":                 measurement.value = "rgba(205, 133, 63, 1.0)";  break;
+            case "pink":                 measurement.value = "rgba(255, 192, 203, 1.0)"; break;
+            case "plum":                 measurement.value = "rgba(221, 160, 221, 1.0)"; break;
+            case "powderblue":           measurement.value = "rgba(176, 224, 230, 1.0)"; break;
+            case "purple":               measurement.value = "rgba(128, 0, 128, 1.0)";   break;
+            case "rebeccapurple":        measurement.value = "rgba(102, 51, 153, 1.0)";  break;
+            case "red":                  measurement.value = "rgba(255, 0, 0, 1.0)";     break;
+            case "rosybrown":            measurement.value = "rgba(188, 143, 143, 1.0)"; break;
+            case "royalblue":            measurement.value = "rgba(65, 105, 225, 1.0)";  break;
+            case "saddlebrown":          measurement.value = "rgba(139, 69, 19, 1.0)";   break;
+            case "salmon":               measurement.value = "rgba(250, 128, 114, 1.0)"; break;
+            case "sandybrown":           measurement.value = "rgba(244, 164, 96, 1.0)";  break;
+            case "seagreen":             measurement.value = "rgba(46, 139, 87, 1.0)";   break;
+            case "seashell":             measurement.value = "rgba(255, 245, 238, 1.0)"; break;
+            case "sienna":               measurement.value = "rgba(160, 82, 45, 1.0)";   break;
+            case "silver":               measurement.value = "rgba(192, 192, 192, 1.0)"; break;
+            case "skyblue":              measurement.value = "rgba(135, 206, 235, 1.0)"; break;
+            case "slateblue":            measurement.value = "rgba(106, 90, 205, 1.0)";  break;
+            case "slategray":            measurement.value = "rgba(112, 128, 144, 1.0)"; break;
+            case "slategrey":            measurement.value = "rgba(112, 128, 144, 1.0)"; break;
+            case "snow":                 measurement.value = "rgba(255, 250, 250, 1.0)"; break;
+            case "springgreen":          measurement.value = "rgba(0, 255, 127, 1.0)";   break;
+            case "steelblue":            measurement.value = "rgba(70, 130, 180, 1.0)";  break;
+            case "tan":                  measurement.value = "rgba(210, 180, 140, 1.0)"; break;
+            case "teal":                 measurement.value = "rgba(0, 128, 128, 1.0)";   break;
+            case "thistle":              measurement.value = "rgba(216, 191, 216, 1.0)"; break;
+            case "tomato":               measurement.value = "rgba(255, 99, 71, 1.0)";   break;
+            case "transparent":          measurement.value = "rgba(0, 0, 0, 0.0)";       break;
+            case "turquoise":            measurement.value = "rgba(64, 224, 208, 1.0)";  break;
+            case "violet":               measurement.value = "rgba(238, 130, 238, 1.0)"; break;
+            case "wheat":                measurement.value = "rgba(245, 222, 179, 1.0)"; break;
+            case "white":                measurement.value = "rgba(255, 255, 255, 1.0)"; break;
+            case "whitesmoke":           measurement.value = "rgba(245, 245, 245, 1.0)"; break;
+            case "yellow":               measurement.value = "rgba(255, 255, 0, 1.0)";   break;
+            case "yellowgreen":          measurement.value = "rgba(154, 205, 50, 1.0)";  break;
+
+            default: switch (measurements["color"][1].length) /* ->> Hexadecimal */ {
+              case 3: case 4: measurement.value = "rgba(" + parseInt(measurements["color"][2].charAt(0) + measurements["color"][2].charAt(0), 16) + ", " + parseInt(measurements["color"][2].charAt(1) + measurements["color"][2].charAt(1), 16) + ", " + parseInt(measurements["color"][2].charAt(2) + measurements["color"][2].charAt(2), 16) + ", " + (measurements["color"][2].length === 4 ? Math.floor(parseInt(measurements["color"][2].charAt(3) + measurements["color"][2].charAt(3), 16) / 255.0) : "1.0") + ')'; break;
+              case 6: case 8: measurement.value = "rgba(" + parseInt(measurements["color"][2].charAt(0) + measurements["color"][2].charAt(1), 16) + ", " + parseInt(measurements["color"][2].charAt(2) + measurements["color"][2].charAt(3), 16) + ", " + parseInt(measurements["color"][2].charAt(4) + measurements["color"][2].charAt(5), 16) + ", " + (measurements["color"][2].length === 8 ? Math.floor(parseInt(measurements["color"][2].charAt(6) + measurements["color"][2].charAt(7), 16) / 255.0) : "1.0") + ')'
+            }
+          }
+
+          else if (measurements["duration"] = measurement.value.match(MEASUREMENTS["duration"]))
+          switch (measurements["duration"][2]) /* ->> Canonicalizes to `s` unlike `Document|Element::getAnimations(…)`’s `ms` */ {
+            case "ms": measurement.value = (measurements["duration"][1] * 1.00e3) + 's'; break;
+            case 's' : measurement.value = (measurements["duration"][1])          + 's'
+          }
+
+          else if (measurements["frequency"] = measurement.value.match(MEASUREMENTS["frequency"]))
+          switch (measurements["frequency"][2]) {
+            case "khz": measurement.value = (measurements["frequency"][1] * 1.00e3) + "Hz"; break;
+            case "hz" : measurement.value = (measurements["frequency"][1])          + "Hz"
+          }
+
+          else if (measurements["resolution"] = measurement.value.match(MEASUREMENTS["resolution"]))
+          switch (measurements["resolution"][2]) {
+            case "dpcm":           measurement.value = (measurements["resolution"][1] / (96.00 / 2.54)) + "dppx"; break;
+            case "dpi" :           measurement.value = (measurements["resolution"][1] / (96.00 / 1.00)) + "dppx"; break;
+            case "dppx": case 'x': measurement.value = (measurements["resolution"][1])                  + "dppx"
+          }
+
+          else if (measurements["length"] = measurement.value.match(MEASUREMENTS["length"])) {
+            var documentBounds = getDocumentBounds(document);
+            var rootElement    = null;
+
+            // ...
+            switch (measurements["length"][2]) {
+              case "rcap": case "rch": case "rem": case "rex": case "ric": case "rlh": {
+                for (var rootElement = property.element; null !== rootElement && rootElement.nodeType === 0x01; rootElement = rootElement.parentNode)
+                fontElement = rootElement // --> :root
+              } break;
+
+              case '%': switch (property.name) {
+                case "font": case "font-size": case "line-height": measurements["length"][2] = "em"; break;
+                case "vertical-align":                             measurements["length"][2] = "lh"
+              }
+            }
+
+            switch (measurements["length"][2]) {
+              case "cap":  case "ch":
+              case "ex":   case "ic":
+              case "rcap": case "rch":
+              case "rex":  case "ric": {
+                var font        = {family: null, size: null, stretch: null, style: null, variant: null, weight: null};
+                var fontElement = null === rootElement ? property.element : rootElement;
+                var glyph       = '\0';
+                var metric      = NO_METRIC;
+
+                // ...
+                switch (measurements["length"][2]) {
+                  case "cap": case "rcap": metric = ACTUAL_BOUNDING_BOX_ASCENT_METRIC; glyph = 'H'; break;
+                  case "ch":  case "rch":  metric = WIDTH_METRIC;                      glyph = '0'; break;
+                  case "ex":  case "rex":  metric = ACTUAL_BOUNDING_BOX_ASCENT_METRIC; glyph = 'x'; break;
+                  case "ic":  case "ric":  metric = WIDTH_METRIC;                      glyph = '水'
+                }
+
+                try {
+                  font.family  = getCSSPropertyValue(fontElement, "font-family",  styleRules, groupingPredicates, false, $); if (null === font.family)  break;
+                  font.size    = getCSSPropertyValue(fontElement, "font-size",    styleRules, groupingPredicates, false, $); if (null === font.size)    break;
+                  font.stretch = getCSSPropertyValue(fontElement, "font-stretch", styleRules, groupingPredicates, false, $); if (null === font.stretch) break;
+                  font.style   = getCSSPropertyValue(fontElement, "font-style",   styleRules, groupingPredicates, false, $); if (null === font.style)   break;
+                  font.variant = getCSSPropertyValue(fontElement, "font-variant", styleRules, groupingPredicates, false, $); if (null === font.variant) break;
+                  font.weight  = getCSSPropertyValue(fontElement, "font-weight",  styleRules, groupingPredicates, false, $); if (null === font.weight)  break
+                } catch (error) { /* --> InvalidError | RangeError */ }
+
+                try {
+                  if (null === $.textMetricsContext && typeof probe().getContext === "function")
+                  $.textMetricsContext = probe().getContext("2d", {"alpha": false, "colorSpace": "srgb", "colorType": "unorm8", "desynchronized": true, "willReadFrequently": false})
+                } catch (error) { /* --> DOMException | InvalidStateError */ }
+
+                if (null !== $.textMetricsContext && typeof $.textMetricsContext.font === "string" && typeof $.textMetricsContext.measureText === "function") {
+                  $.textMetricsContext.font = font.style + ' ' + font.variant + ' ' + font.weight + ' ' + font.stretch + ' ' + font.size + ' ' + font.family;
+
+                  switch (metric) {
+                    case ACTUAL_BOUNDING_BOX_ASCENT_METRIC: measurement.value = (measurements["length"][1] * $.textMetricsContext.measureText(glyph).actualBoundingBoxAscent) + "px";
+                    case WIDTH_METRIC:                      measurement.value = (measurements["length"][1] * $.textMetricsContext.measureText(glyph).width)                   + "px"
+                  }
+                }
+              } break;
+
+              case "cqb": case "cqh": case "cqi": case "cqmax": case "cqmin": case "cqw": try {
+                var containerElement = property.element.parentNode;
+                var containerSizes   = {height: 0.00, width: 0.00};
+
+                // ... ---> containerElement = …
+                while (true) {
+                  if (null === containerElement || containerElement.nodeType !== 0x01) {
+                    var documentBounds = getDocumentBounds(document);
+
+                    // ...
+                    containerElement      = null;
+                    containerSizes.height = documentBounds.height;
+                    containerSizes.width  = documentBounds.width;
+                    property.axis         = HORIZONTAL_AXIS; // --> `horizontal-tb` default
+
+                    break
+                  }
+
+                  var containerType = getCSSPropertyValue(containerElement, "container-type", styleRules, groupingPredicates, false, $);
+                  if (containerType === "inline-size" || containerType === "size") {
+                    containerSizes.height = containerElement.clientHeight;
+                    containerSizes.width  = containerElement.clientWidth;
+
+                    break;
+                  }
+
+                  containerElement = containerElement.parentNode
+                }
+
+                // ... --> containerSizes = {…}; .axis = enum … ->> `ResizeObserver` could alternatively be used to measure the `.element`’s content-box dimensions
+                switch (NO_AXIS === property.axis ? measurements["length"][2] : null) {
+                  case "cqb": property.axis = block (getCSSPropertyValue(containerElement, "writing-mode", styleRules, groupingPredicates, false, $)); break; case "cqh": property.axis = VERTICAL_AXIS; break;
+                  case "cqi": property.axis = inline(getCSSPropertyValue(containerElement, "writing-mode", styleRules, groupingPredicates, false, $)); break; case "cqw": property.axis = HORIZONTAL_AXIS
+                }
+
+                if (property.priors.length > 0) {
+                  while (property.priors.length) {
+                    var prior = property.priors.pop();
+                    switch (prior.name) {
+                      case "padding-bottom": case "padding-top":   containerSizes.height -= prior.canonValue.replace(CANON_MATCH, CANON_ONLY); break;
+                      case "padding-left":   case "padding-right": containerSizes.width  -= prior.canonValue.replace(CANON_MATCH, CANON_ONLY)
+                    }
+                  }
+                }
+
+                else if (null !== containerElement) {
+                  for (var containerPaddings = [
+                    {axis: VERTICAL_AXIS,   name: "padding-bottom", value: NO_AXIS === property.axis || VERTICAL_AXIS   === property.axis ? getCSSPropertyValue(containerElement, "padding-bottom", styleRules, groupingPredicates, false, $) : null},
+                    {axis: HORIZONTAL_AXIS, name: "padding-left",   value: NO_AXIS === property.axis || HORIZONTAL_AXIS === property.axis ? getCSSPropertyValue(containerElement, "padding-left",   styleRules, groupingPredicates, false, $) : null},
+                    {axis: HORIZONTAL_AXIS, name: "padding-right",  value: NO_AXIS === property.axis || HORIZONTAL_AXIS === property.axis ? getCSSPropertyValue(containerElement, "padding-right",  styleRules, groupingPredicates, false, $) : null},
+                    {axis: VERTICAL_AXIS,   name: "padding-top",    value: NO_AXIS === property.axis || VERTICAL_AXIS   === property.axis ? getCSSPropertyValue(containerElement, "padding-top",    styleRules, groupingPredicates, false, $) : null}
+                  ]; containerPaddings.length; ) {
+                    var containerPadding = containerPaddings.pop();
+                    canonicalized = null !== containerPadding.value ? canon(containerElement, containerPadding.name, containerPadding.value, containerPadding.axis, property, properties) : canonicalized
+                  }
+
+                  if (canonicalized)
+                  break // --> continue canonicalize
+                }
+
+                switch (NO_AXIS === property.axis ? measurements["length"][2] : null) {
+                  case "cqmax": switch (Math.max(containerSizes.height, containerSizes.width)) { case containerSizes.height: property.axis = VERTICAL_AXIS; break; case containerSizes.width: property.axis = HORIZONTAL_AXIS } break;
+                  case "cqmin": switch (Math.min(containerSizes.height, containerSizes.width)) { case containerSizes.height: property.axis = VERTICAL_AXIS; break; case containerSizes.width: property.axis = HORIZONTAL_AXIS }
+                }
+
+                // ...
+                switch (property.axis) {
+                  case HORIZONTAL_AXIS: measurement.value = (measurements["length"][1] * (containerSizes.width  / 100.00)) + "px"; break;
+                  case VERTICAL_AXIS:   measurement.value = (measurements["length"][1] * (containerSizes.height / 100.00)) + "px"
+                }
+              } catch (error) { /* --> InternalError | RangeError */ } break;
+
+              case "cm":                                             measurement.value = (measurements["length"][1] * (96.00 / 2.54))                                                   + "px"; break;
+              case "dvh":   case "lvh":   case "svh":   case "vh":   measurement.value = (measurements["length"][1] * (documentBounds.height                                 / 100.00)) + "px"; break; // ->> DOM/ window-resize snooping required to support dynamic (`d…`), large (`l…`), and small (`s…`) variants
+              case "dvmax": case "lvmax": case "svmax": case "vmax": measurement.value = (measurements["length"][1] * (Math.max(documentBounds.height, documentBounds.width) / 100.00)) + "px"; break; //       ^^^
+              case "dvmin": case "lvmin": case "svmin": case "vmin": measurement.value = (measurements["length"][1] * (Math.min(documentBounds.height, documentBounds.width) / 100.00)) + "px"; break; //       ^^^
+              case "dvw":   case "lvw":   case "svw":   case "vw":   measurement.value = (measurements["length"][1] * (documentBounds.width                                  / 100.00)) + "px"; break; //       ^^^
+              case "in":                                             measurement.value = (measurements["length"][1] * (96.00 / 1.00))                                                   + "px"; break;
+              case "mm":                                             measurement.value = (measurements["length"][1] * (96.00 / 25.40))                                                  + "px"; break;
+              case 'q' :                                             measurement.value = (measurements["length"][1] * (96.00 / 101.60))                                                 + "px"; break;
+              case "pc":                                             measurement.value = (measurements["length"][1] * 16.00)                                                            + "px"; break;
+              case "pt":                                             measurement.value = (measurements["length"][1] * (96.00 / 72.00))                                                  + "px"; break;
+              case "px":                                             measurement.value = (measurements["length"][1])                                                                    + "px"; break;
+
+              case "dvb": case "lvb": case "svb": case "vb": try { switch (block (getCSSPropertyValue(property.element, "writing-mode", styleRules, groupingPredicates, false, $))) { case HORIZONTAL_AXIS: measurement.value = (measurements["length"][1] * (documentBounds.width / 100.00)) + "px"; break; case VERTICAL_AXIS: measurement.value = (measurements["length"][1] * (documentBounds.height / 100.00)) + "px" } } catch (error) { /* --> InternalError | RangeError */ } break;
+              case "dvi": case "lvi": case "svi": case "vi": try { switch (inline(getCSSPropertyValue(property.element, "writing-mode", styleRules, groupingPredicates, false, $))) { case HORIZONTAL_AXIS: measurement.value = (measurements["length"][1] * (documentBounds.width / 100.00)) + "px"; break; case VERTICAL_AXIS: measurement.value = (measurements["length"][1] * (documentBounds.height / 100.00)) + "px" } } catch (error) { /* --> InternalError | RangeError */ } break;
+
+              case "em": case "rem":
+              case "lh": case "rlh": {
+                if (property.priors.length === 1) {
+                  if (/[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?/.test(property.priors[0].canonValue.replace(CANON_MATCH, CANON_PASS)))
+                  measurement.value = (measurements["length"][1] * property.priors[0].canonValue.replace(CANON_MATCH, CANON_PASS)) + "px"
+                }
+
+                else try {
+                  var fontElement       = null;
+                  var fontPropertyName  = null;
+                  var fontPropertyValue = null;
+
+                  // ...
+                  switch (measurements["length"][2]) {
+                    case "em": case "rem": fontPropertyName = "font-size"; break;
+                    case "lh": case "rlh": fontPropertyName = "line-height"
+                  }
+
+                  fontElement = null === rootElement ? fontPropertyName === property.name ? property.element.parentNode : property.element : rootElement;
+
+                  while (true) {
+                    if (null === fontElement || fontElement.nodeType !== 0x01) {
+                      if (fontPropertyName === "font-size") {
+                        var containerNode         = /* --> :root */ document.documentElement || document;
+                        var containerFontSize     = {priority: "", value: ""};
+                        var containerStyle        = null;
+                        var containerStyleInlined = false;
+                        var fontSize              = 16.00; // ->> Typical default
+
+                        // ...
+                        if (null !== containerNode) {
+                          if (containerNode.nodeType === 0x01) {
+                            containerStyle        = containerNode.style;
+                            containerStyleInlined = null !== containerNode.getAttribute("style")
+                          }
+
+                          // ...
+                          if (null !== containerStyle) {
+                            if (containerStyleInlined) {
+                              if (typeof containerStyle.getPropertyPriority === "function") containerFontSize.priority = containerStyle.getPropertyPriority("font-size");
+                              if (typeof containerStyle.removeProperty      === "function") containerFontSize.value    = containerStyle.removeProperty     ("font-size");
+                              if (typeof containerStyle.setProperty         === "function")                              containerStyle.setProperty        ("font-size", "initial", "important")
+                            } else containerStyle.cssText = "font-size: initial !important" // ->> Uncertain if Internet Explorer 7- supports `containerNode.setAttribute("style", "…")`
+                          }
+
+                          fontSize = containerNode.appendChild(PROBE_ELEMENT = probe("height: 0 !important; position: absolute !important; width: 1rem !important")).offsetWidth;
+                          void       containerNode.removeChild(PROBE_ELEMENT);
+
+                          if (null !== containerStyle) {
+                            if (containerStyleInlined) {
+                              if (containerFontSize.value !== "") { if (typeof containerStyle.setProperty    === "function")      containerStyle.setProperty   ("font-size", containerFontSize.value, containerFontSize.priority) }
+                              else                                { if (typeof containerStyle.removeProperty === "function") void containerStyle.removeProperty("font-size") }
+                            } else containerNode.removeAttribute("style")
+                          }
+                        }
+
+                        fontPropertyValue = fontSize + "px"
+                      }
+
+                      fontElement = null;
+                      break
+                    }
+
+                    fontPropertyValue = getCSSPropertyValue(fontElement, fontPropertyName, styleRules, groupingPredicates, false, $);
+                    if (null !== fontPropertyValue) break;
+                    fontElement = fontElement.parentNode
+                  }
+
+                  // ...
+                  if (null !== fontPropertyValue) {
+                    if (null === fontElement) measurement.value = (measurements["length"][1] * fontPropertyValue.replace(CANON_MATCH, CANON_ONLY)) + "px";
+                    else                      canonicalized     = canon(fontElement, fontPropertyName, fontPropertyValue, property.axis, property, properties)
+                  }
+                } catch (error) { /* --> InternalError | RangeError */ }
+              } break;
+
+              case '%': switch (property.name) {
+                case "offset-anchor":
+                case "perspective-origin":
+                case "transform":
+                case "transform-origin":
+                case "translate": switch (property.axis) {
+                  case HORIZONTAL_AXIS: measurement.value = ((measurements["length"][1] / 100.00) * property.element.offsetWidth)  + "px"; break;
+                  case VERTICAL_AXIS:   measurement.value = ((measurements["length"][1] / 100.00) * property.element.offsetHeight) + "px"
+                } break;
+
+                case "scroll-padding":
+                case "scroll-padding-block":
+                case "scroll-padding-block-end":
+                case "scroll-padding-block-start":
+                case "scroll-padding-inline":
+                case "scroll-padding-inline-end":
+                case "scroll-padding-inline-start": switch (property.axis) {
+                  case HORIZONTAL_AXIS: measurement.value = ((measurements["length"][1] / 100.00) * property.element.clientWidth)  + "px"; break;
+                  case VERTICAL_AXIS:   measurement.value = ((measurements["length"][1] / 100.00) * property.element.clientHeight) + "px"
+                } break;
+
+                default: {
+                  var containerElement = property.element.parentNode;
+
+                  if (null !== containerElement && containerElement.nodeType === 0x01)
+                  switch (property.axis) {
+                    // ->> Assumes layout measurement
+                    case HORIZONTAL_AXIS: measurement.value = ((measurements["length"][1] / 100.00) * getElementBounds(containerElement).width)  + "px"; break;
+                    case VERTICAL_AXIS:   measurement.value = ((measurements["length"][1] / 100.00) * getElementBounds(containerElement).height) + "px"
+                  }
+                }
+              }
+            }
+          }
+
+          // ...
+          if (canonicalized) break; // --> continue canonicalize
+          property.canonValue += measurement.value + measurement.delimiter;
+        }
+
+        if (canonicalized)
+        continue; // --> continue canonicalize
+
+        if (null !== property.origin) void property.origin.priors.push(property);
+        else                          return property.canonValue;
+
+        void properties.pop()
+      }
+
+      return propertyValue
+    }
+
+    function cascade(element, propertyName, property, properties) {
+      var cascaded      = false;
+      var propertyNames = [propertyName];
+      var style         = {"display": null, "flex-direction": null, "font-size": null, "line-height": null, "writing-mode": null, '__proto__': null};
+
+      // ...
+      for (var index = properties.length; !cascaded && index--; )
+      cascaded = element === properties[index].element;
+
+      if (!cascaded) // ->> Preemptively account for relevant metadata e.g. for `…em` and `…lh` measurements
+      switch (propertyName) {
+        case "backdrop-filter": case "background": case "background-position": case "background-size":   case "baseline-shift": case "block-size": case "border":                       case "border-block":             case "border-block-end":              case "border-block-end-width": case "border-block-start":      case "border-block-start-width": case "border-block-width": case "border-bottom": case "border-bottom-left-radius": case "border-bottom-right-radius": case "border-bottom-width": case "border-end-end-radius": case "border-end-start-radius": case "border-image-outset": case "border-image-width": case "border-inline": case "border-inline-end": case "border-inline-end-width": case "border-inline-start": case "border-inline-start-width": case "border-inline-width": case "border-left": case "border-left-width": case "border-radius": case "border-right": case "border-right-width": case "border-spacing": case "border-start-end-radius": case "border-start-start-radius": case "border-top": case "border-top-left-radius": case "border-top-right-radius": case "border-top-width": case "border-width": case "bottom": case "box-shadow":
+        case "clip-path":       case "column-gap": case "column-rule":         case "column-rule-width": case "column-width":   case "columns":    case "contain-intrinsic-block-size": case "contain-intrinsic-height": case "contain-intrinsic-inline-size": case "contain-intrinsic-size": case "contain-intrinsic-width": case "cx":                       case "cy":
+        case "filter":
+        case "gap": case "grid": case "grid-auto-columns": case "grid-auto-rows": case "grid-template": case "grid-template-columns": case "grid-template-rows":
+        case "height":
+        case "inline-size":     case "inset": case "inset-block": case "inset-block-end": case "inset-block-start": case "inset-inline": case "inset-inline-end": case "inset-inline-start":
+        case "left":            case "letter-spacing":
+        case "margin":          case "margin-block":              case "margin-block-end":        case "margin-block-start":        case "margin-bottom":  case "margin-inline":  case "margin-inline-end": case "margin-inline-start": case "margin-left": case "margin-right": case "margin-top": case "mask": case "mask-position": case "mask-size": case "max-block-size": case "max-height": case "max-inline-size": case "max-width": case "min-block-size": case "min-height": case "min-inline-size": case "min-width":
+        case "object-position": case "offset-anchor":             case "offset-distance":         case "offset-position":           case "outline":        case "outline-offset": case "outline-width":
+        case "padding":         case "padding-block":             case "padding-block-end":       case "padding-block-start":       case "padding-bottom": case "padding-inline": case "padding-inline-end": case "padding-inline-start": case "padding-left": case "padding-right": case "padding-top": case "perspective": case "perspective-origin":
+        case 'r':               case "right":                     case "row-gap":                 case "rx":                        case "ry":
+        case "scroll-margin":   case "scroll-margin-block":       case "scroll-margin-block-end": case "scroll-margin-block-start": case "scroll-margin-bottom":  case "scroll-margin-inline": case "scroll-margin-inline-end": case "scroll-margin-inline-start": case "scroll-margin-left": case "scroll-margin-right": case "scroll-margin-top": case "scroll-padding": case "scroll-padding-block": case "scroll-padding-block-end": case "scroll-padding-block-start": case "scroll-padding-bottom": case "scroll-padding-inline": case "scroll-padding-inline-end": case "scroll-padding-inline-start": case "scroll-padding-left": case "scroll-padding-right": case "scroll-padding-top": case "shape-margin": case "shape-outside": case "stroke-dashoffset": case "stroke-width":
+        case "tab-size":        case "text-decoration-thickness": case "text-indent":             case "text-shadow":               case "text-underline-offset": case "top":                  case "transform":                case "transform-origin":           case "translate":
+        case "vertical-align":
+        case "width": case "word-spacing":
+        case 'x':     case 'y':          void propertyNames.push("font-size", "line-height"); break;
+        case "flex":  case "flex-basis": void propertyNames.push("flex-direction");           break;
+        case "font":  case "font-size":  void propertyNames.push("line-height");              break;
+        case "line-height":              void propertyNames.push("font-size");                break;
+        case "writing-mode":             void propertyNames.push("display")
+      }
+
+      if (null !== property) {
+        property.priors = [];
+
+        for (var subproperty = property; null !== subproperty; subproperty = subproperty.origin)
+        if (element === subproperty.element) { style = subproperty.style; break }
+      }
+
+      return (void properties.push({
+        animation  : {descriptor: NO_DESCRIPTOR, end: null, next: null, previous: null, properties: [], value: null}, // --> {descriptor: enum, end: Object*, names: String[], next: Object*, previous: Object*, properties: {animated: Boolean, information: Object, name: delimiter: String, String, value: String*}[], value: String*}
+        deferred   : false,                                                                                           // --> Boolean
+        element    : element,                                                                                         // --> HTMLElement
+        information: null,                                                                                            // --> {layer: String*, matches: Boolean, order: Number(Uint32) {< 0}, priority: "important" | …, specificity: {0: 0, 1: 0, 2: 0}*, text: String*, value: String}*
+        name       : propertyNames[0],                                                                                // --> String
+        names      : propertyNames,                                                                                   // --> String[]
+        origin     : property,                                                                                        // --> this
+        priors     : [],                                                                                              // --> this[]
+        rule       : {containerQueries: [], specificity: null},                                                       // --> {specificity: {0: Number(Uint32), 1: Number(Uint32), 2: Number(Uint32)}, containerQueries: {applicable: Boolean[], delimiter: "and"|"or", negate: Boolean, prior: this, value: String}[]}
+        ruleIndex  : 0,                                                                                               // --> Number(Uint32)
+        style      : style,                                                                                           // --> CSSStyleDeclaration
+        unlayered  : []                                                                                               // --> String[] {applicable: [], delimiter: "", negate: false, prior: null, value: styleRule.container.query}
+      }), properties)
+    }
+
     function compare(specificityA, specificityB) {
-      return (
-        specificityA[0] !== specificityB[0] ? specificityA[0] - specificityB[0] :
-        specificityA[1] !== specificityB[1] ? specificityA[1] - specificityB[1] :
-                                              specificityA[2] - specificityB[2]
-      )
+      return specificityA[0] !== specificityB[0] ? specificityA[0] - specificityB[0] : specificityA[1] !== specificityB[1] ? specificityA[1] - specificityB[1] : specificityA[2] - specificityB[2]
+    }
+
+    function inline(writingMode) {
+      switch (writingMode) {
+        case "vertical-rl":                                   // --> switch direction { ltr => top    → bottom, … }
+        case "vertical-lr":                                   // --> switch direction { ltr => top    → bottom, … }
+        case "sideways-rl":                                   // --> switch direction { ltr => top    → bottom, … }
+        case "sideways-lr":            return VERTICAL_AXIS;  // --> switch direction { ltr => bottom → top,    … }
+        case "horizontal-tb": default: return HORIZONTAL_AXIS // --> switch direction { ltr => left   → right,  … }
+      }
+    }
+
+    function lerp(valueA, valueB) {
+      var scalarA       = +valueA, scalarB = +valueB;
+      var interpolation = (progress * (scalarB - scalarA)) + scalarA;
+
+      return interpolation !== interpolation /* --> Number.isNaN(…) */ ? progress < 0.50 ? valueA : valueB : interpolation
     }
 
     function matches(element, selector) {
@@ -157,521 +974,2571 @@ void function main() {
         else if (typeof element.webkitMatchesSelector === "function") return element.webkitMatchesSelector(selector)
       } catch (error) { /* --> DOMException | SyntaxError */ }
 
-      return false
-    }
+      for (var node = element.parentNode || document; null !== node && (node.nodeType === 0x1 || node.nodeType === /* --> Node.DOCUMENT_NODE */ 0x9); node = node.parentNode)
+      if (typeof node.querySelectorAll === "function") {
+        var list = node.querySelectorAll(selector);
 
-    function max(selectors) {
-      var selectorList      = [];
-      var selectorListIndex = 0;
-      var specificity       = {0: 0, 1: 0, 2: 0};
-
-      // ...
-      for (var depth = 0, index = 0; index !== selectors.length; ++index)
-      switch (selectors[index]) {
-        case '(': ++depth; break;
-        case ')': --depth; break;
-        case ',': if (0 === depth) {
-          void selectorList.push(selectors.slice(selectorListIndex, index)/* --> .trim() */.replace(/(^|)\s+($|)/g, ""));
-          selectorListIndex = index + 1
+        for (var index = list.length; index--; ) {
+          if (element === list.item(index))
+          return true
         }
       }
 
-      void selectorList.push(selectors.slice(selectorListIndex)/* --> .trim() */.replace(/(^|)\s+($|)/g, ""));
-
-      for (var index = 0; index !== selectorList.length; ++index) {
-        var selectorSpecificity = null;
-
-        // ...
-        try { selectorSpecificity = rank(selectorList[index]) }
-        catch (error) { /* --> InternalError | RangeError */ }
-
-        specificity = null !== selectorSpecificity && compare(selectorSpecificity, specificity) > 0 ? selectorSpecificity : specificity
-      }
-
-      return specificity
+      return false // ->> Parser required e.g. `Element::tagName` and such (right-to-left evaluation)
     }
 
     function rank(selector) {
       var specificity = {0: 0, 1: 0, 2: 0};
 
+      /* ... ->> Quietly failing stack overflow errors here is acceptable because the CSS selector depth/ level of nesting would be presumptuously unreasonable for the scope of this parser */
+      function max(selectors) {
+        var selectorList      = [];
+        var selectorListIndex = 0;
+        var specificity       = {0: 0, 1: 0, 2: 0};
+
+        // ...
+        for (var depth = 0, index = 0; index !== selectors.length; ++index)
+        switch (selectors.charAt(index)) {
+          case '(': ++depth; break;
+          case ')': --depth; break;
+          case ',': if (0 === depth) {
+            void selectorList.push(selectors.slice(selectorListIndex, index).replace(TRIM_MATCH, TRIM_PASS));
+            selectorListIndex = index + 1
+          }
+        }
+
+        void selectorList.push(selectors.slice(selectorListIndex).replace(TRIM_MATCH, TRIM_PASS));
+
+        for (var index = 0; index !== selectorList.length; ++index) {
+          var selectorSpecificity = null;
+
+          try { selectorSpecificity = rank(selectorList[index]) } catch (error) { /* --> InternalError | RangeError */ }
+          specificity = null !== selectorSpecificity && compare(selectorSpecificity, specificity) > 0 ? selectorSpecificity : specificity
+        }
+
+        return specificity
+      }
+
       // ...
       for (var index = 0; index !== selector.length; )
-      switch (selector[index]) {
-        case '#': for (++specificity[0], ++index; index !== selector.length; ++index) { if (!/[\w-]/.test(selector[index])) break } break; // ->> ID        selectors
-        case '.': for (++specificity[1], ++index; index !== selector.length; ++index) { if (!/[\w-]/.test(selector[index])) break } break; // ->> Class     selectors
-        case '[': for (++specificity[1];          index !== selector.length; )        { if (selector[index++] === ']')      break } break; // ->> Attribute selectors
+      switch (selector.charAt(index)) {
+        case '#': for (++specificity[0], ++index; index !== selector.length; ++index) { if (!/[\w-]/.test(selector.charAt(index)))  break } break; // ->> ID        selectors
+        case '.': for (++specificity[1], ++index; index !== selector.length; ++index) { if (!/[\w-]/.test(selector.charAt(index)))  break } break; // ->> Class     selectors
+        case '[': for (++specificity[1];          index !== selector.length; )        { if (']' ===       selector.charAt(index++)) break } break; // ->> Attribute selectors
         case ':': ++index; {
-          var isPseudoElement = selector[index] === ':'; if    (isPseudoElement)                                            ++index;
-          var pseudoIndex     = index;                   while (index !== selector.length && /[\w-]/.test(selector[index])) ++index;
+          var isPseudoElement = selector.charAt(index) === ':'; if    (isPseudoElement)                                                   ++index;
+          var pseudoIndex     = index;                          while (index !== selector.length && /[\w-]/.test(selector.charAt(index))) ++index;
           var pseudo          = selector.slice(pseudoIndex, index).toLowerCase();
 
           // ...
-          if (selector[index] !== '(') ++specificity[isPseudoElement || pseudo === "after" || pseudo === "backdrop" || pseudo === "before" || pseudo === "file-selector-button" || pseudo === "first-letter" || pseudo === "first-line" || pseudo === "grammar-error" || pseudo === "marker" || pseudo === "placeholder" || pseudo === "selection" || pseudo === "spelling-error" ? 2 : 1];
+          if (selector.charAt(index) !== '(') ++specificity[isPseudoElement || pseudo === "after" || pseudo === "backdrop" || pseudo === "before" || pseudo === "file-selector-button" || pseudo === "first-letter" || pseudo === "first-line" || pseudo === "grammar-error" || pseudo === "marker" || pseudo === "placeholder" || pseudo === "selection" || pseudo === "spelling-error" ? 2 : 1];
           else {
             var selectors = null;
 
             // ...
             for (var depth = 0, subindex = index; subindex !== selector.length; ++subindex) {
-              if      (selector[subindex] === '(') { ++depth }
-              else if (selector[subindex] === ')') { --depth; if (0 === depth) { selectors = selector.slice(index + 1, subindex); index = subindex + 1; break } }
+              if      (selector.charAt(subindex) === '(') { ++depth }
+              else if (selector.charAt(subindex) === ')') { --depth; if (0 === depth) { selectors = selector.slice(index + 1, subindex); index = subindex + 1; break } }
             }
 
-            if (null === selectors) { selectors = selector.slice(index + 1); index = selector.length }
+            if (null === selectors)
+            selectors = selector.slice(index + 1); index = selector.length;
 
             switch (pseudo) {
               case "has":       case "is": case "not": { var selectorsSpecificity = max(selectors); specificity[0] += selectorsSpecificity[0]; specificity[1] += selectorsSpecificity[1]; specificity[2] += selectorsSpecificity[2] } break;
-              case "nth-child": case "nth-last-child": { var subselectorIndex = selectors.search(/\bof\b/); if (subselectorIndex !== -1) { var subselectorSpecificity = max(selectors.slice(subselectorIndex + /* --> "of" */ 2)/* --> .trim() */.replace(/(^|)\s+($|)/g, "")); specificity[0] += subselectorSpecificity[0]; specificity[1] += subselectorSpecificity[1]; specificity[2] += subselectorSpecificity[2] } ++specificity[1] } break;
+              case "nth-child": case "nth-last-child": { var subselectorIndex = selectors.search(/\bof\b/); if (subselectorIndex !== -1) { var subselectorSpecificity = max(selectors.slice(subselectorIndex + /* --> "of".length */ 2).replace(TRIM_MATCH, TRIM_PASS)); specificity[0] += subselectorSpecificity[0]; specificity[1] += subselectorSpecificity[1]; specificity[2] += subselectorSpecificity[2] } ++specificity[1] } break;
               case "where":                            continue; break; // ->> Explicitly `0` specificity
               default:                                 ++specificity[1] // ->> Pseudo-class selectors
             }
           }
         } break;
         default:
-          if (!/[A-z_\\]/.test(selector[index])) ++index;                                                               // ->> Combinators, whitespace, or universal selector `*`
-          else for (++specificity[2]; index !== selector.length; ++index) { if (!/[\w-]/.test(selector[index])) break } // ->> Type selectors
+          if (!/[A-z_\\]/.test(selector.charAt(index))) ++index;                                                               // ->> Combinators, whitespace, or universal selector `*`
+          else for (++specificity[2]; index !== selector.length; ++index) { if (!/[\w-]/.test(selector.charAt(index))) break } // ->> Type selectors
       }
 
       return specificity
     }
 
-    // ... --> rules | style | styleMap
-    if (0x00 === cascaded && typeof getComputedStyle          === "function") { style    = getComputedStyle(element);       cascaded = null !== style ? CASCADED   | 0x20 : 0x00 } //
-    if (0x00 === cascaded && typeof element.computedStyleMap  === "function") { styleMap = element.computedStyleMap();      cascaded = true           ? CASCADED   | 0x10 : 0x00 } // ->> Chromium-specific
-    if (0x00 === cascaded && typeof element.currentStyle      === "object")   { style    = element.currentStyle;            cascaded = true           ? CASCADED   | 0x08 : 0x00 } // ->> Internet Explorer-specific and non-canonicalized
-    if (0x00 === cascaded && typeof element.attributeStyleMap === "object")   { styleMap = element.attributeStyleMap;       cascaded = true           ? UNCASCADED | 0x04 : 0x00 } // ->> Chromium-specific
-    if (0x00 === cascaded && typeof element.style             === "object")   { style    = element.style;                   cascaded = true           ? UNCASCADED | 0x02 : 0x00 } //
-    if (0x00 === cascaded && typeof getMatchedCSSRules        === "function") { rules    = getMatchedCSSRules(element, ""); cascaded = true           ? CASCADED   | 0x01 : 0x00 } // ->> WebKit-specific and non-canonicalized; Gecko-polyfill here: `mozGetMatchedCSSRules(…)` @ `https://gist.github.com/ydaniv/3033012`
+    function slerp(quaternionA, quaternionB) {
+      var distance      = (quaternionA.w * quaternionB.w) + (quaternionA.x * quaternionB.x) + (quaternionA.y * quaternionB.y) + (quaternionA.z * quaternionB.z);
+      var interpolation = {w: 0.00, x: 0.00, y: 0.00, z: 0.00};
+
+      // ...
+      if (distance > 0.9995) {
+        var n;
+
+        interpolation.w = lerp(quaternionA.w, quaternionB.w);
+        interpolation.x = lerp(quaternionA.x, quaternionB.x);
+        interpolation.y = lerp(quaternionA.y, quaternionB.y);
+        interpolation.z = lerp(quaternionA.z, quaternionB.z);
+
+        n = Math.sqrt((interpolation.w * interpolation.w) + (interpolation.x * interpolation.x) + (interpolation.y * interpolation.y) + (interpolation.z * interpolation.z)); // --> Math.hypot(...interpolation)
+
+        interpolation.w /= n;
+        interpolation.x /= n;
+        interpolation.y /= n;
+        interpolation.z /= n
+      }
+
+      else {
+        if (distance < 0.0000) { distance = -distance; quaternionB.w = -quaternionB.w; quaternionB.x = -quaternionB.x; quaternionB.y = -quaternionB.y; quaternionB.z = -quaternionB.z }
+        var angularDistance = Math.acos(distance);
+        var s               = [Math.cos(angularDistance * progress) - (distance * (Math.sin(angularDistance * progress) / Math.sin(angularDistance))), Math.sin(angularDistance * progress) / Math.sin(angularDistance)];
+
+        interpolation.w = (quaternionA.w * s[0]) + (quaternionB.w * s[1]);
+        interpolation.x = (quaternionA.x * s[0]) + (quaternionB.x * s[1]);
+        interpolation.y = (quaternionA.y * s[0]) + (quaternionB.y * s[1]);
+        interpolation.z = (quaternionA.z * s[0]) + (quaternionB.z * s[1])
+      }
+
+      return interpolation
+    }
 
     // ...
-    if (null !== rules)
-    for (var index = rules.length; index && null === value; ) {
-      var ruleStyle = rules.item(--index).style;
-
-      for (var subindex = ruleStyle.length; subindex; )
-      if (property === ruleStyle.item(--subindex)) {
-        style = ruleStyle;
-        break
-      }
+    if (0 !== styleDeclaration.length) {
+      try { return getStyleDeclarationPropertyValue(styleDeclaration, propertyName) }
+      catch (error) { /* --> SecurityError | TypeError */ }
     }
 
-    if (null !== styleMap) {
-      cascaded |= UNCASCADED | 0x04 === cascaded && typeof element.style === "object" && typeof element.style.getPropertyPriority === "function" && element.style.getPropertyPriority(property) === "important" ? CASCADED : UNCASCADED; // ->> Limitation of `StylePropertyMap`
-      try { value = styleMap.get(property) } catch (error) { /* --> TypeError */ }
-    }
+    $ = $ ? {
+      deferred          : $.deferred           || true, // ->> Recursed `getCSSPropertyValue(…)` inherits automatically
+      textMetricsContext: $.textMetricsContext || null
+    } : {deferred: false, textMetricsContext: null};
 
-    if (null !== style) {
-      cascaded |= typeof style.getPropertyPriority === "function" && style.getPropertyPriority(property) === "important" ? CASCADED : UNCASCADED;
-      value     = typeof style.getPropertyValue    === "function" ?  style.getPropertyValue(property) : (property !== "constructor" && property !== "cssFloat" && property !== "cssText" && property !== "getPropertyCSSValue" && property !== "getPropertyPriority" && property !== "getPropertyShorthand" && property !== "getPropertyValue" && property !== "isPropertyImplicit" && property !== "item" && property !== "length" && property !== "parentRule" && property !== "removeProperty" && property !== "setProperty" && /* property !== Symbol.iterator && property !== Symbol.toStringTag && */ typeof style[alternateProperty] === "string" && typeof style[property] === "string") ? style[property] : null
-    }
+    cascade:
+    for (var properties = cascade(element, propertyName, null, properties = [ /* ... */ ]); properties.length && null !== styleRules; ) {
+      var property      = properties[properties.length - 1];
+      var parentElement = null !== property.element.parentNode && property.element.parentNode.nodeType === 0x1 ? property.element.parentNode : null;
+      var animations    = typeof property.element.getAnimations === "function" ? property.element.getAnimations({subtree: false}) : typeof document.getAnimations === "function" ? document.getAnimations() : []; // --> Animation[]
+      var cascaded      = null;
 
-    // ... --> document.styleSheets TODO
-    if (!(cascaded & CASCADED)) {
-      rules = [];
+      // ...
+      while (property.names.length) {
+        var composited   = null;
+        var deferred     = $.deferred || properties.length > 1 || property.names.length > 1;
+        var reverted     = false;
+        var propertyName = property.names[property.names.length - 1];
 
-      for (var index = document.styleSheets.length; index; ) {
-        var styleSheet = document.styleSheets.item(--index);
+        // ...
+        for (var index = STYLE_SHORTHANDS.length; !composited && index--; )
+        composited = STYLE_SHORTHANDS[index].name === propertyName ? STYLE_SHORTHANDS[index].composition : null;
 
-        try { void styleSheets.push({layer: layers[0], rules: styleSheet.cssRules}) } catch (error) { // --> SecurityError
-        try { void styleSheets.push({layer: layers[0], rules: styleSheet.rules}) }    catch (error) { /* --> SecurityError */ if (strict) return null } }
-      }
+        do {
+          if (!(propertyName in property.style) || null === property.style[propertyName]) {
+            // ... --> .information = {…}
+            for (; property.ruleIndex !== styleRules.length; ++property.ruleIndex) {
+              var applicable  = true;
+              var information = null; // ->> Possibly `property.information`
+              var precedes    = false, precontained = false, prescoped = false;
+              var styleRule   = styleRules[property.ruleIndex];
 
-      for (var order = 0; styleSheets.length; ) {
-        var styleSheet = styleSheets.pop(); // --> styleSheets[--styleSheets.length]
-        var layer      = styleSheet.layer;
+              // ... --> applicable = …
+              for (var index = styleRule.containers.length; applicable && index--; ) {
+                var container           = styleRule.containers[--index];
+                var containerApplicable = {name: false, value: false};
+                var containerElement    = parentElement;
 
-        for (var index = 0, length = styleSheet.rules.length; index !== length; ++index) {
-          var rule = styleSheet.rules[index];
+                // ...
+                if (null !== containerElement) {
+                  // ... --> containers.name[…]
+                  precontained = false;
 
-          // ...
-          if (typeof CSSContainerRule === "function" && rule instanceof CSSContainerRule && typeof rule.cssRules === "object" && typeof rule.containerName === "string" && typeof rule.containerQuery === "string") { /* Do nothing… */ }
+                  for (var subindex = groupingPredicates.container.name.length; subindex--; )
+                  if (
+                    groupingPredicates.container.name[subindex].container === styleRule.container &&
+                    groupingPredicates.container.name[subindex].element   === property.element
+                  ) {
+                    containerApplicable.name = groupingPredicates.container.name[subindex].applicable;
+                    containerElement         = groupingPredicates.container.name[subindex].containerElement;
+                    precontained             = true;
 
-          else if (typeof CSSLayerBlockRule === "function" && rule instanceof CSSLayerBlockRule && typeof rule.cssRules === "object" && typeof rule.name === "string") /* --> @layer … {} */ {
-            var sublayer = rule.name !== "" ? (layer !== "" ? layer + '.' : "") + rule.name : layer;
+                    break
+                  }
 
-            if (layers.indexOf(sublayer) === -1) { void layers.splice(layers.indexOf(layer), 0, sublayer) }
-            void styleSheets.push({layer: sublayer, rules: rule.cssRules})
-          }
+                  if (!precontained) {
+                    var containerPropertyName = null;
 
-          else if (typeof CSSLayerStatementRule === "function" && rule instanceof CSSLayerStatementRule && typeof rule.nameList === "object") /* --> @layer … */ {
-            for (var subindex = 0; subindex !== rule.nameList.length; ++subindex) {
-              var sublayer = rule.nameList[subindex];
+                    // ...
+                    if (property.priors.length > 0)
+                    while (property.priors.length) /* ->> In reverse `cascade(…)` order, so the nearest ancestor is traversed first */ {
+                      var prior = property.priors.pop();
 
-              if (layers.indexOf(sublayer) === -1)
-              void layers.push(sublayer)
-            }
-          }
+                      // ...
+                      if (null === prior.information)
+                        continue;
 
-          else if (typeof CSSScopeRule === "function" && rule instanceof CSSScopeRule && typeof rule.cssRules === "object" && typeof rule.end === "string" && typeof rule.start === "string") {
-            var scoped = false;
+                      else if (prior.name === "container-name") /* --> getCSSPropertyValue(…containerElement, "container-name").includes(styleRule.container.name) */ {
+                        for (var names = prior.information.value.split(/\s+/); names.length; )
+                        if (names.pop() === styleRule.container.name) {
+                          containerApplicable.name = true;
+                          containerElement         = prior.element;
 
-            // ...
-            if (null === rule.start) scoped = true;
-            else {
-              var root = null;
+                          break
+                        }
 
-              // ...
-              for (var node = element; null !== node && node.nodeType === /* --> Node.ELEMENT_NODE */ 0x1; node = node.parentNode)
-              if (matches(node, rule.start)) { root = node; break }
+                        if (applicable)
+                        break
+                      }
 
-              // ...
-              if (element === root) scoped = true;
-              else if (null !== root && null !== rule.end) {
-                scoped = true;
+                      else if (prior.name === "container-type" && prior.information.value !== "normal") /* --> getCSSPropertyValue(…containerElement, "container-type") !== "normal" || … */ {
+                        if (styleRule.container.name === "") {
+                          containerApplicable.name = true;
+                          containerElement         = prior.element;
 
-                for (var node = element.parentNode; null !== node && node.nodeType === /* --> Node.ELEMENT_NODE */ 0x1 && node !== root; node = node.parentNode)
-                if (matches(node, rule.end)) { scoped = false; break }
+                          break
+                        }
+
+                        containerPropertyName = "container-name"
+                      }
+                    } else containerPropertyName = "container-type";
+
+                    // ...
+                    if (!containerApplicable.name && null !== containerPropertyName) {
+                      for (; null !== containerElement && containerElement.nodeType === 0x01; containerElement = containerElement.parentNode)
+                      cascaded = cascade(containerElement, containerPropertyName, property, properties)
+                    }
+
+                    if (cascaded)
+                    break; // --> continue cascade
+
+                    void groupingPredicates.container.name.push({
+                      applicable      : containerApplicable.name,
+                      container       : styleRule.container,
+                      containerElement: containerElement,
+                      element         : property.element
+                    })
+                  }
+
+                  // ... --> containers.query[…]
+                  if (containerApplicable.value = containerApplicable.name) {
+                    if (0 === property.rule.containerQueries.length) // ->> Begin parsing the `styleRule.container.query` or otherwise continue
+                    void property.rule.containerQueries.push({applicable: [], delimiter: "", negate: false, prior: null, value: styleRule.container.query});
+
+                    while (property.rule.containerQueries.length) {
+                      var containerQuery = property.rule.containerQueries[property.rule.containerQueries.length - 1];
+
+                      // ...
+                      if (0 === containerQuery.applicable.length) {
+                        var conditions = []; // --> String[]
+                        var functions  = {"scroll-state": null, "style": null, '@': null};
+                        var negate     = false;
+
+                        // ...
+                        for (var value = null; containerQuery.value !== value; ) /* ->> Remove outer-level parentheses (except topmost) */ {
+                          var indexes  = {begin: 0, end: 0};
+                          var multiple = false;
+
+                          // ...
+                          containerQuery.value = containerQuery.value.replace(TRIM_MATCH, TRIM_PASS);
+
+                          for (var depth = 0, subindex = 0; subindex !== containerQuery.value.length; ++subindex)
+                          switch (containerQuery.value[subindex]) {
+                            case '(': if (0 === depth++) { indexes.begin = subindex; void conditions.push(containerQuery.value.slice(indexes.end   + (containerQuery.value[indexes.end] === '('), indexes.begin)) } break;
+                            case ')': if (0 === --depth) { indexes.end   = subindex; void conditions.push(containerQuery.value.slice(indexes.begin + 1,                                           indexes.end++)) }
+                          }
+
+                          void conditions.push(containerQuery.value.slice(indexes.end + (containerQuery.value[indexes.end] === '('), containerQuery.value.length));
+
+                          for (var subindex = conditions.length; subindex--; ) // ->> Keep parentheses of stripped scroll-state descriptors and (computed) style queries
+                          if (/\s*(scroll-state|style)\s*$/.test(conditions[subindex])) {
+                            conditions[subindex + 1] = conditions[subindex + 0] + '(' + conditions[subindex + 1] + ')';
+                            void conditions.splice(subindex, 1)
+                          }
+
+                          value                = containerQuery.value;
+                          multiple             = conditions.length > 3;
+                          containerQuery.value = "";
+
+                          while (conditions.length)
+                          containerQuery.value = conditions.pop() + containerQuery.value;
+
+                          if (delimit(containerQuery.value, /\s*\b(and|or)\b\s*/g).length !== 1) {
+                            containerQuery.value = multiple ? value : containerQuery.value; // ->> “except topmost”
+                            value                = containerQuery.value
+                          }
+                        }
+
+                        containerQuery.value = containerQuery.value.replace(TRIM_MATCH, TRIM_PASS);
+
+                        for (var negateMatch = null; null !== (negateMatch = containerQuery.value.match(/^\s*not\s*(.*)/)); negate = !negate)
+                          containerQuery.value = negateMatch[1];
+
+                        conditions = delimit(containerQuery.value, /\s*\b(and|or)\b\s*/g); // ->> Remove outer-level parentheses
+
+                        if (conditions.length !== 1) {
+                          for (containerQuery.delimiter = conditions[0].delimiter; conditions.length; negate = false)
+                          void property.rule.containerQueries.push({applicable: [], delimiter: "", negate: negate, query: containerQuery, value: conditions.pop().value});
+
+                          continue
+                        }
+
+                        // ...
+                        precontained = false;
+
+                        for (var subindex = groupingPredicates.container.query.length; subindex--; )
+                        if (
+                          groupingPredicates.container.query[subindex].condition === containerQuery.value &&
+                          groupingPredicates.container.query[subindex].container === styleRule.container  &&
+                          groupingPredicates.container.query[subindex].element   === property.element
+                        ) {
+                          containerApplicable.value = groupingPredicates.container.query[subindex].applicable;
+                          precontained              = true;
+
+                          break
+                        }
+
+                        if (!precontained) {
+                          if (functions["scroll-state"] = containerQuery.value.match(/^scroll-state\s*\(\s*([-\w]+)\s*:\s*([-\w]+)\s*\)$/))
+                          switch (functions["scroll-state"][1]) {
+                            case "scrollable": switch (functions["scroll-state"][2]) {
+                              case "bottom":           containerApplicable.value = containerElement.clientHeight < containerElement.scrollHeight && containerElement.scrollHeight <= containerElement.clientHeight + containerElement.scrollTop; break;
+                              case "left"  :           containerApplicable.value = containerElement.clientWidth  < containerElement.scrollWidth  && containerElement.scrollLeft   <= 0.00;                                                       break;
+                              case "right" :           containerApplicable.value = containerElement.clientWidth  < containerElement.scrollWidth  && containerElement.scrollWidth  <= containerElement.clientWidth + containerElement.scrollLeft; break;
+                              case "top"   :           containerApplicable.value = containerElement.clientHeight < containerElement.scrollHeight && containerElement.scrollTop    <= 0.00;                                                       break;
+                              case 'x': case "inline": containerApplicable.value = containerElement.clientWidth  < containerElement.scrollWidth;                                                                                                 break;
+                              case 'y': case "block" : containerApplicable.value = containerElement.clientHeight < containerElement.scrollHeight
+                            } break;
+
+                            case "snapped": {
+                              var containerParentElement = containerElement.parentNode;
+
+                              if (null !== containerParentElement && containerParentElement.nodeType === 0x01)
+                              switch (functions["scroll-state"][2]) {
+                                // ->> Approximate (with) scroll position without existing DOM API
+                                case 'x': case "inline": containerApplicable.value = Math.abs(getElementBounds(containerElement).left - getElementBounds(containerParentElement).left) < 1.00; break;
+                                case 'y': case "block" : containerApplicable.value = Math.abs(getElementBounds(containerElement).top  - getElementBounds(containerParentElement).top)  < 1.00
+                              }
+                            } break;
+
+                            case "stuck": switch (property.priors.length === 1 && null !== property.priors[0].information ? property.priors[0].name : null) {
+                              case "bottom": case "left": case "right": case "top": {
+                                var prior = property.priors.pop();
+                                var value = (canonicalize(containerElement, prior.name, prior.information.value, NO_AXIS, styleRules, groupingPredicates) || "").replace(CANON_MATCH, CANON_ONLY);
+
+                                if (value !== "")
+                                switch (functions["scroll-state"][2]) /* --> getCSSPropertyValue(containerElement, "bottom" | "left" | "right" | "top") ? … */ {
+                                  case "bottom": containerApplicable.value = getElementBounds(containerElement).bottom >= getDocumentBounds(document).height - value; break;
+                                  case "left":   containerApplicable.value = getElementBounds(containerElement).left   <= 0                                  + value; break;
+                                  case "none":   containerApplicable.value = getElementBounds(containerElement).top    >  0                                  + value; break;
+                                  case "right":  containerApplicable.value = getElementBounds(containerElement).right  >= getDocumentBounds(document).width  - value; break;
+                                  case "top":    containerApplicable.value = getElementBounds(containerElement).top    <= 0                                  + value
+                                }
+                              } break;
+
+                              case "position": if (property.priors.pop().information.value === "sticky") {
+                                switch (functions["scroll-state"][2]) /* --> getCSSPropertyValue(containerElement, "position") === "sticky" */ {
+                                  case "bottom": cascaded = cascade(containerElement, "bottom", property, properties); break;
+                                  case "left":   cascaded = cascade(containerElement, "left",   property, properties); break;
+                                  case "none":   cascaded = cascade(containerElement, "top",    property, properties); break;
+                                  case "right":  cascaded = cascade(containerElement, "right",  property, properties); break;
+                                  case "top":    cascaded = cascade(containerElement, "top",    property, properties)
+                                }
+                              } break;
+
+                              default:
+                                cascaded = cascade(containerElement, "position", property, properties)
+                            }
+                          }
+
+                          else if (functions["style"] = containerQuery.value.match(/^style\s*\(\s*([-\w]+)\s*:\s*([\S\s]+)\s*\)$/)) /* --> getCSSPropertyValue(containerElement, functions["style"][1]) === functions["style"][2] */ {
+                            if (property.priors.length === 1 && property.priors[0].name === functions["style"][1]) containerApplicable.value = canonicalize(containerElement, functions["style"][1], functions["style"][2], NO_AXIS, styleRules, groupingPredicates) === canonicalize(containerElement, functions["style"][1], (property.priors.pop().information || {value: ""}).value, NO_AXIS, styleRules, groupingPredicates);
+                            else                                                                                   cascaded                  = cascade(containerElement, functions["style"][1], property, properties)
+                          }
+
+                          else if (functions['@'] = containerQuery.value.match(/^(max-|min-)?(aspect-ratio|block-size|height|inline-size|width)\s*([:<=>]+)\s*([\S\s]+)$/)) {
+                            var containerAxis = NO_AXIS;
+
+                            // ...
+                            switch (functions['@'][2]) {
+                              case "block" : case "height": containerAxis = VERTICAL_AXIS; break;
+                              case "inline": case "width" : containerAxis = HORIZONTAL_AXIS
+                            }
+
+                            if (NO_AXIS !== containerAxis) {
+                              var containerElementBounds = getElementBounds(containerElement);
+                              var containerThreshold     = 0.00;
+                              var containerSize          = 0.00;
+
+                              // ...
+                              if (functions['@'][2] === "aspect-ratio") {
+                                var aspects = functions['@'][4].split(/\s*\/\s*/);
+
+                                // ...
+                                containerThreshold = +aspects[0] / (+aspects[1] || 1.00);
+                                containerSize      = containerElementBounds.width / containerElementBounds.height;
+
+                                if      (/^max-/i.test(functions['@'][1] || "")) containerApplicable.value = containerSize <= containerThreshold;
+                                else if (/^min-/i.test(functions['@'][1] || "")) containerApplicable.value = containerSize >= containerThreshold;
+                                else                                             containerApplicable.value = Math.abs(containerSize - containerThreshold) < 1.00e-3
+                              }
+
+                              else {
+                                containerThreshold = (canonicalize(containerElement, functions['@'][2].replace("block", "height").replace("inline", "width"), functions['@'][4], containerAxis, styleRules, groupingPredicates).replace(/px$/, "") || "").replace(CANON_MATCH, CANON_ONLY);
+                                containerSize      = HORIZONTAL_AXIS === containerAxis ? containerElementBounds.width : VERTICAL_AXIS === containerAxis ? containerElementBounds.height : containerSize;
+
+                                if (containerThreshold !== "") {
+                                  if      (/^max-/i.test(functions['@'][1] || "")) containerApplicable.value = containerSize <= containerThreshold;
+                                  else if (/^min-/i.test(functions['@'][1] || "")) containerApplicable.value = containerSize >= containerThreshold;
+                                  else switch (functions['@'][3] || ':') {
+                                    case '<' :                    containerApplicable.value = containerSize <  containerThreshold; break;
+                                    case '=' :                    containerApplicable.value = containerSize == containerThreshold; break;
+                                    case '>' :                    containerApplicable.value = containerSize >  containerThreshold; break;
+                                    case "<=":                    containerApplicable.value = containerSize <= containerThreshold; break;
+                                    case ">=": case ':': default: containerApplicable.value = containerSize >= containerThreshold
+                                  }
+                                }
+                              }
+                            }
+                          }
+
+                          // ...
+                          if (cascaded)
+                          break; // --> continue cascade
+
+                          void groupingPredicates.container.query.push({
+                            applicable: containerApplicable.value,
+                            condition : containerQuery.value,
+                            container : styleRule.container,
+                            element   : property.element
+                          })
+                        }
+                      } else switch (containerQuery.delimiter) {
+                        case "and": for (containerApplicable.value = true;  containerQuery.applicable.length; ) containerApplicable.value = containerQuery.applicable.pop() && containerApplicable.value; break;
+                        case "or":  for (containerApplicable.value = false; containerQuery.applicable.length; ) containerApplicable.value = containerQuery.applicable.pop() || containerApplicable.value
+                      }
+
+                      // ...
+                      if (null !== containerQuery.prior) void containerQuery.prior.applicable.push(containerApplicable.value);
+                      if (true)                          void property.rule.containerQueries.pop()
+                    }
+
+                    if (cascaded)
+                    break // --> continue cascade
+                  }
+                }
+
+                applicable = containerApplicable.name && containerApplicable.value
+              }
+
+              for (var index = styleRule.scopes.length; applicable && index--; ) {
+                var scope           = styleRule.scopes[index];
+                var scopeApplicable = true;
+
+                // ...
+                for (var subindex = groupingPredicates.scope.length; subindex--; )
+                if (groupingPredicates.scope[subindex].scope === scope) {
+                  prescoped       = true;
+                  scopeApplicable = groupingPredicates.scope[subindex].applicable;
+
+                  break
+                }
+
+                if (!prescoped) {
+                  if (null !== scope.start) {
+                    var root = null;
+
+                    // ...
+                    for (var node = property.element; null !== node && node.nodeType === 0x01; node = node.parentNode)
+                    if  (matches(node, scope.start)) { root = node; break }
+
+                    if (null === root) scopeApplicable = false;
+                    else if (property.element !== root && null !== scope.end) {
+                      for (var node = element.parentNode; null !== node && node.nodeType === 0x01 && node !== root; node = node.parentNode)
+                      if  (matches(node, scope.end)) { scopeApplicable = false; break }
+                    }
+                  }
+
+                  void groupingPredicates.scope.push({
+                    applicable: scopeApplicable,
+                    scope     : scope
+                  })
+                }
+
+                // ...
+                applicable = scopeApplicable
+              }
+
+              if (applicable) {
+                information = {
+                  layer      : styleRule.layer,
+                  matches    : false,
+                  order      : styleRule.order,
+                  priority   : typeof styleRule.value.style.getPropertyPriority !== "function" ? "" : styleRule.value.style.getPropertyPriority(propertyName),
+                  specificity: null,
+                  text       : styleRule.value.cssText ? styleRule.value.cssText + "" : null,
+                  value      : getStyleDeclarationPropertyValue(styleRule.value.style, propertyName)
+                };
+
+                // ...
+                for (var selectors = delimit(styleRule.value.selectorText, /\s*,\s*/g); selectors.length; ) {
+                  var selector = selectors.pop().value;
+
+                  if (matches(property.element, selector)) {
+                    var specificity = rank(selector);
+
+                    information.matches       = true;
+                    property.rule.specificity = null === property.rule.specificity || compare(property.rule.specificity, specificity) <= 0 ? specificity : property.rule.specificity
+                  }
+                }
+
+                information.specificity = property.rule.specificity;
+                applicable              = information.matches && null !== information.specificity && (null !== information.value || propertyName === "anchor-name" || propertyName === "animation" || propertyName === "animation-name" || propertyName === "content" || propertyName === "font-family" || propertyName === "hyphenate-character" || propertyName === "quotes" || propertyName === "timeline-scope" || propertyName === "view-timeline-name" || propertyName === "view-transition-name");
+
+                for (var index = applicable ? property.unlayered.length : 0; index--; )
+                if (information.layer === property.unlayered[index]) {
+                  applicable = false;
+                  break
+                }
+              }
+
+              // ... --> .information = {…}
+              if (applicable) {
+                // ... --> precedes = false|true
+                if (null === property.information || (information.priority === "important" && property.information.priority !== "important"))
+                  precedes = true;
+
+                else if (information.priority === property.information.priority) {
+                  if (information.layer !== property.information.layer) {
+                    var layer         = styleRule.layers.length;
+                    var propertyLayer = styleRule.layers.length;
+
+                    // ...
+                    while (layer--)         { if (information.layer          === styleRule.layers[layer])         break }
+                    while (propertyLayer--) { if (property.information.layer === styleRule.layers[propertyLayer]) break }
+
+                    precedes = (propertyLayer - layer) * (information.priority === "important" ? -1 : +1) < 0
+                  }
+
+                  else {
+                    var comparison = compare(information.specificity, property.information.specificity);
+                    precedes = 0 === comparison ? information.order > property.information.order : comparison >= 0
+                  }
+                }
+
+                // ...
+                if (precedes)
+                property.information = information
               }
             }
 
-            if (scoped)
-            void styleSheets.push({layer: layer, rules: rule.cssRules})
-          }
+            if (cascaded)
+            break; // --> continue cascade
 
-          else switch (typeof rule.type !== "number" ? /* --> CSSRule.UNKNOWN_RULE */ 0x00 : rule.type) {
-            // --> CSSRule.STYLE_RULE === CSSStyleRule::type
-            case 0x01: void rules.push({layer: layer, order: order++, rule: rule}); break;
+            // ... --> .animation = {…} --- TODO (Lapys) -> `KeyframeEffect::composite|iterationComposite` (with `auto` from `GroupEffect`) unsupported
+            if (NO_DESCRIPTOR === property.animation.descriptor) {
+              if (null === property.animation.next || null === property.animation.previous) {
+                var frames = {next: [], previous: []}; // ->> Not `Window::frames`
 
-            // --> CSSRule.IMPORT_RULE === CSSImportRule::type --> @import
-            case 0x03: if (typeof rule.styleSheet === "object") {
-              try { void styleSheets.push({layer: layer, rules: rule.styleSheet.cssRules}) } catch (error) { // --> SecurityError
-              try { void styleSheets.push({layer: layer, rules: rule.styleSheet.rules}) }    catch (error) { /* --> SecurityError */ if (strict) return null } }
-            } break;
+                // ... --> .end = …; frames.next = frames.previous = […]
+                for (var index = animations.length; index--; ) {
+                  var descriptor = typeof CSSTransition === "function" && animations[index] instanceof CSSTransition ? CSS_TRANSITION_DESCRIPTOR : typeof CSSAnimation === "function" && animations[index] instanceof CSSAnimation ? CSS_ANIMATION_DESCRIPTOR : typeof Animation === "function" && animations[index] instanceof Animation ? ANIMATION_DESCRIPTOR : NO_DESCRIPTOR;
 
-            // --> CSSRule.MEDIA_RULE === CSSMediaRule::type --> @media
-            case 0x04: if (typeof rule.cssRules === "object" && typeof matchMedia === "function") {
-              if (matchMedia(typeof rule.media === "object" && typeof rule.media.mediaText === "string" ? rule.media.mediaText : typeof rule.conditionText === "string" ? rule.conditionText : "all"))
-              void styleSheets.push({layer: layer, rules: rule.cssRules})
-            } break;
+                  if (NO_DESCRIPTOR !== descriptor && typeof animations[index].effect === "object" && typeof animations[index].effect.getComputedTiming === "function" && typeof animations[index].effect.getKeyframes === "function" && animations[index].effect.target === property.element)
+                  for (var keyframes = animations[index].effect.getKeyframes(), timing = animations[index].effect.getComputedTiming(); keyframes.length && null !== timing.currentIteraton && null !== timing.progress; ) {
+                    var information = {
+                      descriptor: descriptor,      // --> enum
+                      keyframe  : keyframes.pop(), // --> Object*
+                      order     : index,           // --> Number(Uint32)
+                      progress  : timing.progress, // --> Number
+                      properties: []               // --> {name: String, value: String}[]*
+                    };
 
-            case 0x07: continue; // --> CSSRule.KEYFRAMES_RULE === CSSKeyframesRule::type --- CODE (Lapys) -> @keyframes
-            case 0x08: continue; // --> CSSRule.KEYFRAME_RULE  === CSSKeyframeRule ::type --- TODO (Lapys) -> `Animation[] Element::getAnimations({subtree: false})` is available but computing mid-interpolations between CSS property values is non-trivial
+                    // ...
+                    if      (typeof information.keyframe[propertyName]      === "string") information.properties = [{name: propertyName, value: information.keyframe[propertyName]}];
+                    else if (typeof information.keyframe[alt(propertyName)] === "string") information.properties = [{name: propertyName, value: information.keyframe[alt(propertyName)]}];
+                    else if (composited) for (var subindex = 0; subindex !== composited.length; ++subindex) {
+                      if      (typeof information.keyframe[composited[subindex].value]      === "string") void information.properties.push({name: composited[subindex].value, value: information.keyframe[composited[subindex].value]});
+                      else if (typeof information.keyframe[alt(composited[subindex].value)] === "string") void information.properties.push({name: composited[subindex].value, value: information.keyframe[alt(composited[subindex].value)]})
+                    }
+                    else for (var shorthandIndex = STYLE_SHORTHANDS.length; shorthandIndex --> 0; ) {
+                      for (var subindex = STYLE_SHORTHANDS[shorthandIndex].composition.length; subindex--; )
+                      if (STYLE_SHORTHANDS[shorthandIndex].composition[subindex].value === propertyName) {
+                        var style = probe().style;
+                        var value = null;
 
-            // --> CSSRule.SUPPORTS_RULE === CSSSupportsRule::type --> @supports
-            case 0x0C: if (typeof rule.cssRules === "object" && typeof CSS === "object" && typeof CSS.supports === "function") try {
-              if (CSS.supports(typeof rule.conditionText === "string" ? rule.conditionText : "display: block"))
-              void styleSheets.push({layer: layer, rules: rule.cssRules})
-            } catch (error) { if (strict) return null } break;
+                        // ...
+                        if      (typeof information.keyframe[STYLE_SHORTHANDS[shorthandIndex].name]      === "string") style.cssText = STYLE_SHORTHANDS[shorthandIndex].name + ": " + information.keyframe[STYLE_SHORTHANDS[shorthandIndex].name];
+                        else if (typeof information.keyframe[alt(STYLE_SHORTHANDS[shorthandIndex].name)] === "string") style.cssText = STYLE_SHORTHANDS[shorthandIndex].name + ": " + information.keyframe[alt(STYLE_SHORTHANDS[shorthandIndex].name)];
 
-            case 0x05: // --> CSSRule.FONT_FACE_RULE           === CSSFontFaceRule         ::type                                                                                        --> @font-face
-            case 0x06: // --> CSSRule.PAGE_RULE                === CSSPageRule             ::type                                                                                        --> @page
-            case 0x09: // --> CSSRule.MARGIN_RULE              === CSSMarginRule           ::type                                                                                        --> …
-            case 0x0A: // --> CSSRule.NAMESPACE_RULE           === CSSNamespaceRule        ::type                                                                                        --> @namespace
-            case 0x0B: // --> CSSRule.COUNTER_STYLE_RULE       === CSSCounterStyleRule     ::type                                                                                        --> @counter-style
-            case 0x0E: // --> CSSRule.FONT_FEATURE_VALUES_RULE === CSSFontFeatureValuesRule::type                                                                                        --> @font-feature-values
-            default:   // --> CSSRule.UNKNOWN_RULE {0x00} | CSSRule.CHARSET_RULE {0x02} | CSSRule.DOCUMENT_RULE {0x0D} | CSSRule.REGION_STYLE_RULE {0x10} | CSSRule.VIEWPORT_RULE {0x0E} --> @container, @document, …
-              if (typeof rule.cssRules === "object")
-              void styleSheets.push({layer: layer, rules: rule.cssRules})
-          }
-        }
-      }
+                        information.properties = (value = getStyleDeclarationPropertyValue(style, propertyName)) ? [{name: propertyName, value: value}] : [];
+                        break
+                      }
+                    }
 
-      // 👀
-      for (var cascaded = false, unlayered = []; !cascaded; ) {
-        var information = null; // --> {matches: false, order: < 0, priority: "", specificity: {0: 0, 1: 0, 2: 0}, value: null}
+                    property.animation.end = timing.progress === 1.00 ? information : property.animation.end;
 
-        // ...
-        cascaded = true;
+                    if (0 !== information.properties.length) {
+                      if (information.keyframe.computedOffset >= timing.progress) void frames.next    .unshift(information);
+                      if (information.keyframe.computedOffset <= timing.progress) void frames.previous.push   (information)
+                    }
+                  }
+                }
 
-        for (var index = 0, specificity = /* --> {0: 0, 1: 0, 2: 0} */ null; index !== rules.length; ++index) /* --> with (rules[index]) */ {
-          var rule           = rules[index].rule;
-          var selectors      = rule.selectorText.split(/\s*,\s*/);
-          var style          = rule.style;
-          var subinformation = {matches: false, layer: rules[index].layer, order: rules[index].order, priority: style.getPropertyPriority(property), specificity: null, value: style.getPropertyValue(property)};
+                switch (0) {
+                  case frames.next    .length: frames.next     = frames.previous.slice(); break;
+                  case frames.previous.length: frames.previous = frames.next    .slice()
+                }
 
-          // ...
-          for (var subindex = selectors.length; subindex--; )
-          if (matches(element, selectors[subindex])) {
-            var selectorSpecificity = rank(selectors[subindex]);
+                // ... ->> Collate `frames.next|.previous` keyframes into resolved `.next|.previous` properties e.g. `@keyframe { 0% { color: red } 42% { color: blue } }` resolves to a previous `color: blue` at `50%` progress
+                if (frames.next.length || frames.previous.length)
+                for (var keyframes = [
+                  {frames: frames.next,     values: delimit(propertyName, /(?:)/)},
+                  {frames: frames.previous, values: delimit(propertyName, /(?:)/)},
+                ]; keyframes.length; ) {
+                  var details  = []; // --> {delimiter: String, information: Object, name: String*, value: String*}[]
+                  var keyframe = keyframes.pop();
 
-            specificity            = null === specificity || compare(selectorSpecificity, specificity) > 0 ? selectorSpecificity : specificity;
-            subinformation.matches = true
-          }
+                  // ...
+                  while (keyframe.values.length) {
+                    var value     = keyframe.values.pop();
+                    var name      = value.value;
+                    var evaluated = false;
+                    var detail    = {information: /* --> frames.next|.previous[…] === keyframes.frames[…] */ {descriptor: NO_DESCRIPTOR, keyframe: null, order: 0, progress: 0.00, properties: null}, name: name, value: null};
 
-          subinformation.specificity = specificity;
+                    // ... --> details = […]
+                    for (var index    = keyframe.frames                  .length; index--; )
+                    for (var subindex = keyframe.frames[index].properties.length; subindex--; ) {
+                      if (detail.name === keyframe.frames[index].properties[subindex].name && detail.information.order <= keyframe.frames[index].order) {
+                        detail.information = keyframe.frames[index];
+                        detail.value       = keyframe.frames[index].properties[subindex].value;
 
-          if (subinformation.matches && null !== subinformation.specificity && subinformation.value !== "" && unlayered.indexOf(subinformation.layer) === -1) {
-            var precedes = false;
+                        break
+                      }
+                    }
 
-            // ...
-            if (null === information || (information.priority !== "important" && subinformation.priority === "important"))
-              precedes = true;
+                    if (NO_DESCRIPTOR !== detail.information.descriptor)
+                      void details.push(detail);
 
-            else if (information.priority === subinformation.priority) {
-              if (information.layer !== subinformation.layer)                                       precedes = (layers.indexOf(information.layer) - layers.indexOf(subinformation.layer)) * (subinformation.priority === "important" ? -1 : +1) < 0;
-              else { var comparison = compare(information.specificity, subinformation.specificity); precedes = comparison < 0 || (0 === comparison && information.order < subinformation.order) }
+                    else if (composited && name === propertyName) {
+                      for (var index = composited.length; index--; )
+                      void keyframe.values.push(composited[index]);
+
+                      continue
+                    }
+
+                    // ... --> .properties = […]
+                    for (var index = property.animation.properties.length; ; ) {
+                      if (--index === -1) { void property.animation.properties.push({animated: null !== detail.value, delimiter: value.delimiter, information: detail.information, name: detail.name, value: null}); break }
+                      if (name === property.animation.properties[index].name) { property.animation.properties[index].animated = property.animation.properties[index].animated || null !== detail.value; break }
+                    }
+                  }
+
+                  // ... --> .next = .previous = […]
+                  switch (keyframe.frames) {
+                    case frames.next:     property.animation.next     = details; break;
+                    case frames.previous: property.animation.previous = details
+                  }
+                }
+
+                for (var index = property.animation.properties.length; index--; )
+                for (var subindex = property.names.length; ; ) {
+                  if (--subindex === -1) { cascaded = cascade(property.element, property.animation.properties[index].name, property, properties); break }
+                  if (property.animation.properties[index].name === property.names[subindex]) break
+                }
+
+                if (cascaded)
+                break // --> continue cascade
+              }
+
+              if (cascaded)
+              break; // --> continue cascade
+
+              // ... --> .descriptor = enum; .value = "…"
+              for (var index = property.animation.properties.length; index--; ) {
+                for (var subindex = property.priors.length; subindex--; )
+                if (
+                  null !== property.priors[subindex].information && property.animation.properties[index].name === property.priors[subindex].name &&
+                  CSS_TRANSITION_DESCRIPTOR !== property.animation.properties[index].information.descriptor && (!property.animation.properties[index].animated || property.priors[subindex].information.priority === "important")
+                ) property.animation.properties[index].value = property.priors[subindex].information.value;
+
+                if (!property.animation.properties[index].animated && null === property.animation.properties[index].value)
+                void property.animation.properties.splice(index, 1)
+              }
+
+              if (null === property.animation.value)
+              while (property.animation.properties.length) {
+                var animationProperty = property.animation.properties.pop();
+
+                // ...
+                if (null === animationProperty.value) {
+                  var detail   = {information: {descriptor: NO_DESCRIPTOR, keyframe: null, order: 0, progress: 0.00, properties: null}, name: null, value: null};
+                  var next     = null;
+                  var previous = null;
+
+                  // ... --> next = previous = …
+                  for (var index = property.animation.next    .length; index--; ) if (animationProperty.name === property.animation.next    [index].name) { next     = property.animation.next    [index]; break }
+                  for (var index = property.animation.previous.length; index--; ) if (animationProperty.name === property.animation.previous[index].name) { previous = property.animation.previous[index]; break }
+
+                  next     = null === next     ? detail : next;
+                  previous = null === previous ? detail : previous;
+
+                  switch (true) {
+                    case next.information.order < previous.information.order: next     = detail; break;
+                    case next.information.order > previous.information.order: previous = detail
+                  }
+
+                  // ...
+                  animationProperty.value       = "";
+                  property.animation.descriptor = (
+                    ANIMATION_DESCRIPTOR      === next.information.descriptor || ANIMATION_DESCRIPTOR      === previous.information.descriptor ? ANIMATION_DESCRIPTOR      :
+                    CSS_ANIMATION_DESCRIPTOR  === next.information.descriptor || CSS_ANIMATION_DESCRIPTOR  === previous.information.descriptor ? CSS_ANIMATION_DESCRIPTOR  :
+                    CSS_TRANSITION_DESCRIPTOR === next.information.descriptor || CSS_TRANSITION_DESCRIPTOR === previous.information.descriptor ? CSS_TRANSITION_DESCRIPTOR :
+                    NO_DESCRIPTOR
+                  );
+
+                  if      (null === next.value && null === previous.value) animationProperty.value = null;
+                  else if (null !== next.value && null === previous.value) animationProperty.value = next    .value;
+                  else if (null === next.value && null !== previous.value) animationProperty.value = previous.value;
+                  else /* ->> Non-standard interpolation e.g. what would `background-position-x: left 20px` to `background-position-x: right 20px` evaluate to?  */ {
+                    var delta         = next.information.keyframe.computedOffset - previous.information.keyframe.computedOffset;
+                    var easing        = previous.information.keyframe.easing;
+                    var nextValue     = delimit(next    .value, /[,\/\s]+/g);
+                    var previousValue = delimit(previous.value, /[,\/\s]+/g);
+                    var progress      = delta > 0.00 ? (previous.information.progress - previous.information.keyframe.computedOffset) / delta : 1.00;
+
+                    // ... --> progress = …
+                    switch (easing) {
+                      case "ease":        progress = bézier(0.25, 0.10, 0.25, 1.00, progress); break;
+                      case "ease-in":     progress = bézier(0.42, 0.00, 1.00, 1.00, progress); break;
+                      case "ease-in-out": progress = bézier(0.42, 0.00, 0.58, 1.00, progress); break;
+                      case "ease-out":    progress = bézier(0.00, 0.00, 0.58, 1.00, progress); break;
+                      case "linear":      /* Do nothing… */                                    break;
+                      case "step-end":    progress = progress <  1.00 ? 0.00 : 1.00;           break;
+                      case "step-start":  progress = progress <= 0.00 ? 0.00 : 1.00;           break;
+                      default: {
+                        var functions = {"bézier": null, "linear": null, "step": null};
+
+                        // ...
+                        if (functions["bézier"] = easing.match(/^cubic-bezier\(\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?)\s*,\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?)\s*,\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?)\s*,\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?)\s*\)$/))
+                          progress = bézier(+functions["bézier"][1], +functions["bézier"][2], +functions["bézier"][3], +functions["bézier"][4], progress);
+
+                        else if (functions["step"] = easing.match(/^steps\(\s*(\d+)\s*(?:,\s*([\w-]+))?\s*\)$/)) // --> intervalCount = functions["step"][1], position = functions["step"][2]
+                          switch (functions["step"][2]) {
+                            case "both":  case "jump-both":         progress = Math.min((Math.floor(progress * functions["step"][1]) + 1) / (functions["step"][1] + 1), 1.00); break;
+                            case "start": case "jump-start":        progress = Math.min((Math.ceil (progress * functions["step"][1]) + 0) / (functions["step"][1] + 0), 1.00); break;
+                            case "none":  case "jump-none":         progress = Math.floor((progress * (functions["step"][1] - 1)) + 0.50) / (functions["step"][1] - 1);        break;
+                            case "end":   case "jump-end": default: progress = Math.floor((progress * (functions["step"][1] - 0)) + 0.00) / (functions["step"][1] - 0)
+                          }
+
+                        else if (functions["linear"] = easing.match(/^linear\(([\S\s]+)\)$/)) /* CITE (Lapys) -> https://developer.mozilla.org/docs/Web/CSS/Reference/Values/easing-function/linear */ {
+                          var points = [];
+                          var tokens = functions["linear"].split(/\s*,\s*/);
+
+                          // ... --> points = […]
+                          for (var index = 0; index !== tokens.length; ++index) {
+                            var positions = [];
+                            var subtokens = tokens[index].split(/\s+/);
+
+                            // ...
+                            for (var subindex = 1; subindex !== subtokens.length; ++subindex)
+                            void positions.push(+subtokens[subindex] / 100.00);
+
+                            if (0 === positions.length)
+                            positions = [null];
+
+                            for (var subindex = 0; subindex !== positions.length; ++subindex)
+                            void points.push({input: positions[subindex], output: +subtokens[0]})
+                          }
+
+                          points[0]                .input = null !== points[0]                .input ? points[0]                .input : 0.00;
+                          points[points.length - 1].input = null !== points[points.length - 1].input ? points[points.length - 1].input : 1.00;
+
+                          for (var index = 1; index < points.length; ++index)
+                          if (null === points[index].input) {
+                            var inputEnd = 0, inputStart = 0; // --> points[rangeEnd, rangeStart].input
+                            var rangeEnd = 0, rangeStart = index - 1;
+
+                            // ...
+                            while (null !== points[index].input && index !== points.length)
+                              ++index;
+
+                            rangeEnd   = index;
+                            inputEnd   = points[rangeEnd]  .input;
+                            inputStart = points[rangeStart].input;
+
+                            for (var count = rangeEnd - rangeStart, subindex = 1; count !== subindex; ++subindex)
+                            points[rangeStart + subindex].input = inputStart + ((inputEnd - inputStart) * (subindex / count))
+                          }
+
+                          // ... --> progress = …
+                          if      (progress <= points[0]                .input) progress = points[0]                .output;
+                          else if (progress >= points[points.length - 1].input) progress = points[points.length - 1].output;
+                          else
+                            for (var index = 1; index !== points.length; ++index)
+                            if (progress <= points[index].input) {
+                              progress = points[index - 1].output + ((points[index - 0].output - points[index - 1].output) * (points[index - 0].input - points[index - 1].input > 0.00 ? (t - points[index - 1].input) / (points[index - 0].input - points[index - 1].input) : 1.00));
+                              break
+                            }
+                        }
+                      }
+                    }
+
+                    // ...
+                    if (nextValue.length === previousValue.length)
+                    for (var index = 0; index !== (nextValue || previousValue).length; ++index) {
+                      var valueB        = nextValue    [index];
+                      var valueA        = previousValue[index];
+                      var interpolation = progress < 0.50 ? valueA.value : valueB.value;
+
+                      // ...
+                      if (valueA.delimiter !== valueB.delimiter) {
+                        animationProperty.value = "";
+                        break;
+                      }
+
+                      // ... --> interpolation = … ->> Expects absolute lengths canonicalized/ computed to `px`, angles to `deg`, colors (not wide-gamut) to legacy `rgb(…)`/ `rgba(…)`, frequencies to `Hz`, durations to `ms`, resolutions to `dppx` — ignoring other units (e.g. `em`, `vmax`, …) except `%`
+                      if (MEASUREMENTS["function-color"].test(valueA.value) && MEASUREMENTS["function-color"].test(valueB.value)) /* --> "rgb(…, …, …)" | "rgba(…, …, …, …)" */ {
+                        valueA.value  = (valueA.value.replace(/^rgba?\(\s*|\s*\)$/g, "") + (valueA.value.indexOf('a') === -1 ? ", 1" : "")).split(/\s*,\s*/);
+                        valueB.value  = (valueB.value.replace(/^rgba?\(\s*|\s*\)$/g, "") + (valueB.value.indexOf('a') === -1 ? ", 1" : "")).split(/\s*,\s*/);
+                        interpolation = "rgba(" + Math.floor(lerp(valueA.value[0], valueB.value[0])) + ", " + Math.floor(lerp(valueA.value[1], valueB.value[1])) + ", " + Math.floor(lerp(valueA.value[2], valueB.value[2])) + ", " + lerp(valueA.value[3], valueB.value[3]) + ')'
+                      }
+
+                      else if (MEASUREMENTS["function-transform"].test(valueA.value) && MEASUREMENTS["function-transform"].test(valueB.value)) /* --> "matrix(…, …, …, …, …, …)" | "matrix3d(…, …, …, …, …, …, …, …, …, …, …, …, …, …, …, …)" */ {
+                        if (/^matrix\(/.test(valueA.value)) { valueA.value = valueA.value.replace(/^matrix(3d)?\(\s*|\s*\)$/g, "").split(/\s*,\s*/); valueA.value = "matrix3d(" + valueA.value[0] + ", " + valueA.value[1] + ", 0, 0, " + valueA.value[2] + ", " + valueA.value[3] + ", 0, 0, 0, 0, 1, 0" + valueA.value[4] + ", " + valueA.value[5] + ", 0, 1)" }
+                        if (/^matrix\(/.test(valueB.value)) { valueB.value = valueB.value.replace(/^matrix(3d)?\(\s*|\s*\)$/g, "").split(/\s*,\s*/); valueB.value = "matrix3d(" + valueB.value[0] + ", " + valueB.value[1] + ", 0, 0, " + valueB.value[2] + ", " + valueB.value[3] + ", 0, 0, 0, 0, 1, 0" + valueB.value[4] + ", " + valueB.value[5] + ", 0, 1)" }
+
+                        for (var values = [valueA, valueB]; values.length; ) {
+                          var value       = values.pop();
+                          var matrix      = value.value.replace(/^matrix3d\(|\)$/g, "").split(/\s*,\s*/), columns = [[0.00, 0.00, 0.00], [0.00, 0.00, 0.00], [0.00, 0.00, 0.00]]; // ->> Upper-left 3×3
+                          var perspective = [0.00, 0.00, 0.00, 1.00];
+                          var quaternion  = {x:  0.00, y:  0.00, z:  0.00, w: 0.00};
+                          var scale       = {x:  0.00, y:  0.00, z:  0.00};
+                          var skew        = {xy: 0.00, xz: 0.00, yz: 0.00};
+                          var translation = {x:  0.00, y:  0.00, z:  0.00};
+                          var trace       = 0.00;
+
+                          /* ... */
+                          function dot   (vectorA, vectorB) { return (vectorA[0] * vectorB[0]) + (vectorA[1] * vectorB[1]) + (vectorA[2] * vectorB[2]) }
+                          function length(vector)           { return Math.sqrt(dot(vector, vector)) }
+
+                          // ...
+                          value.value = null;
+
+                          if (matrix.length !== 16) break; matrix[15] = +matrix[15]; matrix[14]  = +matrix[14]; matrix[13]  = +matrix[13]; matrix[12]  = +matrix[12]; matrix[11]  = +matrix[11]; matrix[10]  = +matrix[10]; matrix[9]  = +matrix[9];  matrix[8]  = +matrix[8];  matrix[7]  = +matrix[7];  matrix[6]  = +matrix[6];  matrix[5]  = +matrix[5];  matrix[4]  = +matrix[4];  matrix[3]  = +matrix[3];  matrix[2]  = +matrix[2];  matrix[1]  = +matrix[1];  matrix[0]  = +matrix[0];
+                          if (0.00 === matrix[15])  break; matrix[15] = 1.00;        matrix[14] /=  matrix[15]; matrix[13] /=  matrix[15]; matrix[12] /=  matrix[15]; matrix[11] /=  matrix[15]; matrix[10] /=  matrix[15]; matrix[9] /=  matrix[15]; matrix[8] /=  matrix[15]; matrix[7] /=  matrix[15]; matrix[6] /=  matrix[15]; matrix[5] /=  matrix[15]; matrix[4] /=  matrix[15]; matrix[3] /=  matrix[15]; matrix[2] /=  matrix[15]; matrix[1] /=  matrix[15]; matrix[0] /=  matrix[15];
+
+                          columns[0][0] = matrix[0]; columns[0][1] = matrix[1]; columns[0][2] = matrix[2];
+                          columns[1][0] = matrix[4]; columns[1][1] = matrix[5]; columns[1][2] = matrix[6];
+                          columns[2][0] = matrix[8]; columns[2][1] = matrix[9]; columns[2][2] = matrix[10];
+
+                          // ...
+                          if (0.00 !== matrix[3] || 0.00 !== matrix[7] || 0.00 !== matrix[11]) /* --> perspective ->> Bottom row at column-major indices `3`, `7`, `11`, and `15` */ {
+                            var invertedSubmatrix = [];
+                            var subdeterminant    = 0.00;
+                            var submatrix         = matrix.slice();
+
+                            // ...
+                            submatrix[11] = submatrix[7] = submatrix[3] = 0.00;
+                            submatrix[15]                               = 1.00;
+                            invertedSubmatrix                           = /* ->> Inversion (column-major) via cofactor expansion */ [
+                              +(submatrix[5] * submatrix[10] * submatrix[15]) - (submatrix[5] * submatrix[11] * submatrix[14]) - (submatrix[9] * submatrix[6] * submatrix[15]) + (submatrix[9] * submatrix[7] * submatrix[14]) + (submatrix[13] * submatrix[6] * submatrix[11]) - (submatrix[13] * submatrix[7] * submatrix[10]),
+                              -(submatrix[1] * submatrix[10] * submatrix[15]) + (submatrix[1] * submatrix[11] * submatrix[14]) + (submatrix[9] * submatrix[2] * submatrix[15]) - (submatrix[9] * submatrix[3] * submatrix[14]) - (submatrix[13] * submatrix[2] * submatrix[11]) + (submatrix[13] * submatrix[3] * submatrix[10]),
+                              +(submatrix[1] * submatrix[6]  * submatrix[15]) - (submatrix[1] * submatrix[7]  * submatrix[14]) - (submatrix[5] * submatrix[2] * submatrix[15]) + (submatrix[5] * submatrix[3] * submatrix[14]) + (submatrix[13] * submatrix[2] * submatrix[7])  - (submatrix[13] * submatrix[3] * submatrix[6]),
+                              -(submatrix[1] * submatrix[6]  * submatrix[11]) + (submatrix[1] * submatrix[7]  * submatrix[10]) + (submatrix[5] * submatrix[2] * submatrix[11]) - (submatrix[5] * submatrix[3] * submatrix[10]) - (submatrix[9]  * submatrix[2] * submatrix[7])  + (submatrix[9]  * submatrix[3] * submatrix[6]),
+                              -(submatrix[4] * submatrix[10] * submatrix[15]) + (submatrix[4] * submatrix[11] * submatrix[14]) + (submatrix[8] * submatrix[6] * submatrix[15]) - (submatrix[8] * submatrix[7] * submatrix[14]) - (submatrix[12] * submatrix[6] * submatrix[11]) + (submatrix[12] * submatrix[7] * submatrix[10]),
+                              +(submatrix[0] * submatrix[10] * submatrix[15]) - (submatrix[0] * submatrix[11] * submatrix[14]) - (submatrix[8] * submatrix[2] * submatrix[15]) + (submatrix[8] * submatrix[3] * submatrix[14]) + (submatrix[12] * submatrix[2] * submatrix[11]) - (submatrix[12] * submatrix[3] * submatrix[10]),
+                              -(submatrix[0] * submatrix[6]  * submatrix[15]) + (submatrix[0] * submatrix[7]  * submatrix[14]) + (submatrix[4] * submatrix[2] * submatrix[15]) - (submatrix[4] * submatrix[3] * submatrix[14]) - (submatrix[12] * submatrix[2] * submatrix[7])  + (submatrix[12] * submatrix[3] * submatrix[6]),
+                              +(submatrix[0] * submatrix[6]  * submatrix[11]) - (submatrix[0] * submatrix[7]  * submatrix[10]) - (submatrix[4] * submatrix[2] * submatrix[11]) + (submatrix[4] * submatrix[3] * submatrix[10]) + (submatrix[8]  * submatrix[2] * submatrix[7])  - (submatrix[8]  * submatrix[3] * submatrix[6]),
+                              +(submatrix[4] * submatrix[9]  * submatrix[15]) - (submatrix[4] * submatrix[11] * submatrix[13]) - (submatrix[8] * submatrix[5] * submatrix[15]) + (submatrix[8] * submatrix[7] * submatrix[13]) + (submatrix[12] * submatrix[5] * submatrix[11]) - (submatrix[12] * submatrix[7] * submatrix[9]),
+                              -(submatrix[0] * submatrix[9]  * submatrix[15]) + (submatrix[0] * submatrix[11] * submatrix[13]) + (submatrix[8] * submatrix[1] * submatrix[15]) - (submatrix[8] * submatrix[3] * submatrix[13]) - (submatrix[12] * submatrix[1] * submatrix[11]) + (submatrix[12] * submatrix[3] * submatrix[9]),
+                              +(submatrix[0] * submatrix[5]  * submatrix[15]) - (submatrix[0] * submatrix[7]  * submatrix[13]) - (submatrix[4] * submatrix[1] * submatrix[15]) + (submatrix[4] * submatrix[3] * submatrix[13]) + (submatrix[12] * submatrix[1] * submatrix[7])  - (submatrix[12] * submatrix[3] * submatrix[5]),
+                              -(submatrix[0] * submatrix[5]  * submatrix[11]) + (submatrix[0] * submatrix[7]  * submatrix[9])  + (submatrix[4] * submatrix[1] * submatrix[11]) - (submatrix[4] * submatrix[3] * submatrix[9])  - (submatrix[8]  * submatrix[1] * submatrix[7])  + (submatrix[8]  * submatrix[3] * submatrix[5]),
+                              -(submatrix[4] * submatrix[9]  * submatrix[14]) + (submatrix[4] * submatrix[10] * submatrix[13]) + (submatrix[8] * submatrix[5] * submatrix[14]) - (submatrix[8] * submatrix[6] * submatrix[13]) - (submatrix[12] * submatrix[5] * submatrix[10]) + (submatrix[12] * submatrix[6] * submatrix[9]),
+                              +(submatrix[0] * submatrix[9]  * submatrix[14]) - (submatrix[0] * submatrix[10] * submatrix[13]) - (submatrix[8] * submatrix[1] * submatrix[14]) + (submatrix[8] * submatrix[2] * submatrix[13]) + (submatrix[12] * submatrix[1] * submatrix[10]) - (submatrix[12] * submatrix[2] * submatrix[9]),
+                              -(submatrix[0] * submatrix[5]  * submatrix[14]) + (submatrix[0] * submatrix[6]  * submatrix[13]) + (submatrix[4] * submatrix[1] * submatrix[14]) - (submatrix[4] * submatrix[2] * submatrix[13]) - (submatrix[12] * submatrix[1] * submatrix[6])  + (submatrix[12] * submatrix[2] * submatrix[5]),
+                              +(submatrix[0] * submatrix[5]  * submatrix[10]) - (submatrix[0] * submatrix[6]  * submatrix[9])  - (submatrix[4] * submatrix[1] * submatrix[10]) + (submatrix[4] * submatrix[2] * submatrix[9])  + (submatrix[8]  * submatrix[1] * submatrix[6])  - (submatrix[8]  * submatrix[2] * submatrix[5])
+                            ];
+
+                            subdeterminant = (invertedSubmatrix[0] * submatrix[0]) + (invertedSubmatrix[4] * submatrix[1]) + (invertedSubmatrix[8] * submatrix[2]) + (invertedSubmatrix[12] * submatrix[3]);
+                            if (0.00 === subdeterminant) break;
+                            submatrix = [invertedSubmatrix[0] / subdeterminant, invertedSubmatrix[1] / subdeterminant, invertedSubmatrix[2] / subdeterminant, invertedSubmatrix[3] / subdeterminant, invertedSubmatrix[4] / subdeterminant, invertedSubmatrix[5] / subdeterminant, invertedSubmatrix[6] / subdeterminant, invertedSubmatrix[7] / subdeterminant, invertedSubmatrix[8] / subdeterminant, invertedSubmatrix[9] / subdeterminant, invertedSubmatrix[10] / subdeterminant, invertedSubmatrix[11] / subdeterminant, invertedSubmatrix[12] / subdeterminant, inversion[13] / subdeterminant, inversion[14] / subdeterminant, inversion[15] / subdeterminant];
+
+                            // ... --> perspective = mulPointByMatrix(Point point, Matrix = transpose(submatrix))
+                            for (var index = perspective.length, point = [matrix[3], matrix[7], matrix[11], matrix[15]]; index--; ) {
+                              perspective[index] = 0.00;
+
+                              for (var subindex = point.length; subindex--; )
+                              perspective[index] += point[subindex] * submatrix[index + (subindex * 4)]
+                            }
+                          }
+
+                          scale.x = length(columns[0]);             columns[0][0] /= scale.x;                 columns[0][1] /= scale.x;                 columns[0][2] /= scale.x;
+                          skew.xy = dot   (columns[0], columns[1]); columns[1][0] -= columns[0][0] * skew.xy; columns[1][1] -= columns[0][1] * skew.xy; columns[1][2] -= columns[0][2] * skew.xy;
+                          scale.y = length(columns[1]);             columns[1][0] /= scale.y;                 columns[1][1] /= scale.y;                 columns[1][2] /= scale.y;
+                          skew.xz = dot   (columns[0], columns[2]); columns[2][0] -= columns[0][0] * skew.xz; columns[2][1] -= columns[0][1] * skew.xz; columns[2][2] -= columns[0][2] * skew.xz;
+                          skew.yz = dot   (columns[1], columns[2]); columns[2][0] -= columns[1][0] * skew.yz; columns[2][1] -= columns[1][1] * skew.yz; columns[2][2] -= columns[1][2] * skew.yz;
+                          scale.z = length(columns[2]);             columns[2][0] /= scale.z;                 columns[2][1] /= scale.z;                 columns[2][2] /= scale.z;
+
+                          skew.xy      /= scale.y;    skew.xz      /= scale.z;    skew.yz      /= scale.z;
+                          translation.x = matrix[12]; translation.y = matrix[13]; translation.z = matrix[14];
+
+                          if (dot(columns[2], /* --> cross */ [(columns[0][1] * columns[1][2]) - (columns[0][2] * columns[1][1]), (columns[0][2] * columns[1][0]) - (columns[0][0] * columns[1][2]), (columns[0][0] * columns[1][1]) - (columns[0][1] * columns[1][0])]) < 0.00) /* ->> `cross` is scalar triple product sign (reflection handling, absorbed into X axis) */ {
+                            columns[0][0] = -columns[0][0];
+                            columns[0][1] = -columns[0][1];
+                            columns[0][2] = -columns[0][2];
+                            scale.x       = -scale.x;
+                            skew .xy      = -skew .xy;
+                            skew .xz      = -skew .xz
+                          }
+
+                          trace = columns[0][0] + columns[1][1] + columns[2][2]; // ->> Shepperd’s method
+                          if      (trace > 0.00)                                                   { var s = 0.5 / Math.sqrt(1.00 + trace);                                         quaternion.w = 0.25                            / s; quaternion.x = (columns[1][2] - columns[2][1]) * s; quaternion.y = (columns[2][0] - columns[0][2]) * s; quaternion.z = (columns[0][1] - columns[1][0]) * s }
+                          else if (columns[0][0] > columns[1][1] && columns[0][0] > columns[2][2]) { var s = 2.0 * Math.sqrt(1.00 + columns[0][0] - columns[1][1] - columns[2][2]); quaternion.w = (columns[1][2] - columns[2][1]) / s; quaternion.x = s / 4;                               quaternion.y = (columns[1][0] + columns[0][1]) / s; quaternion.z = (columns[2][0] + columns[0][2]) / s }
+                          else if (columns[1][1] > columns[2][2])                                  { var s = 2.0 * Math.sqrt(1.00 + columns[1][1] - columns[0][0] - columns[2][2]); quaternion.w = (columns[2][0] - columns[0][2]) / s; quaternion.x = (columns[1][0] + columns[0][1]) / s; quaternion.y = s / 4;                               quaternion.z = (columns[2][1] + columns[1][2]) / s }
+                          else                                                                     { var s = 2.0 * Math.sqrt(1.00 + columns[2][2] - columns[0][0] - columns[1][1]); quaternion.w = (columns[0][1] - columns[1][0]) / s; quaternion.x = (columns[2][0] + columns[0][2]) / s; quaternion.y = (columns[2][1] + columns[1][2]) / s; quaternion.z = s / 4 }
+                          value.value = {perspective: perspective, quaternion: quaternion, scale: scale, skew: skew, translation: translation}
+                        }
+
+                        if (null !== valueA.value && null !== valueB.value) {
+                          var matrix = {
+                            perspective: [lerp(valueA.value.perspective[0], valueB.value.perspective[0]), lerp(valueA.value.perspective[1], valueB.value.perspective[1]), lerp(valueA.value.perspective[2], valueB.value.perspective[2]), lerp(valueA.value.perspective[3], valueB.value.perspective[3])],
+                            quaternion : slerp(valueA.value.quaternion, valueB.value.quaternion),
+                            scale      : {x:  lerp(valueA.value.scale      .x,  valueB.value.scale      .x),  y:  lerp(valueA.value.scale      .y,  valueB.value.scale      .y),  z:  lerp(valueA.value.scale      .z,  valueB.value.scale      .z)},
+                            skew       : {xy: lerp(valueA.value.skew       .xy, valueB.value.skew       .xy), xz: lerp(valueA.value.skew       .xz, valueB.value.skew       .xz), yz: lerp(valueA.value.skew       .yz, valueB.value.skew       .yz)},
+                            translation: {x:  lerp(valueA.value.translation.x,  valueB.value.translation.x),  y:  lerp(valueA.value.translation.y,  valueB.value.translation.y),  z:  lerp(valueA.value.translation.z,  valueB.value.translation.z)}
+                          }, rotations = [
+                            [1.00 - (((matrix.quaternion.y * matrix.quaternion.y) + (matrix.quaternion.z * matrix.quaternion.z)) * 2.00),        (((matrix.quaternion.x * matrix.quaternion.y) + (matrix.quaternion.w * matrix.quaternion.z)) * 2.00),        (((matrix.quaternion.x * matrix.quaternion.z) - (matrix.quaternion.w * matrix.quaternion.y)) * 2.00)],
+                            [       (((matrix.quaternion.x * matrix.quaternion.y) - (matrix.quaternion.w * matrix.quaternion.z)) * 2.00), 1.00 - (((matrix.quaternion.x * matrix.quaternion.x) + (matrix.quaternion.z * matrix.quaternion.z)) * 2.00),        (((matrix.quaternion.y * matrix.quaternion.z) + (matrix.quaternion.w * matrix.quaternion.x)) * 2.00)],
+                            [       (((matrix.quaternion.x * matrix.quaternion.z) + (matrix.quaternion.w * matrix.quaternion.y)) * 2.00),        (((matrix.quaternion.y * matrix.quaternion.z) - (matrix.quaternion.w * matrix.quaternion.x)) * 2.00), 1.00 - (((matrix.quaternion.x * matrix.quaternion.x) + (matrix.quaternion.y * matrix.quaternion.y)) * 2.00)]
+                          ];
+
+                          // ...
+                          interpolation = "matrix3d(";
+                            for (var subindex = rotations[0].length; subindex--; ) { interpolation += (matrix.scale.x * ((rotations[0][subindex] * 1.00)           + 0.00                                      + 0.00))                   + ", " } interpolation += matrix.perspective[0] + ", ";
+                            for (var subindex = rotations[1].length; subindex--; ) { interpolation += (matrix.scale.y * ((rotations[0][subindex] * matrix.skew.xy) + (rotations[1][subindex] * 1.00)           + 0.00))                   + ", " } interpolation += matrix.perspective[1] + ", ";
+                            for (var subindex = rotations[2].length; subindex--; ) { interpolation += (matrix.scale.z * ((rotations[0][subindex] * matrix.skew.xz) + (rotations[1][subindex] * matrix.skew.yz) + rotations[2][subindex])) + ", " } interpolation += matrix.perspective[2] + ", ";
+                          interpolation = interpolation + matrix.translation.x + ", " + matrix.translation.y + ", " + matrix.translation.z + ", " + matrix.perspective[3] + ')'
+                        }
+                      }
+
+                      else if (MEASUREMENTS['%']         .test(valueA.value) && MEASUREMENTS['%']         .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/%$/,    ""), valueB.value.replace(/%$/,    ""))  + '%';
+                      else if (MEASUREMENTS["angle"]     .test(valueA.value) && MEASUREMENTS["angle"]     .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/%$/,    ""), valueB.value.replace(/%$/,    ""))  + "deg";
+                      else if (MEASUREMENTS["duration"]  .test(valueA.value) && MEASUREMENTS["duration"]  .test(valueB.value)) interpolation = Math.floor(lerp(valueA.value.replace(/ms$/,   ""), valueB.value.replace(/ms$/,   ""))) + "ms";
+                      else if (MEASUREMENTS["frequency"] .test(valueA.value) && MEASUREMENTS["frequency"] .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/Hz$/,   ""), valueB.value.replace(/Hz$/,   ""))  + "Hz";
+                      else if (MEASUREMENTS["length"]    .test(valueA.value) && MEASUREMENTS["length"]    .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/px$/,   ""), valueB.value.replace(/px$/,   ""))  + "px";
+                      else if (MEASUREMENTS["resolution"].test(valueA.value) && MEASUREMENTS["resolution"].test(valueB.value)) interpolation =            lerp(valueA.value.replace(/dppx$/, ""), valueB.value.replace(/dppx$/, ""))  + "dppx";
+                      else switch (name) {
+                        case "aspect-ratio":
+                        case "fill-opacity": case "flex-grow": case "flex-shrink": case "flood-opacity": case "font-size-adjust": case "font-variation-settings":
+                        case "opacity":
+                        case "scale": case "shape-image-threshold": case "stop-opacity": case "stroke-dasharray": case "stroke-dashoffset": case "stroke-miterlimit": case "stroke-opacity": case "stroke-width":
+                          interpolation = lerp(valueA.value, valueB.value) + "";
+                          break;
+
+                        case "column-count": case "math-depth":
+                        case "order":        case "orphans":
+                        case "widows":       case "z-index":
+                          interpolation = Math.floor(lerp(valueA.value, valueB.value)) + "";
+                          break;
+
+                        case "font-weight":
+                          interpolation = (Math.floor(lerp(valueA.value, valueB.value) / 100) * 100) + ""
+                      }
+
+                      animationProperty.value += interpolation.replace(/(\.\d{6})\d+/g, "$1").replace(/(\.\d*[1-9])0+([^\d]|$)/g, "$1$2").replace(/\.0+([^\d]|$)/g, "$1") + (valueA.delimiter || valueB.delimiter).replace(/\s*([,])+\s*/, "$1 ")
+                    }
+
+                    if (animationProperty.value === "")
+                    animationProperty.value = progress < 0.50 ? previous.value : next.value
+                  }
+
+                  // ...
+                  if (animationProperty.value === "" && (animationProperty.name === "font-family" || animationProperty.name === "font-size")) {
+                    property.animation.value = null;
+                    break
+                  }
+                }
+
+                property.animation.value = animationProperty.value + animationProperty.delimiter + (null !== property.animation.value ? property.animation.value : "")
+              }
             }
 
-            // ...
-            if (precedes)
-            information = subinformation
+            // ... ->> Choose `.animation` versus `.information`
+            if (null !== property.animation.value) {
+              if (null === property.information) {
+                if (NO_DESCRIPTOR !== property.animation.descriptor)
+                property.information = {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: property.animation.value}
+              }
+
+              else if (CSS_TRANSITION_DESCRIPTOR === property.animation.descriptor || ((ANIMATION_DESCRIPTOR === property.animation.descriptor || CSS_ANIMATION_DESCRIPTOR === property.animation.descriptor) && property.information.priority !== "important")) {
+                property.information.layer = null;
+                property.information.text  = null;
+                property.information.value = property.animation.value
+              }
+            }
+
+            // ... ->> Choose inline styling
+            if (null === property.information || (CSS_TRANSITION_DESCRIPTOR !== property.animation.descriptor && null !== property.element.style.cssText.replace(/\/\*[\S\s]*?\*\//g, "").match(new RegExp("(?:[^;])\\s*" + propertyName + "\\s*:[^;]*!important", 'i')))) {
+              var value = null;
+
+              // ...
+              if (null === value && typeof property.element.attributeStyleMap === "object") value = getStyleMapPropertyValue        (property.element.attributeStyleMap, propertyName); // ->> Chromium-specific
+              if (null === value)                                                           value = getStyleDeclarationPropertyValue(property.element.style,             propertyName);
+
+              property.information = null !== value ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value} : null
+            }
+
+            // ... ->> Choose standards-default styling --- CITE (Lapys) -> https://html.spec.whatwg.org/multipage/rendering.html
+            if (null === property.information) {
+              var appearance = "auto";
+              var charset    = ((document.characterSet || document.charset) + "").toUpperCase();
+              var quirksMode = document.compatMode === "BackCompat"; // --> … !== "CSS1Compat"
+              var value      = null;
+
+              // ... ->> Longhand properties predicated (while shorthands are incidental — saves on resolving the expansion) --- TODO (Lapys) -> Presentational hint via relative `font` HTML attribute
+              if      (/^(align-items)$/.test(propertyName) && matches(property.element, "select option"))                                                                   { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "center"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              else if (/^(all)$/        .test(propertyName) && matches(property.element, "select > button:first-child") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "unset"}  : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+
+              else if (/^(appearance)$/.test(propertyName)) {
+                if      (matches(property.element, "input[type=file i], input[type=hidden i], input[type=image i]")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "none"} : null;
+                else if (matches(property.element, "button, input, meter, progress, select, textarea"))              property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null;
+              }
+
+              else if (/^(aspect-ratio)$/.test(propertyName)) {
+                if      (matches(property.element, "canvas[height][width]")                                                      && (value = {height: property.element.getAttribute("height").replace(TRIM_MATCH, TRIM_PASS), width: property.element.getAttribute("width").replace(TRIM_MATCH, TRIM_PASS), size: function() { return this.height + this.width }}).size()) { property.information = PRESENTATIONAL_HINT && (value.height = value.height.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/,   "$1")) && (value.width = value.width.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/,   "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto " + value.width + " / " + value.height} : null }
+                else if (matches(property.element, "img[height][width], input[height][type=image][width], video[height][width]") && (value = {height: property.element.getAttribute("height").replace(TRIM_MATCH, TRIM_PASS), width: property.element.getAttribute("width").replace(TRIM_MATCH, TRIM_PASS), size: function() { return this.height + this.width }}).size()) { property.information = PRESENTATIONAL_HINT && (value.height = value.height.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)(px)?\s*$|^[\S\s]*$/, "$1")) && (value.width = value.width.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)(px)?\s*$|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto " + value.width + " / " + value.height} : null }
+              }
+
+              else if (/^(background-color)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element)))                                                                        { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "Canvas"}                                   : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, ":popover-open::backdrop"))                                                                                                                                                                                                     property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "transparent"}                              : null;
+                else if (matches(property.element, "body[bgcolor], marquee[bgcolor], table[bgcolor], tbody[bgcolor], td[bgcolor], tfoot[bgcolor], th[bgcolor], thead[bgcolor], tr[bgcolor]") && (value = property.element.getAttribute("bgcolor").replace(TRIM_MATCH, TRIM_PASS))) property.information = USER_AGENT && /^#[0-F]{6}$/.test(value)                                          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}                                      : null;
+                else if (matches(property.element, "dialog::backdrop"))                                                                                                                                                                                                            property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "rgba(0, 0, 0, 0.1)"}                       : null;
+                else if (matches(property.element, "[popover], dialog"))                                                                                                                                                                                                           property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "Canvas"}                                   : null;
+                else if (matches(property.element, "mark"))                                                                                                                                                                                                                        property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "yellow"}                                   : null;
+                else if (matches(property.element, "select option:disabled"))                                                                                                                      { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "color-mix(currentColor 50%, transparent)"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select option:enabled:active"))                                                                                                                { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "color-mix(currentColor 20%, transparent)"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select option:enabled:hover"))                                                                                                                 { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "color-mix(currentColor 10%, transparent)"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select:disabled")       && (value = DROPDOWN_BOX === box(property.element)))                                                                   { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "color-mix(currentColor 50%, transparent)"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select:enabled:active") && (value = DROPDOWN_BOX === box(property.element)))                                                                   { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "color-mix(currentColor 20%, transparent)"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select:enabled:hover")  && (value = DROPDOWN_BOX === box(property.element)))                                                                   { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "color-mix(currentColor 10%, transparent)"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select"))                                                                                                                                      { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "transparent"}                              : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(background-image)$/.test(propertyName) && matches(property.element, "body[background], table[background], tbody[background], td[background], th[background], thead[background], tfoot[background], tr[background]") && (value = property.element.getAttribute("background").replace(TRIM_MATCH, TRIM_PASS)))
+                property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "url(\"" + value + "\")"} : null;
+
+              else if (/^(block-size)$/.test(propertyName)) {
+                if      (matches(property.element, "select") && (value = LIST_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "calc(max(24px, 1lh) * attr(size type(<integer>), 4))"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "meter, progress, select, textarea"))                                                                                                      property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1em"}                                                  : null
+              }
+
+              else if (/^(border(.*-(block|bottom|inline|left|right|top))?)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value)                                  ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px solid"}              : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "fieldset"))                                                                                                                                             property.information = USER_AGENT                                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "groove 2px ThreeDFace"}  : null;
+                else if (matches(property.element, "iframe"))                                                                                                                                               property.information = USER_AGENT                                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "2px inset"}              : null;
+                else if (matches(property.element, "select"))                                                               { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value)                                  ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px solid currentColor"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "table[border]")          && (value = property.element.getAttribute("border").replace(TRIM_MATCH, TRIM_PASS)))                                           property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px outset"}     : null;
+                else if (matches(property.element, "td[border], th[border]") && (value = property.element.getAttribute("border").replace(TRIM_MATCH, TRIM_PASS)))                                           property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px inset"}      : null
+              }
+
+              else if (/^(border-block-style)$/.test(propertyName)) {
+                if      (matches(property.element, "table[rules=cols i] > tbody > tr > td,                                     table[rules=cols   i] > tbody > tr > th, table[rules=cols i] > tfoot > tr > td,                                     table[rules=cols   i] > tfoot > tr > th, table[rules=cols i] > thead > tr > td,                                     table[rules=cols   i] > thead > tr > th, table[rules=cols i] > tr > td,                             table[rules=cols   i] > tr > th")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "none"}  : null;
+                else if (matches(property.element, "table[rules=rows i] > tbody > tr, table[rules=groups i] > tbody > tr > td, table[rules=groups i] > tbody > tr > th, table[rules=rows i] > tfoot > tr, table[rules=groups i] > tfoot > tr > td, table[rules=groups i] > tfoot > tr > th, table[rules=rows i] > thead > tr, table[rules=groups i] > thead > tr > td, table[rules=groups i] > thead > tr > th, table[rules=rows i] > tr, table[rules=groups i] > tr > td, table[rules=groups i] > tr > th")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "solid"} : null
+              }
+
+              else if (/^(border-block-width)$/.test(propertyName) && matches(property.element, "table[rules=groups i] > tbody, table[rules=rows i] > tbody > tr, table[rules=groups i] > tfoot, table[rules=rows i] > tfoot > tr, table[rules=groups i] > thead, table[rules=rows i] > thead > tr, table[rules=rows i] > tr"))
+                property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px"} : null;
+
+              else if (/^(border-bottom-style)$/.test(propertyName)) {
+                if      (matches(property.element, "table[frame=above i], table[frame=hsides i], table[frame=lhs i], table[frame=rhs i], table[frame=vsides i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden"} : null;
+                else if (matches(property.element, "table[frame=below i]"))                                                                                       property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outset"} : null
+              }
+
+              else if (/^(border-bottom-width)$/.test(propertyName) && matches(property.element, "hr[size]:not([color]):not([noshade])") && (value = property.element.getAttribute("size").replace(TRIM_MATCH, TRIM_PASS)))
+                property.information = PRESENTATIONAL_HINT && (value = Math.floor(value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1"))) === 1 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'} : null;
+
+              else if (/^(border-collapse)$/.test(propertyName)) {
+                if      (matches(property.element, "table[border], table[rules=all i], table[rules=cols i], table[rules=groups i], table[rules=none i], table[rules=rows i], td[border], td[cellspacing], th[border], th[cellspacing]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "collapse"} : null;
+                else if (matches(property.element, "table"))                                                                                                                                                                             property.information = USER_AGENT          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "separate"} : null
+              }
+
+              else if (/^(border-inline-style)$/.test(propertyName) && matches(property.element, "table[rules=groups i] > colgroup, table[rules=cols i] > tbody > tr > td, table[rules=cols i] > tbody > tr > th, table[rules=cols i] > tfoot > tr > td, table[rules=cols i] > tfoot > tr > th, table[rules=cols i] > thead > tr > td, table[rules=cols i] > thead > tr > th, table[rules=cols i] > tr > td, table[rules=cols i] > tr > th")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "solid"} : null;
+              else if (/^(border-inline-width)$/.test(propertyName) && matches(property.element, "table[rules=groups i] > colgroup"))                                                                                                                                                                                                                                                                                                         property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px"}   : null;
+
+              else if (/^(border-left-style)$/.test(propertyName)) {
+                if      (matches(property.element, "table[frame=above  i], table[frame=below i], table[frame=rhs    i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden"} : null;
+                else if (matches(property.element, "table[frame=hsides i], table[frame=lhs   i], table[frame=vsides i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outset"} : null
+              }
+
+              else if (/^(border-right-style)$/.test(propertyName)) {
+                if      (matches(property.element, "table[frame=above  i], table[frame=below i], table[frame=lhs    i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden"} : null;
+                else if (matches(property.element, "table[frame=hsides i], table[frame=rhs   i], table[frame=vsides i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outset"} : null
+              }
+
+              else if (/^(border-spacing)$/.test(propertyName)) {
+                if      (matches(property.element, "table"))                                                                                                                     property.information = USER_AGENT                                                                                                           ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "2px"}         : null;
+                else if (matches(property.element, "table[cellspacing]"))                                                                                                        property.information = PRESENTATIONAL_HINT && USER_AGENT && (value = value.replace(/^\+?([1-9]\d*([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value}        : null;
+                else if (matches(property.element, "td[cellspacing], th[cellspacing]") && (value = property.element.getAttribute("cellspacing").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1"))    ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px"} : null
+              }
+
+              else if (/^(border-style)$/.test(propertyName)) {
+                if      (matches(property.element, "table[frame=above  i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outset hidden hidden hidden"} : null;
+                else if (matches(property.element, "table[frame=below  i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden hidden outset hidden"} : null;
+                else if (matches(property.element, "table[frame=hsides i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outset hidden outset hidden"} : null;
+                else if (matches(property.element, "table[frame=lhs    i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden hidden hidden outset"} : null;
+                else if (matches(property.element, "table[frame=rhs    i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden outset hidden hidden"} : null;
+                else if (matches(property.element, "table[frame=vsides i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden outset hidden outset"} : null
+              }
+
+              else if (/^(border-top-style)$/.test(propertyName)) {
+                if      (matches(property.element, "table[frame=above i]"))                                                                                       property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outset"} : null;
+                else if (matches(property.element, "table[frame=below i], table[frame=hsides i], table[frame=lhs i], table[frame=rhs i], table[frame=vsides i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden"} : null
+              }
+
+              else if (/^(border.*-color)$/.test(propertyName)) {
+                if      (matches(property.element, "fieldset"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "ThreeDFace"}   : null;
+                else if (matches(property.element, "select"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "currentColor"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "table[bordercolor]") && (value = property.element.getAttribute("bordercolor").replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              property.information = PRESENTATIONAL_HINT && /^#[0-F]{6}$/.test(value)                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}          : null;
+                else if (matches(property.element, "table[frame=above i], table[frame=below i], table[frame=border i], table[frame=box i], table[frame=hsides i], table[frame=lhs i], table[frame=rhs i], table[frame=void i], table[frame=vsides i], table[rules=all i] > tbody > tr > td, table[rules=cols i] > tbody > tr > td, table[rules=groups i] > tbody > tr > td, table[rules=none i] > tbody > tr > td, table[rules=rows i] > tbody > tr > td, table[rules=all i] > tbody > tr > th, table[rules=cols i] > tbody > tr > th, table[rules=groups i] > tbody > tr > th, table[rules=none i] > tbody > tr > th, table[rules=rows i] > tbody > tr > th, table[rules=all i] > tfoot > tr > td, table[rules=cols i] > tfoot > tr > td, table[rules=groups i] > tfoot > tr > td, table[rules=none i] > tfoot > tr > td, table[rules=rows i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th, table[rules=cols i] > tfoot > tr > th, table[rules=groups i] > tfoot > tr > th, table[rules=none i] > tfoot > tr > th, table[rules=rows i] > tfoot > tr > th, table[rules=all i] > thead > tr > td, table[rules=cols i] > thead > tr > td, table[rules=groups i] > thead > tr > td, table[rules=none i] > thead > tr > td, table[rules=rows i] > thead > tr > td, table[rules=all i] > thead > tr > th, table[rules=cols i] > thead > tr > th, table[rules=groups i] > thead > tr > th, table[rules=none i] > thead > tr > th, table[rules=rows i] > thead > tr > th")) property.information = PRESENTATIONAL_HINT                                                              ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "black"}        : null;
+                else if (matches(property.element, "tbody, tfoot, thead, tr"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inherit"}      : null
+              }
+
+              else if (/^(border.*-radius|gap|padding-inline(-(end|start))?)$/.test(propertyName) && matches(property.element, "select") && (value = DROPDOWN_BOX === box(property.element))) {
+                if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.5em"} : null;
+                else                                                                          cascaded             = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties)
+              }
+
+              else if (/^(border.*-style)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value)                                                  ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "solid"}  : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "[popover]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              property.information = USER_AGENT                                                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "solid"}  : null;
+                else if (matches(property.element, "dialog"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 property.information = USER_AGENT                                                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "solid"}  : null;
+                else if (matches(property.element, "fieldset"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               property.information = USER_AGENT                                                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "groove"} : null;
+                else if (matches(property.element, "hr[color], hr[noshade], table[rules=all i] > tbody > tr > td, table[rules=all i] > tbody > tr > th, table[rules=all i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th, table[rules=all i] > thead > tr > td, table[rules=all i] > thead > tr > th, table[rules=all i] > tr > td, table[rules=all i] > tr > th"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 property.information = PRESENTATIONAL_HINT                                                                                                               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "solid"}  : null;
+                else if (matches(property.element, "hr, iframe, td[border], th[border]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     property.information = PRESENTATIONAL_HINT && USER_AGENT                                                                                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inset"}  : null;
+                else if (matches(property.element, "img[border], input[border][type=image i], object[border]") && (value = property.element.getAttribute("border").replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) > 0             ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "solid"}  : null;
+                else if (matches(property.element, "select"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value)                                                  ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "solid"}  : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "table[border] > tbody > tr > td, table[border] > tbody > tr > th, table[border] > tfoot > tr > td, table[border] > tfoot > tr > th, table[border] > thead > tr > td, table[border] > thead > tr > th, table[border] > tr > td, table[border] > tr > th") && (value = getElementAncestorByTagName(property.element, "table").getAttribute("border").replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((?!(?:0+(?:\.0*)?|\.0+)(?:[Ee][-+]?\d+)?\s*$)[\S\s]*$)(\2)|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inset"}  : null;
+                else if (matches(property.element, "table[border]")                                                                                                                                                                                                                                          && (value = property.element                                      .getAttribute("border").replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((?!(?:0+(?:\.0*)?|\.0+)(?:[Ee][-+]?\d+)?\s*$)[\S\s]*$)(\2)|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outset"} : null;
+                else if (matches(property.element, "table[border], table[frame=void i], table[rules=all i], table[rules=cols i], table[rules=groups i], table[rules=none i], table[rules=rows i]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           property.information = PRESENTATIONAL_HINT                                                                                                               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden"} : null;
+                else if (matches(property.element, "table[frame=border i], table[frame=box i]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              property.information = PRESENTATIONAL_HINT                                                                                                               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outset"} : null;
+                else if (matches(property.element, "table[rules=groups i] > tbody > tr > td, table[rules=none i] > tbody > tr > td, table[rules=rows i] > tbody > tr > td, table[rules=groups i] > tbody > tr > th, table[rules=none i] > tbody > tr > th, table[rules=rows i] > tbody > tr > th, table[rules=groups i] > tfoot > tr > td, table[rules=none i] > tfoot > tr > td, table[rules=rows i] > tfoot > tr > td, table[rules=groups i] > tfoot > tr > th, table[rules=none i] > tfoot > tr > th, table[rules=rows i] > tfoot > tr > th, table[rules=groups i] > thead > tr > td, table[rules=none i] > thead > tr > td, table[rules=rows i] > thead > tr > td, table[rules=groups i] > thead > tr > th, table[rules=none i] > thead > tr > th, table[rules=rows i] > thead > tr > th, table[rules=groups i] > tr > td, table[rules=none i] > tr > td, table[rules=rows i] > tr > td, table[rules=groups i] > tr > th, table[rules=none i] > tr > th, table[rules=rows i] > tr > th")) property.information = PRESENTATIONAL_HINT                                                                                                               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "none"}   : null
+              }
+
+              else if (/^(border.*-width)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value)                                                          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px"}                                                                          : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "fieldset, iframe"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     property.information = USER_AGENT                                                                                                                                ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "2px"}                                                                          : null;
+                else if (matches(property.element, "hr"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT                                                                                                                                ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px"}                                                                          : null;
+                else if (matches(property.element, "hr[color][size], hr[noshade][size]")                       && (value = property.element.getAttribute("size")       .replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    property.information = PRESENTATIONAL_HINT && (value = Math.floor(value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")))           ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: (+value / 2) + "px"}                                                            : null;
+                else if (matches(property.element, "iframe[frameborder]")                                      && (value = property.element.getAttribute("frameborder").replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((?!(?:[1-9]\d*(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?\s*$)[\S\s]*$)(\2)|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'}                                                                            : null;
+                else if (matches(property.element, "img[border], input[border][type=image i], object[border]") && (value = property.element.getAttribute("border")     .replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) > 0                     ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px"}                                                                  : null;
+                else if (matches(property.element, "select"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value)                                                          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px"}                                                                          : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "table[border]      > tbody > tr > td,                                                                                                                                                               table[border]      > tbody > tr > th,                                                                                                                                                               table[border]      > tfoot > tr > td,                                                                                                                                                               table[border]      > tfoot > tr > th,                                                                                                                                                               table[border]      > thead > tr > td,                                                                                                                                                               table[border]      > thead > tr > th, table[border] > tr > td, table[border] > tr > th") && (value = getElementAncestorByTagName(property.element, "table").getAttribute("border").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((?!(?:0+(?:\.0*)?|\.0+)(?:[Ee][-+]?\d+)?\s*$)[\S\s]*$)(\2)|^[\S\s]*$/, "$1"))         ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: /^[-+]?((\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?)/i.test(value) ? +value + "px" : "1px"} : null;
+                else if (matches(property.element, "table[rules=all i] > tbody > tr > td, table[rules=cols i] > tbody > tr > td, table[rules=groups i] > tbody > tr > td, table[rules=none i] > tbody > tr > td, table[rules=rows i] > tbody > tr > td, table[rules=all i] > tbody > tr > th, table[rules=cols i] > tbody > tr > th, table[rules=groups i] > tbody > tr > th, table[rules=none i] > tbody > tr > th, table[rules=rows i] > tbody > tr > th, table[rules=all i] > tfoot > tr > td, table[rules=cols i] > tfoot > tr > td, table[rules=groups i] > tfoot > tr > td, table[rules=none i] > tfoot > tr > td, table[rules=rows i] > tfoot > tr > td, table[rules=all i] > tfoot > tr > th, table[rules=cols i] > tfoot > tr > th, table[rules=groups i] > tfoot > tr > th, table[rules=none i] > tfoot > tr > th, table[rules=rows i] > tfoot > tr > th, table[rules=all i] > thead > tr > td, table[rules=cols i] > thead > tr > td, table[rules=groups i] > thead > tr > td, table[rules=none i] > thead > tr > td, table[rules=rows i] > thead > tr > td, table[rules=all i] > thead > tr > th, table[rules=cols i] > thead > tr > th, table[rules=groups i] > thead > tr > th, table[rules=none i] > thead > tr > th, table[rules=rows i] > thead > tr > th"))               property.information = PRESENTATIONAL_HINT                                                                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px"}                                                                          : null;
+                else if (matches(property.element, "td[border], th[border]") && (value = property.element.getAttribute("border").replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1"))                         ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px"}                                                                  : null
+              }
+
+              else if (/^(box-sizing)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element)))                           { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "border-box"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "button, input[type=button i], input[type=checkbox i], input[type=color i], input[type=radio i], input[type=reset i], input[type=search i], input[type=submit i], select, table")) property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "border-box"} : null;
+                else if (matches(property.element, "input:not([type=image i]), textarea"))                                                                                                                                            property.information = USER_AGENT && quirksMode                                                         ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "border-box"} : null;
+                else if (matches(property.element, "select"))                                                                                         { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "border-box"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(caption-side)$/.test(propertyName) && matches(property.element, "caption[align=bottom i]"))
+                property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "bottom"} : null;
+
+              else if (/^(clear)$/.test(propertyName)) {
+                if      (matches(property.element, "br[clear=all   i], br[clear=both i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "both"}  : null;
+                else if (matches(property.element, "br[clear=left  i]"))                   property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "left"}  : null;
+                else if (matches(property.element, "br[clear=right i]"))                   property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "right"} : null
+              }
+
+              else if (/^(color)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element)))                          { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "CanvasText"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, ":link"))                                                                                                                                                                         property.information = USER_AGENT && /^#[0-F]{6}$/.test(value)                                          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "#0000EE"}    : null;
+                else if (matches(property.element, ":link:active, :visited:active"))                                                                                                                                                 property.information = USER_AGENT && /^#[0-F]{6}$/.test(value)                                          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "#FF0000"}    : null;
+                else if (matches(property.element, ":visited"))                                                                                                                                                                      property.information = USER_AGENT && /^#[0-F]{6}$/.test(value)                                          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "#551A8B"}    : null;
+                else if (matches(property.element, "[popover], dialog"))                                                                                                                                                             property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "CanvasText"} : null;
+                else if (matches(property.element, "body[alink] :active:link, body[alink] :active:visited") && (value = getElementAncestorByTagName(property.element, "body").getAttribute("alink").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && /^#[0-F]{6}$/.test(value)                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}        : null;
+                else if (matches(property.element, "body[link]  :visited")                                  && (value = getElementAncestorByTagName(property.element, "body").getAttribute("link") .replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && /^#[0-F]{6}$/.test(value)                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}        : null;
+                else if (matches(property.element, "body[text]")                                            && (value = property.element                                     .getAttribute("text") .replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && /^#[0-F]{6}$/.test(value)                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}        : null;
+                else if (matches(property.element, "body[vlink] :visited")                                  && (value = getElementAncestorByTagName(property.element, "body").getAttribute("vlink").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && /^#[0-F]{6}$/.test(value)                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}        : null;
+                else if (matches(property.element, "font[color]")                                           && (value = property.element                                     .getAttribute("color").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && /^#[0-F]{6}$/.test(value)                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}        : null;
+                else if (matches(property.element, "hr[color]")                                             && (value = property.element                                     .getAttribute("color").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && /^#[0-F]{6}$/.test(value)                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}        : null;
+                else if (matches(property.element, "hr"))                                                                                                                                                                            property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "gray"}       : null;
+                else if (matches(property.element, "mark"))                                                                                                                                                                          property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "black"}      : null
+              }
+
+              else if (/^(contain)$/               .test(propertyName) && matches(property.element, "img:is([sizes=auto i], [sizes^=\"auto,\" i])")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "size"}        : null;
+              else if (/^(contain-intrinsic-size)$/.test(propertyName) && matches(property.element, "img:is([sizes=auto i], [sizes^=\"auto,\" i])")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "300px 150px"} : null;
+
+              else if (/^(content)$/.test(propertyName)) {
+                if      (matches(property.element, "select option::checkmark"))                                                { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "'\\2713' / ''"}                               : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select::picker-icon") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "counter(fake-counter-name, disclosure-open)"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(content-visibility)$/.test(propertyName) && matches(property.element, "[hidden=until-found i]:not(embed)"))              property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden"}      : null;
+              else if (/^(counter-increment)$/ .test(propertyName) && matches(property.element, ":host summary, details > summary:first-of-type")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "list-item 0"} : null;
+
+              else if (/^(counter-reset)$/.test(propertyName)) {
+                if      (matches(property.element, "ol[reversed][start]") && (value = property.element.getAttribute("start").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?(\d+([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "reversed(list-item) " + (+value + 1)} : null;
+                else if (matches(property.element, "ol[reversed]"))                                                                                           property.information = PRESENTATIONAL_HINT                                                                               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "reversed(list-item)"}                 : null;
+                else if (matches(property.element, "ol[start]") && (value = property.element.getAttribute("start").replace(TRIM_MATCH, TRIM_PASS)))           property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?(\d+([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "list-item " + (+value - 1)}           : null;
+                else if (matches(property.element, "ol, ul, menu"))                                                                                           property.information = USER_AGENT                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "list-item"}                           : null
+              }
+
+              else if (/^(counter-set)$/.test(propertyName) && matches(property.element, "li[value]") && (value = property.element.getAttribute("value").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?(\d+([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "list-item " + +value} : null;
+              else if (/^(cursor)$/     .test(propertyName) && matches(property.element, ":link, :visited"))                                                                              property.information = USER_AGENT && /^#[0-F]{6}$/.test(value)                                                           ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "pointer"}             : null;
+
+              else if (/^(direction)$/.test(propertyName)) {
+                if      (matches(property.element, "[dir]:dir(ltr), bdi:dir(ltr), input[type=tel i]:dir(ltr)")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "ltr"} : null;
+                else if (matches(property.element, "[dir]:dir(rtl), bdi:dir(rtl)"))                             property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "rtl"} : null;
+              }
+
+              else if (/^(display)$/.test(propertyName)) {
+                if      (matches(property.element, ":host summary, details > summary:first-of-type, li"))                                                                                                                                                                                                                                                       property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "list-item"}          : null;
+                else if (matches(property.element, "[hidden]:not(embed):not([hidden=until-found i]), [popover]:not(:popover-open):not(dialog[open]), area, base, basefont, datalist, head, input[type=hidden i], link, meta, noembed, noframes, param, rp, script, style, table > form, thead > form, tbody > form, tfoot > form, tr > form, template, title")) property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "none"}               : null;
+                else if (matches(property.element, "address, article, aside, blockquote, body, center, dd, details, dir, div, dl, dt, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, html, legend, listing, main, menu, nav, ol, p, plaintext, pre, search, section, summary, ul, xmp"))                               property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "block"}              : null;
+                else if (matches(property.element, "button, input, marquee"))                                                                                                                                                                                                                                                                                   property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inline-block"}       : null;
+                else if (matches(property.element, "caption"))                                                                                                                                                                                                                                                                                                  property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table-caption"}      : null;
+                else if (matches(property.element, "col,      col[hidden]"))                                                                                                                                                                                                                                                                                    property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table-column"}       : null;
+                else if (matches(property.element, "colgroup, colgroup[hidden]"))                                                                                                                                                                                                                                                                               property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table-column-group"} : null;
+                else if (matches(property.element, "embed[hidden]"))                                                                                                                                                                                                                                                                                            property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inline"}             : null;
+                else if (matches(property.element, "rt"))                                                                                                                                                                                                                                                                                                       property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "ruby-text"}          : null;
+                else if (matches(property.element, "ruby :not(rp):not(rt)"))                                                                                                                                                                                                                                                                                    property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "ruby-base"}          : null;
+                else if (matches(property.element, "ruby"))                                                                                                                                                                                                                                                                                                     property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "ruby"}               : null;
+                else if (matches(property.element, "select > button:first-child") && (value = DROPDOWN_BOX === box(property.element)))                                                                                                                                          { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "contents"}           : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select optgroup"))                                                                                                                                                                                                          { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "block"}              : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select option"))                                                                                                                                                                                                            { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "flex"}               : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select")              && (value = DROPDOWN_BOX === box(property.element)))                                                                                                                                                  { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(auto|none)$/     .test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inline-block"}       : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select")              && (value = DROPDOWN_BOX === box(property.element)))                                                                                                                                                  { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inline-flex"}        : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select::picker-icon") && (value = DROPDOWN_BOX === box(property.element)))                                                                                                                                                  { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "block"}              : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "slot"))                                                                                                                                                                                                                                                                                                     property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "contents"}           : null;
+                else if (matches(property.element, "table"))                                                                                                                                                                                                                                                                                                    property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table"}              : null;
+                else if (matches(property.element, "tbody, tbody[hidden]"))                                                                                                                                                                                                                                                                                     property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table-row-group"}    : null;
+                else if (matches(property.element, "td, th"))                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table-cell"}         : null;
+                else if (matches(property.element, "tfoot, tfoot[hidden]"))                                                                                                                                                                                                                                                                                     property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table-footer-group"} : null;
+                else if (matches(property.element, "thead, thead[hidden]"))                                                                                                                                                                                                                                                                                     property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table-header-group"} : null;
+                else if (matches(property.element, "tr,    tr[hidden]"))                                                                                                                                                                                                                                                                                        property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "table-row"}          : null;
+              }
+
+              else if (/^(display-outside)$/.test(propertyName)) {
+                if      (matches(property.element, "br"))  property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "newline"}           : null;
+                else if (matches(property.element, "wbr")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "break-opportunity"} : null;
+              }
+
+              else if (/^(field-sizing)$/.test(propertyName)) {
+                if      (matches(property.element, ":autofill"))                                                                                                                                  property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "fixed"}   : null;
+                else if (matches(property.element, "select") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "content"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(float)$/.test(propertyName)) {
+                if      (matches(property.element, "embed[align=left  i], iframe[align=left  i], img[align=left  i], input[type=image i][align=left  i], object[align=left  i], table[align=left  i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "left"}  : null;
+                else if (matches(property.element, "embed[align=right i], iframe[align=right i], img[align=right i], input[type=image i][align=right i], object[align=right i], table[align=right i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "right"} : null
+              }
+
+              else if (/^(font-family)$/.test(propertyName)) {
+                if      (matches(property.element, "code, kbd, listing, plaintext, pre, samp, tt, xmp"))                                            property.information = USER_AGENT          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "monospace"} : null;
+                else if (matches(property.element, "font[face]") && (value = property.element.getAttribute("face").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value}       : null
+              }
+
+              else if (/^(font-size)$/.test(propertyName)) {
+                if      (matches(property.element, "big"))             property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "larger"}  : null;
+                else if (matches(property.element, "h1"))              property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "2.00em"}  : null;
+                else if (matches(property.element, "h2"))              property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1.50em"}  : null;
+                else if (matches(property.element, "h3"))              property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1.17em"}  : null;
+                else if (matches(property.element, "h4"))              property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1.00em"}  : null;
+                else if (matches(property.element, "h5"))              property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.83em"}  : null;
+                else if (matches(property.element, "h6"))              property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.67em"}  : null;
+                else if (matches(property.element, "small, sub, sup")) property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "smaller"} : null;
+                else if (matches(property.element, "table"))           property.information = USER_AGENT && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null
+              }
+
+              else if (/^(font-style)$/.test(propertyName)) {
+                if      (matches(property.element, "address, cite, dfn, em, i, var")) property.information = USER_AGENT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "italic"}  : null;
+                else if (matches(property.element, "table"))                          property.information = USER_AGENT && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null;
+              }
+
+              else if (/^(font-variant)$/.test(propertyName) && matches(property.element, "table"))
+                property.information = USER_AGENT && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null;
+
+              else if (/^(font-weight)$/.test(propertyName)) {
+                if      (matches(property.element, "b, strong"))                                                                                              property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "bolder"}  : null;
+                else if (matches(property.element, "h1, h2, h3, h4, h5, h6, th"))                                                                             property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "bold"}    : null;
+                else if (matches(property.element, "select optgroup option")) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "normal"}  : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select optgroup"))        { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "bolder"}  : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "table"))                                                                                                  property.information = USER_AGENT && quirksMode                                                         ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null
+              }
+
+              else if (/^(gap|padding-inline(-(end|start))?)$/.test(propertyName) && matches(property.element, "select option")) {
+                if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.5em"} : null;
+                else                                                                          cascaded             = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties)
+              }
+
+              else if (/^(height)$/.test(propertyName)) {
+                if      (matches(property.element, "embed[height], iframe[height], img[height], input[height][type=image i], marquee[height], object[height], table[height], tbody[height], tfoot[height], thead[height], tr[height], video[height]") && (value = (property.element.getAttribute("height") || "").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1"))                   ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px"}       : null;
+                else if (matches(property.element, "hr[size]:not([color]):not([noshade])")                                                                                                                                                            && (value = (property.element.getAttribute("size") || "").replace(TRIM_MATCH, TRIM_PASS)))   property.information = PRESENTATIONAL_HINT && (value = Math.floor(value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1"))) > 1 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: (+value - 2) + "px"} : null;
+                else if (matches(property.element, "marquee[direction=down i], marquee[direction=up i]"))                                                                                                                                                                                                                                          property.information = PRESENTATIONAL_HINT                                                                                                                 ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "200px"}             : null;
+                else if (matches(property.element, "td[height], th[height]") && (value = (property.element.getAttribute("height") || "").replace(TRIM_MATCH, TRIM_PASS)))                                                                                                                                                                          property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?(([1-9]\d*(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1"))              ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px"}       : null;
+              }
+
+              else if (/^(height|width)$/.test(propertyName)) {
+                if      (matches(property.element, "[popover], dialog")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "fit-content"} : null;
+                else if (matches(property.element, "embed[hidden]"))     property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'}           : null
+              }
+
+              else if (/^(inline-size)$/.test(propertyName)) {
+                if      (matches(property.element, "meter"))    property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "5em"}  : null;
+                else if (matches(property.element, "progress")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "10em"} : null
+              }
+
+              else if (/^(inset)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, ":popover-open::backdrop, [popover]"))                                                                                                                   property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'}    : null
+              }
+
+              else if (/^(inset-block)$/                .test(propertyName) && matches(property.element, "dialog:modal")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'} : null;
+              else if (/^(inset-inline(-(end|start))?)$/.test(propertyName) && matches(property.element, "dialog"))       property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'} : null;
+
+              else if (/^(justify-self)$/.test(propertyName)) {
+                if      (matches(property.element, "legend[align=center i]")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "center"} : null;
+                else if (matches(property.element, "legend[align=left   i]")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "left"}   : null;
+                else if (matches(property.element, "legend[align=right  i]")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "right"}  : null
+              }
+
+              else if (/^(letter-spacing)$/.test(propertyName)) {
+                if      (matches(property.element, "button, input, textarea"))                                                                property.information = USER_AGENT                                                                  ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null;
+                else if (matches(property.element, "select")) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(auto|none)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(line-height)$/.test(propertyName)) {
+                if      (matches(property.element, "button, input, textarea"))                                                                property.information = USER_AGENT                                                                  ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null;
+                else if (matches(property.element, "select")) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(auto|none)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "sub, sup"))                                                                               property.information = USER_AGENT                                                                  ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "normal"}  : null;
+                else if (matches(property.element, "table"))                                                                                  property.information = USER_AGENT && quirksMode                                                    ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null
+              }
+
+              else if (/^(line-style)$/.test(propertyName)) {
+                if      (matches(property.element, ":host([open]) summary, details[open] > summary:first-of-type")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "disclosure-open"}          : null;
+                else if (matches(property.element, ":host         summary, details       > summary:first-of-type")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "disclosure-closed inside"} : null
+              }
+
+              else if (/^(line-style-position)$/.test(propertyName)) {
+                if      (matches(property.element, "dir dir, dir li, dir menu, dir ol, dir ul, menu dir, menu li, menu menu, menu ol, menu ul, ol dir, ol li, ol menu, ol ol, ol ul, ul dir, ul li, ul menu, ul ol, ul ul")) property.information = USER_AGENT && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "unset"}   : null;
+                else if (matches(property.element, "li dir, li menu, li ol, li ul"))                                                                                                                                         property.information = USER_AGENT && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "outside"} : null;
+                else if (matches(property.element, "li"))                                                                                                                                                                    property.information = USER_AGENT && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inside"}  : null
+              }
+
+              else if (/^(line-style-type)$/.test(propertyName)) {
+                if      (matches(property.element, "dir dir dir, dir dir menu, dir dir ul, dir menu dir, dir menu menu, dir menu ul, dir ol dir, dir ol menu, dir ol ul, dir ul dir, dir ul menu, dir ul ul, menu dir dir, menu dir menu, menu dir ul, menu menu dir, menu menu menu, menu menu ul, menu ol dir, menu ol menu, menu ol ul, menu ul dir, menu ul menu, menu ul ul, ol dir dir, ol dir menu, ol dir ul, ol menu dir, ol menu menu, ol menu ul, ol ol dir, ol ol menu, ol ol ul, ol ul dir, ol ul menu, ol ul ul, ul dir dir, ul dir menu, ul dir ul, ul menu dir, ul menu menu, ul menu ul, ul ol dir, ul ol menu, ul ol ul, ul ul dir, ul ul menu, ul ul ul")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "square"}      : null;
+                else if (matches(property.element, "dir dir,     dir menu,     dir ul,     menu dir,     menu menu,     menu ul,     ol dir,     ol menu,     ol ul,     ul dir,     ul menu,     ul ul"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                    property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "circle"}      : null;
+                else if (matches(property.element, "dir,         menu,         ul"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "disc"}        : null;
+                else if (matches(property.element, "li[type='1'],      ol[type='1'], ol"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "decimal"}     : null;
+                else if (matches(property.element, "li[type=A      s], ol[type=A      s]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "upper-alpha"} : null;
+                else if (matches(property.element, "li[type=a      s], ol[type=a      s]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "lower-alpha"} : null;
+                else if (matches(property.element, "li[type=circle i], ul[type=circle i]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "circle"}      : null;
+                else if (matches(property.element, "li[type=disc   i], ul[type=disc   i]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "disc"}        : null;
+                else if (matches(property.element, "li[type=I      s], ol[type=I      s]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "upper-roman"} : null;
+                else if (matches(property.element, "li[type=i      s], ol[type=i      s]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "lower-roman"} : null;
+                else if (matches(property.element, "li[type=none   i], ul[type=none   i]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "none"}        : null;
+                else if (matches(property.element, "li[type=square i], ul[type=square i]"))                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "square"}      : null
+              }
+
+              else if (/^(margin-(bottom|top))$/.test(propertyName)) {
+                if      (matches(property.element, "[marginheight] body, body[marginheight]")                                                  && (value = getElementAncestorByTagName(property.element, "marginheight").getAttribute("marginheight").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value} : null;
+                else if (matches(property.element, "body[topmargin]")                                                                          && (value = property.element                                             .getAttribute("topmargin")   .replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value} : null;
+                else if (matches(property.element, "embed[vspace], img[vspace], input[type=image i][vspace], marquee[vspace], object[vspace]") && (value = property.element                                             .getAttribute("vspace")      .replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value} : null
+              }
+
+              else if (/^(margin-(left|right))$/.test(propertyName)) {
+                if      (matches(property.element, "[marginwidth] body, body[marginwidth]")                                                    && (value = getElementAncestorByTagName(property.element, "marginwidth").getAttribute("marginwidth").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value} : null;
+                else if (matches(property.element, "body[leftmargin]")                                                                         && (value = property.element                                            .getAttribute("leftmargin") .replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value} : null;
+                else if (matches(property.element, "embed[hspace], img[hspace], input[hspace][type=image i], marquee[hspace], object[hspace]") && (value = property.element                                            .getAttribute("hspace")     .replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value} : null
+              }
+
+              else if (/^(margin-?)/          .test(propertyName) && matches(property.element, "[popover], dialog"))                                                                                                                                    property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null;
+              else if (/^(margin-?|padding-?)/.test(propertyName) && matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'}    : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+
+              else if (/^(margin-block-?)/.test(propertyName)) {
+                if      (matches(property.element, "dir dir, dir dl, dir menu, dir ol, dir ul, dl dir, dl dl, dl menu, dl ol, dl ul, menu dir, menu dl, menu menu, menu ol, menu ul, ol dir, ol dl, ol menu, ol ol, ol ul, ul dir, ul dl, ul menu, ul ol, ul ul")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'}      : null;
+                else if (matches(property.element, "blockquote, dir, dl, figure, h3, listing, menu, ol, p, plaintext, pre, ul, xmp"))                                                                                                                              property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1em"}    : null;
+                else if (matches(property.element, "h1"))                                                                                                                                                                                                          property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.67em"} : null;
+                else if (matches(property.element, "h2"))                                                                                                                                                                                                          property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.83em"} : null;
+                else if (matches(property.element, "h4"))                                                                                                                                                                                                          property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1.33em"} : null;
+                else if (matches(property.element, "h5"))                                                                                                                                                                                                          property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1.67em"} : null;
+                else if (matches(property.element, "h6"))                                                                                                                                                                                                          property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "2.33em"} : null;
+                else if (matches(property.element, "hr"))                                                                                                                                                                                                          property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.5em"}  : null
+              }
+
+              else if (/^(margin-block-end)$/.test(propertyName) && matches(property.element, "form"))
+                property.information = USER_AGENT && (value = value.replace(/^[-+]?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1em"} : null;
+
+              else if (/^(margin-inline-?)/.test(propertyName)) {
+                if      (matches(property.element, "blockquote, figure"))    property.information = USER_AGENT          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "40px"} : null;
+                else if (matches(property.element, "fieldset"))              property.information = USER_AGENT          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "2px"}  : null;
+                else if (matches(property.element, "hr"))                    property.information = USER_AGENT          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null;
+                else if (matches(property.element, "table[align=center i]")) property.information = PRESENTATIONAL_HINT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null
+              }
+
+              else if (/^(margin-inline-start)$/.test(propertyName)) {
+                if      (matches(property.element, "dd"))                                                                                                                                                      property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "40px"} : null;
+                else if (matches(property.element, "select::picker-icon") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(margin-left)$/.test(propertyName)) {
+                if      (matches(property.element, "hr[align=center i]")) property.information = PRESENTATIONAL_HINT      ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null;
+                else if (matches(property.element, "hr[align=left   i]")) property.information = PRESENTATIONAL_HINT      ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'}    : null;
+                else if (matches(property.element, "hr[align=right  i]")) property.information = PRESENTATIONAL_HINT      ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null;
+                else if (matches(property.element, "img[align=right i]")) property.information = USER_AGENT && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "3px"}  : null
+              }
+
+              else if (/^(margin-right)$/.test(propertyName)) {
+                if      (matches(property.element, "hr[align=center i]")) property.information = PRESENTATIONAL_HINT      ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null;
+                else if (matches(property.element, "hr[align=left   i]")) property.information = PRESENTATIONAL_HINT      ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"} : null;
+                else if (matches(property.element, "hr[align=right  i]")) property.information = PRESENTATIONAL_HINT      ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'}    : null;
+                else if (matches(property.element, "img[align=left  i]")) property.information = USER_AGENT && quirksMode ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "3px"}  : null
+              }
+
+              else if (/^(margin.*-block)$/    .test(propertyName) && matches(property.element, "hr"))                                                                                                                                                   property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.5em"}                  : null;
+              else if (/^(margin.*-inline)$/   .test(propertyName) && matches(property.element, "hr"))                                                                                                                                                   property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"}                   : null;
+              else if (/^(max-(height|width))$/.test(propertyName) && matches(property.element, "dialog:modal"))                                                                                                                                         property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "calc(100% - 6px - 2em)"} : null;
+              else if (/^(max-block-size)$/    .test(propertyName) && matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "stretch"}                : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+
+              else if (/^(min-block-size)$/.test(propertyName)) {
+                if      (matches(property.element, "select optgroup legend"))                                            { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1lh"}                                   : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select option") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "max(24px, 1lh)"}                        : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select")        && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "calc-size(auto, max(size, 24px, 1lh))"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(min-inline-size)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "anchor-size(self-inline)"}         : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "fieldset"))                                                                                                                                             property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "min-content"}                      : null;
+                else if (matches(property.element, "select option"))                                                        { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "24px"}                             : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "select") && (value = DROPDOWN_BOX === box(property.element)))           { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "calc-size(auto, max(size, 24px))"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(object-fit)$/   .test(propertyName) && matches(property.element, "video"))          property.information = USER_AGENT                              ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "contain"} : null;
+              else if (/^(outline-style)$/.test(propertyName) && matches(property.element, ":focus-visible")) property.information = USER_AGENT && /^#[0-F]{6}$/.test(value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"}    : null;
+
+              else if (/^(overflow)$/.test(propertyName)) {
+                if      (matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"}   : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "[popover], dialog:modal"))                                                                                                                              property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"}   : null;
+                else if (matches(property.element, "hr, marquee"))                                                                                                                                          property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden"} : null;
+                else if (matches(property.element, "input:not([type=checkbox i]):not([type=image i]):not([type=radio i]):not([type=range i])"))                                                             property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "clip"}   : null;
+                else if (matches(property.element, "select") && (value = LIST_BOX === box(property.element)))               { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "auto"}   : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(overflow-clip-margin)$/.test(propertyName) && matches(property.element, "input:not([type=checkbox i], [type=image i], [type=radio i], [type=range i])"))
+                property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'} : null;
+
+              else if (/^(padding-?)/.test(propertyName)) {
+                if      (matches(property.element, "[popover]"))                                                                                                                 property.information = USER_AGENT                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.25em"}      : null;
+                else if (matches(property.element, "dialog"))                                                                                                                    property.information = USER_AGENT                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1em"}         : null;
+                else if (matches(property.element, "td[cellpadding], th[cellpadding]") && (value = property.element.getAttribute("cellpadding").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?(\d+([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px"} : null;
+                else if (matches(property.element, "td,              th"))                                                                                                       property.information = USER_AGENT                                                                                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "1px"}         : null
+              }
+
+              else if (/^(padding-block(-(end|start))?)$/.test(propertyName)) {
+                if      (matches(property.element, "fieldset"))                                                                                                                                   property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.35em 0.625em"} : null;
+                else if (matches(property.element, "select") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.25em"}         : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(padding-block-end)$/.test(propertyName)) {
+                if      (matches(property.element, "fieldset"))                                                                                      property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.625em"} : null;
+                else if (matches(property.element, "select option")) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: '0'}       : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(padding-block-start)$/.test(propertyName) && matches(property.element, "fieldset"))
+                property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.35em"} : null;
+
+              else if (/^(padding-inline(-(end|start))?)$/.test(propertyName)) {
+                if      (matches(property.element, "fieldset"))                                                                                               property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.75em"} : null;
+                else if (matches(property.element, "select optgroup legend")) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "0.5em"}  : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "legend"))                                                                                                 property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "2px"}    : null
+              }
+
+              else if (/^(padding-inline-start)$/.test(propertyName) && matches(property.element, "dir, menu, ol, ul"))       property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "40px"} : null;
+              else if (/^(pointer-events)$/      .test(propertyName) && matches(property.element, ":popover-open::backdrop")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "none"} : null;
+
+              else if (/^(position)$/.test(propertyName)) {
+                if      (matches(property.element, ":popover-open::backdrop, [popover], dialog:modal")) property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "fixed"}    : null;
+                else if (matches(property.element, "dialog"))                                           property.information = USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "absolute"} : null
+              }
+
+              else if (/^(position-area)$/         .test(propertyName) && matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "self-block-end span-self-inline-end"}                                                                                   : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              else if (/^(position-try-fallbacks)$/.test(propertyName) && matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "self-block-start span-self-inline-end, self-block-end span-self-inline-start, self-block-start span-self-inline-start"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              else if (/^(position-try-order)$/    .test(propertyName) && matches(property.element, "::picker(select)") && (value = DROPDOWN_BOX === box(property.element))) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "most-block-size"}                                                                                                       : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+
+              else if (/^(text-align)$/.test(propertyName)) {
+                if      (matches(property.element, "button,  center, div[align=center i], div[align=middle i], h1[align=center i], h1[align=middle i], h2[align=center i], h2[align=middle i], h3[align=center i], h3[align=middle i], h4[align=center i], h4[align=middle i], h5[align=center i], h5[align=middle i], h6[align=center i], h6[align=middle i], input[type=button i], input[type=reset i], input[type=submit i], p[align=center i], p[align=middle i]")) property.information = PRESENTATIONAL_HINT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "center"}       : null;
+                else if (matches(property.element, "caption, center, tbody[align=absmiddle i], td[align=absmiddle i], tfoot[align=absmiddle i], th[align=absmiddle i], thead[align=absmiddle i], tr[align=absmiddle i]"))                                                                                                                                                                                                                                               property.information = PRESENTATIONAL_HINT && USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "center"}       : null;
+                else if (matches(property.element, "[align=justify i] *, center[align=justify i], div[align=justify i], h1[align=justify i], h2[align=justify i], h3[align=justify i], h4[align=justify i], h5[align=justify i], h6[align=justify i], p[align=justify i], tbody[align=justify i], td[align=justify i], tfoot[align=justify i], th[align=justify i], thead[align=justify i], tr[align=justify i]"))                                                      property.information = PRESENTATIONAL_HINT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "justify"}      : null;
+                else if (matches(property.element, "[align=left    i] *, center[align=left    i], div[align=left    i], h1[align=left    i], h2[align=left    i], h3[align=left    i], h4[align=left    i], h5[align=left    i], h6[align=left    i], p[align=left    i], tbody[align=left    i], td[align=left    i], tfoot[align=left    i], th[align=left    i], thead[align=left    i], tr[align=left    i]"))                                                      property.information = PRESENTATIONAL_HINT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "left"}         : null;
+                else if (matches(property.element, "[align=right   i] *, center[align=right   i], div[align=right   i], h1[align=right   i], h2[align=right   i], h3[align=right   i], h4[align=right   i], h5[align=right   i], h6[align=right   i], p[align=right   i], tbody[align=right   i], td[align=right   i], tfoot[align=right   i], th[align=right   i], thead[align=right   i], tr[align=right   i]"))                                                      property.information = PRESENTATIONAL_HINT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "right"}        : null;
+                else if (matches(property.element, "tbody[align=center i], tbody[align=center i] *, td[align=center i], td[align=center i] *, tfoot[align=center i], tfoot[align=center i] *, th[align=center i], th[align=center i] *, thead[align=center i], thead[align=center i] *, thead[align=middle i], thead[align=middle i] *, tr[align=center i], tr[align=center i] *"))                                                                                     property.information = PRESENTATIONAL_HINT && USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "center"}       : null;
+                else if (matches(property.element, "input, marquee, select, textarea"))                                                                                                                                                                                                                                                                                                                                                                                 property.information = USER_AGENT                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"}      : null;
+                else if (matches(property.element, "li"))                                                                                                                                                                                                                                                                                                                                                                                                               property.information = USER_AGENT                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "match-parent"} : null;
+                else if (matches(property.element, "table"))                                                                                                                                                                                                                                                                                                                                                                                                            property.information = USER_AGENT && quirksMode          ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"}      : null;
+              }
+
+              else if (/^(text-decoration-line)$/.test(propertyName)) {
+                if      (matches(property.element, ":link, :visited, abbr[title], acronym[title], ins, u")) property.information = USER_AGENT && /^#[0-F]{6}$/.test(value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "underline"}    : null;
+                else if (matches(property.element, "del, s, strike"))                                       property.information = USER_AGENT && /^#[0-F]{6}$/.test(value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "line-through"} : null
+              }
+
+              else if (/^(text-decoration-style)$/.test(propertyName) && matches(property.element, "abbr[title], acronym[title]"))            property.information = USER_AGENT && /^#[0-F]{6}$/.test(value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "dotted"}  : null;
+              else if (/^(text-indent)$/          .test(propertyName) && matches(property.element, "button, input, select, table, textarea")) property.information = USER_AGENT                              ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null;
+              else if (/^(text-shadow)$/          .test(propertyName) && matches(property.element, "button, input, select,        textarea")) property.information = USER_AGENT                              ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null;
+              else if (/^(text-transform)$/       .test(propertyName) && matches(property.element, "button, input, select,        textarea")) property.information = USER_AGENT                              ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null
+
+              else if (/^(unicode-bidi)$/.test(propertyName)) {
+                if      (matches(property.element, "bdo"))                                                                                                                                                                                                                                                                                                                                                                       property.information = USER_AGENT                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "isolate-override"}                                     : null;
+                else if (matches(property.element, "input:not([type=button i]):not([type=reset i]):not([type=submit i]), textarea"))                                                                                                                                                                                                                                                                                             property.information = USER_AGENT                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "normal"}                                               : null;
+                else if (matches(property.element, "input[dir=auto i][type=email i], input[dir=auto i][type=search i], input[dir=auto i][type=tel i], input[dir=auto i][type=text i], input[dir=auto i][type=url i], pre[dir=auto i], textarea[dir=auto i]"))                                                                                                                                                                    property.information = PRESENTATIONAL_HINT && USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "plaintext"}                                            : null;
+                else if (matches(property.element, "*|*, [dir=auto i], [dir=ltr i], [dir=rtl i], address, article, aside, bdi, blockquote, caption, center, col, colgroup, dd, dir, div, dl, dt, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, legend, li, listing, main, menu, nav, ol, output, p, plaintext, pre, search, section, summary, table, tbody, td, tfoot, th, thead, tr, ul, xmp")) property.information = PRESENTATIONAL_HINT && USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: charset === "ISO-8859-8" ? "bidi-override" : "isolate"} : null
+              }
+
+              else if (/^(user-select)$/.test(propertyName) && matches(property.element, "select")) {
+                if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "none"} : null;
+                else                                                                          cascaded             = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties)
+              }
+
+              else if (/^(vertical-align)$/.test(propertyName)) {
+                if      (matches(property.element, "embed[align=abscenter i], embed[align=absmiddle i], iframe[align=abscenter i], iframe[align=absmiddle i], img[align=abscenter i], img[align=absmiddle i], input[align=abscenter i][type=image i], input[align=absmiddle i][type=image i], object[align=abscenter i], object[align=absmiddle i], table > tr, tbody,                    td[valign=middle   i], tfoot,                    th[valign=middle   i], thead"))                                           property.information = PRESENTATIONAL_HINT && USER_AGENT ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "middle"}   : null;
+                else if (matches(property.element, "embed[align=baseline  i],                           iframe[align=baseline  i],                            img[align=baseline  i],                         input[align=baseline  i][type=image i],                                         object[align=baseline  i],                                        tbody[valign=baseline i], td[valign=baseline i], tfoot[valign=baseline i], th[valign=baseline i], thead[valign=baseline i], tr[valign=baseline i]")) property.information = PRESENTATIONAL_HINT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "baseline"} : null;
+                else if (matches(property.element, "embed[align=bottom    i],                           iframe[align=bottom    i],                            img[align=bottom    i],                         input[align=bottom    i][type=image i],                                         object[align=bottom    i],                                        tbody[valign=bottom   i], td[valign=bottom   i], tfoot[valign=bottom   i], th[valign=bottom   i], thead[valign=bottom   i], tr[valign=bottom   i]")) property.information = PRESENTATIONAL_HINT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "bottom"}   : null;
+                else if (matches(property.element, "embed[align=top       i],                           iframe[align=top       i],                            img[align=top       i],                         input[align=top       i][type=image i],                                         object[align=top       i],                                        tbody[valign=top      i], td[valign=top      i], tfoot[valign=top      i], th[valign=top      i], thead[valign=top      i], tr[valign=top      i]")) property.information = PRESENTATIONAL_HINT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "top"}      : null;
+                else if (matches(property.element, "embed[align=texttop   i],                           iframe[align=texttop   i],                            img[align=texttop   i],                         input[align=texttop   i][type=image i],                                         object[align=texttop   i]"))                                                                                                                                                                                           property.information = PRESENTATIONAL_HINT               ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "text-top"} : null;
+                else if (matches(property.element, "meter, progress, select, textarea"))                                                                                                                                                                                                                                                                                                                                                                                                                             property.information = USER_AGENT                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "-0.2em"}   : null;
+                else if (matches(property.element, "sub"))                                                                                                                                                                                                                                                                                                                                                                                                                                                           property.information = USER_AGENT                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "sub"}      : null;
+                else if (matches(property.element, "sup"))                                                                                                                                                                                                                                                                                                                                                                                                                                                           property.information = USER_AGENT                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "super"}    : null;
+                else if (matches(property.element, "td, th, tr"))                                                                                                                                                                                                                                                                                                                                                                                                                                                    property.information = USER_AGENT                        ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "inherit"}  : null
+              }
+
+              else if (/^(visibility)$/.test(propertyName)) {
+                if      (matches(property.element, "col[hidden], colgroup[hidden], tbody[hidden], tfoot[hidden], thead[hidden], tr[hidden]"))                                 property.information = USER_AGENT                                                                       ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "collapse"} : null;
+                else if (matches(property.element, "select option:not(:checked)::checkmark")) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "hidden"}   : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+
+              else if (/^(white-space)$/.test(propertyName)) {
+                if      (matches(property.element, "listing, plaintext, pre, textarea[wrap=off i], xmp"))                                            property.information = PRESENTATIONAL_HINT && USER_AGENT                                                                                                    ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "pre"}      : null;
+                else if (matches(property.element, "td[nowrap][width], th[nowrap][width]"))                                                          property.information = PRESENTATIONAL_HINT && USER_AGENT && (value = value.replace(/^\+?(([1-9]\d*(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "normal"}   : null;
+                else if (matches(property.element, "td[nowrap],        th[nowrap], nobr"))                                                           property.information = PRESENTATIONAL_HINT && USER_AGENT                                                                                                    ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "nowrap"}   : null;
+                else if (matches(property.element, "nobr wbr"))                                                                                      property.information = USER_AGENT                                                                                                                           ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "normal"}   : null;
+                else if (matches(property.element, "pre[wrap], textarea"))                                                                           property.information = USER_AGENT                                                                                                                           ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "pre-wrap"} : null;
+                else if (matches(property.element, "select option")) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(base(-select)?)$/.test(property.priors.pop().information.value)                                                     ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "nowrap"}   : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+                else if (matches(property.element, "table"))                                                                                         property.information = USER_AGENT && quirksMode                                                                                                             ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"}  : null
+              }
+
+              else if (/^(width)$/.test(propertyName)) {
+                if      (matches(property.element, "col[width],   embed[width], hr[width], iframe[width], img[width], input[type=image i][width], marquee[width], object[width], video[width]") && (value = property.element.getAttribute("width").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?((\d+(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1"))      ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px"} : null;
+                else if (matches(property.element, "table[width], td[width],    th[width]")                                                                                                     && (value = property.element.getAttribute("width").replace(TRIM_MATCH, TRIM_PASS))) property.information = PRESENTATIONAL_HINT && (value = value.replace(/^\+?(([1-9]\d*(\.\d*)?|\.\d+)([Ee][-+]?\d+)?)[\S\s]*|^[\S\s]*$/, "$1")) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: +value + "px"} : null
+              }
+
+              else if (/^(word-spacing)$/.test(propertyName)) {
+                if      (matches(property.element, "button, input, textarea"))                                                                property.information = USER_AGENT                                                                  ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null;
+                else if (matches(property.element, "select")) { if (property.priors.length === 1 && property.priors[0].name === "appearance") property.information = USER_AGENT && /^(auto|none)$/.test(property.priors.pop().information.value) ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "initial"} : null; else cascaded = cascade(getElementAncestorByTagName(property.element, "select"), "appearance", property, properties) }
+              }
+            }
+
+            // ... ->> Composite shorthands
+            if (null === property.information && composited) {
+              if (composited.length === property.priors.length) {
+                property.information = {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: ""};
+
+                for (var index = 0; index !== property.priors.length; ++index) {
+                  if (null !== property.priors[index].information)                     property.information.value += property.priors[index].information.value + composited[index].delimiter;
+                  else if (/^font-(family|size)$/.test(property.priors[index].name)) { property.information        = null; break }
+                }
+
+                property.information = property.information.value !== "" ? property.information : null;
+                property.priors      = []
+              }
+
+              else {
+                for (var index = composited.length; index--; )
+                cascaded = cascade(property.element, composited[index].value, property, properties);
+
+                for (var index = properties.length; properties[--index].origin === property; )
+                properties[index].deferred = true // ->> Avoid resolving
+              }
+            }
+          } else {
+            property.deferred    = deferred = false;
+            property.information = {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: property.style[propertyName]}
           }
+
+          // ...
+          reverted = false;
+
+          if      (property.deferred) { if (property.priors.length && property.priors[0].name === propertyName) { property.deferred = false; property.information = property.priors[0].information } }
+          else if (null === property.information && deferred)                                                   { property.deferred = true;  property.information = {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: "unset"} }
+
+          for (var propertyValue = null; null !== property.information && propertyValue !== property.information.value; )
+          switch (propertyValue = property.information.value) {
+            case "inherit": {
+              if      (null === parentElement)                                                   property.information.value = "initial";
+              else if (property.priors.length === 1 && property.priors[0].name === propertyName) property.information.value = (property.priors.pop().information || property.information).value; // --> getCSSPropertyValue(parentElement, propertyName)
+              else                                                                               cascaded                   = cascade(parentElement, propertyName, property, properties)
+            } break;
+
+            case "initial": switch (propertyName) {
+              case "align-content":         case "align-items": case "animation-direction": case "animation-range-end": case "animation-range-start":
+              case "background-blend-mode": case "box-direction":
+              case "column-gap":            case "container-type": case "content":
+              case "gap":                   case "initial-letter": case "justify-content": case "mix-blend-mode":
+              case "place-content":         case "position-try-order":
+              case "reading-flow":          case "row-gap":
+              case "scroll-snap-stop":
+              case "text-box": case "transition-behavior":
+              case "unicode-bidi":
+                property.information.value = "normal";
+                break;
+
+              case "align-self":  case "animation-timeline": case "aspect-ratio":
+              case "block-size":  case "bottom":             case "break-after":  case "break-before": case "break-inside":
+              case "caret-color": case "clip":               case "column-count": case "column-width":
+              case "flex-basis":
+              case "grid-area": case "grid-auto-columns": case "grid-auto-rows": case "grid-column": case "grid-column-end": case "grid-column-start": case "grid-row": case "grid-row-end": case "grid-row-start":
+              case "height":
+              case "inline-size":       case "inset": case "inset-block": case "inset-block-end": case "inset-block-start": case "inset-inline": case "inset-inline-end": case "inset-inline-start": case "isolation":
+              case "justify-self":      case "left":
+              case "mask-border-width": case "mask-size":
+              case "offset-anchor":     case "offset-rotate":    case "overflow-anchor":   case "overscroll-behavior": case "overscroll-behavior-block": case "overscroll-behavior-inline": case "overscroll-behavior-x": case "overscroll-behavior-y":
+              case "page":              case "page-break-after": case "page-break-before": case "page-break-inside":   case "place-self":
+              case "right":
+              case "scroll-behavior": case "scroll-padding-block-end": case "scroll-padding-block-start": case "scroll-padding-bottom": case "scroll-padding-inline-end": case "scroll-padding-inline-start": case "scroll-padding-left": case "scroll-padding-right": case "scroll-padding-top": case "scrollbar-gutter":
+              case "table-layout":    case "text-box-edge":            case "text-decoration-thickness":  case "top":                   case "touch-action":
+              case "user-select":
+              case "view-timeline-inset":
+              case "width": case "will-change":
+              case "z-index":
+                property.information.value = "auto";
+                break;
+
+              case "alignment-baseline":
+              case "vertical-align":
+                property.information.value = "baseline";
+                break;
+
+              case "anchor-name":     case "animation":        case "animation-fill-mode":    case "animation-name":           case "appearance":
+              case "backdrop-filter": case "background-image": case "border-block-end-style": case "border-block-start-style": case "border-block-style": case "border-bottom-style":          case "border-image":             case "border-image-source":           case "border-inline-end-style": case "border-inline-start-style": case "border-inline-style": case "border-left-style": case "border-right-style": case "border-style": case "border-top-style": case "box-shadow":
+              case "clear":           case "clip-path":        case "column-rule-style":      case "column-span":              case "contain":            case "contain-intrinsic-block-size": case "contain-intrinsic-height": case "contain-intrinsic-inline-size": case "contain-intrinsic-size":  case "contain-intrinsic-width":   case "container-name":      case "counter-increment": case "counter-reset":      case "counter-set":
+              case 'd':
+              case "filter": case "float":
+              case "grid":   case "grid-template": case "grid-template-areas": case "grid-template-columns": case "grid-template-rows":
+              case "line-clamp":
+              case "margin-trim":   case "mask":            case "mask-border-source": case "mask-image": case "max-block-size": case "max-height": case "max-inline-size": case "max-width":
+              case "offset-path":   case "outline-style":   case "overlay":
+              case "perspective":   case "position-anchor": case "position-area": case "position-try-fallbacks":
+              case "resize":        case "rotate":
+              case "scale":         case "scroll-marker-group":  case "scroll-snap-align":     case "scroll-snap-type":     case "scroll-timeline-name": case "shape-outside":
+              case "text-box-trim": case "text-combine-upright": case "text-decoration":       case "text-decoration-line": case "text-emphasis-style":  case "timeline-scope": case "transform": case "transition": case "translate":
+              case "vector-effect": case "view-timeline-name":   case "view-transition-class": case "view-transition-name":
+                property.information.value = "none";
+                break;
+
+              case "animation-delay":  case "animation-duration":
+              case "transition-delay": case "transition-duration":
+                property.information.value = "0s";
+                break;
+
+              case "animation-iteration-count":
+              case "border-image-width": case "box-flex-group": case "box-ordinal-group":
+              case "flex-shrink":        case "flood-opacity":
+              case "opacity":            case "stop-opacity": case "zoom":
+                property.information.value = '1';
+                break;
+
+              case "animation-timing-function":
+              case "transition-timing-function":
+                property.information.value = "ease";
+                break;
+
+              case "backface-visibility": case "content-visibility":
+              case "overflow":            case "overflow-block": case "overflow-inline": case "overflow-x": case "overflow-y":
+                property.information.value = "visible";
+                break;
+
+              case "background-clip":
+              case "mask-clip": case "mask-origin":
+                property.information.value = "border-box";
+                break;
+
+              case "border": case "border-block": case "border-block-end": case "border-block-start": case "border-bottom": case "border-inline": case "border-inline-end": case "border-inline-start": case "border-left": case "border-right": case "border-top":
+              case "column-rule":
+                property.information.value = "medium none currentColor";
+                break;
+
+              case "border-block-color": case "border-block-end-color": case "border-block-start-color": case "border-bottom-color": case "border-color": case "border-inline-color": case "border-inline-end-color": case "border-inline-start-color": case "border-left-color": case "border-right-color": case "border-top-color":
+              case "column-rule-color":
+              case "text-decoration-color": case "text-emphasis-color":
+                property.information.value = "currentColor";
+                break;
+
+              case "border-block-end-width": case "border-block-start-width": case "border-block-width": case "border-bottom-width": case "border-inline-end-width": case "border-inline-start-width": case "border-inline-width": case "border-left-width": case "border-right-width": case "border-top-width": case "border-width":
+              case "column-rule-width":      case "outline-width":
+                property.information.value = "medium";
+                break;
+
+              case "border-bottom-left-radius": case "border-bottom-right-radius": case "border-end-end-radius": case "border-end-start-radius": case "border-image-outset": case "border-start-end-radius": case "border-start-start-radius": case "border-top-left-radius": case "border-top-right-radius": case "box-flex":
+              case "cx":                        case "cy":
+              case "flex-grow":
+              case "margin":          case "margin-block":            case "margin-block-end": case "margin-block-start": case "margin-bottom": case "margin-inline": case "margin-inline-end": case "margin-inline-start": case "margin-left": case "margin-right": case "margin-top": case "mask-border-outset": case "mask-border-slice": case "min-block-size": case "min-height": case "min-inline-size": case "min-width":
+              case "offset-distance": case "order":                   case "outline-offset":
+              case "padding":         case "padding-block":           case "padding-block-end":         case "padding-block-start": case "padding-bottom": case "padding-inline": case "padding-inline-end": case "padding-inline-start": case "padding-left": case "padding-right": case "padding-top":
+              case 'r':               case "reading-order":           case "rx":                        case "ry":
+              case "scroll-margin":   case "scroll-margin-block-end": case "scroll-margin-block-start": case "scroll-margin-bottom": case "scroll-margin-inline-end": case "scroll-margin-inline-start": case "scroll-margin-left": case "scroll-margin-right": case "scroll-margin-top": case "shape-image-threshold": case "shape-margin":
+              case 'x':               case 'y':
+                property.information.value = '0';
+                break;
+
+              case "background-size":      case "columns":
+              case "scroll-padding-block": case "scroll-padding-inline":
+                property.information.value = "auto auto";
+                break;
+
+              case "background-position-x": case "background-position-y": property.information.value = "0%";      break;
+              case "background-repeat":     case "mask-repeat":           property.information.value = "repeat";  break;
+              case "border-radius":         case "scroll-padding":        property.information.value = "0 0 0 0"; break;
+              case "box-align":             case "mask-border-repeat":    property.information.value = "stretch"; break;
+              case "flex-direction":        case "grid-auto-flow":        property.information.value = "row";     break;
+              case "flood-color":           case "stop-color":            property.information.value = "black";   break;
+              case "object-position":       case "perspective-origin":    property.information.value = "50% 50%"; break;
+              case "scroll-margin-block":   case "scroll-margin-inline":  property.information.value = "0 0";     break;
+              case "scroll-timeline-axis":  case "view-timeline-axis":    property.information.value = "block";   break;
+
+              case "animation-composition":       property.information.value = "replace";                                                               break;
+              case "animation-play-state":        property.information.value = "running";                                                               break;
+              case "animation-range":             property.information.value = "normal normal";                                                         break;
+              case "background":                  property.information.value = "none 0% 0%/auto auto repeat scroll border-box padding-box transparent"; break;
+              case "background-attachment":       property.information.value = "scroll";                                                                break;
+              case "background-color":            property.information.value = "transparent";                                                           break;
+              case "background-origin":           property.information.value = "padding-box";                                                           break;
+              case "background-position":         property.information.value = "0% 0%";                                                                 break;
+              case "border-image-repeat":         property.information.value = "stretch stretch";                                                       break;
+              case "border-image-slice":          property.information.value = "100%";                                                                  break;
+              case "box-decoration-break":        property.information.value = "slice";                                                                 break;
+              case "box-lines":                   property.information.value = "single";                                                                break;
+              case "box-orient":                  property.information.value = "inline-axis";                                                           break;
+              case "box-pack":                    property.information.value = "start";                                                                 break;
+              case "box-sizing":                  property.information.value = "content-box";                                                           break;
+              case "color-interpolation":         property.information.value = "sRGB";                                                                  break;
+              case "color-interpolation-filters": property.information.value = "linearRGB";                                                             break;
+              case "column-fill":                 property.information.value = "balance";                                                               break;
+              case "container":                   property.information.value = "none/normal";                                                           break;
+              case "display":                     property.information.value = "inline";                                                                break;
+              case "field-sizing":                property.information.value = "fixed";                                                                 break;
+              case "flex":                        property.information.value = "0 1 auto";                                                              break;
+              case "flex-flow":                   property.information.value = "row nowrap";                                                            break;
+              case "flex-wrap":                   property.information.value = "nowrap";                                                                break;
+              case "justify-items":               property.information.value = "legacy";                                                                break;
+              case "lighting-color":              property.information.value = "white";                                                                 break;
+              case "mask-border":                 property.information.value = "none 0/auto/0 stretch alpha";                                           break;
+              case "mask-border-mode":            property.information.value = "alpha";                                                                 break;
+              case "mask-composite":              property.information.value = "end";                                                                   break;
+              case "mask-mode":                   property.information.value = "match-source";                                                          break;
+              case "mask-position":               property.information.value = "center";                                                                break;
+              case "mask-type":                   property.information.value = "luminance";                                                             break;
+              case "object-fit":                  property.information.value = "fill";                                                                  break;
+              case "offset":                      property.information.value = "normal none 0/auto";                                                    break;
+              case "outline":                     property.information.value = "medium none invert";                                                    break; // ->> CSS 2.1 specified `invert` instead
+              case "outline-color":               property.information.value = "currentColor";                                                          break;
+              case "overflow-clip-margin":        property.information.value = "0px";                                                                   break;
+              case "place-items":                 property.information.value = "normal legacy";                                                         break;
+              case "position":                    property.information.value = "static";                                                                break;
+              case "position-try":                property.information.value = "normal none";                                                           break;
+              case "position-visibility":         property.information.value = "anchors-visible";                                                       break;
+              case "scroll-timeline":             property.information.value = "none block";                                                            break;
+              case "text-decoration-style":       property.information.value = "solid";                                                                 break;
+              case "text-emphasis":               property.information.value = "none currentColor";                                                     break;
+              case "text-overflow":               property.information.value = "clip";                                                                  break;
+              case "transform-box":               property.information.value = "view-box";                                                              break;
+              case "transform-origin":            property.information.value = "50% 50% 0";                                                             break;
+              case "transform-style":             property.information.value = "flat";                                                                  break;
+              case "transition-property":         property.information.value = "all";                                                                   break;
+              case "user-modify":                 property.information.value = "read-only";                                                             break;
+              case "view-timeline":               property.information.value = "none block auto";                                                       break;
+              case "writing-mode":                property.information.value = "horizontal-tb"
+            } break;
+
+            case "revert": {
+              property.information.value = "unset";
+              if (strict) return null // ->> CSSOM prohibits user agent and user stylesheets access, so unable to rollback cascade layer from author origin
+            } break;
+
+            case "revert-layer": {
+              void property.unlayered.push(property.information.layer);
+              property.information = null;
+              property.ruleIndex   = 0;
+              reverted             = true
+            } break;
+
+            case "revert-rule":
+              return null; // TODO (Lapys) -> Unsupported
+
+            case "unset": switch (propertyName) {
+              case "accent-color":
+              case "border-collapse": case "border-spacing":
+              case "caption-side":    case "caret-color": case "clip-rule": case "color": case "color-scheme": case "cursor":
+              case "direction":       case "dominant-baseline":
+              case "empty-cells":
+              case "fill":                case "fill-opacity":        case "fill-rule":             case "font": case "font-family": case "font-feature-settings": case "font-kerning": case "font-language-override": case "font-optical-sizing": case "font-palette": case "font-size": case "font-size-adjust": case "font-smooth": case "font-stretch": case "font-style": case "font-synthesis": case "font-synthesis-position": case "font-synthesis-small-caps": case "font-synthesis-style": case "font-synthesis-weight": case "font-variant": case "font-variant-alternates": case "font-variant-caps": case "font-variant-east-asian": case "font-variant-emoji": case "font-variant-ligatures": case "font-variant-numeric": case "font-variant-position": case "font-variation-settings": case "font-weight": case "font-width": case "forced-color-adjust":
+              case "hanging-punctuation": case "hyphenate-character": case "hyphenate-limit-chars": case "hyphens":
+              case "image-orientation":   case "image-rendering":     case "image-resolution":      case "interpolate-size":
+              case "letter-spacing":      case "line-break":          case "line-height":           case "line-height-step": case "list-style": case "list-style-image": case "list-style-position": case "list-style-type":
+              case "marker":              case "marker-end":          case "marker-mid":            case "marker-start":     case "math-depth": case "math-shift":       case "math-style":
+              case "orphans":             case "overflow-wrap":
+              case "paint-order":         case "pointer-events": case "print-color-adjust":
+              case "quotes":
+              case "ruby-align":      case "ruby-overhang":   case "ruby-position":
+              case "scrollbar-color": case "scrollbar-width": case "shape-rendering": case "speak":       case "speak-as":             case "stroke":                   case "stroke-dasharray":       case "stroke-dashoffset": case "stroke-linecap": case "stroke-linejoin":  case "stroke-miterlimit": case "stroke-opacity": case "stroke-width":
+              case "tab-size":        case "text-align":      case "text-align-last": case "text-anchor": case "text-decoration-skip": case "text-decoration-skip-ink": case "text-emphasis-position": case "text-indent":       case "text-justify":   case "text-orientation": case "text-rendering":    case "text-shadow":    case "text-size-adjust": case "text-spacing-trim": case "text-transform": case "text-underline-offset": case "text-underline-position": case "text-wrap": case "text-wrap-mode": case "text-wrap-style":
+              case "visibility":
+              case "white-space": case "white-space-collapse": case "widows": case "word-break": case "word-spacing": case "writing-mode":
+                property.information.value = "inherit";
+                break;
+
+              default:
+                property.information.value = "initial"
+            } break;
+
+            default: {
+              switch (propertyName) /* ->> Account for CSS quirks --> getCSSPropertyValue(element, "…") === … */ {
+                case "border-bottom-width": if (property.priors.length === 1 && property.priors[0].name === "border-bottom-style") switch (property.priors.pop().information.value) { case null: case "hidden":         case "none":                                                                                                                                                                property.information.value = "0px" }   else                                                                                                                                             cascaded = cascade(property.element, "border-bottom-style", property, properties);  break;
+                case "border-left-width":   if (property.priors.length === 1 && property.priors[0].name === "border-left-style")   switch (property.priors.pop().information.value) { case null: case "hidden":         case "none":                                                                                                                                                                property.information.value = "0px" }   else                                                                                                                                             cascaded = cascade(property.element, "border-left-style",   property, properties);  break;
+                case "border-right-width":  if (property.priors.length === 1 && property.priors[0].name === "border-right-style")  switch (property.priors.pop().information.value) { case null: case "hidden":         case "none":                                                                                                                                                                property.information.value = "0px" }   else                                                                                                                                             cascaded = cascade(property.element, "border-right-style",  property, properties);  break;
+                case "border-top-width":    if (property.priors.length === 1 && property.priors[0].name === "border-top-style")    switch (property.priors.pop().information.value) { case null: case "hidden":         case "none":                                                                                                                                                                property.information.value = "0px" }   else                                                                                                                                             cascaded = cascade(property.element, "border-top-style",    property, properties);  break;
+                case "border-width":        if (property.priors.length === 1 && property.priors[0].name === "border-style")        switch (property.priors.pop().information.value) { case null: case "hidden":         case "none":                                                                                                                                                                property.information.value = "0px" }   else                                                                                                                                             cascaded = cascade(property.element, "border-style",        property, properties);  break;
+                case "column-rule-width":   if (property.priors.length === 1 && property.priors[0].name === "column-rule-style")   switch (property.priors.pop().information.value) { case null:                        case "none":                                                                                                                                                                property.information.value = "0px" }   else                                                                                                                                             cascaded = cascade(property.element, "column-rule-style",   property, properties);  break;
+                case "outline-width":       if (property.priors.length === 1 && property.priors[0].name === "outline-style")       switch (property.priors.pop().information.value) { case null:                        case "none":                                                                                                                                                                property.information.value = "0px" }   else                                                                                                                                             cascaded = cascade(property.element, "outline-style",       property, properties);  break;
+                case "writing-mode":        if (property.priors.length === 1 && property.priors[0].name === "display")             switch (property.priors.pop().information.value) { case "ruby-annotation-container": case "ruby-base-container": case "table-column": case "table-column-group": case "table-footer-group": case "table-header-group": case "table-row": case "table-row-group": property.information.value = "unset" } else if (0 === property.priors.length || property.priors.length !== 1 || property.priors[0].name !== "writing-mode") { property.deferred = true; cascaded = cascade(property.element, "display",             property, properties) } break
+              }
+
+              if (cascaded) continue; // --> continue cascade
+              property.information.value = property.information.value.replace(/\s*([,\/]+)\s*/g, "$1").replace(/[,\/\s]+$/, "").replace(/,/g, ", ")
+            }
+          }
+
+          if (cascaded)
+          break // --> continue cascade
+        } while (reverted);
+
+        if (cascaded)
+        break; // --> continue cascade
+
+        // ... --> .style = {…}
+        if (null !== property.information)
+        switch (propertyName) {
+          case "font-size": case "line-height":        property.style[propertyName] = canonicalize(property.element, propertyName, property.information.value, NO_AXIS, styleRules, groupingPredicates).replace(CANON_MATCH, CANON_ONLY); break;
+          default: if (propertyName in property.style) property.style[propertyName] = property.information.value
         }
 
-        if (null !== information && resolve)
-        for (var resolved = false; !resolved; )
-        switch (information.value) {
-          case "inherit": {
-            cascaded = false;
-            element  = element.parentNode;
-            resolved = true;
+        // ... ->> Discard additionally cascaded `.names`
+        if (property.names.length > 1) {
+          property.animation.descriptor = NO_DESCRIPTOR;
+          property.animation.next       = null;
+          property.animation.previous   = null;
+          property.animation.properties = [];
+          property.animation.value      = null;
+          property.information          = null;
+          property.ruleIndex            = 0
+        }
 
-            if (null === element || element.nodeType !== /* --> Node.ELEMENT_NODE */ 0x1)
-            return null
-          } break;
+        void property.names.pop()
+      }
 
-          case "initial": switch (property) {
-            case "align-content":         case "align-items": case "animation-direction": case "animation-range-end": case "animation-range-start":
-            case "background-blend-mode": case "box-direction":
-            case "column-gap":            case "container-type": case "content":
-            case "gap":                   case "initial-letter": case "justify-content": case "mix-blend-mode":
-            case "place-content":         case "position-try-order":
-            case "reading-flow":          case "row-gap":
-            case "scroll-snap-stop":
-            case "text-box": case "transition-behavior":
-            case "unicode-bidi":
-              return "normal";
+      if (cascaded)
+      continue; // --> continue cascade
 
-            case "align-self": case "animation-timeline": case "aspect-ratio":
-            case "block-size": case "bottom":             case "break-after": case "break-before": case "break-inside":
-            case "clip":       case "column-count":       case "column-width":
-            case "flex-basis":
-            case "grid-area": case "grid-auto-columns": case "grid-auto-rows": case "grid-column": case "grid-column-end": case "grid-column-start": case "grid-row": case "grid-row-end": case "grid-row-start":
-            case "height":
-            case "inline-size":       case "inset": case "inset-block": case "inset-block-end": case "inset-block-start": case "inset-inline": case "inset-inline-end": case "inset-inline-start": case "isolation":
-            case "justify-self":      case "left":
-            case "mask-border-width": case "mask-size":
-            case "offset-anchor":     case "offset-rotate":    case "overflow-anchor":   case "overscroll-behavior": case "overscroll-behavior-block": case "overscroll-behavior-inline": case "overscroll-behavior-x": case "overscroll-behavior-y":
-            case "page":              case "page-break-after": case "page-break-before": case "page-break-inside":   case "place-self":
-            case "right":
-            case "scroll-behavior": case "scroll-padding-block-end": case "scroll-padding-block-start": case "scroll-padding-bottom": case "scroll-padding-inline-end": case "scroll-padding-inline-start": case "scroll-padding-left": case "scroll-padding-right": case "scroll-padding-top": case "scrollbar-gutter":
-            case "table-layout":    case "text-box-edge":            case "text-decoration-thickness":  case "top":                   case "touch-action":
-            case "user-select":
-            case "view-timeline-inset":
-            case "width":   case "will-change":
-            case "z-index": case "-moz-user-input":
-              return "auto";
+      if      (null !== property.origin) { if (0 === property.names.length) void property.origin.priors.push(property) }
+      else if (null !== property.information) return property.information.value;
 
-            case "alignment-baseline":
-            case "vertical-align":
-              return "baseline";
+      void properties.pop()
+    }
 
-            case "anchor-name":     case "animation":        case "animation-fill-mode":    case "animation-name":           case "appearance":
-            case "backdrop-filter": case "background-image": case "border-block-end-style": case "border-block-start-style": case "border-block-style": case "border-bottom-style":          case "border-image":             case "border-image-source":           case "border-inline-end-style": case "border-inline-start-style": case "border-inline-style": case "border-left-style": case "border-right-style": case "border-style": case "border-top-style": case "box-shadow":
-            case "clear":           case "clip-path":        case "column-rule-style":      case "column-span":              case "contain":            case "contain-intrinsic-block-size": case "contain-intrinsic-height": case "contain-intrinsic-inline-size": case "contain-intrinsic-size":  case "contain-intrinsic-width":   case "container-name":      case "counter-increment": case "counter-reset":      case "counter-set":
-            case 'd':
-            case "filter": case "float":
-            case "grid":   case "grid-template": case "grid-template-areas": case "grid-template-columns": case "grid-template-rows":
-            case "line-clamp":
-            case "margin-trim":         case "mask":            case "mask-border-source": case "mask-image": case "max-block-size": case "max-height": case "max-inline-size": case "max-width":
-            case "offset-path":         case "outline-style":   case "overlay":
-            case "perspective":         case "position-anchor": case "position-area": case "position-try-fallbacks":
-            case "resize":              case "rotate":
-            case "scale":               case "scroll-marker-group":  case "scroll-snap-align":     case "scroll-snap-type":     case "scroll-timeline-name": case "shape-outside":
-            case "text-box-trim":       case "text-combine-upright": case "text-decoration":       case "text-decoration-line": case "text-emphasis-style":  case "timeline-scope": case "transform": case "transition": case "translate":
-            case "vector-effect":       case "view-timeline-name":   case "view-transition-class": case "view-transition-name":
-            case "-webkit-box-reflect": case "-webkit-mask-box-image":
-              return "none";
+    return null
+  }
 
-            case "animation-delay":  case "animation-duration":
-            case "transition-delay": case "transition-duration":
-              return "0s";
+  function getCSSStyleDeclaration(element) {
+    var style            = null;
+    var styleDeclaration = /* --> CSSStyleDeclaration */ {
+      cssText            : "",
+      getPropertyPriority: function(propertyName) { return "" },
+      getPropertyValue   : function(propertyName) { return "" },
+      item               : function(index)        { return ["accent-color", "align-content", "align-items", "align-self", "alignment-baseline", "anchor-name", "anchor-scope", "animation-composition", "animation-delay", "animation-direction", "animation-duration", "animation-fill-mode", "animation-iteration-count", "animation-name", "animation-play-state", "animation-range-end", "animation-range-start", "animation-timeline", "animation-timing-function", "animation-trigger", "app-region", "appearance", "aspect-ratio", "backdrop-filter", "backface-visibility", "background-attachment", "background-blend-mode", "background-clip", "background-color", "background-image", "background-origin", "background-position", "background-repeat", "background-size", "baseline-shift", "baseline-source", "block-size", "border-block-end-color", "border-block-end-style", "border-block-end-width", "border-block-start-color", "border-block-start-style", "border-block-start-width", "border-bottom-color", "border-bottom-left-radius", "border-bottom-right-radius", "border-bottom-style", "border-bottom-width", "border-collapse", "border-end-end-radius", "border-end-start-radius", "border-image-outset", "border-image-repeat", "border-image-slice", "border-image-source", "border-image-width", "border-inline-end-color", "border-inline-end-style", "border-inline-end-width", "border-inline-start-color", "border-inline-start-style", "border-inline-start-width", "border-left-color", "border-left-style", "border-left-width", "border-right-color", "border-right-style", "border-right-width", "border-shape", "border-start-end-radius", "border-start-start-radius", "border-top-color", "border-top-left-radius", "border-top-right-radius", "border-top-style", "border-top-width", "bottom", "box-decoration-break", "box-shadow", "box-sizing", "break-after", "break-before", "break-inside", "buffered-rendering", "caption-side", "caret-animation", "caret-color", "caret-shape", "clear", "clip", "clip-path", "clip-rule", "color", "color-interpolation", "color-interpolation-filters", "color-rendering", "color-scheme", "column-count", "column-fill", "column-gap", "column-height", "column-rule-color", "column-rule-style", "column-rule-width", "column-span", "column-width", "column-wrap", "contain", "contain-intrinsic-block-size", "contain-intrinsic-height", "contain-intrinsic-inline-size", "contain-intrinsic-size", "contain-intrinsic-width", "container-name", "container-type", "content", "content-visibility", "corner-bottom-left-shape", "corner-bottom-right-shape", "corner-end-end-shape", "corner-end-start-shape", "corner-start-end-shape", "corner-start-start-shape", "corner-top-left-shape", "corner-top-right-shape", "counter-increment", "counter-reset", "counter-set", "cursor", "cx", "cy", "d", "direction", "display", "dominant-baseline", "dynamic-range-limit", "empty-cells", "field-sizing", "fill", "fill-opacity", "fill-rule", "filter", "flex-basis", "flex-direction", "flex-grow", "flex-shrink", "flex-wrap", "float", "flood-color", "flood-opacity", "font-family", "font-feature-settings", "font-kerning", "font-language-override", "font-optical-sizing", "font-palette", "font-size", "font-size-adjust", "font-stretch", "font-style", "font-synthesis-small-caps", "font-synthesis-style", "font-synthesis-weight", "font-variant", "font-variant-alternates", "font-variant-caps", "font-variant-east-asian", "font-variant-emoji", "font-variant-ligatures", "font-variant-numeric", "font-variant-position", "font-variation-settings", "font-weight", "forced-color-adjust", "grid-auto-columns", "grid-auto-flow", "grid-auto-rows", "grid-column-end", "grid-column-start", "grid-row-end", "grid-row-start", "grid-template-areas", "grid-template-columns", "grid-template-rows", "height", "hyphenate-character", "hyphenate-limit-chars", "hyphens", "image-orientation", "image-rendering", "initial-letter", "inline-size", "inset-block-end", "inset-block-start", "inset-inline-end", "inset-inline-start", "interactivity", "interest-delay-end", "interest-delay-start", "interpolate-size", "isolation", "justify-content", "justify-items", "justify-self", "left", "letter-spacing", "lighting-color", "line-break", "line-height", "list-style-image", "list-style-position", "list-style-type", "margin-block-end", "margin-block-start", "margin-bottom", "margin-inline-end", "margin-inline-start", "margin-left", "margin-right", "margin-top", "marker-end", "marker-mid", "marker-start", "mask-clip", "mask-composite", "mask-image", "mask-mode", "mask-origin", "mask-position", "mask-repeat", "mask-size", "mask-type", "math-depth", "math-shift", "math-style", "max-block-size", "max-height", "max-inline-size", "max-width", "min-block-size", "min-height", "min-inline-size", "min-width", "mix-blend-mode", "object-fit", "object-position", "object-view-box", "offset-anchor", "offset-distance", "offset-path", "offset-position", "offset-rotate", "opacity", "order", "orphans", "outline-color", "outline-offset", "outline-style", "outline-width", "overflow-anchor", "overflow-block", "overflow-clip-margin", "overflow-inline", "overflow-wrap", "overflow-x", "overflow-y", "overlay", "overscroll-behavior-block", "overscroll-behavior-inline", "overscroll-behavior-x", "overscroll-behavior-y", "padding-block-end", "padding-block-start", "padding-bottom", "padding-inline-end", "padding-inline-start", "padding-left", "padding-right", "padding-top", "paint-order", "perspective", "perspective-origin", "pointer-events", "position", "position-anchor", "position-area", "position-try-fallbacks", "position-try-order", "position-visibility", "print-color-adjust", "quotes", "r", "reading-flow", "reading-order", "resize", "right", "rotate", "row-gap", "ruby-align", "ruby-position", "rx", "ry", "scale", "scroll-behavior", "scroll-initial-target", "scroll-margin-block-end", "scroll-margin-block-start", "scroll-margin-bottom", "scroll-margin-inline-end", "scroll-margin-inline-start", "scroll-margin-left", "scroll-margin-right", "scroll-margin-top", "scroll-marker-group", "scroll-padding-block-end", "scroll-padding-block-start", "scroll-padding-bottom", "scroll-padding-inline-end", "scroll-padding-inline-start", "scroll-padding-left", "scroll-padding-right", "scroll-padding-top", "scroll-snap-align", "scroll-snap-stop", "scroll-snap-type", "scroll-target-group", "scroll-timeline-axis", "scroll-timeline-name", "scrollbar-color", "scrollbar-gutter", "scrollbar-width", "shape-image-threshold", "shape-margin", "shape-outside", "shape-rendering", "speak", "stop-color", "stop-opacity", "stroke", "stroke-dasharray", "stroke-dashoffset", "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity", "stroke-width", "tab-size", "table-layout", "text-align", "text-align-last", "text-anchor", "text-autospace", "text-box-edge", "text-box-trim", "text-combine-upright", "text-decoration", "text-decoration-color", "text-decoration-line", "text-decoration-skip-ink", "text-decoration-style", "text-decoration-thickness", "text-emphasis-color", "text-emphasis-position", "text-emphasis-style", "text-indent", "text-justify", "text-orientation", "text-overflow", "text-rendering", "text-shadow", "text-size-adjust", "text-spacing-trim", "text-transform", "text-underline-offset", "text-underline-position", "text-wrap-mode", "text-wrap-style", "timeline-scope", "timeline-trigger-activation-range-end", "timeline-trigger-activation-range-start", "timeline-trigger-active-range-end", "timeline-trigger-active-range-start", "timeline-trigger-name", "timeline-trigger-source", "top", "touch-action", "transform", "transform-box", "transform-origin", "transform-style", "transition-behavior", "transition-delay", "transition-duration", "transition-property", "transition-timing-function", "translate", "trigger-scope", "unicode-bidi", "user-select", "vector-effect", "vertical-align", "view-timeline-axis", "view-timeline-inset", "view-timeline-name", "view-transition-class", "view-transition-group", "view-transition-name", "view-transition-scope", "visibility", "white-space-collapse", "widows", "width", "will-change", "word-break", "word-spacing", "writing-mode", "x", "y", "z-index", "zoom", "-webkit-border-horizontal-spacing", "-webkit-border-image", "-webkit-border-vertical-spacing", "-webkit-box-align", "-webkit-box-decoration-break", "-webkit-box-direction", "-webkit-box-flex", "-webkit-box-ordinal-group", "-webkit-box-orient", "-webkit-box-pack", "-webkit-box-reflect", "-webkit-font-smoothing", "-webkit-line-break", "-webkit-line-clamp", "-webkit-locale", "-webkit-mask-box-image", "-webkit-mask-box-image-outset", "-webkit-mask-box-image-repeat", "-webkit-mask-box-image-slice", "-webkit-mask-box-image-source", "-webkit-mask-box-image-width", "-webkit-mask-position-x", "-webkit-mask-position-y", "-webkit-rtl-ordering", "-webkit-ruby-position", "-webkit-tap-highlight-color", "-webkit-text-combine", "-webkit-text-decorations-in-effect", "-webkit-text-fill-color", "-webkit-text-orientation", "-webkit-text-security", "-webkit-text-stroke-color", "-webkit-text-stroke-width", "-webkit-user-drag", "-webkit-user-modify", "-webkit-writing-mode"][index >>> 0] || "" },
+      length             : 456,
+      parentRule         : null,
+      removeProperty     : function() { throw new Error("Can’t remove property `accent-color` from computed style") },     // --> DOMException | NoModificationAllowedError
+      setProperty        : function() { throw new Error("Can’t set value for property `accent-color` in computed style") } // --> DOMException | NoModificationAllowedError
+    };
 
-            case "animation-iteration-count":
-            case "border-image-width": case "box-flex-group": case "box-ordinal-group":
-            case "flex-shrink":        case "flood-opacity":
-            case "opacity":            case "stop-opacity": case "zoom":
-              return '1';
+    // ...
+    if (typeof getComputedStyle === "function")
+      return getComputedStyle(element, null);
 
-            case "animation-timing-function":
-            case "transition-timing-function":
-              return "ease";
+    else if (typeof element.computedStyleMap === "function") {
+      style                             = element.computedStyleMap();
+      styleDeclaration.getPropertyValue = function(propertyName) { return getStyleMapPropertyValue(style, propertyName) }
+    }
 
-            case "backface-visibility": case "content-visibility":
-            case "overflow":            case "overflow-block": case "overflow-inline": case "overflow-x": case "overflow-y":
-              return "visible";
+    else if (typeof element.currentStyle === "object") {
+      style                             = element.currentStyle;
+      styleDeclaration.getPropertyValue = function(propertyName) {
+        var value = getStyleDeclarationPropertyValue(style, propertyName); // ->> Internet Explorer-specific and non-canonicalized
 
-            case "background-clip":
-            case "mask-clip": case "mask-origin":
-              return "border-box";
+        // ...
+        for (var shorthandIndex = STYLE_SHORTHANDS.length; shorthandIndex --> 0 && value === ""; )
+        if (STYLE_SHORTHANDS[shorthandIndex].name === propertyName) {
+          for (var composition = STYLE_SHORTHANDS[shorthandIndex].composition, shorthandIndex = composition.length; shorthandIndex--; )
+          value = getStyleDeclarationPropertyValue(style, composition[shorthandIndex].value) + composition[shorthandIndex].delimiter + value
+        }
 
-            case "background-position-x":   case "background-position-y":
-            case "-webkit-mask-position-x": case "-webkit-mask-position-y":
-              return "0%";
+        return value
+      }
+    }
 
-            case "background-repeat":     case "mask-repeat":
-            case "-webkit-mask-repeat-x": case "-webkit-mask-repeat-y":
-              return "repeat";
+    else {
+      styleDeclaration.getPropertyValue = function(propertyName) { return getCSSPropertyValue(element, propertyName, STYLE_RULES, STYLE_GROUPING_PREDICATES, false) };
+      styleDeclaration.length           = 0 // ->> Signifies this function does not internally use computed style(s)
+    }
 
-            case "border": case "border-block": case "border-block-end": case "border-block-start": case "border-bottom": case "border-inline": case "border-inline-end": case "border-inline-start": case "border-left": case "border-right": case "border-top":
-            case "column-rule":
-              return "medium none currentcolor";
+    // ...
+    return styleDeclaration
+  }
 
-            case "border-block-color": case "border-block-end-color": case "border-block-start-color": case "border-bottom-color": case "border-color": case "border-inline-color": case "border-inline-end-color": case "border-inline-start-color": case "border-left-color": case "border-right-color": case "border-top-color":
-            case "column-rule-color":
-            case "text-decoration-color": case "text-emphasis-color":
-              return "currentcolor";
+  function getCSSStyleRules(document, strict /* = false */) {
+    var layers = [""]; // --> String[]
+    var rules  = [];   // --> {container: {name: String, query: String}*, layer: String, layers: String[], order: Number(Uint32), scope: {end: String, start: String}*, value: CSSStyleRule}[]
+    var sheets = [];   // --> {containers: {name: String, query: String}[], layer: String, rules: CSSRuleList | DOMCSSRuleList, scopes: {end: String, start: String}[]}[]
 
-            case "border-block-end-width": case "border-block-start-width": case "border-block-width": case "border-bottom-width": case "border-inline-end-width": case "border-inline-start-width": case "border-inline-width": case "border-left-width": case "border-right-width": case "border-top-width": case "border-width":
-            case "column-rule-width":      case "outline-width":
-              return "medium";
+    // ...
+    if (typeof getMatchedCSSRules === "function")
+      sheets = [{containers: [], layer: layers[0], rules: getMatchedCSSRules(element, ""), scopes: []}]; // ->> WebKit-specific and non-canonicalized; Gecko-polyfill here: `mozGetMatchedCSSRules(…)` @ `https://gist.github.com/ydaniv/3033012`
 
-            case "border-bottom-left-radius": case "border-bottom-right-radius": case "border-end-end-radius": case "border-end-start-radius": case "border-image-outset": case "border-start-end-radius": case "border-start-start-radius": case "border-top-left-radius": case "border-top-right-radius": case "box-flex":
-            case "cx":                        case "cy":
-            case "flex-grow":
-            case "margin":          case "margin-block":            case "margin-block-end": case "margin-block-start": case "margin-bottom": case "margin-inline": case "margin-inline-end": case "margin-inline-start": case "margin-left": case "margin-right": case "margin-top": case "mask-border-outset": case "mask-border-slice": case "min-block-size": case "min-height": case "min-inline-size": case "min-width":
-            case "offset-distance": case "order":                   case "outline-offset":
-            case "padding":         case "padding-block":           case "padding-block-end":         case "padding-block-start": case "padding-bottom": case "padding-inline": case "padding-inline-end": case "padding-inline-start": case "padding-left": case "padding-right": case "padding-top":
-            case 'r':               case "reading-order":           case "rx":                        case "ry":
-            case "scroll-margin":   case "scroll-margin-block-end": case "scroll-margin-block-start": case "scroll-margin-bottom": case "scroll-margin-inline-end": case "scroll-margin-inline-start": case "scroll-margin-left": case "scroll-margin-right": case "scroll-margin-top": case "shape-image-threshold": case "shape-margin":
-            case 'x':               case 'y':                       case "-moz-force-broken-image-icon":
-              return '0';
+    else {
+      if (typeof document.adoptedStyleSheets === "object") // --> … instanceof CSSStyleSheet[]
+      for (var index = document.adoptedStyleSheets.length; index; ) {
+        var sheet = document.adoptedStyleSheets[--index];
 
-            case "background-size":      case "columns":
-            case "scroll-padding-block": case "scroll-padding-inline":
-              return "auto auto";
+        if (typeof rule.cssRules === "object") { void sheets.push({containers: [], layer: layers[0], rules: sheet.cssRules, scopes: []}); continue }
+        if (typeof rule.rules    === "object") { void sheets.push({containers: [], layer: layers[0], rules: sheet.rules,    scopes: []}); continue }
+      }
 
-            case "border-radius":        case "scroll-padding":       return "0 0 0 0";
-            case "box-align":            case "mask-border-repeat":   return "stretch";
-            case "box-sizing":           case "-moz-float-edge":      return "content-box";
-            case "display":              case "-moz-orient":          return "inline";
-            case "flex-direction":       case "grid-auto-flow":       return "row";
-            case "flood-color":          case "stop-color":           return "black";
-            case "object-position":      case "perspective-origin":   return "50% 50%";
-            case "scroll-margin-block":  case "scroll-margin-inline": return "0 0";
-            case "scroll-timeline-axis": case "view-timeline-axis":   return "block";
+      if (true) // --> … instanceof StyleSheetList
+      for (var index = document.styleSheets.length; index; ) {
+        var sheet = document.styleSheets.item(--index);
 
-            case "all":                         return "initial";
-            case "animation-composition":       return "replace";
-            case "animation-play-state":        return "running";
-            case "animation-range":             return "normal normal";
-            case "background":                  return "none 0% 0% / auto auto repeat scroll border-box padding-box transparent";
-            case "background-attachment":       return "scroll";
-            case "background-color":            return "transparent";
-            case "background-origin":           return "padding-box";
-            case "background-position":         return "0% 0%";
-            case "border-image-repeat":         return "stretch stretch";
-            case "border-image-slice":          return "100%";
-            case "box-decoration-break":        return "slice";
-            case "box-lines":                   return "single";
-            case "box-orient":                  return "inline-axis";
-            case "box-pack":                    return "start";
-            case "color-interpolation":         return "sRGB";
-            case "color-interpolation-filters": return "linearRGB";
-            case "column-fill":                 return "balance";
-            case "container":                   return "none/normal";
-            case "field-sizing":                return "fixed";
-            case "flex":                        return "0 1 auto";
-            case "flex-flow":                   return "row nowrap";
-            case "flex-wrap":                   return "nowrap";
-            case "justify-items":               return "legacy";
-            case "lighting-color":              return "white";
-            case "mask-border":                 return "none 0/auto/0 stretch alpha";
-            case "mask-border-mode":            return "alpha";
-            case "mask-composite":              return "end";
-            case "mask-mode":                   return "match-source";
-            case "mask-position":               return "center";
-            case "mask-type":                   return "luminance";
-            case "object-fit":                  return "fill";
-            case "offset":                      return "normal none 0/auto";
-            case "outline":                     return "medium none invert,currentcolor";
-            case "outline-color":               return "invert";
-            case "overflow-clip-margin":        return "0px";
-            case "place-items":                 return "normal legacy";
-            case "position":                    return "static";
-            case "position-try":                return "normal none";
-            case "position-visibility":         return "anchors-visible";
-            case "scroll-timeline":             return "none block";
-            case "text-decoration-style":       return "solid";
-            case "text-emphasis":               return "none currentcolor";
-            case "text-overflow":               return "clip";
-            case "transform-box":               return "view-box";
-            case "transform-origin":            return "50% 50% 0";
-            case "transform-style":             return "flat";
-            case "transition-property":         return "all";
-            case "user-modify":                 return "read-only";
-            case "view-timeline":               return "none block auto";
-            case "-webkit-border-before":       return "medium none canvastext";
-            case "-webkit-mask-composite":      return "source-over";
+        try { void sheets.push({containers: [], layer: layers[0], rules: sheet.cssRules, scopes: []}) } catch (error) { // --> SecurityError
+        try { void sheets.push({containers: [], layer: layers[0], rules: sheet.rules,    scopes: []}) } catch (error) { /* --> SecurityError */ if (strict) return null } }
+      }
+    }
 
-            default:
-              return null
-          } break;
+    for (var count = sheets.length, order = 0; count; count = sheets.length)
+    for (var index = 0, sheet = sheets.pop(), length = sheet.rules.length; index !== length; ++index) {
+      var rule = sheet.rules[index];
 
-          case "revert":       information.value = "unset"; if (strict) return null;                      break; // ->> CSSOM prohibits user agent and user stylesheets access, so unable to rollback cascade layer from author origin
-          case "revert-layer": cascaded = false; resolved = true; void unlayered.push(information.layer); break;
+      // ...
+      if (typeof CSSContainerRule === "function" && rule instanceof CSSContainerRule && typeof rule.cssRules === "object" && typeof rule.containerName === "string" && typeof rule.containerQuery === "string") // --> @container … (…) {}
+        void sheets.splice(count, 0, {containers: sheet.containers.concat({name: rule.containerName, query: rule.containerQuery.replace(TRIM_MATCH, TRIM_PASS)}), layer: sheet.layer, rules: rule.cssRules, scopes: sheet.scopes}); // ->> `String .conditionText` or `String .cssText` otherwise
 
-          case "unset": switch (property) {
-            case "accent-color":
-            case "border-collapse": case "border-spacing":
-            case "caption-side":    case "caret-color": case "clip-rule": case "color": case "color-scheme": case "cursor":
-            case "direction":       case "dominant-baseline":
-            case "empty-cells":
-            case "fill":                case "fill-opacity":        case "fill-rule":             case "font": case "font-family": case "font-feature-settings": case "font-kerning": case "font-language-override": case "font-optical-sizing": case "font-palette": case "font-size": case "font-size-adjust": case "font-smooth": case "font-stretch": case "font-style": case "font-synthesis": case "font-synthesis-position": case "font-synthesis-small-caps": case "font-synthesis-style": case "font-synthesis-weight": case "font-variant": case "font-variant-alternates": case "font-variant-caps": case "font-variant-east-asian": case "font-variant-emoji": case "font-variant-ligatures": case "font-variant-numeric": case "font-variant-position": case "font-variation-settings": case "font-weight": case "font-width": case "forced-color-adjust":
-            case "hanging-punctuation": case "hyphenate-character": case "hyphenate-limit-chars": case "hyphens":
-            case "image-orientation":   case "image-rendering":     case "image-resolution":      case "interpolate-size":
-            case "letter-spacing":      case "line-break":          case "line-height":           case "line-height-step": case "list-style": case "list-style-image": case "list-style-position": case "list-style-type":
-            case "marker":              case "marker-end":          case "marker-mid":            case "marker-start":     case "math-depth": case "math-shift":       case "math-style":
-            case "orphans":             case "overflow-wrap":
-            case "paint-order":         case "pointer-events": case "print-color-adjust":
-            case "quotes":
-            case "ruby-align":      case "ruby-overhang":   case "ruby-position":
-            case "scrollbar-color": case "scrollbar-width": case "shape-rendering": case "speak":       case "speak-as":             case "stroke":                   case "stroke-dasharray":       case "stroke-dashoffset": case "stroke-linecap": case "stroke-linejoin":  case "stroke-miterlimit": case "stroke-opacity": case "stroke-width":
-            case "tab-size":        case "text-align":      case "text-align-last": case "text-anchor": case "text-decoration-skip": case "text-decoration-skip-ink": case "text-emphasis-position": case "text-indent":       case "text-justify":   case "text-orientation": case "text-rendering":    case "text-shadow":    case "text-size-adjust": case "text-spacing-trim": case "text-transform": case "text-underline-offset": case "text-underline-position": case "text-wrap": case "text-wrap-mode": case "text-wrap-style":
-            case "visibility":
-            case "white-space":                 case "white-space-collapse":    case "widows":                case "word-break":          case "word-spacing":              case "writing-mode":
-            case "-webkit-tap-highlight-color": case "-webkit-text-fill-color": case "-webkit-text-security": case "-webkit-text-stroke": case "-webkit-text-stroke-color": case "-webkit-text-stroke-width": case "-webkit-touch-callout":
-              information.value = "inherit";
-              break;
+      else if (typeof CSSLayerBlockRule === "function" && rule instanceof CSSLayerBlockRule && typeof rule.cssRules === "object" && typeof rule.name === "string") /* --> @layer … {} */ {
+        var layer      = rule.name !== "" ? (sheet.layer !== "" ? sheet.layer + '.' : "") + rule.name : sheet.layer;
+        var layerIndex = layers.length;
 
-            default:
-              information.value = "initial"
-          } break;
+        // ...
+        while (layerIndex--) { if (layer === layers[layerIndex]) break }
+        if (layerIndex === -1) { for (layerIndex = 0; ; ++layerIndex) if (layers[layerIndex] === sheet.layer) { void layers.splice(layerIndex, 0, layer); break } }
 
-          default:
-            resolved = true
+        void sheets.splice(count, 0, {containers: sheet.containers, layer: layer, rules: rule.cssRules, scopes: sheet.scopes})
+      }
+
+      else if (typeof CSSLayerStatementRule === "function" && rule instanceof CSSLayerStatementRule && typeof rule.nameList === "object") /* --> @layer … */ {
+        for (var nameIndex = 0; nameIndex !== rule.nameList.length; ++nameIndex)
+        for (var layerIndex = layers.length; ; ) {
+          --layerIndex;
+
+          if (layerIndex === -1) { void layers.push(rule.nameList[nameIndex]); break }
+          if (layers[layerIndex] === rule.nameList[nameIndex]) break
         }
       }
 
-      return null === information || information.value === "" ? null : information.value
+      else if (typeof CSSScopeRule === "function" && rule instanceof CSSScopeRule && typeof rule.cssRules === "object" && (typeof rule.end === "object" || typeof rule.end === "string") && (typeof rule.start === "object" || typeof rule.start === "string"))
+        void sheets.splice(count, 0, {containers: sheet.containers, layer: sheet.layer, rules: rule.cssRules, scopes: sheet.scopes.concat({end: rule.end, start: rule.start})});
+
+      else switch (typeof rule.type !== "number" ? /* --> CSSRule.UNKNOWN_RULE */ 0x00 : rule.type) {
+        // --> CSSRule.STYLE_RULE === CSSStyleRule::type
+        case 0x01: void rules.push({containers: sheet.containers, layer: sheet.layer, layers: layers, order: order++, scopes: sheet.scopes, value: rule}); break;
+
+        // --> CSSRule.IMPORT_RULE === CSSImportRule::type --> @import
+        case 0x03: if (typeof rule.sheet === "object") {
+          try { void sheets.splice(count, 0, {containers: sheet.containers, layer: sheet.layer, rules: rule.sheet.cssRules, scopes: sheet.scopes}) } catch (error) { // --> SecurityError
+          try { void sheets.splice(count, 0, {containers: sheet.containers, layer: sheet.layer, rules: rule.sheet.rules,    scopes: sheet.scopes}) } catch (error) { /* --> SecurityError */ if (strict) return null } }
+        } break;
+
+        // --> CSSRule.MEDIA_RULE === CSSMediaRule::type --> @media
+        case 0x04: if (typeof rule.cssRules === "object" && typeof matchMedia === "function") {
+          if (matchMedia(typeof rule.media === "object" && typeof rule.media.mediaText === "string" ? rule.media.mediaText : typeof rule.conditionText === "string" ? rule.conditionText : "all"))
+          void sheets.splice(count, 0, {containers: sheet.containers, layer: sheet.layer, rules: rule.cssRules, scopes: sheet.scopes})
+        } break;
+
+        case 0x07: continue; // --> CSSRule.KEYFRAMES_RULE === CSSKeyframesRule::type --- CODE (Lapys) -> @keyframes
+        case 0x08: continue; // --> CSSRule.KEYFRAME_RULE  === CSSKeyframeRule ::type --- WARN (Lapys) -> Solely implemented via `Animation[] Document|Element::getAnimations(…)`, otherwise non-trivial to evaluate active animations (and transitions — including ones from `Animation Element::animate(…)`) in composite order
+
+        // --> CSSRule.SUPPORTS_RULE === CSSSupportsRule::type --> @supports
+        case 0x0C: if (typeof rule.cssRules === "object" && typeof CSS === "object" && typeof CSS.supports === "function") try {
+          if (CSS.supports(typeof rule.conditionText === "string" ? rule.conditionText : "display: block"))
+          void sheets.splice(count, 0, {containers: sheet.containers, layer: sheet.layer, rules: rule.cssRules, scopes: sheet.scopes})
+        } catch (error) { if (strict) return null } break;
+
+        case 0x05: // --> CSSRule.FONT_FACE_RULE           === CSSFontFaceRule         ::type                                                              --> @font-face
+        case 0x06: // --> CSSRule.PAGE_RULE                === CSSPageRule             ::type                                                              --> @page
+        case 0x09: // --> CSSRule.MARGIN_RULE              === CSSMarginRule           ::type                                                              --> …
+        case 0x0A: // --> CSSRule.NAMESPACE_RULE           === CSSNamespaceRule        ::type                                                              --> @namespace
+        case 0x0B: // --> CSSRule.COUNTER_STYLE_RULE       === CSSCounterStyleRule     ::type                                                              --> @counter-style
+        case 0x0E: // --> CSSRule.FONT_FEATURE_VALUES_RULE === CSSFontFeatureValuesRule::type                                                              --> @font-feature-values
+        default:   // --> CSSRule.CHARSET_RULE {0x02} | CSSRule.DOCUMENT_RULE {0x0D} | CSSRule.REGION_STYLE_RULE {0x10} | CSSRule.VIEWPORT_RULE {0x0E} | … --> @container, @document, …
+          if (typeof rule.cssRules === "object")
+          void sheets.splice(count, 0, {containers: sheet.containers, layer: sheet.layer, rules: rule.cssRules, scopes: sheet.scopes})
+      }
     }
 
-    // bgcolor align hidden border color height width valign cellpadding cellspacing <input size=N>width:Nch <textarea cols=M rows=N>height:Nch,width:Mch
-    // size=1 font === 3/5%
-    // size=2 font === 8/9%
-    // size=3 font === 1/1%
-    // size=4 font === 6/5%
-    // size=5 font === 3/2%
-    // size=6 font === 2/1%
-    // size=7 font === 3/1%
-    // size=+n size=-n multiplies parent chain
-    return value
+    return rules
   }
 
-  function getLazyElements  () { return getComponentsByAttributeName(Lazy  .ATTRIBUTE_NAME, document.images) }
-  function getPortalElements() { return getComponentsByAttributeName(Portal.ATTRIBUTE_NAME, document.all) }
+  function getDocumentBounds(/* document */) {
+    var height = typeof innerHeight === "number" && innerHeight === innerHeight >>> 0 ? innerHeight : document.documentElement.clientHeight;
+    var width  = typeof innerWidth  === "number" && innerWidth  === innerWidth  >>> 0 ? innerWidth  : document.documentElement.clientWidth;
 
-  function isVisibleByCSS(element) {
-    // TODO (Lapys)
-    getCSSPropertyValue(element, "content-visibility", true, false) === "hidden"
-    getCSSPropertyValue(element, "display", true, false) === "none"
-    getCSSPropertyValue(element, "visibility", true, false) === "collapse" | "hidden"
-
-    getCSSPropertyValue(element, "filter", true, false) == "opacity(0%)"
-    getCSSPropertyValue(element, "transform", true, false) == "scale(0)" // or translation outside
-    getCSSPropertyValue(element, "opacity", true, false) == 0
-
-    // getCSSPropertyValue(element, "clip-path", true, false) or "clip" == zero-sized shape
-    // getCSSPropertyValue(element, "mask", true, false) or "mask-image" or "mask-*" == zero-sized shape
+    return {bottom: height, left: 0.0, height: height, right: width, top: 0.0, width: width}
   }
 
-  /* ... ->> Background scripts; Opted out of Web Workers à la limited DOM parsing */
-  if      (typeof scheduler           === "object")   void scheduler.postTask (function background() { backgroundProcedure(); void scheduler.yield().then(background) /* --> if (TaskController::aborted) return void TaskController::reason */ }, {delay: 0.0e3, priority: "background" /* --> signal: new TaskController().signal */}); // --> TaskController::abort(…)
-  else if (typeof requestIdleCallback === "function") void requestIdleCallback(function background() { backgroundProcedure(); void requestIdleCallback(background, {timeout: 0.0e3}) }, {timeout: 0.0e3}); // --> cancelIdleCallback(…)
-  else                                                backgroundProcedures.main = backgroundProcedure;
+  function getElementAncestorByTagName(element, name) /* ->> `element` will also match its own tag `name` */ {
+    for (var name = name.toUpperCase(), node = element; null !== node && node.nodeType === 0x01; node = node.parentNode) {
+      if (name === node.tagName)
+      return node
+    }
 
-  // ... ->> Main scripts
-  void loopProcedure(function loop() {
-    backgroundProcedures.main();
-    return void loopCallback(loop)
-  })
+    return null
+  }
+
+  function getElementBounds(element) /* TODO (Lapys) -> Ignores CSS transform translations */ {
+    if (typeof element.getBoundingClientRect !== "function") {
+      var left = 0.00;
+      var top  = 0.00;
+
+      // ...
+      for (var node = element; null !== node; node = node.offsetParent) {
+        left += node.offsetLeft;
+        top  += node.offsetTop
+      }
+
+      for (var node = element.parentNode; null !== node && node.nodeType === /* --> Node.ELEMENT_NODE */ 0x01; node = node.parentNode) {
+        left -= node.scrollLeft || 0.00;
+        top  -= node.scrollTop  || 0.00
+      }
+
+      // ...
+      return {bottom: top + element.offsetHeight, height: element.offsetHeight, left: left, right: left + element.offsetWidth, top: top, width: element.offsetWidth}
+    }
+
+    return element.getBoundingClientRect()
+  }
+
+  function getElementsByComponent(component) {
+    for (var componentCacheIndex = COMPONENTS_CACHE.length; ; )
+    if (--componentCacheIndex === -1 || COMPONENTS_CACHE[componentCacheIndex].component === component) {
+      var componentCache = componentCacheIndex === -1 ? COMPONENTS_CACHE[COMPONENTS_CACHE.push(createComponentCache(component)) - 1] : COMPONENTS_CACHE[componentCacheIndex];
+      var searched       = null;
+
+      // ...
+      if (0 === componentCache.elements.length) {
+        if (null === searched && typeof document.querySelectorAll === "function") {
+          var escapedAttributeName = component.attributeName; // --> CSS.escape(…)
+
+          // ...
+          if (typeof "".charCodeAt === "function") {
+            var entryCodeUnit = component.attributeName.charCodeAt(0);
+
+            if (entryCodeUnit === 0x002D && component.attributeName.length === 1) escapedAttributeName = "\\-";
+            else for (var escapedAttributeName = "", index = 0, length = component.attributeName.length; index !== length; ++index) {
+              var codeUnit = component.attributeName.charCodeAt(index);
+              escapedAttributeName += (
+                // ->> NUL
+                codeUnit === 0x0000 ? '\uFFFD' :
+
+                // ->> Control characters or leading digits (e.g. `-2`)
+                (
+                  (codeUnit >=  0x0030 && codeUnit <= 0x0039 && entryCodeUnit === 0x002D && index === 1) ||
+                  (codeUnit >=  0x0030 && codeUnit <= 0x0039                             && index === 0) ||
+                  (codeUnit >=  0x0001 && codeUnit <= 0x001F)                                            ||
+                  (codeUnit === 0x007F)
+                ) ? '\\' + codeUnit.toString(16) + ' ' :
+
+                // ->> Identifier characters
+                (
+                  (codeUnit >=  0x0030 && codeUnit <= 0x0039) || // --> [0-9]
+                  (codeUnit >=  0x0041 && codeUnit <= 0x005A) || // --> [A-Z]
+                  (codeUnit >=  0x0061 && codeUnit <= 0x007A) || // --> [a-z]
+                  (codeUnit >=  0x0080) ||                       //
+                  (codeUnit === 0x002D) ||                       // --> [-]
+                  (codeUnit === 0x005F)                          // --> [_]
+                ) ? component.attributeName[index] :
+
+                // ->> …
+                '\\' + component.attributeName[index]
+              )
+            }
+          }
+
+          // ...
+          if (componentCache.cssText === "") {
+            for (var index = component.tagNames.length; index--; )
+            componentCache.cssText += component.tagNames[index] + '[' + escapedAttributeName + ']' + (index ? ", " : "")
+          }
+
+          if (componentCache.cssText !== "")
+          try {
+            searched = document.querySelectorAll(componentCache.cssText);
+
+            for (var index = 0, length = searched.length; index !== length; ++index)
+            void componentCache.elements.push(searched[index]) // --> searched.item(index)
+          } catch (error) { searched = null }                  // --> DOMException | SyntaxError
+        }
+
+        if (null === searched && typeof document.evaluate === "function") {
+          if (componentCache.xpathText === "") {
+            for (var index = component.tagNames.length; index--; )
+            componentCache.xpathText += "//" + component.tagNames[index] + "[@*[name()=\"" + escapedAttributeName + "\"]]" + (index ? " | " : "")
+          }
+
+          if (componentCache.xpathText !== "") {
+            searched = document.evaluate(componentCache.xpathText, document.documentElement, null, /* --> XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE */ 0x6, null);
+
+            for (var index = 0, length = searched.snapshotLength; index !== length; ++index)
+            void componentCache.elements.push(searched.snapshotItem(index))
+          }
+        }
+
+        if (null === searched)
+        for (var index = 0, length = component.tagNames.length; index !== length; ++index) {
+          switch (component.tagNames[index]) {
+            case '*':      searched = document.all;             break;
+            case "applet": searched = document.applets || null; break;
+            case "embed":  searched = document.plugins || null; break;
+            case "form":   searched = document.forms   || null; break;
+            case "img":    searched = document.images  || null; break;
+            case "script": searched = document.scripts || null
+          }
+
+          searched = null === searched ? document.getElementsByTagName(component.tagNames[index]) : searched;
+
+          for (var subindex = 0, sublength = searched.length; subindex !== sublength; ++subindex) {
+            if (null !== searched[index].getAttribute(component.attributeName))
+            void componentCache.elements.push(searched[index]) // --> searched.item(index)
+          }
+        }
+      }
+
+      return componentCache.elements
+    }
+
+    return []
+  }
+
+  function getStyleDeclarationPropertyValue(style, propertyName) {
+    var NO_PROPERTY = /^(constructor|cssFloat|cssText|getPropertyPriority|getPropertyValue|hasOwnProperty|isPrototypeOf|item|length|parentRule|propertyIsEnumerable|removeProperty|setProperty|toLocaleString|toString|valueOf|__defineGetter__|__defineSetter__|__lookupGetter__|__lookupSetter__|__proto__)$/;
+    var value       = null;
+
+    // ...
+    try {
+      if (typeof style.getPropertyValue === "function") value = style.getPropertyValue(propertyName);
+      else /* if (property !== Symbol.iterator && property !== Symbol.toStringTag) */ {
+        if (null === value && !NO_PROPERTY.test(propertyName)      && typeof style[propertyName]      === "string") value = style[propertyName];
+        if (null === value && !NO_PROPERTY.test(alt(propertyName)) && typeof style[alt(propertyName)] === "string") value = style[alt(propertyName)]
+      }
+    } catch (error) { /* --> TypeError */ }
+
+    return value !== "" ? value : null
+  }
+
+  function getStyleMapPropertyValue(styleMap, propertyName) {
+    var value = null;
+
+    // ...
+    try { value = styleMap.get(propertyName) } // ->> `undefined` when `not .has(propertyName)`
+    catch (error) {}                           // --> TypeError
+
+    return null !== value && undefined !== value ? value + "" : null
+  }
+
+  function hasComponent(element, component) {
+    if (element.nodeType === 0x1 && null !== element.getAttribute(component.attributeName))
+    for (var index = component.tagNames; index--; ) {
+      if (element.tagName === component.tagNames[index])
+      return true
+    }
+
+    return false
+  }
+
+  function isCSSVisible(element) /* TODO (Lapys) -> Ignores `clip-path` and `mask` (e.g. `inset(50%)` and `linear-gradient(black 0 0) center / 0 0 no-repeat` up to more complex values respectively) */ {
+    var styleDeclaration = getCSSStyleDeclaration(element);
+    return !(
+      /^\s*(hidden)\s*$/                                  .test(getStyleDeclarationPropertyValue(styleDeclaration, "content-visibility")) ||
+      /^\s*(none)\s*$/                                    .test(getStyleDeclarationPropertyValue(styleDeclaration, "display"))            ||
+      /^\s*[-+]?(?:0+(?:\.0*)?|\.0+)(?:e[-+]?\d+)?%?\s*$/i.test(getStyleDeclarationPropertyValue(styleDeclaration, "opacity"))            ||
+      /^\s*(collapse|hidden)\s*$/                         .test(getStyleDeclarationPropertyValue(styleDeclaration, "visibility"))         ||
+
+      /\b(opacity\(\s*[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?%?\s*\)|progid\s*:\s*DXImageTransform\s*\.\s*Microsoft\s*\.\s*Alpha\s*\((?=[^)]*\bOpacity\s*=\s*[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?%?(?=\s*([,)])))(?![^)]*\bFinishOpacity\s*=\s*(?![-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?%?(?=\s*([,)])))[^,)]*)[^)]*\))/i
+      .test(getStyleDeclarationPropertyValue(styleDeclaration, "filter")) ||
+
+      /\b(matrix\(\s*[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?\s*\)|matrix3d\(\s*[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)\+?0*1(\.0*)?(e[-+]?0+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(\d+(\.\d*)?|\.\d+)(e[-+]?\d+)?\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?\s*(,\s*|\s+)\+?0*1(\.0*)?(e[-+]?0+)?\s*\)|scale\(\s*[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?%?(\s*(,\s*|\s+)[-+]?(0+(\.0*)?|\.0+)(e[-+]?\d+)?%?)?\s*\))/i
+      .test(getStyleDeclarationPropertyValue(styleDeclaration, "transform"))
+    )
+  }
+
+  function isVisible(element) {
+    if (0 !== element.offsetHeight + element.offsetWidth) {
+      var documentBounds = getDocumentBounds(document);
+      var elementBounds  = getElementBounds (element);
+
+      if (documentBounds.height > elementBounds.top && documentBounds.width > elementBounds.left)
+      return true
+    }
+
+    return isCSSVisible(element)
+  }
+
+  function nop() /* --> () => void 0 */ {}
+
+  function poll(target, type, handler, configuration) {
+    var type          = type;
+    var configuration = {
+      "capture": "capture" in (configuration || {}) ? !!configuration["capture"] : false,
+      "once"   : "once"    in (configuration || {}) ? !!configuration["once"]    : false,
+      "passive": "passive" in (configuration || {}) ? !!configuration["passive"] : /^(mousewheel|touchmove|touchstart|wheel)$/.test(type)
+    };
+
+    // ... ->> `AbortSignal configuration["signal"]` unsupported
+    function eventHandler(pollEvent) {
+      var pollEvent = arguments.length ? pollEvent : event;
+
+      // ...
+      if (configuration["once"]) {
+        if      (typeof target.detachEvent === "function") target.detachEvent(type, eventHandler, configuration["capture"] ? {"capture": true} : null);
+        else if (eventHandler === target[type])            target[type] = null
+      }
+
+      if (configuration["passive"] && typeof pollEvent.preventDefault === "function")
+      pollEvent.preventDefault = nop;
+
+      // ...
+      return handler(pollEvent)
+    }
+
+    // ...
+    if (typeof target.addEventListener === "function") {
+      target.addEventListener(type, handler, configuration, configuration["capture"], false);
+      return true
+    }
+
+    type = "on" + type;
+
+    if (typeof target.attachEvent === "function") {
+      var attached = target.attachEvent(type, eventHandler, configuration["capture"] ? {"capture": true} : null);
+      return attached === undefined || !!attached
+    }
+
+    else if (null === target[type]) {
+      target[type] = eventHandler;
+      return eventHandler === target[type]
+    }
+
+    return false
+  }
+
+  function probe(style) {
+    PROBE_ELEMENT.style.cssText = "animation: none !important; display: block !important; transition: none !important; -moz-animation: none !important; -moz-transition: none !important; -ms-animation: none !important; -ms-transition: none !important; -o-animation: none !important; -o-transition: none !important; -webkit-animation: none !important; -webkit-transition: none !important;" + (style ? ' ' + style : "");
+    return PROBE_ELEMENT
+  }
+
+  function reduceComponentCache(element, componentCache) {
+    for (var index = componentCache.elements.length; index--; )
+    if (componentCache.elements[index] === element) {
+      void componentCache.elements.splice(index, 1);
+      break
+    }
+  }
+
+  /* ... */
+  Lazy.main = function lazyMain() {
+    if (null === Lazy.all) return;
+    if (0    === Lazy.all.length) { Lazy.all = getElementsByComponent(Lazy); return }
+
+    if (null === Lazy.awaiting)
+    for (var index = 0, length = Lazy.all.length; index !== length; ++index) {
+      var lazyElement = Lazy.all[index];
+      var lazyInvalid = null === lazyURL || lazyURL === "";
+      var lazyURL     = lazyElement.getAttribute(Lazy.attributeName);
+
+      // ...
+      if (!lazyInvalid) validate: {
+        if      (typeof URL       === "function") try { void new URL      (lazyURL, location.protocol + (/^(file|ftps?|https?|resource|ssh|wss?):/i.test(location.protocol) ? "//" : "") + location.hostname) } catch (error) { lazyInvalid = true } // --> TypeError
+        else if (typeof webkitURL === "function") try { void new webkitURL(lazyURL, location.protocol + (/^(file|ftps?|https?|resource|ssh|wss?):/i.test(location.protocol) ? "//" : "") + location.hostname) } catch (error) { lazyInvalid = true } // --> TypeError
+        else lazyInvalid = !(
+          (/^blob:/i        .test(lazyURL) && /^blob:https?:\/\/(([0-9a-z\-]+\.)+[a-z]{2,}|localhost)(:\d{1,5})?\/[a-f0-9\-]{36}$/i                                  .test(lazyURL)) ||
+          (/^data:/i        .test(lazyURL) && /^data:[0-9a-z\-]+\/[0-9a-z\-+.]+(?:;[0-9a-z\-=]+)*(?:;base64)?,[\S\s]*$/i                                             .test(lazyURL)) ||
+          (/^file:/i        .test(lazyURL) && /^file:\/\/([0-9a-z\-\.]*)(\/[^\s]*)?$/i                                                                               .test(lazyURL)) ||
+          (/^ftps?:/i       .test(lazyURL) && /^ftps?:\/\/(([0-9a-z\-]+\.)+[a-z]{2,}|\d{1,3}(\.\d{1,3}){3})(:\d{1,5})?(\/[^\s]*)?$/i                                 .test(lazyURL)) ||
+          (/^https?:/i      .test(lazyURL) && /^https?:\/\/(([0-9a-z\-]+\.)+[a-z]{2,}|localhost|\d{1,3}(\.\d{1,3}){3})(:\d{1,5})?(\/[^\s]*)?(\?[^\s#]*)?(#[^\s]*)?$/i.test(lazyURL)) ||
+          (/^https?:\/\/\[/i.test(lazyURL) && /^https?:\/\/\[([0-9a-f:]+)\](:\d{1,5})?(\/[^\s]*)?(\?[^\s#]*)?(#[^\s]*)?$/i                                           .test(lazyURL)) ||
+          (/^wss?:/i        .test(lazyURL) && /^wss?:\/\/(([0-9a-z\-]+\.)+[a-z]{2,}|localhost|\d{1,3}(\.\d{1,3}){3})(:\d{1,5})?(\/[^\s]*)?(\?[^\s#]*)?$/i            .test(lazyURL))
+        )
+      }
+
+      if (!lazyInvalid) wait: {
+        if (null !== Lazy.observer)
+        for (var subindex = Lazy.observed.length; ; ) {
+          if (--subindex === -1) { void Lazy.observed.push(lazyElement), Lazy.observer.observe(lazyElement); break }
+          if (Lazy.observed[subindex] === lazyElement) break
+        }
+
+        for (var subindex = Lazy.prompted.length; subindex--; )
+        if (Lazy.prompted[subindex] === lazyElement) {
+          void poll(lazyElement, "error", Lazy.next, {"once": true, "passive": true});
+          void setTimeout(Lazy.next, 3.0e3);
+
+          switch (lazyElement.tagName) {
+            case "audio": case "video": {
+              void poll(lazyElement, "canplay",    Lazy.next, {"once": true, "passive": true});
+              void poll(lazyElement, "loadeddata", Lazy.next, {"once": true, "passive": true});
+
+              lazyElement.src = lazyURL
+            } break;
+
+            case "link":   void poll(lazyElement, "load", Lazy.next, {"once": true, "passive": true}); lazyElement.href = lazyURL; break;
+            case "object": void poll(lazyElement, "load", Lazy.next, {"once": true, "passive": true}); lazyElement.data = lazyURL; break;
+            default:       void poll(lazyElement, "load", Lazy.next, {"once": true, "passive": true}); lazyElement.src  = lazyURL
+          }
+
+          Lazy.awaiting = lazyElement;
+          break
+        }
+      }
+
+      if (null !== Lazy.awaiting || lazyInvalid) {
+        length -= Lazy.all.splice(index--, 1).length;
+        lazyElement.removeAttribute(Lazy.attributeName)
+      }
+
+      if (null !== Lazy.awaiting)
+      break
+    }
+  };
+    Lazy.next = function next() {
+      for (var index = Lazy.observed.length; index--; ) if (Lazy.awaiting === Lazy.observed[index]) { void Lazy.observed.splice(index, 1); break }
+      for (var index = Lazy.prompted.length; index--; ) if (Lazy.awaiting === Lazy.prompted[index]) { void Lazy.prompted.splice(index, 1); break }
+
+      Lazy.awaiting = null
+    };
+
+  Portal.main = function portalMain() /* ->> Static read-only reflection of target element’s DOM tree */ {
+    for (var portals = getElementsByComponent(Portal), length = portals.length, index = 0; index !== length; ++index) {
+      var portalElement       = portals[index]; // --> portals instanceof NodeList ? portals.item(index) : …
+      var portalTargetId      = portalElement.getAttribute(Portal.attributeName);
+      var portalTargetElement = null;
+
+      // ...
+      if (null === portalTargetId || portalTargetId === "")
+      continue;
+
+      portalTargetElement = document.getElementById(portalTargetId);
+
+      if (!isVisible(portalElement) || isVisible(portalTargetElement)) {
+        for (var subindex = Portal.all.length; subindex--; )
+        if (Portal.all[subindex].destination === portalElement && Portal.all[subindex].source === portalTargetElement) {
+          portalTargetElement.removeAttribute(Reflection.attributeName);
+
+          for (var nodes = Portal.all.splice(subindex, 1)[0].nodes, subindex = 0; nodes.length !== subindex; ++subindex)
+          void portalTargetElement.appendChild(nodes[subindex]);
+
+          break
+        }
+      }
+
+      else for (var subindex = Portal.all.length; ; ) {
+        if (--subindex === -1) {
+          portalTargetElement.setAttribute(Reflection.attributeName, "");
+
+          for (var nodes = Portal.all[Portal.all.push({destination: portalElement, nodes: [], source: portalTargetElement}) - 1].nodes; portalTargetElement.childNodes.length;)
+          void nodes.push(portalElement.appendChild(portalTargetElement.childNodes.item(0)));
+
+          break
+        }
+
+        if (Portal.all[subindex].source === portalTargetElement)
+        break
+      }
+    }
+  };
+
+  switch (null !== LOOP_HANDLER) /* ->> `LOOP_PROCEDURE` indefinitely repeats on first invocation */ {
+    case typeof requestAnimationFrame === "function": void requestAnimationFrame(function loop() { LOOP_PROCEDURE(), pend(BACKGROUND_PROCEDURE) }); break; // --> cancelAnimationFrame(…)
+    default:                                          void setInterval          (function loop() { LOOP_PROCEDURE(), pend(BACKGROUND_PROCEDURE) }, 0.0e3)  // --> clearInterval       (…)
+  }
+
+  if (null === COMPONENTS_HANDLER && typeof MutationObserver === "function")
+  try {
+    (new MutationObserver(COMPONENTS_HANDLER = function updateComponentCaches(records, observer) {
+      for (var index = records.length; index--; ) {
+        var record = records[index];
+
+        // ...
+        for (var subindex = 0; subindex !== record.addedNodes.length; ++subindex)
+        for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
+          if (hasComponent(record.addedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex].component))
+          extendComponentCache(record.addedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex])
+        }
+
+        for (var subindex = 0; subindex !== record.removedNodes.length; ++subindex)
+        for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
+          if (hasComponent(record.removedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex].component))
+          reduceComponentCache(record.removedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex])
+        }
+      }
+    })).observe(document.documentElement, {attributeFilter: [], childList: true, subtree: true})
+  } catch (error) /* --> SyntaxError | TypeError */ { COMPONENTS_HANDLER = null }
+
+  if (null === COMPONENTS_HANDLER) {
+    function updateComponentCaches(event) {
+      var element = event.target || event.srcElement;
+
+      // ...
+      COMPONENTS_HANDLER = updateComponentCaches;
+
+      if (typeof event.stopPropagation === "function")
+      event.stopPropagation();
+
+      for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
+        if (hasComponent(element, COMPONENTS_CACHE[componentCacheIndex].component))
+        switch (event.type) {
+          case "DOMNodeInserted": extendComponentCache(element, COMPONENTS_CACHE[componentCacheIndex]); break;
+          case "DOMNodeRemoved":  reduceComponentCache(element, COMPONENTS_CACHE[componentCacheIndex])
+        }
+      }
+    }
+
+    // ...
+    void poll(document, "propertychange", function resetComponentCaches(event) {
+      for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
+        COMPONENTS_CACHE[componentCacheIndex].elements.length = 0;
+        COMPONENTS_CACHE[componentCacheIndex].elements        = getElementsByComponent(COMPONENTS_CACHE[componentCacheIndex].component)
+      }
+    }, {"capture": true});
+
+    if (
+      poll(document, "DOMNodeInserted", updateComponentCaches, {"capture": true, "passive": true}) &&
+      poll(document, "DOMNodeRemoved",  updateComponentCaches, {"capture": true, "passive": true})
+    ) void document.documentElement.removeChild(document.documentElement.appendChild(PROBE_ELEMENT)) // ->> Trigger either Mutation Event
+  }
+
+  if (null === COMPONENTS_HANDLER)
+  void LOOP_PROCEDURES.push(function resetComponentCaches() {
+    for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; )
+    COMPONENTS_CACHE[componentCacheIndex].elements.length = 0 // ->> Keep the cache perma-live and non-stale
+  });
+
+  switch (null !== BACKGROUND_HANDLER) {
+    case typeof Worker              === "function":;                                                                                                                                                                                                                                                                                            // ->> Opted out of Web Workers à la limited DOM parsing
+    case typeof scheduler           === "object":   void scheduler.postTask (function background() { BACKGROUND_PROCEDURE(), void scheduler.yield().then(background) /* --> if (TaskController::aborted) return void TaskController::reason */ }, {delay: 0.0e3, priority: "background" /* --> signal: new TaskController().signal */}); break; // --> TaskController::abort(…)
+    case typeof requestIdleCallback === "function": void requestIdleCallback(function background() { BACKGROUND_PROCEDURE(), void requestIdleCallback(background, {timeout: 0.0e3}) }, {timeout: 0.0e3});                                                                                                                                break; // --> cancelIdleCallback   (…)
+    default:                                        BACKGROUND_PROCEDURES.main = BACKGROUND_PROCEDURE
+  }
+
+  // Just a fun lil’ script — surprisingly lightweight (something more passive like `requestIdleCallback` is preferable)
+  var tilting = false;
+  void poll(document, "mousemove", function(event) {
+    var element = event.target || event.srcElement;
+
+    // ... TODO (Lapys)
+    if (null !== event) {
+      if (document.documentElement !== element)
+      for (var index = Zoom.all.length; ; ) {
+        if (--index === -1) {
+          var attribute = document.createAttribute(Zoom.attributeName);
+
+          // ...
+          attribute.value = "bubble";
+          element.setAttributeNode(attribute); // --> .setAttribute(Zoom.attributeName, "bubble")
+          void Zoom.all.push(element);
+
+          break
+        }
+
+        if (Zoom.all[index] === element)
+        break
+      }
+
+      for (var index = Zoom.all.length; index--; ) {
+        if (Zoom.all[index] !== element)                                        // ->> Possibly limit to certain sizes only, say less than half the page dimensions
+        Zoom.all.splice(index, 1)[0].getAttributeNode(Zoom.attributeName).value = "" // --> .setAttribute(Zoom.attributeName, "")
+      }
+
+      // ...
+      if (!tilting) {
+        var tiltFrame = (typeof requestAnimationFrame === "function" ? requestAnimationFrame : setTimeout)(function() {
+          try {
+            var rx = ((event.clientY / innerHeight) - 0.5) * -1.0;
+            var ry = ((event.clientX / innerWidth)  - 0.5) * +1.0; // figure out the `scale(…)`
+
+            // ...
+            document.documentElement.style.cssText =  document.documentElement.style.cssText.replace(/(transform|transition\-duration|transition\-timing\-function|will\-change)[^;]*(\s*;\s*|$)/g, ".").replace(/;\s*$/g, "") + "; ";
+            document.documentElement.style.cssText += "transform"                  + ": perspective(1200px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) scale(0.98)" + " !important" + "; ";
+            document.documentElement.style.cssText += "transition-duration"        + ": 100ms"                                                                         + " !important" + "; ";
+            document.documentElement.style.cssText += "transition-timing-function" + ": linear"                                                                        + " !important" + "; ";
+            document.documentElement.style.cssText += "will-change"                + ": transform"                                                                     + " !important" + "; ";
+            tilting                                 = false;
+
+            (typeof cancelAnimationFrame === "function" ? cancelAnimationFrame : clearTimeout)(tiltFrame)
+          } catch (error) { /* ->> “Member not found.” */ }
+        });
+        tilting = true
+      }
+    }
+  }, {"passive": true});
+
+  void poll(window, "load", function start(_) /* --> document.readyState === "complete" */ {
+    Lazy.all = [];
+
+    if (typeof IntersectionObserver === "function")
+    try {
+      Lazy.observer = new IntersectionObserver(function promptLazyComponents(entries, observer) {
+        for (var index = entries.length; index--; ) {
+          var entry = entries[index];
+
+          if (entry.isIntersecting) {
+            void Lazy.prompted.push(entry.target);
+            observer.unobserve(entry.target)
+          }
+        }
+      }, {"delay": 0e3, "root": /* --> document */ null, "rootMargin": "40px 40px 40px 40px", "scrollMargin": "0px 0px 0px 0px", "threshold": /* ->> Singular (trigger when intersecting any percentage) */ [Lazy.threshold], "trackVisibility": /* --> isVisible(…) */ false})
+    } catch (error) { /* --> RangeError | SyntaxError */ }
+
+    else {
+      function promptLazyComponents(_) {
+        for (var index = Lazy.all.length; index--; ) {
+          var documentBounds    = getDocumentBounds(document);
+          var lazyElement       = Lazy.all[index];
+          var lazyElementBounds = getElementBounds(lazyElement);
+
+          if (
+            lazyElementBounds.bottom > 0.0                  - +Lazy.threshold &&
+            lazyElementBounds.left   < documentBounds.width + -Lazy.threshold &&
+            lazyElementBounds.right  > 0.0                  - +Lazy.threshold &&
+            lazyElementBounds.top    < documentBounds.height + Lazy.threshold
+          ) for (var subindex = Lazy.prompted.length; ; ) {
+            if (--subindex === -1) { void Lazy.prompted.push(lazyElement); break }
+            if (Lazy.prompted[subindex] === lazyElement) break
+          }
+        }
+      }
+
+      void poll(window, "resize", promptLazyComponents, {"passive": true});
+      void poll(window, "scroll", promptLazyComponents, {"passive": true});
+      void setInterval(promptLazyComponents, 0.1e3)
+    }
+  }, {"once": true, "passive": true})
 }();

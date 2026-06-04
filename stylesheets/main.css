@@ -8,379 +8,440 @@
 
 /* At Rules */
   /* Font Face */
-  @font-face /* CITE (Lapys) -> Belleve Invis (@be5invis) @ `https://typeof.net/Iosevka`, `https://github.com/be5invis` */ {
-    font-family : Iosevka;
-    font-variant: historical-forms;
-    font-weight : 400;
-    src         : local(Iosevka), url(../fonts/iosevka.ttf) format("truetype")
+  @font-face /* ->> Iosevka --- CITE (Lapys) -> Belleve Invis (@be5invis) @ `https://typeof.net/Iosevka`, `https://github.com/be5invis` */ {
+    font-display           : swap;
+    font-family            : Iosevka;
+    font-feature-settings  : "hist" 1;
+    font-variant-alternates: historical-forms;
+    font-weight            : 400;
+    src                    : local(Iosevka), url(../fonts/iosevka.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
+    unicode-range          : U+0020-007E
   }
     @font-face {
-      font-display: swap;
-      font-family : Iosevka;
-      font-weight : 100;
-      src         : local("Iosevka Thin"), url(../fonts/iosevka-thin.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Iosevka;
+      font-weight  : 100;
+      src          : local("Iosevka Thin"), url(../fonts/iosevka-thin.woff2) format("woff2"), url(../fonts/iosevka-thin.woff) format("woff"), url(../fonts/iosevka-thin.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 100;
-      src         : local("Iosevka Thin"), url(../fonts/iosevka-thin-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 100;
+      src          : local("Iosevka Thin"), url(../fonts/iosevka-thin-italic.woff2) format("woff2"), url(../fonts/iosevka-thin-italic.woff) format("woff"), url(../fonts/iosevka-thin-italic.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 100;
-      src         : local("Iosevka Thin Oblique"), url(../fonts/iosevka-thin-oblique.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 100;
+      src          : local("Iosevka Thin Oblique"), url(../fonts/iosevka-thin-oblique.woff2) format("woff2"), url(../fonts/iosevka-thin-oblique.woff) format("woff"), url(../fonts/iosevka-thin-oblique.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Iosevka;
-      font-weight : 200;
-      src         : local("Iosevka Extralight"), url(../fonts/iosevka-extralight.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Iosevka;
+      font-weight  : 200;
+      src          : local("Iosevka Extralight"), url(../fonts/iosevka-extralight.woff2) format("woff2"), url(../fonts/iosevka-extralight.woff) format("woff"), url(../fonts/iosevka-extralight.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 200;
-      src         : local("Iosevka Extralight"), url(../fonts/iosevka-extralight-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 200;
+      src          : local("Iosevka Extralight"), url(../fonts/iosevka-extralight-italic.woff2) format("woff2"), url(../fonts/iosevka-extralight-italic.woff) format("woff"), url(../fonts/iosevka-extralight-italic.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 200;
-      src         : local("Iosevka Extralight Oblique"), url(../fonts/iosevka-extralight-oblique.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 200;
+      src          : local("Iosevka Extralight Oblique"), url(../fonts/iosevka-extralight-oblique.woff2) format("woff2"), url(../fonts/iosevka-extralight-oblique.woff) format("woff"), url(../fonts/iosevka-extralight-oblique.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Iosevka;
-      font-weight : 300;
-      src         : local("Iosevka Light"), url(../fonts/iosevka-light.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Iosevka;
+      font-weight  : 300;
+      src          : local("Iosevka Light"), url(../fonts/iosevka-light.woff2) format("woff2"), url(../fonts/iosevka-light.woff) format("woff"), url(../fonts/iosevka-light.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 300;
-      src         : local("Iosevka Light"), url(../fonts/iosevka-light-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 300;
+      src          : local("Iosevka Light"), url(../fonts/iosevka-light-italic.woff2) format("woff2"), url(../fonts/iosevka-light-italic.woff) format("woff"), url(../fonts/iosevka-light-italic.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 300;
-      src         : local("Iosevka Light Oblique"), url(../fonts/iosevka-light-oblique.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 300;
+      src          : local("Iosevka Light Oblique"), url(../fonts/iosevka-light-oblique.woff2) format("woff2"), url(../fonts/iosevka-light-oblique.woff) format("woff"), url(../fonts/iosevka-light-oblique.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 400;
-      src         : local(Iosevka), url(../fonts/iosevka.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 400;
+      src          : local(Iosevka), url(../fonts/iosevka-italic.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 400;
-      src         : local(Iosevka), url(../fonts/iosevka.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 400;
+      src          : local("Iosevka Oblique"), url(../fonts/iosevka-oblique.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Iosevka;
-      font-weight : 500;
-      src         : local("Iosevka Medium"), url(../fonts/iosevka-medium.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Iosevka;
+      font-weight  : 500;
+      src          : local("Iosevka Medium"), url(../fonts/iosevka-medium.woff2) format("woff2"), url(../fonts/iosevka-medium.woff) format("woff"), url(../fonts/iosevka-medium.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 500;
-      src         : local("Iosevka Medium"), url(../fonts/iosevka-medium-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 500;
+      src          : local("Iosevka Medium"), url(../fonts/iosevka-medium-italic.woff2) format("woff2"), url(../fonts/iosevka-medium-italic.woff) format("woff"), url(../fonts/iosevka-medium-italic.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 500;
-      src         : local("Iosevka Medium Oblique"), url(../fonts/iosevka-medium-oblique.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 500;
+      src          : local("Iosevka Medium Oblique"), url(../fonts/iosevka-medium-oblique.woff2) format("woff2"), url(../fonts/iosevka-medium-oblique.woff) format("woff"), url(../fonts/iosevka-medium-oblique.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Iosevka;
-      font-weight : 600;
-      src         : local("Iosevka Semibold"), url(../fonts/iosevka-semibold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Iosevka;
+      font-weight  : 600;
+      src          : local("Iosevka Semibold"), url(../fonts/iosevka-semibold.woff2) format("woff2"), url(../fonts/iosevka-semibold.woff) format("woff"), url(../fonts/iosevka-semibold.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 600;
-      src         : local("Iosevka Semibold"), url(../fonts/iosevka-semibold-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 600;
+      src          : local("Iosevka Semibold"), url(../fonts/iosevka-semibold-italic.woff2) format("woff2"), url(../fonts/iosevka-semibold-italic.woff) format("woff"), url(../fonts/iosevka-semibold-italic.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 600;
-      src         : local("Iosevka Semibold Oblique"), url(../fonts/iosevka-semibold-oblique.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 600;
+      src          : local("Iosevka Semibold Oblique"), url(../fonts/iosevka-semibold-oblique.woff2) format("woff2"), url(../fonts/iosevka-semibold-oblique.woff) format("woff"), url(../fonts/iosevka-semibold-oblique.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Iosevka;
-      font-weight : 700;
-      src         : local(Iosevka), url(../fonts/iosevka-bold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Iosevka;
+      font-weight  : 700;
+      src          : local(Iosevka), url(../fonts/iosevka-bold.woff2) format("woff2"), url(../fonts/iosevka-bold.woff) format("woff"), url(../fonts/iosevka-bold.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 700;
-      src         : local(Iosevka), url(../fonts/iosevka-bold-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 700;
+      src          : local(Iosevka), url(../fonts/iosevka-bold-italic.woff2) format("woff2"), url(../fonts/iosevka-bold-italic.woff) format("woff"), url(../fonts/iosevka-bold-italic.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 700;
-      src         : local("Iosevka Oblique"), url(../fonts/iosevka-bold-oblique.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 700;
+      src          : local("Iosevka Oblique"), url(../fonts/iosevka-bold-oblique.woff2) format("woff2"), url(../fonts/iosevka-bold-oblique.woff) format("woff"), url(../fonts/iosevka-bold-oblique.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Iosevka;
-      font-weight : 800;
-      src         : local("Iosevka Extrabold"), url(../fonts/iosevka-extrabold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Iosevka;
+      font-weight  : 800;
+      src          : local("Iosevka Extrabold"), url(../fonts/iosevka-extrabold.woff2) format("woff2"), url(../fonts/iosevka-extrabold.woff) format("woff"), url(../fonts/iosevka-extrabold.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 800;
-      src         : local("Iosevka Extrabold"), url(../fonts/iosevka-extrabold-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 800;
+      src          : local("Iosevka Extrabold"), url(../fonts/iosevka-extrabold-italic.woff2) format("woff2"), url(../fonts/iosevka-extrabold-italic.woff) format("woff"), url(../fonts/iosevka-extrabold-italic.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 800;
-      src         : local("Iosevka Extrabold Oblique"), url(../fonts/iosevka-extrabold-oblique.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 800;
+      src          : local("Iosevka Extrabold Oblique"), url(../fonts/iosevka-extrabold-oblique.woff2) format("woff2"), url(../fonts/iosevka-extrabold-oblique.woff) format("woff"), url(../fonts/iosevka-extrabold-oblique.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Iosevka;
-      font-weight : 900;
-      src         : local("Iosevka Heavy"), url(../fonts/iosevka-heavy.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Iosevka;
+      font-weight  : 900;
+      src          : local("Iosevka Heavy"), url(../fonts/iosevka-heavy.woff2) format("woff2"), url(../fonts/iosevka-heavy.woff) format("woff"), url(../fonts/iosevka-heavy.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : italic;
-      font-weight : 900;
-      src         : local("Iosevka Heavy"), url(../fonts/iosevka-heavy-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : italic;
+      font-weight  : 900;
+      src          : local("Iosevka Heavy"), url(../fonts/iosevka-heavy-italic.woff2) format("woff2"), url(../fonts/iosevka-heavy-italic.woff) format("woff"), url(../fonts/iosevka-heavy-italic.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : Iosevka;
-      font-style  : oblique;
-      font-weight : 900;
-      src         : local("Iosevka Heavy Oblique"), url(../fonts/iosevka-heavy-oblique.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : Iosevka;
+      font-style   : oblique;
+      font-weight  : 900;
+      src          : local("Iosevka Heavy Oblique"), url(../fonts/iosevka-heavy-oblique.woff2) format("woff2"), url(../fonts/iosevka-heavy-oblique.woff) format("woff"), url(../fonts/iosevka-heavy-oblique.ttf) format("truetype");
+      unicode-range: U+0020-007E
     }
 
-  @font-face /* CITE (Lapys) -> Underforest Design (Coji Morishita (@coz-m)) @ `https://mplusfonts.github.io` */ {
-    font-family : "M PLUS 1 Code";
-    font-variant: historical-forms;
-    font-weight : 400;
-    src         : local("M PLUS 1 Code"), url(../fonts/m_plus_1_code.ttf) format("truetype")
+  @font-face /* ->> M PLUS 1 Code --- CITE (Lapys) -> Underforest Design (Coji Morishita (@coz-m)) @ `https://mplusfonts.github.io` */ {
+    font-display           : swap;
+    font-family            : "M PLUS 1 Code";
+    font-feature-settings  : "hist" 1;
+    font-variant-alternates: historical-forms;
+    font-weight            : 400;
+    src                    : local("M PLUS 1 Code"), url(../fonts/m_plus_1_code.woff2) format("woff2"), url(../fonts/m_plus_1_code.woff) format("woff"), url(../fonts/m_plus_1_code.ttf) format("truetype");
+    unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
   }
     @font-face {
-      font-display: swap;
-      font-family : "M PLUS 1 Code";
-      font-weight : 100;
-      src         : local("M PLUS 1 Code Thin"), url(../fonts/m_plus_1_code-thin.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "M PLUS 1 Code";
+      font-weight  : 100;
+      src          : local("M PLUS 1 Code Thin"), url(../fonts/m_plus_1_code-thin.woff2) format("woff2"), url(../fonts/m_plus_1_code-thin.woff) format("woff"), url(../fonts/m_plus_1_code-thin.ttf) format("truetype");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
     @font-face {
-      font-display: swap;
-      font-family : "M PLUS 1 Code";
-      font-weight : 200;
-      src         : local("M PLUS 1 Code ExtraLight"), url(../fonts/m_plus_1_code-extralight.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "M PLUS 1 Code";
+      font-weight  : 200;
+      src          : local("M PLUS 1 Code ExtraLight"), url(../fonts/m_plus_1_code-extralight.woff2) format("woff2"), url(../fonts/m_plus_1_code-extralight.woff) format("woff"), url(../fonts/m_plus_1_code-extralight.ttf) format("truetype");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
     @font-face {
-      font-display: swap;
-      font-family : "M PLUS 1 Code";
-      font-weight : 300;
-      src         : local("M PLUS 1 Code Light"), url(../fonts/m_plus_1_code-light.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "M PLUS 1 Code";
+      font-weight  : 300;
+      src          : local("M PLUS 1 Code Light"), url(../fonts/m_plus_1_code-light.woff2) format("woff2"), url(../fonts/m_plus_1_code-light.woff) format("woff"), url(../fonts/m_plus_1_code-light.ttf) format("truetype");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
     @font-face {
-      font-display: swap;
-      font-family : "M PLUS 1 Code";
-      font-weight : 500;
-      src         : local("M PLUS 1 Code Medium"), url(../fonts/m_plus_1_code-medium.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "M PLUS 1 Code";
+      font-weight  : 500;
+      src          : local("M PLUS 1 Code Medium"), url(../fonts/m_plus_1_code-medium.woff2) format("woff2"), url(../fonts/m_plus_1_code-medium.woff) format("woff"), url(../fonts/m_plus_1_code-medium.ttf) format("truetype");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
     @font-face {
-      font-display: swap;
-      font-family : "M PLUS 1 Code";
-      font-weight : 600;
-      src         : local("M PLUS 1 Code SemiBold"), url(../fonts/m_plus_1_code-semibold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "M PLUS 1 Code";
+      font-weight  : 600;
+      src          : local("M PLUS 1 Code SemiBold"), url(../fonts/m_plus_1_code-semibold.woff2) format("woff2"), url(../fonts/m_plus_1_code-semibold.woff) format("woff"), url(../fonts/m_plus_1_code-semibold.ttf) format("truetype");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
     @font-face {
-      font-display: swap;
-      font-family : "M PLUS 1 Code";
-      font-weight : 700 900;
-      src         : local("M PLUS 1 Code"), url(../fonts/m_plus_1_code-bold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "M PLUS 1 Code";
+      font-weight  : 700 900;
+      src          : local("M PLUS 1 Code"), url(../fonts/m_plus_1_code-bold.woff2) format("woff2"), url(../fonts/m_plus_1_code-bold.woff) format("woff"), url(../fonts/m_plus_1_code-bold.ttf) format("truetype");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
-  @font-face /* CITE (Lapys) -> Ascender Corporation (Steve Matteson) @ `https://mattesontypographics.com` */ {
-    font-family : "Open Sans";
-    font-variant: historical-forms;
-    font-weight : 400;
-    src         : local("Open Sans"), url(../fonts/open_sans.ttf) format("truetype")
+  @font-face /* ->> Open Sans --- CITE (Lapys) -> Ascender Corporation (Steve Matteson) @ `https://mattesontypographics.com` */ {
+    font-display           : swap;
+    font-family            : "Open Sans";
+    font-feature-settings  : "hist" 1;
+    font-variant-alternates: historical-forms;
+    font-weight            : 400;
+    src                    : local("Open Sans"), url(../fonts/open_sans.woff2) format("woff2"), url(../fonts/open_sans.woff) format("woff");
+    unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
   }
     @font-face {
-      font-display: swap;
-      font-family : "Open Sans";
-      font-weight : 100 300;
-      src         : local("Open Sans Light"), url(../fonts/open_sans-light.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "Open Sans";
+      font-weight  : 100 300;
+      src          : local("Open Sans Light"), url(../fonts/open_sans-light.woff2) format("woff2"), url(../fonts/open_sans-light.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : "Open Sans";
-      font-style  : italic;
-      font-weight : 100 300;
-      src         : local("Open Sans Light"), url(../fonts/open_sans-light-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : "Open Sans";
+      font-style   : italic;
+      font-weight  : 100 300;
+      src          : local("Open Sans Light"), url(../fonts/open_sans-light-italic.woff2) format("woff2"), url(../fonts/open_sans-light-italic.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : "Open Sans";
-      font-style  : italic;
-      font-weight : 400;
-      src         : local("Open Sans"), url(../fonts/open_sans-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : "Open Sans";
+      font-style   : italic;
+      font-weight  : 400;
+      src          : local("Open Sans"), url(../fonts/open_sans-italic.woff2) format("woff2"), url(../fonts/open_sans-italic.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
-      font-display: swap;
-      font-family : "Open Sans";
-      font-weight : 500 600;
-      src         : local("Open Sans Semibold"), url(../fonts/open_sans-semibold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "Open Sans";
+      font-weight  : 500 600;
+      src          : local("Open Sans Semibold"), url(../fonts/open_sans-semibold.woff2) format("woff2"), url(../fonts/open_sans-semibold.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : "Open Sans";
-      font-style  : italic;
-      font-weight : 500 600;
-      src         : local("Open Sans Semibold"), url(../fonts/open_sans-semibold-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : "Open Sans";
+      font-style   : italic;
+      font-weight  : 500 600;
+      src          : local("Open Sans Semibold"), url(../fonts/open_sans-semibold-italic.woff2) format("woff2"), url(../fonts/open_sans-semibold-italic.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
-      font-display: swap;
-      font-family : "Open Sans";
-      font-weight : 700;
-      src         : local("Open Sans"), url(../fonts/open_sans-bold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "Open Sans";
+      font-weight  : 700;
+      src          : local("Open Sans"), url(../fonts/open_sans-bold.woff2) format("woff2"), url(../fonts/open_sans-bold.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : "Open Sans";
-      font-style  : italic;
-      font-weight : 700;
-      src         : local("Open Sans"), url(../fonts/open_sans-bold-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : "Open Sans";
+      font-style   : italic;
+      font-weight  : 700;
+      src          : local("Open Sans"), url(../fonts/open_sans-bold-italic.woff2) format("woff2"), url(../fonts/open_sans-bold-italic.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
-      font-display: swap;
-      font-family : "Open Sans";
-      font-weight : 800 900;
-      src         : local("Open Sans Extrabold"), url(../fonts/open_sans-extrabold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "Open Sans";
+      font-weight  : 800 900;
+      src          : local("Open Sans Extrabold"), url(../fonts/open_sans-extrabold.woff2) format("woff2"), url(../fonts/open_sans-extrabold.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
-      font-display: fallback;
-      font-family : "Open Sans";
-      font-style  : italic;
-      font-weight : 800 900;
-      src         : local("Open Sans Extrabold"), url(../fonts/open_sans-extrabold-italic.ttf) format("truetype")
+      font-display : fallback;
+      font-family  : "Open Sans";
+      font-style   : italic;
+      font-weight  : 800 900;
+      src          : local("Open Sans Extrabold"), url(../fonts/open_sans-extrabold-italic.woff2) format("woff2"), url(../fonts/open_sans-extrabold-italic.woff) format("woff");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
-  @font-face /* CITE (Lapys) -> ParaType Ltd (Alexandra Korolkova, Olga Umpeleva, Vladimir Yefimov) @ `https://paratype.com/public` */ {
-    font-family : "PT Sans";
-    font-variant: historical-forms;
-    font-weight : 400;
-    src         : local("PT Sans"), url(../fonts/pt_sans.ttf) format("truetype")
+  @font-face /* ->> PT Sans --- CITE (Lapys) -> ParaType Ltd (Alexandra Korolkova, Olga Umpeleva, Vladimir Yefimov) @ `https://paratype.com/public` */ {
+    font-display           : swap;
+    font-family            : "PT Sans";
+    font-feature-settings  : normal;
+    font-variant-alternates: initial;
+    font-weight            : 400;
+    src                    : local("PT Sans"), url(../fonts/pt_sans.woff2) format("woff2"), url(../fonts/pt_sans.woff) format("woff"), url(../fonts/pt_sans.ttf) format("truetype");
+    unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0400-04FF
   }
     @font-face {
-      font-display: swap;
-      font-family : Rajdhani;
-      font-weight : bold;
-      src         : local("PT Sans Bold"), url(../fonts/pt_sans-bold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : "PT Sans";
+      font-weight  : bold;
+      src          : local("PT Sans Bold"), url(../fonts/pt_sans-bold.woff2) format("woff2"), url(../fonts/pt_sans-bold.woff) format("woff"), url(../fonts/pt_sans-bold.ttf) format("truetype");
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0400-04FF
     }
 
-  @font-face /* CITE (Lapys) -> Indian Type Foundry (Devanagari: Satya Rajpurohit, Jyotish Sonowal, Shiva Nalleperumal) */ {
-    font-family : Rajdhani;
-    font-variant: historical-forms;
-    font-weight : 400;
-    src         : local(Rajdhani), url(../fonts/rajdhani.ttf) format("truetype")
+  @font-face /* ->> Rajdhani --- CITE (Lapys) -> Indian Type Foundry (Devanagari: Satya Rajpurohit, Jyotish Sonowal, Shiva Nalleperumal) */ {
+    /*font-display           : swap;*/
+    font-family            : Rajdhani;
+    font-feature-settings  : normal;
+    font-variant-alternates: initial;
+    font-weight            : 400;
+    src                    : local(Rajdhani), url(../fonts/rajdhani.woff2) format("woff2"), url(../fonts/rajdhani.woff) format("woff"), url(../fonts/rajdhani.ttf) format("truetype");
+    unicode-range          :  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
   }
     @font-face {
-      font-display: swap;
-      font-family : Rajdhani;
-      font-weight : 100 300;
-      src         : local("Rajdhani Light"), url(../fonts/rajdhani-light.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Rajdhani;
+      font-weight  : 100 300;
+      src          : local("Rajdhani Light"), url(../fonts/rajdhani-light.woff2) format("woff2"), url(../fonts/rajdhani-light.woff) format("woff"), url(../fonts/rajdhani-light.ttf) format("truetype");
+      unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Rajdhani;
-      font-weight : 500;
-      src         : local("Rajdhani Medium"), url(../fonts/rajdhani-medium.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Rajdhani;
+      font-weight  : 500;
+      src          : local("Rajdhani Medium"), url(../fonts/rajdhani-medium.woff2) format("woff2"), url(../fonts/rajdhani-medium.woff) format("woff"), url(../fonts/rajdhani-medium.ttf) format("truetype");
+      unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Rajdhani;
-      font-weight : 600;
-      src         : local("Rajdhani Semibold"), url(../fonts/rajdhani-semibold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Rajdhani;
+      font-weight  : 600;
+      src          : local("Rajdhani Semibold"), url(../fonts/rajdhani-semibold.woff2) format("woff2"), url(../fonts/rajdhani-semibold.woff) format("woff"), url(../fonts/rajdhani-semibold.ttf) format("truetype");
+      unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
     @font-face {
-      font-display: swap;
-      font-family : Rajdhani;
-      font-weight : 700 900;
-      src         : local("Rajdhani Bold"), url(../fonts/rajdhani-bold.ttf) format("truetype")
+      font-display : swap;
+      font-family  : Rajdhani;
+      font-weight  : 700 900;
+      src          : local("Rajdhani Bold"), url(../fonts/rajdhani-bold.woff2) format("woff2"), url(../fonts/rajdhani-bold.woff) format("woff"), url(../fonts/rajdhani-bold.ttf) format("truetype");
+      unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
   /* Keyframes */
@@ -390,7 +451,7 @@
         border-width: 3px;
         filter           : brightness(0.8);
         transform        : translate(0, -2px);
-        -ms-filter       : brightness(0.8);
+        -ms-filter       : "brightness(0.8)";
         -ms-transform    : translate(0, -2px);
         -o-transform     : translate(0, -2px);
         -webkit-transform: translate(0, -2px);
@@ -468,12 +529,12 @@
         print-color-adjust        : economy;
         transition                : none !important;
         -moz-animation            : none !important;
-        -moz-animation            : none !important;
+        -moz-transition           : none !important;
         -moz-print-color-adjust   : economy;
         -ms-animation             : none !important;
-        -ms-animation             : none !important;
+        -ms-transition            : none !important;
         -o-animation              : none !important;
-        -o-animation              : none !important;
+        -o-transition             : none !important;
         -webkit-animation         : none !important;
         -webkit-color-adjust      : economy;
         -webkit-print-color-adjust: economy;
@@ -545,6 +606,7 @@
   }
 
   *, ::after, ::before {
+    scroll-behavior                   : smooth;
     transition-duration               : 100ms;
     transition-timing-function        : ease-in-out;
     transition-property               : opacity;
@@ -562,46 +624,48 @@
     -webkit-transition-timing-function: ease-in-out
   }
     /* Pseudo */
+      /* Active */
+      :active { cursor: text }
       /* Language */
         /* ->> Arabic */
-        [lang|=ar],
+        [lang|=ar i],
         :lang(ar) { direction: rtl }
 
         /* ->> Arabic, Catalan, German, Greek, Spanish, Basque, Persian, French, Galician, Italian, Italian (Swiss), Norwegian (Bokmål, Nynorsk), Portuguese, Romansh --> « » ‹ › */
-        [lang|=ar], [lang|=ca], [lang|=de-CH], [lang|=el], [lang|=es], [lang|=eu], [lang|=fa], [lang|=fr-CH], [lang|=gl], [lang|=it], [lang|=it-CH], [lang|=nb], [lang|=nn], [lang|=pt], [lang|=rm],
+        [lang|=ar i], [lang|=ca i], [lang|=de-CH i], [lang|=el i], [lang|=es i], [lang|=eu i], [lang|=fa i], [lang|=fr-CH i], [lang|=gl i], [lang|=it i], [lang|=it-CH i], [lang|=nb i], [lang|=nn i], [lang|=pt i], [lang|=rm i],
         :lang(afir), :lang(ca), :lang(de-CH), :lang(el), :lang(es), :lang(eu), :lang(fa), :lang(fr-CH), :lang(gl), :lang(it), :lang(it-CH), :lang(nb), :lang(nn), :lang(pt), :lang(rm) { quotes: "\00AB" "\00BB" "\2039" "\203A" }
 
         /* ->> Belarusian, Macedonian, Russian, Ukrainian --> « » „ " */
-        [lang|=be], [lang|=mk], [lang|=ru], [lang|=uk],
+        [lang|=be i], [lang|=mk i], [lang|=ru i], [lang|=uk i],
         :lang(be), :lang(mk), :lang(ru), :lang(uk) { quotes: "\00AB" "\00BB" "\201E" "\201C" }
 
         /* ->> Bulgarian, Bosnian, Czech, German, Hebrew, Croatian, Slovak, Slovenian, Serbian --> „ " ‚ ' */
-        [lang|=bg], [lang|=bs], [lang|=cs], [lang|=de], [lang|=he], [lang|=hr], [lang|=sk], [lang|=sl], [lang|=sr],
+        [lang|=bg i], [lang|=bs i], [lang|=cs i], [lang|=de i], [lang|=he i], [lang|=hr i], [lang|=sk i], [lang|=sl i], [lang|=sr i],
         :lang(bg), :lang(bs), :lang(cs), :lang(de), :lang(he), :lang(hr), :lang(sk), :lang(sl), :lang(sr) { quotes: "\201E" "\201C" "\201A" "\2018" }
 
         /* ->> English, English (Australian, New Zealand), Danish, Korean, Dutch, Portuguese (Brazilian), Thai, Turkish, Vietnamese, Chinese, Chinese (Simplified, Singapore) --> “ ” ‘ ’ */
-        [lang|=en], [lang|=en-AU], [lang|=en-NZ], [lang|=da], [lang|=ko], [lang|=nl], [lang|=pt-BR], [lang|=th], [lang|=tr], [lang|=vi], [lang|=zh-CN], [lang|=zh-Hans], [lang|=zh-SG],
+        [lang|=en i], [lang|=en-AU i], [lang|=en-NZ i], [lang|=da i], [lang|=ko i], [lang|=nl i], [lang|=pt-BR i], [lang|=th i], [lang|=tr i], [lang|=vi i], [lang|=zh-CN i], [lang|=zh-Hans i], [lang|=zh-SG i],
         :lang(en), :lang(en-AU), :lang(en-NZ), :lang(da), :lang(ko), :lang(nl), :lang(pt-BR), :lang(th), :lang(tr), :lang(vi), :lang(zh-CN), :lang(zh-Hans), :lang(zh-SG) { quotes: "\201C" "\201D" "\2018" "\2019" }
 
         /* ->> Finnish, Swedish --> " " ' ' */
-        [lang|=fi], [lang|=sv],
+        [lang|=fi i], [lang|=sv i],
         :lang(fi), :lang(sv) { quotes: "\201D" "\201D" "\2019" "\2019" }
 
         /* ->> French --> « » ‹ › */
-        [lang|=fr], [lang|=fr-BE], [lang|=fr-LU],
+        [lang|=fr i], [lang|=fr-BE i], [lang|=fr-LU i],
         :lang(fr), :lang(fr-BE), :lang(fr-LU)
         { quotes: "\00AB\202F" "\202F\00BB" "\2039\202F" "\202F\203A" }
 
         /* ->> Hungarian, Lithuanian, Latvian, Polish, Romanian --> „ " ‚ ' */
-        [lang|=hu], [lang|=lt], [lang|=lv], [lang|=pl], [lang|=ro],
+        [lang|=hu i], [lang|=lt i], [lang|=lv i], [lang|=pl i], [lang|=ro i],
         :lang(hu), :lang(lt), :lang(lv), :lang(pl), :lang(ro) { quotes: "\201E" "\201D" "\201A" "\2019" }
 
         /* ->> Japanese, Chinese (Traditional, Hong Kong, Taiwan) --> 「 」 『 』 */
-        [lang|=ja], [lang|=zh-Hant], [lang|=zh-HK], [lang|=zh-TW],
+        [lang|=ja i], [lang|=zh-Hant i], [lang|=zh-HK i], [lang|=zh-TW i],
         :lang(ja), :lang(zh-Hant), :lang(zh-HK), :lang(zh-TW) { quotes: "\300C" "\300D" "\300E" "\300F" }
 
         /* ->> Japanese, Korean, Chinese (Simplified) */
-        [lang|=ja], [lang|=ko], [lang|=zh],
+        [lang|=ja i], [lang|=ko i], [lang|=zh i],
         :lang(ja), :lang(ko), :lang(zh) { line-height: 1.8 }
 
       /* (Search, Target) Text */
@@ -609,6 +673,15 @@
         background-color: rebeccapurple;
         color           : white
       }
+  }
+
+  /* All, <blockquote>, <q> */
+    /* Pseudo > (After, Before) */
+    [lang] blockquote:after,  [lang] q:after,  blockquote[lang]:after,  q[lang]:after  { content: close-quote }
+    [lang] blockquote::after, [lang] q::after, blockquote[lang]::after, q[lang]::after { content: close-quote }
+
+    [lang] blockquote:before,  [lang] q:before,  blockquote[lang]:before,  q[lang]:before  { content: open-quote }
+    [lang] blockquote::before, [lang] q::before, blockquote[lang]::before, q[lang]::before { content: open-quote }
 
   /* <a> */
   a, a[href]:link {
@@ -624,9 +697,9 @@
   /* <a>, <button>, <input>, <label>, <select> (> <option>) */
   a,
   button,
-  input[type=button],
-  input[type=reset],
-  input[type=submit],
+  input[type=button i],
+  input[type=reset  i],
+  input[type=submit i],
   label,
   select,
   select option { cursor: pointer }
@@ -669,24 +742,25 @@
 
   /* <body> */
   body {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(3, 0, 63, 0.05);
     background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(3, 0, 63, 0.05));
-    font-family     : "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif
+    font-family     : "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif;
+    font-synthesis  : none
   }
     /* All */
     body > * { background-color: transparent }
 
   /* <button>, <input> */
   button,
-  input[type=button],
-  input[type=reset]
-  input[type=submit] { outline: none }
+  input[type=button i],
+  input[type=reset  i]
+  input[type=submit i] { outline: none }
 
   /* <code>, <kbd> */
   code, kbd { font-variant-emoji: emoji }
 
-  /* <code>, <kbd>, <pre>, <samp> */
-  code, kbd, pre, samp {
+  /* <code>, <kbd>, <pre>, <samp>, <tt> */
+  code, kbd, pre, samp, tt {
     font-family: "M PLUS 1 Code", Iosevka, monospace;
     font-family: monospace /* ->> Allow modification with user-agent style */
   }
@@ -706,11 +780,14 @@
   h1 {
     font-weight              : bolder;
     text-shadow              : 0 0 10px rgba(0, 0, 0, 0.1);
-    -webkit-text-stroke-width: 2.5px
+    -webkit-text-stroke-width: 1px
   }
 
   /* <h1>, Mirrored */
-  h1, .mirrored { -webkit-box-reflect: below 7px linear-gradient(transparent, rgba(255, 255, 255, 0.05)) }
+  h1, .mirrored {
+    /* ->> Modern alternatives: `background-image: -moz-element(…)`, `filter: progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, Mirror=true)`? */
+    -webkit-box-reflect: below 7px linear-gradient(transparent, rgba(255, 255, 255, 0.05))
+  }
 
   /* <h2> */
   h2 { font-weight: 900 }
@@ -766,7 +843,7 @@
     -webkit-text-emphasis-color: currentColor
   }
     /* At Rules > Media > Prefers Color Scheme */
-    @media (prefers-color-scheme: dark)  { html { background-image: none } }
+    @media (prefers-color-scheme: dark)  { html { background-image: /* --> ../icons/background-pattern-2.svg */ url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI4IiBoZWlnaHQ9IjI4Ij48cGF0aCBkPSJNMTEgMTRjMC0xLjcgMS4zLTMgMy0zIDEuNyAwIDMgMS4zIDMgMyAwIDEuNy0xLjMgMy0zIDMtMS43IDAtMy0xLjMtMy0zeiIgc3R5bGU9ImZpbGw6cmdiYSgyNTUsMjU1LDI1NSwuMDE2KSIvPjwvc3ZnPg==) } }
     @media (prefers-color-scheme: light) { html { background-image: /* --> ../icons/background-pattern-1.svg */ url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2ZXJzaW9uPSIxLjIiPjxwYXRoIGQ9Im0xNTAuNyAzNy40IDY3LjkgNjcuOWMxMi41IDEyLjYgMTIuNSAzMi44IDAgNDUuNGwtNjcuOSA2Ny45Yy0xMi42IDEyLjUtMzIuOCAxMi41LTQ1LjQgMGwtNjcuOS02Ny45Yy0xMi41LTEyLjYtMTIuNS0zMi44IDAtNDUuNGw2Ny45LTY3LjljMTIuNi0xMi41IDMyLjgtMTIuNSA0NS40IDAiIHN0eWxlPSJmaWxsOnJnYmEoMCwwLDAsLjAxNikiIHRyYW5zZm9ybT0ibWF0cml4KC41MDAgMCAwIC41MDAgLS4wMTYgLS4wMTYpIi8+PC9zdmc+) } }
 
     /* Pseudo > View Transition (New, Old) */
@@ -787,25 +864,38 @@
     }
 
   /* <input> */
-  input[type=file]::file-selector-button {
+  input[type=file i]::file-selector-button {
     cursor : pointer;
     outline: none
   }
 
-  input[type=file]::-ms-browse {
+  input[type=file i]::-ms-browse {
     cursor : pointer;
     outline: none
   }
 
-  input[type=file]::-webkit-file-upload-button {
+  input[type=file i]::-webkit-file-upload-button {
     cursor : pointer;
     outline: none
   }
+
+  /* <li> */
+  li::after { content: ' ' }
 
   /* <pre>, <samp> */
   pre, samp { font-variant-emoji: text }
 
 /* Components */
+  /* Zoom */
+  [data-\@zoom] {
+    transform       : scale(1.000);
+    transform-origin: center;
+    transition      : transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change     : transform
+  }
+
+  [data-\@zoom=bubble] { transform: scale(1.006) }
+
   /* Button */
   .button {
     backdrop-filter  : blur(10px);
@@ -814,7 +904,7 @@
     outline          : none;
     text-transform   : uppercase;
     transform        : translate(0px, -0px);
-    -ms-filter       : brightness(1.0);
+    -ms-filter       : "brightness(1.0)";
     -ms-transform    : translate(0px, -0px);
     -o-transform     : translate(0px, -0px);
     -webkit-transform: translate(0px, -0px)
