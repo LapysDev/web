@@ -1,9 +1,10 @@
 **/.git
 **/.git/
 **/.gitignore
+**/lapys*.js
 *.lnk
 *.url
 [Dd]esktop.ini
 
 !/.gitignore
-
+!**/lapys.js
