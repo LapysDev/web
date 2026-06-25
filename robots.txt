@@ -107,6 +107,7 @@ User-agent: YouBot                       # You.com’s A.I. search engine crawle
 # User-agent: Xbot                 # Twitter’s platform bot/ crawler
 
 Disallow: /fonts/
+Disallow: /revisions/            #
 Disallow: /scripts/lapys.js      # Prevent redundant indexing
 Disallow: /stylesheets/lapys.css # — alternatively cite to `https://github.com/LapysDev/LapysJS`
 Disallow: /stylesheets/test.css  # Don’t hamper SEO
