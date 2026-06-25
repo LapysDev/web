@@ -1,55 +1,235 @@
 @charset "UTF-8";
 @import  "main.css";
+@namespace     "http://www.w3.org/1999/xhtml";
+@namespace svg "http://www.w3.org/2000/svg";
+
+/* At Rules */
+  /* Keyframes > Avatar */
+  @keyframes avatar {
+    50% { transform: translate(0, 5px) }
+  }
+
+  /* Media > ... */
+  @media all\0, all\9 {
+    /* Background */
+    #background { background-color: #03003F }
+
+    /* Hero */
+    #hero, #hero * { color: #F0F0F0 }
+  }
+
+/* DOM Elements */
+  /* Pseudo > Selection */
+  ::-moz-selection { background-color: rgba(240, 240, 240, 0.5) } /* --> #F0F0F07F */
+  ::selection      { background-color: rgba(240, 240, 240, 0.5) } /* --> #F0F0F07F */
 
 /* Features */
   /* Main */
-  #main { width: 100% }
-    /* Hero > <table> */
-    #hero table { width: 80% }
-      /* Avatar */
-      #avatar {
-        text-align: center;
-        width     : 35%
+  #main {
+    height       : 100%;
+    padding-left : 1%;
+    padding-right: 1%
+  }
+
+  #contact, #expertise, #game, #hero, #main, #projects, #socials {
+    margin-left : auto;
+    margin-right: auto;
+    width       : 100%
+  }
+    /* Hero */
+    #hero {
+      height     : 80%;
+      padding-top: 5%
+    }
+      /* Button */
+      #hero .button {
+        font-size    : 180%;
+        margin-bottom: 1.00em;
+        margin-left  : 0.75em;
+        margin-right : 0.75em;
+        margin-top   : 1.00em
       }
 
-      /* Title */
-      #title {
-        font-size     : 500%;
-        font-synthesis: none;
-        font-variant  : normal;
-        font-weight   : 900;
-        text-align    : right;
-        width         : 65%
+      #hero [data-\:portal=actions] .button { font-size: 100% }
+        /* All */
+        #hero .button svg|* { stroke: currentColor }
+
+      /* Region */
+        /* <table> */
+        #hero table {
+          margin-left   : 10%; /* --> auto */
+          margin-right  : 10%; /* --> auto */
+          vertical-align: middle;
+          width         : 80%
+        }
+          /* Avatar */
+          #avatar {
+            -moz-animation-delay             : 0ms;
+            -moz-animation-duration          : 3000ms;
+            -moz-animation-iteration-count   : infinite;
+            -moz-animation-name              : avatar;
+            -moz-animation-timing-function   : ease-in-out;
+            -ms-animation-delay              : 0ms;
+            -ms-animation-duration           : 3000ms;
+            -ms-animation-iteration-count    : infinite;
+            -ms-animation-name               : avatar;
+            -ms-animation-timing-function    : ease-in-out;
+            -o-animation-delay               : 0ms;
+            -o-animation-duration            : 3000ms;
+            -o-animation-iteration-count     : infinite;
+            -o-animation-name                : avatar;
+            -o-animation-timing-function     : ease-in-out;
+            -webkit-animation-delay          : 0ms;
+            -webkit-animation-duration       : 3000ms;
+            -webkit-animation-iteration-count: infinite;
+            -webkit-animation-name           : avatar;
+            -webkit-animation-timing-function: ease-in-out;
+            animation-delay                  : 0ms;
+            animation-duration               : 3000ms;
+            animation-iteration-count        : infinite;
+            animation-name                   : avatar;
+            animation-timing-function        : ease-in-out;
+            padding-left                     : 65px;
+            padding-right                    : 65px;
+            text-align                       : center;
+            width                            : 40%;
+            will-change                      : transform
+          }
+            #avatar img { width: 100% }
+
+          /* Subtitle, Title */
+          #subtitle, #title, [data-\:portal=title] {
+            font-synthesis: style weight;
+            font-variant  : normal
+          }
+
+          /* Title */
+          #title {
+            padding-right: 15%;
+            text-align   : right
+          }
+
+          #title                        { font-size  : 500% }
+          #title, [data-\:portal=title] { font-weight: 900 }
+          [data-\:portal=title]         { font-size  : 400% }
+            /* All */
+            #title *, [data-\:portal=title] * {
+              -webkit-text-stroke-width: 2.5px !important;
+              -webkit-text-stroke-width: 2.5px;
+              font-weight              : inherit;
+              margin                   : 0
+            }
+
+            /* Subtitle */
+            #subtitle {
+              -webkit-text-stroke-width: 0 !important;
+              font-size                : 50%;
+              font-weight              : normal
+            }
+              /* Pseudo > After */
+              #subtitle::after {
+                -moz-transition-property   : font-size, opacity;
+                -ms-transition-property    : font-size, opacity;
+                -o-transition-property     : font-size, opacity;
+                -webkit-transition-property: font-size, opacity;
+                -khtml-opacity             : 0.0;
+                -moz-opacity               : 0.0;
+                color                      : inherit;
+                content                    : " circa 2016";
+                display                    : block;
+                font-size                  : 0%;
+                font-style                 : oblique;
+                opacity                    : 0.0;
+                transition-property        : font-size, opacity;
+                transition-timing-function : linear
+              }
+
+              /* Hover > Pseudo > After */
+              #subtitle:hover::after {
+                -khtml-opacity: 1.0;
+                -moz-opacity  : 1.0;
+                font-size     : 75%;
+                font-size     : 30px; /* ->> Internet Explorer failed the `transition` */
+                opacity       : 1.0
+              }
+
+      /* Background */
+      #background {
+        -ms-filter             : "progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2)";
+        -webkit-filter         : progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2);
+        -webkit-mask-image     : -webkit-gradient(radial, center center, 0, center center, 720, from(rgba(0, 0, 0, 1.0)), to(rgba(0, 0, 0, 0.0)));
+        -webkit-mask-position  : center;
+        -webkit-mask-position-x: center;
+        -webkit-mask-position-y: center;
+        -webkit-mask-repeat    : no-repeat;
+        -webkit-mask-size      : contain;
+        bottom                 : 0;
+        filter                 : progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2);
+        height                 : 100%;
+        left                   : 0;
+        margin-left            : auto;
+        margin-right           : auto;
+        mask                   : url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IndoaXRlIiBzdG9wLW9wYWNpdHk9IjAiIC8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIGZpbGw9InVybCgjZykiIC8+PC9zdmc+DQo=);
+        mask-image             : radial-gradient(circle, rgba(0, 0, 0, 1.0) 0%, rgba(0, 0, 0, 0.0) 100%);
+        mask-position          : center;
+        mask-repeat            : no-repeat;
+        mask-size              : contain;
+        max-width              : 100%;
+        position               : absolute;
+        right                  : 0;
+        top                    : 0;
+        width                  : 102%;
+        z-index                : -1;
+        zoom                   : 1.0
       }
-        /* … */
-        #title * {
-          font-weight              : inherit;
-          margin                   : 0;
-          -webkit-text-stroke-width: 2.5px
+
+      /* Tagline */
+      #tagline {
+        max-width: 50%;
+        min-width: 300px
+      }
+        #tagline span {
+          display       : inline-block;
+          vertical-align: baseline;
+          white-space   : pre-wrap
         }
 
-        /* Subtitle */
-        #subtitle {
-          font-size                : 50%;
-          font-synthesis           : none;
-          font-variant             : normal;
-          font-weight              : normal;
-          -webkit-text-stroke-width: 0
-        }
-          /* Pseudo */
-            /* After */
-            #subtitle::after {
-              color         : inherit;
-              content       : " since 2016";
-              display       : block;
-              opacity       : 0.0;
-              visibility    : collapse;
-              -khtml-opacity: 0.0;
-              -moz-opacity  : 0.0
-            }
+    /* Hero, Socials */
+    #hero, #socials { text-align: center }
 
-            /* Hover */
-            #subtitle:hover::after {
-              opacity   : 1.0;
-              visibility: initial
-            }
+    /* Socials */
+    #socials {
+      height: 20%;
+      height: 20vh
+    }
+      /* Social */
+      #socials .social {
+        -ah-border-bottom-left-radius     : 50%;
+        -ah-border-bottom-right-radius    : 50%;
+        -ah-border-top-left-radius        : 50%;
+        -ah-border-top-right-radius       : 50%;
+        -khtml-border-bottom-left-radius  : 50%;
+        -khtml-border-bottom-right-radius : 50%;
+        -khtml-border-top-left-radius     : 50%;
+        -khtml-border-top-right-radius    : 50%;
+        -moz-border-bottom-left-radius    : 50%;
+        -moz-border-bottom-right-radius   : 50%;
+        -moz-border-top-left-radius       : 50%;
+        -moz-border-top-right-radius      : 50%;
+        -pie-border-radius                : 50%;
+        -webkit-border-bottom-left-radius : 50%;
+        -webkit-border-bottom-right-radius: 50%;
+        -webkit-border-top-left-radius    : 50%;
+        -webkit-border-top-right-radius   : 50%;
+        border-bottom-left-radius         : 50%;
+        border-bottom-right-radius        : 50%;
+        border-top-left-radius            : 50%;
+        border-top-right-radius           : 50%;
+        display                           : inline-block;
+        font-size                         : 200%;
+        height                            : 2em;
+        line-height                       : 2em;
+        margin-left                       : 0.5em;
+        margin-right                      : 0.5em;
+        width                             : 2em
+      }

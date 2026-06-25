@@ -1,28 +1,10 @@
 @charset "UTF-8";
-@namespace "http://www.w3.org/1999/xhtml";
+@namespace     "http://www.w3.org/1999/xhtml";
+@namespace svg "http://www.w3.org/2000/svg";
 
 /* DOM Elements */
   /* All */
   * {
-    animation-timing-function          : linear;
-    box-decoration-break               : clone;
-    image-orientation                  : inherit;
-    image-rendering                    : inherit;
-    image-resolution                   : inherit;
-    interpolate-size                   : inherit;
-    scrollbar-3dlight-color            : whitesmoke;
-    scrollbar-arrow-color              : whitesmoke;
-    scrollbar-base-color               : whitesmoke;
-    scrollbar-color                    : dimgray whitesmoke;
-    scrollbar-darkshadow-color         : dimgray;
-    scrollbar-face-color               : whitesmoke;
-    scrollbar-gutter                   : auto;
-    scrollbar-highlight-color          : white;
-    scrollbar-shadow-color             : dimgray;
-    scrollbar-track-color              : dimgray;
-    scrollbar-width                    : thin;
-    transition-timing-function         : linear;
-    user-modify                        : read-only;
     -ah-background-image-resolution    : normal;
     -ah-image-resolution               : inherit;
     -ah-image-smoothing                : inherit;
@@ -43,31 +25,57 @@
     -webkit-animation-timing-function  : linear;
     -webkit-box-decoration-break       : clone;
     -webkit-transition-timing-function : linear;
-    -webkit-user-modify                : read-only
+    -webkit-user-drag                  : none;
+    -webkit-user-modify                : read-only;
+    animation-timing-function          : linear;
+    box-decoration-break               : clone;
+    image-orientation                  : inherit;
+    image-rendering                    : inherit;
+    image-resolution                   : inherit;
+    interpolate-size                   : inherit;
+    scrollbar-3dlight-color            : whitesmoke;
+    scrollbar-arrow-color              : whitesmoke;
+    scrollbar-base-color               : whitesmoke;
+    scrollbar-color                    : dimgray whitesmoke;
+    scrollbar-darkshadow-color         : dimgray;
+    scrollbar-face-color               : whitesmoke;
+    scrollbar-gutter                   : auto;
+    scrollbar-highlight-color          : white;
+    scrollbar-shadow-color             : dimgray;
+    scrollbar-track-color              : dimgray;
+    scrollbar-width                    : thin;
+    transition-behavior                : inherit;
+    transition-timing-function         : linear;
+    user-modify                        : read-only
   }
 
-  *, [draggable=false i] { -webkit-user-drag: none }
-
-  [contenteditable],
-  [contenteditable=true i] {
-    user-modify        : read-write;
+  [contenteditable] {
     -khtml-user-modify : read-write;
     -moz-user-modify   : read-write;
-    -webkit-user-modify: read-write
+    -webkit-user-modify: read-write;
+    user-modify        : read-write
   }
 
-  [contenteditable=plaintext-only i] {
-    user-modify        : read-write-plaintext-only;
-    user-modify        : read-write;
+  [contenteditable=true /* i */] {
+    -khtml-user-modify : read-write;
+    -moz-user-modify   : read-write;
+    -webkit-user-modify: read-write;
+    user-modify        : read-write
+  }
+
+  [contenteditable=plaintext-only /* i */] {
     -khtml-user-modify : read-write-plaintext-only;
     -khtml-user-modify : read-write;
     -moz-user-modify   : read-write-plaintext-only;
     -moz-user-modify   : read-write;
     -webkit-user-modify: read-write-plaintext-only;
-    -webkit-user-modify: read-write
+    -webkit-user-modify: read-write;
+    user-modify        : read-write-plaintext-only;
+    user-modify        : read-write
   }
 
-  [draggable=true i] { -webkit-user-drag: element }
+  [draggable=false /* i */] { -webkit-user-drag: none }
+  [draggable=true  /* i */] { -webkit-user-drag: element }
 
   [hidden] /* ->> Ignores `[hidden=until-found i]`, `ol[hidden]`, `colgroup[hidden]`, `tbody[hidden]`, `tfoot[hidden]`, `thead[hidden]`, and `tr[hidden]` default user-agent styles */ {
     appearance: none;
@@ -77,68 +85,68 @@
     visibility: collapse
   }
 
-  [hidden=until-found i] { content-visibility: hidden }
+  [hidden=until-found /* i */] { content-visibility: hidden }
 
-  [lang|=ar i], :lang(ar) { -prince-lang: ar }
-  [lang|=be i], :lang(be) { -prince-lang: be }
-  [lang|=bg i], :lang(bg) { -prince-lang: bg }
-  [lang|=bs i], :lang(bs) { -prince-lang: bs }
-  [lang|=ca i], :lang(ca) { -prince-lang: ca }
-  [lang|=cs i], :lang(cs) { -prince-lang: cs }
-  [lang|=da i], :lang(da) { -prince-lang: da }
-  [lang|=de i], :lang(de) { -prince-lang: de }
-  [lang|=el i], :lang(el) { -prince-lang: el }
-  [lang|=en i], :lang(en) { -prince-lang: en }
-  [lang|=es i], :lang(es) { -prince-lang: es }
-  [lang|=eu i], :lang(eu) { -prince-lang: eu }
-  [lang|=fa i], :lang(fa) { -prince-lang: fa }
-  [lang|=fi i], :lang(fi) { -prince-lang: fi }
-  [lang|=fr i], :lang(fr) { -prince-lang: fr }
-  [lang|=fr i], :lang(fr) { -prince-lang: fr }
-  [lang|=gl i], :lang(gl) { -prince-lang: gl }
-  [lang|=he i], :lang(he) { -prince-lang: he }
-  [lang|=hr i], :lang(hr) { -prince-lang: hr }
-  [lang|=hu i], :lang(hu) { -prince-lang: hu }
-  [lang|=it i], :lang(it) { -prince-lang: it }
-  [lang|=ja i], :lang(ja) { -prince-lang: ja }
-  [lang|=ko i], :lang(ko) { -prince-lang: ko }
-  [lang|=lt i], :lang(lt) { -prince-lang: lt }
-  [lang|=lv i], :lang(lv) { -prince-lang: lv }
-  [lang|=mk i], :lang(mk) { -prince-lang: mk }
-  [lang|=nb i], :lang(nb) { -prince-lang: nb }
-  [lang|=nl i], :lang(nl) { -prince-lang: nl }
-  [lang|=nn i], :lang(nn) { -prince-lang: nn }
-  [lang|=pl i], :lang(pl) { -prince-lang: pl }
-  [lang|=pt i], :lang(pt) { -prince-lang: pt }
-  [lang|=rm i], :lang(rm) { -prince-lang: rm }
-  [lang|=ro i], :lang(ro) { -prince-lang: ro }
-  [lang|=ru i], :lang(ru) { -prince-lang: ru }
-  [lang|=sk i], :lang(sk) { -prince-lang: sk }
-  [lang|=sl i], :lang(sl) { -prince-lang: sl }
-  [lang|=sr i], :lang(sr) { -prince-lang: sr }
-  [lang|=sv i], :lang(sv) { -prince-lang: sv }
-  [lang|=th i], :lang(th) { -prince-lang: th }
-  [lang|=tr i], :lang(tr) { -prince-lang: tr }
-  [lang|=uk i], :lang(uk) { -prince-lang: uk }
-  [lang|=vi i], :lang(vi) { -prince-lang: vi }
-  [lang|=zh i], :lang(zh) { -prince-lang: zh }
+  [lang|=ar /* i */], :lang(ar) { -prince-lang: ar }
+  [lang|=be /* i */], :lang(be) { -prince-lang: be }
+  [lang|=bg /* i */], :lang(bg) { -prince-lang: bg }
+  [lang|=bs /* i */], :lang(bs) { -prince-lang: bs }
+  [lang|=ca /* i */], :lang(ca) { -prince-lang: ca }
+  [lang|=cs /* i */], :lang(cs) { -prince-lang: cs }
+  [lang|=da /* i */], :lang(da) { -prince-lang: da }
+  [lang|=de /* i */], :lang(de) { -prince-lang: de }
+  [lang|=el /* i */], :lang(el) { -prince-lang: el }
+  [lang|=en /* i */], :lang(en) { -prince-lang: en }
+  [lang|=es /* i */], :lang(es) { -prince-lang: es }
+  [lang|=eu /* i */], :lang(eu) { -prince-lang: eu }
+  [lang|=fa /* i */], :lang(fa) { -prince-lang: fa }
+  [lang|=fi /* i */], :lang(fi) { -prince-lang: fi }
+  [lang|=fr /* i */], :lang(fr) { -prince-lang: fr }
+  [lang|=fr /* i */], :lang(fr) { -prince-lang: fr }
+  [lang|=gl /* i */], :lang(gl) { -prince-lang: gl }
+  [lang|=he /* i */], :lang(he) { -prince-lang: he }
+  [lang|=hr /* i */], :lang(hr) { -prince-lang: hr }
+  [lang|=hu /* i */], :lang(hu) { -prince-lang: hu }
+  [lang|=it /* i */], :lang(it) { -prince-lang: it }
+  [lang|=ja /* i */], :lang(ja) { -prince-lang: ja }
+  [lang|=ko /* i */], :lang(ko) { -prince-lang: ko }
+  [lang|=lt /* i */], :lang(lt) { -prince-lang: lt }
+  [lang|=lv /* i */], :lang(lv) { -prince-lang: lv }
+  [lang|=mk /* i */], :lang(mk) { -prince-lang: mk }
+  [lang|=nb /* i */], :lang(nb) { -prince-lang: nb }
+  [lang|=nl /* i */], :lang(nl) { -prince-lang: nl }
+  [lang|=nn /* i */], :lang(nn) { -prince-lang: nn }
+  [lang|=pl /* i */], :lang(pl) { -prince-lang: pl }
+  [lang|=pt /* i */], :lang(pt) { -prince-lang: pt }
+  [lang|=rm /* i */], :lang(rm) { -prince-lang: rm }
+  [lang|=ro /* i */], :lang(ro) { -prince-lang: ro }
+  [lang|=ru /* i */], :lang(ru) { -prince-lang: ru }
+  [lang|=sk /* i */], :lang(sk) { -prince-lang: sk }
+  [lang|=sl /* i */], :lang(sl) { -prince-lang: sl }
+  [lang|=sr /* i */], :lang(sr) { -prince-lang: sr }
+  [lang|=sv /* i */], :lang(sv) { -prince-lang: sv }
+  [lang|=th /* i */], :lang(th) { -prince-lang: th }
+  [lang|=tr /* i */], :lang(tr) { -prince-lang: tr }
+  [lang|=uk /* i */], :lang(uk) { -prince-lang: uk }
+  [lang|=vi /* i */], :lang(vi) { -prince-lang: vi }
+  [lang|=zh /* i */], :lang(zh) { -prince-lang: zh }
 
   [tabindex]                   { -moz-user-focus: normal }
   [tabindex=-1], [tabindex^=-] { -moz-user-focus: ignore }
     /* Pseudo */
       /* After, Before */
       ::after, ::before {
-        cursor             : inherit;
-        pointer-events     : inherit;
-        touch-action       : inherit;
-        user-select        : inherit;
-        white-space        : pre;
         -khtml-user-select : inherit;
         -moz-user-input    : inherit;
         -moz-user-select   : inherit;
         -ms-touch-action   : inherit;
         -ms-user-select    : inherit;
-        -webkit-user-select: inherit
+        -webkit-user-select: inherit;
+        cursor             : inherit;
+        pointer-events     : inherit;
+        touch-action       : inherit;
+        user-select        : inherit;
+        white-space        : pre
       }
 
       /* Focus Visible */
@@ -172,12 +180,12 @@
 
         /* ::-webkit-scrollbar-thumb */
         ::-webkit-scrollbar-thumb {
-          background-color     : whitesmoke;
-          border-radius        : 12px;
-          border               : 3px solid dimgray;
-          cursor               : pointer;
           -o-border-radius     : 12px;
-          -webkit-border-radius: 12px
+          -webkit-border-radius: 12px;
+          background-color     : whitesmoke;
+          border               : 3px solid dimgray;
+          border-radius        : 12px;
+          cursor               : pointer
         }
           /* Pseudo > Hover */
           ::-webkit-scrollbar-thumb:hover { background-color: white }
@@ -189,22 +197,23 @@
         ::-webkit-scrollbar-track-piece { background-color: dimgray }
 
   /* All, <address>, <article>, <aside>, <bdi>, <blockquote>, <caption>, <center>, <col>, <colgroup>, <dd>, <dir>, <div>, <dl>, <dt>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <hr>, <legend>, <li>, <listing>, <main>, <menu>, <nav>, <ol>, <output>, <p>, <plaintext>, <pre>, <search>, <section>, <summary>, <table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <tr>, <ul>, <xmp> */
-  [dir=auto i], [dir=ltr i], [dir=rtl i], address, article, aside, bdi, blockquote, caption, center, col, colgroup, dd, dir, div, dl, dt, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, legend, li, listing, main, menu, nav, ol, output, p, plaintext, pre, search, section, summary, table, tbody, td, tfoot, th, thead, tr, ul, xmp { unicode-bidi: isolate }
+  [dir=auto /* i */], [dir=ltr /* i */], [dir=rtl /* i */]                                                                                                                                                                                                                                                                     { unicode-bidi: isolate }
+  address, article, aside, bdi, blockquote, caption, center, col, colgroup, dd, dir, div, dl, dt, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, legend, li, listing, main, menu, nav, ol, output, p, plaintext, pre, search, section, summary, table, tbody, td, tfoot, th, thead, tr, ul, xmp { unicode-bidi: isolate }
 
   /* <a> */
   a {
-    background-color           : transparent;
-    -webkit-tap-highlight-color: transparent
+    -webkit-tap-highlight-color: transparent;
+    background-color           : transparent
   }
 
   /* <abbr>, <acronym> */
   abbr[title], acronym[title] {
+    -moz-text-decoration-line : underline;
+    -moz-text-decoration-style: dashed;
     border-bottom             : none;
     border-bottom-style       : none;
     text-decoration-line      : underline;
-    text-decoration-style     : dotted;
-    -moz-text-decoration-line : underline;
-    -moz-text-decoration-style: dashed
+    text-decoration-style     : dotted
   }
 
   /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <blockquote>, <body>, <button>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dl>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <header>, <hgroup>, <html>, <i>, <iframe>, <img>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <optgroup>, <output>, <p>, <pre>, <q>, <ruby>, <s>, <samp>, <section>, <select>, <small>, <span>, <strike>, <strong>, <sub>, <summary>, <sup>, <table>, <tbody>, <td>, <textarea>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <ul>, <var>, <video> */
@@ -212,51 +221,20 @@
 
   /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <big>, <blockquote>, <body>, <button>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dl>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <html>, <i>, <iframe>, <img>, <input>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <optgroup>, <output>, <p>, <pre>, <q>, <ruby>, <s>, <samp>, <section>, <select>, <small>, <span>, <strike>, <strong>, <sub>, <summary>, <sup>, <table>, <tbody>, <td>, <textarea>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <ul>, <var>, <video> ->> Ignores `leftmargin`, `marginheight`, `marginwidth`, and `topmargin` HTML attributes */
   a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, button, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, input, ins, kbd, label, legend, li, mark, menu, nav, object, ol, optgroup, output, p, pre, q, ruby, s, samp, section, select, small, span, strike, strong, sub, summary, sup, table, tbody, td, textarea, tfoot, th, thead, time, tr, tt, u, ul, var, video {
-    direction                                 : inherit;
-    font-family                               : inherit;
-    font-feature-settings                     : inherit;
-    font-kerning                              : inherit;
-    font-optical-sizing                       : inherit;
-    font-palette                              : inherit;
-    font-size                                 : inherit;
-    font-size-adjust                          : inherit;
-    font-smooth                               : inherit;
-    font-stretch                              : inherit;
-    font-style                                : inherit;
-    font-synthesis                            : inherit;
-    font-synthesis-small-caps                 : inherit;
-    font-synthesis-style                      : inherit;
-    font-synthesis-weight                     : inherit;
-    font-variant-alternates                   : inherit;
-    font-variant-caps                         : inherit;
-    font-variant-east-asian                   : inherit;
-    font-variant-emoji                        : inherit;
-    font-variant-ligatures                    : inherit;
-    font-variant-numeric                      : inherit;
-    font-variant-position                     : inherit;
-    font-variation-settings                   : inherit;
-    font-weight                               : inherit;
-    font-width                                : inherit;
-    hyphenate-character                       : inherit;
-    hyphenate-limit-chars                     : inherit;
-    line-break                                : inherit;
-    line-height                               : inherit;
-    line-height-step                          : inherit;
-    margin-block-end                          : 0px;
-    margin-block-start                        : 0px;
-    margin-bottom                             : 0px;
-    margin-inline-end                         : 0px;
-    margin-inline-start                       : 0px;
-    margin-left                               : 0px;
-    margin-right                              : 0px;
-    margin-top                                : 0px;
-    text-box-edge                             : inherit;
-    text-box-trim                             : inherit;
-    text-kashida-space                        : inherit;
-    text-size-adjust                          : inherit;
-    text-spacing-trim                         : inherit;
-    text-underline-position                   : inherit;
-    text-wrap                                 : inherit;
+    mso-ansi-font-size                        : inherit;
+    mso-ansi-font-style                       : inherit;
+    mso-ansi-font-weight                      : inherit;
+    mso-ansi-language                         : inherit;
+    mso-ascii-font-family                     : inherit;
+    mso-bidi-font-family                      : inherit;
+    mso-bidi-font-size                        : inherit;
+    mso-bidi-font-style                       : inherit;
+    mso-bidi-font-weight                      : inherit;
+    mso-fareast-font-family                   : inherit;
+    mso-font-alt                              : inherit;
+    mso-hansi-font-family                     : inherit;
+    mso-symbol-font-family                    : inherit;
+    mso-word-wrap                             : inherit;
     -ah-annotation-font-family                : inherit;
     -ah-annotation-font-size                  : inherit;
     -ah-annotation-font-style                 : inherit;
@@ -318,24 +296,55 @@
     -webkit-text-size-adjust                  : inherit;
     -webkit-text-stroke-color                 : inherit;
     -webkit-text-stroke-width                 : inherit;
-    mso-ansi-font-size                        : inherit;
-    mso-ansi-font-style                       : inherit;
-    mso-ansi-font-weight                      : inherit;
-    mso-ansi-language                         : inherit;
-    mso-ascii-font-family                     : inherit;
-    mso-bidi-font-family                      : inherit;
-    mso-bidi-font-size                        : inherit;
-    mso-bidi-font-style                       : inherit;
-    mso-bidi-font-weight                      : inherit;
-    mso-fareast-font-family                   : inherit;
-    mso-font-alt                              : inherit;
-    mso-hansi-font-family                     : inherit;
-    mso-symbol-font-family                    : inherit;
-    mso-word-wrap                             : inherit
+    direction                                 : inherit;
+    font-family                               : inherit;
+    font-feature-settings                     : inherit;
+    font-kerning                              : inherit;
+    font-optical-sizing                       : inherit;
+    font-palette                              : inherit;
+    font-size                                 : inherit;
+    font-size-adjust                          : inherit;
+    font-smooth                               : inherit;
+    font-stretch                              : inherit;
+    font-style                                : inherit;
+    font-synthesis                            : inherit;
+    font-synthesis-small-caps                 : inherit;
+    font-synthesis-style                      : inherit;
+    font-synthesis-weight                     : inherit;
+    font-variant-alternates                   : inherit;
+    font-variant-caps                         : inherit;
+    font-variant-east-asian                   : inherit;
+    font-variant-emoji                        : inherit;
+    font-variant-ligatures                    : inherit;
+    font-variant-numeric                      : inherit;
+    font-variant-position                     : inherit;
+    font-variation-settings                   : inherit;
+    font-weight                               : inherit;
+    font-width                                : inherit;
+    hyphenate-character                       : inherit;
+    hyphenate-limit-chars                     : inherit;
+    line-break                                : inherit;
+    line-height                               : inherit;
+    line-height-step                          : inherit;
+    margin-block-end                          : 0px;
+    margin-block-start                        : 0px;
+    margin-bottom                             : 0px;
+    margin-inline-end                         : 0px;
+    margin-inline-start                       : 0px;
+    margin-left                               : 0px;
+    margin-right                              : 0px;
+    margin-top                                : 0px;
+    text-box-edge                             : inherit;
+    text-box-trim                             : inherit;
+    text-kashida-space                        : inherit;
+    text-size-adjust                          : inherit;
+    text-spacing-trim                         : inherit;
+    text-underline-position                   : inherit;
+    text-wrap                                 : inherit
   }
 
-  /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <big>, <blockquote>, <body>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <html>, <iframe>, <img>, <input[type=checkbox]>, <input[type=radio]>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <output>, <p>, <pre>, <q>, <ruby>, <s>, <samp>, <section>, <small>, <span>, <strike>, <strong>, <sub>, <summary>, <sup>, <table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <var>, <video> */
-  a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, input[type=checkbox], input[type=radio], ins, kbd, label, legend, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, var, video {
+  /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <big>, <blockquote>, <body>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <html>, <iframe>, <img>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <output>, <p>, <pre>, <q>, <ruby>, <s>, <samp>, <section>, <small>, <span>, <strike>, <strong>, <sub>, <summary>, <sup>, <table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <var>, <video> */
+  a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, mark, menu, nav, object, ol, output, p, pre, q, ruby, s, samp, section, small, span, strike, strong, sub, summary, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, var, video {
     padding-bottom: 0px;
     padding-left  : 0px;
     padding-right : 0px;
@@ -371,14 +380,14 @@
     speak  : never
   }
 
-  /* <audio>, <canvas>, <img>, <input>, <object>, <video> */
-  audio, canvas, img, input[type=image i], object, video {
-    object-fit         : contain; /* ->> Ignored by `<embed>`, `<fencedframe>`, and `<iframe>` */
-    object-position    : center center;
+  /* <audio>, <canvas>, <img>, <object>, <video> */
+  audio, canvas, img, object, video {
     -ah-object-fit     : contain;
     -ah-object-position: center center;
     -o-object-fit      : contain;
-    -o-object-position : center center
+    -o-object-position : center center;
+    object-fit         : contain; /* ->> Ignored by `<embed>`, `<fencedframe>`, and `<iframe>` */
+    object-position    : center center
   }
 
   /* <b>, <strong> */
@@ -397,31 +406,31 @@
   }
     /* All */
     body * {
-      touch-action    : inherit;
-      -ms-touch-action: inherit
+      -ms-touch-action: inherit;
+      touch-action    : inherit
     }
 
   /* <body>, <html> */
   body, html {
+    -ms-touch-action: pan-x pan-y;
     touch-action    : pan-x pan-y;
-    width           : 100%;
-    -ms-touch-action: pan-x pan-y
+    width           : 100%
   }
 
   /* <blockquote>, <dd>, <figure> */
   blockquote, dd, figure {
-    margin-inline-start : 40px;
-    -webkit-margin-start: 40px
+    -webkit-margin-start: 40px;
+    margin-inline-start : 40px
   }
 
   /* <blockquote>, <hr>, <listing>, <p>, <plaintext>, <pre>, <xmp> */
   blockquote, hr, listing, p, plaintext, pre, xmp {
+    -webkit-margin-after : 16px;
+    -webkit-margin-before: 16px;
     margin-block-end     : 16px;
     margin-block-start   : 16px;
     margin-bottom        : 16px;
-    margin-top           : 16px;
-    -webkit-margin-after : 16px;
-    -webkit-margin-before: 16px
+    margin-top           : 16px
   }
 
   /* <blockquote>, <q> */
@@ -441,46 +450,42 @@
     }
 
   /* <br> */
-  br[clear=all   i], br[clear=both i] { clear: both }
-  br[clear=left  i]                   { clear: left }
-  br[clear=right i]                   { clear: right }
+  br[clear=all   /* i */], br[clear=both /* i */] { clear: both }
+  br[clear=left  /* i */]                         { clear: left }
+  br[clear=right /* i */]                         { clear: right }
+
+  /* <button> */
+  button {
+    -moz-appearance   : button;
+    -ms-appearance    : button;
+    -webkit-appearance: button;
+    appearance        : button;
+    padding-bottom    : 1px;
+    padding-left      : 5px;
+    padding-right     : 5px;
+    padding-top       : 1px
+  }
 
   /* <button>, <hr>, <input> */
   button, hr, input { overflow: visible }
 
   /* <button>, <input> */
   button, input { display: inline-block }
-
-  button,
-  input[type=button i],
-  input[type=reset  i],
-  input[type=submit i] {
-    appearance        : button;
-    behavior          : url(pie.htc);
-    padding-bottom    : 1px;
-    padding-left      : 5px;
-    padding-right     : 5px;
-    padding-top       : 1px;
-    -moz-appearance   : button;
-    -ms-appearance    : button;
-    -ms-behavior      : url(pie.htc);
-    -webkit-appearance: button
-  }
     /* Pseudo */
       /* Focus Visible */
       button:focus-visible,
-      input[type=button i]:focus-visible,
-      input[type=reset  i]:focus-visible,
-      input[type=submit i]:focus-visible { outline: 1px dotted ButtonText }
+      input[type=button /* i */]:focus-visible,
+      input[type=reset  /* i */]:focus-visible,
+      input[type=submit /* i */]:focus-visible { outline: 1px dotted ButtonText }
 
-      input[type=file i]::file-selector-button:focus-visible       { outline: 1px dotted ButtonText }
-      input[type=file i]::-webkit-file-upload-button:focus-visible { outline: 1px dotted ButtonText }
+      input[type=file /* i */]::file-selector-button:focus-visible       { outline: 1px dotted ButtonText }
+      input[type=file /* i */]::-webkit-file-upload-button:focus-visible { outline: 1px dotted ButtonText }
 
       /* ::-moz-focus-inner */
       button::-moz-focus-inner,
-      input[type=button i]::-moz-focus-inner,
-      input[type=reset  i]::-moz-focus-inner,
-      input[type=submit i]::-moz-focus-inner {
+      input[type=button /* i */]::-moz-focus-inner,
+      input[type=reset  /* i */]::-moz-focus-inner,
+      input[type=submit /* i */]::-moz-focus-inner {
         padding-bottom: 0px;
         padding-left  : 0px;
         padding-right : 0px;
@@ -489,56 +494,39 @@
 
       /* ::-moz-focusring */
       button:-moz-focusring,
-      input[type=button i]:-moz-focusring,
-      input[type=reset  i]:-moz-focusring,
-      input[type=submit i]:-moz-focusring { outline: 1px dotted ButtonText }
+      input[type=button /* i */]:-moz-focusring,
+      input[type=reset  /* i */]:-moz-focusring,
+      input[type=submit /* i */]:-moz-focusring { outline: 1px dotted ButtonText }
         /* Pseudo > (File Selector Button, ::-webkit-file-upload-button) */
-        input[type=file i]::file-selector-button::-moz-focusring       { outline: 1px dotted ButtonText }
-        input[type=file i]::-webkit-file-upload-button::-moz-focusring { outline: 1px dotted ButtonText }
+        input[type=file /* i */]::file-selector-button::-moz-focusring       { outline: 1px dotted ButtonText }
+        input[type=file /* i */]::-webkit-file-upload-button::-moz-focusring { outline: 1px dotted ButtonText }
 
   /* <button>, <input>, <img> */
   button::-moz-focus-inner,
-  input[type=button i]::-moz-focus-inner,
-  input[type=reset  i]::-moz-focus-inner,
-  input[type=submit i]::-moz-focus-inner,
+  input[type=button /* i */]::-moz-focus-inner,
+  input[type=reset  /* i */]::-moz-focus-inner,
+  input[type=submit /* i */]::-moz-focus-inner,
   img { border-style: none }
 
-  /* <button>, <input>, <legend>, <select> */
-  button,
-  input[type=button   i],
-  input[type=color    i],
-  input[type=checkbox i],
-  input[type=radio    i],
-  input[type=reset    i],
-  input[type=search   i],
-  input[type=submit   i],
-  legend,
-  select {
-    box-sizing        : border-box;
-    -webkit-box-sizing: border-box
+  /* <button>, <legend>, <select> */
+  button, legend, select {
+    -webkit-box-sizing: border-box;
+    box-sizing        : border-box
   }
 
-  /* <button>, <input>, <meter>, <select> (> <option>) */
-  button,
-  input[type=button i],
-  input[type=reset  i],
-  input[type=submit i],
-  meter,
-  select,
-  select option { color: dimgray }
+  /* <button>, <meter>, <select> (> <option>) */
+  button, meter, select, select option { color: dimgray }
 
-  /* <button>, <input>, <progress>, <select> (> <option>) */
-  button,
-  input[type=button i],
-  input[type=reset  i],
-  input[type=submit i],
-  progress,
-  select,
-  select option { background-color: whitesmoke }
+  /* <button>, <progress>, <select> (> <option>) */
+  button, progress, select, select option { background-color: whitesmoke }
 
   /* <button>, <input>, <optgroup>, <select>, <textarea> */
   button, input, optgroup, select, textarea {
-    border-width         : 0px;
+    -khtml-border-radius : 0;
+    -moz-border-radius   : 0;
+    -o-border-radius     : 0;
+    -pie-border-radius   : 0;
+    -webkit-border-radius: 0;
     border-bottom        : 1px solid;
     border-bottom-style  : solid;
     border-bottom-width  : 1px;
@@ -552,11 +540,8 @@
     border-top           : 1px solid;
     border-top-style     : solid;
     border-top-width     : 1px;
-    line-height          : 1.500;
-    -khtml-border-radius : 0;
-    -moz-border-radius   : 0;
-    -o-border-radius     : 0;
-    -webkit-border-radius: 0
+    border-width         : 0px;
+    line-height          : 1.500
   }
 
   /* <button>, <select> */
@@ -567,17 +552,17 @@
 
   /* <canvas>, <svg> */
   canvas, svg {
+    -ah-image-smoothing                : false;
+    -prince-background-image-resolution: normal;
+    -prince-image-resolution           : 1dppx;
+    -ro-image-resolution               : 1dppx;
+    -ro-rasterization-supersampling    : 3;
     image-rendering                    : -moz-crisp-edges;
     image-rendering                    : -webkit-crisp-edges;
     image-rendering                    : crisp-edges;
     image-rendering                    : pixelated;
     image-resolution                   : 1dppx;
-    image-resolution                   : snap;
-    -ah-image-smoothing                : false;
-    -prince-background-image-resolution: normal;
-    -prince-image-resolution           : 1dppx;
-    -ro-image-resolution               : 1dppx;
-    -ro-rasterization-supersampling    : 3
+    image-resolution                   : snap
   }
 
   /* <caption> */
@@ -588,14 +573,14 @@
 
   /* <code>, <kbd>, <listing>, <plaintext>, <pre>, <samp>, <tt>, <xmp> */
   code, kbd, listing, plaintext, pre, samp, tt, xmp {
-    font-family                   : monospace, monospace;
-    font-variant-ligatures        : common-ligatures discretionary-ligatures;
-    tab-size                      : 4;
     -ah-tab-stops                 : 4;
     -moz-tab-size                 : 4;
     -o-tab-size                   : 4;
     -ro-tab-size                  : 4;
-    -webkit-font-variant-ligatures: common-ligatures discretionary-ligatures
+    -webkit-font-variant-ligatures: common-ligatures discretionary-ligatures;
+    font-family                   : monospace, monospace;
+    font-variant-ligatures        : common-ligatures discretionary-ligatures;
+    tab-size                      : 4
   }
 
   /* <embed> */
@@ -629,20 +614,26 @@
 
   /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
   h1, h2, h3, h4, h5, h6 {
+    mso-word-wrap : break-word;
+    -ah-word-wrap : break-word;
+    -ms-word-wrap : break-word;
     font-synthesis: none;
-    font-variant  : normal
+    font-variant  : normal;
+    overflow-wrap : break-word;
+    word-break    : keep-all;
+    word-wrap     : break-word
   }
 
   /* <h1>, <h4>, <h5> */
   h1, h4, h5 {
-    margin-inline-end    : 16px;
-    margin-inline-start  : 16px;
-    margin-left          : 16px;
-    margin-right         : 16px;
     -moz-margin-end      : 16px;
     -moz-margin-start    : 16px;
     -webkit-margin-end   : 16px;
-    -webkit-margin-start : 16px
+    -webkit-margin-start : 16px;
+    margin-inline-end    : 16px;
+    margin-inline-start  : 16px;
+    margin-left          : 16px;
+    margin-right         : 16px
   }
 
   /* <h2> */
@@ -650,14 +641,14 @@
 
   /* <h2>, <h3> */
   h2, h3 {
-    margin-inline-end    : 14px;
-    margin-inline-start  : 14px;
-    margin-left          : 14px;
-    margin-right         : 14px;
     -moz-margin-end      : 14px;
     -moz-margin-start    : 14px;
     -webkit-margin-end   : 14px;
-    -webkit-margin-start : 14px
+    -webkit-margin-start : 14px;
+    margin-inline-end    : 14px;
+    margin-inline-start  : 14px;
+    margin-left          : 14px;
+    margin-right         : 14px
   }
 
   /* <h3> */
@@ -671,26 +662,34 @@
 
   /* <h6> */
   h6 {
+    -moz-margin-end      : 18px;
+    -moz-margin-start    : 18px;
+    -webkit-margin-end   : 18px;
+    -webkit-margin-start : 18px;
     font-size            : /* --> xx-small */ 60%;
     margin-inline-end    : 18px;
     margin-inline-start  : 18px;
     margin-left          : 18px;
-    margin-right         : 18px;
-    -moz-margin-end      : 18px;
-    -moz-margin-start    : 18px;
-    -webkit-margin-end   : 18px;
-    -webkit-margin-start : 18px
+    margin-right         : 18px
   }
 
   /* <hr> */
   hr {
+    -webkit-box-sizing: content-box;
     box-sizing        : content-box;
-    height            : 0;
-    -webkit-box-sizing: content-box
+    height            : 0
   }
 
   /* <html> */
   html {
+    mso-word-wrap           : normal;
+    -ah-justify-nbsp        : true;
+    -ah-word-wrap           : normal;
+    -moz-osx-font-smoothing : grayscale;
+    -ms-word-wrap           : normal;
+    -webkit-font-smoothing  : subpixel-antialiased;
+    -webkit-text-security   : none;
+    -webkit-text-size-adjust: 100%;
     direction               : ltr; /* ->> `unicode-bidi` not overriden for Document Type Definition (DTD) designers */
     font-smooth             : always;
     interpolate-size        : allow-keywords;
@@ -700,17 +699,9 @@
     text-size-adjust        : 100%;
     text-spacing-trim       : trim-start;
     text-wrap               : /* wrap */ balance;
-    text-wrap               : /* wrap */ stable;
     text-wrap               : /* wrap */ pretty;
-    zoom                    : 1.000;
-    -ah-justify-nbsp        : true;
-    -ah-word-wrap           : normal;
-    -ms-word-wrap           : normal;
-    -moz-osx-font-smoothing : grayscale;
-    -webkit-font-smoothing  : subpixel-antialiased;
-    -webkit-text-size-adjust: 100%;
-    -webkit-text-security   : none;
-    mso-word-wrap           : normal
+    text-wrap               : /* wrap */ stable;
+    zoom                    : 1.000
   }
 
   /* <html>, <img>, <object> */
@@ -731,57 +722,76 @@
     contain-intrinsic-width      : 0px
   }
 
-  img[align=left  i] { margin-right: 0px }
-  img[align=right i] { margin-left : 0px }
+  img[align=left  /* i */] { margin-right: 0px }
+  img[align=right /* i */] { margin-left : 0px }
 
   /* <input> */
   input[required] { -wap-input-required: true }
 
-  input[type=hidden i] { display: none !important }
+  input[type=button   /* i */],
+  input[type=color    /* i */],
+  input[type=checkbox /* i */],
+  input[type=radio    /* i */],
+  input[type=reset    /* i */],
+  input[type=search   /* i */],
+  input[type=submit   /* i */] {
+    -webkit-box-sizing: border-box;
+    box-sizing        : border-box
+  }
 
-  input[type=search i] {
+  input[type=button /* i */],
+  input[type=reset  /* i */],
+  input[type=submit /* i */] {
+    -moz-appearance   : button;
+    -ms-appearance    : button;
+    -webkit-appearance: button;
+    appearance        : button;
+    background-color  : whitesmoke;
+    color             : dimgray;
+    padding-bottom    : 1px;
+    padding-left      : 5px;
+    padding-right     : 5px;
+    padding-top       : 1px
+  }
+
+  input[type=checkbox /* i */],
+  input[type=radio    /* i */] {
+    padding-bottom: 0px;
+    padding-left  : 0px;
+    padding-right : 0px;
+    padding-top   : 0px
+  }
+
+  input[type=file   /* i */],
+  input[type=hidden /* i */],
+  input[type=image  /* i */] {
+    -moz-appearance   : none;
+    -ms-appearance    : none;
+    -webkit-appearance: none;
+    appearance        : none
+  }
+
+  input[type=hidden /* i */] { display: none !important }
+
+  input[type=image /* i */] {
+    -ah-object-fit     : contain;
+    -ah-object-position: center center;
+    -o-object-fit      : contain;
+    -o-object-position : center center;
+    object-fit         : contain; /* ->> Ignored by `<embed>`, `<fencedframe>`, and `<iframe>` */
+    object-position    : center center
+  }
+
+  input[type=search /* i */] {
+    -moz-appearance   : textfield;
+    -ms-appearance    : textfield;
+    -webkit-appearance: textfield;
     appearance        : textfield;
-    outline-offset    : -2px;
-    -moz-appearance   : texfield;
-    -ms-appearance    : texfield;
-    -webkit-appearance: texfield
+    outline-offset    : -2px
   }
     /* Pseudo */
       /* File Selector Button */
-      input[type=file i]::file-selector-button {
-        appearance                    : button;
-        background-color              : whitesmoke;
-        color                         : dimgray;
-        font-family                   : inherit;
-        font-feature-settings         : inherit;
-        font-kerning                  : inherit;
-        font-optical-sizing           : inherit;
-        font-palette                  : inherit;
-        font-palette                  : inherit;
-        font-size                     : inherit;
-        font-size-adjust              : inherit;
-        font-stretch                  : inherit;
-        font-style                    : inherit;
-        font-synthesis                : inherit;
-        font-synthesis-small-caps     : inherit;
-        font-synthesis-style          : inherit;
-        font-synthesis-weight         : inherit;
-        font-variant-alternates       : inherit;
-        font-variant-caps             : inherit;
-        font-variant-east-asian       : inherit;
-        font-variant-emoji            : inherit;
-        font-variant-ligatures        : inherit;
-        font-variant-numeric          : inherit;
-        font-variant-position         : inherit;
-        font-variation-settings       : inherit;
-        font-weight                   : inherit;
-        hyphenate-character           : inherit;
-        hyphenate-limit-chars         : inherit;
-        line-height                   : inherit;
-        line-height-step              : inherit;
-        text-size-adjust              : inherit;
-        text-spacing-trim             : inherit;
-        text-underline-position       : inherit;
+      input[type=file /* i */]::file-selector-button {
         -moz-appearance               : button;
         -moz-font-feature-settings    : inherit;
         -moz-font-language-override   : inherit;
@@ -801,9 +811,43 @@
         -webkit-font-variant-ligatures: inherit;
         -webkit-hyphenate-character   : inherit;
         -webkit-text-size-adjust      : inherit;
+        appearance                    : button;
+        background-color              : whitesmoke;
+        color                         : dimgray;
+        font-family                   : inherit;
+        font-feature-settings         : inherit;
+        font-kerning                  : inherit;
+        font-optical-sizing           : inherit;
+        font-palette                  : inherit;
+        font-palette                  : inherit;
+        font-size                     : inherit;
+        font-size-adjust              : inherit;
+        font-stretch                  : inherit;
+        font-style                    : inherit;
+        font-synthesis                : inherit;
+        font-synthesis-position       : inherit;
+        font-synthesis-small-caps     : inherit;
+        font-synthesis-style          : inherit;
+        font-synthesis-weight         : inherit;
+        font-variant-alternates       : inherit;
+        font-variant-caps             : inherit;
+        font-variant-east-asian       : inherit;
+        font-variant-emoji            : inherit;
+        font-variant-ligatures        : inherit;
+        font-variant-numeric          : inherit;
+        font-variant-position         : inherit;
+        font-variation-settings       : inherit;
+        font-weight                   : inherit;
+        hyphenate-character           : inherit;
+        hyphenate-limit-chars         : inherit;
+        line-height                   : inherit;
+        line-height-step              : inherit;
+        text-size-adjust              : inherit;
+        text-spacing-trim             : inherit;
+        text-underline-position       : inherit
       }
         /* Pseudo > ::-moz-focus-inner */
-        input[type=file i]::file-selector-button::-moz-focus-inner {
+        input[type=file /* i */]::file-selector-button::-moz-focus-inner {
           padding-bottom: 0px;
           padding-left  : 0px;
           padding-right : 0px;
@@ -811,7 +855,11 @@
         }
 
       /* ::-ms-browse */
-      input[type=file i]::-ms-browse {
+      input[type=file /* i */]::-ms-browse {
+        -ms-appearance             : button;
+        -ms-font-feature-settings  : inherit;
+        -ms-text-kashida-space     : inherit;
+        -ms-text-underline-position: inherit;
         appearance                 : button;
         background-color           : whitesmoke;
         border-style               : none;
@@ -846,15 +894,19 @@
         text-size-adjust           : inherit;
         text-spacing-trim          : inherit;
         text-transform             : inherit;
-        text-underline-position    : inherit;
-        -ms-appearance             : button;
-        -ms-font-feature-settings  : inherit;
-        -ms-text-kashida-space     : inherit;
-        -ms-text-underline-position: inherit
+        text-underline-position    : inherit
       }
 
       /* ::-webkit-file-upload-button */
-      input[type=file i]::-webkit-file-upload-button {
+      input[type=file /* i */]::-webkit-file-upload-button {
+        -webkit-appearance            : button;
+        -webkit-font-feature-settings : inherit;
+        -webkit-font-kerning          : inherit;
+        -webkit-font-size-delta       : inherit;
+        -webkit-font-smoothing        : inherit;
+        -webkit-font-variant-ligatures: inherit;
+        -webkit-hyphenate-character   : inherit;
+        -webkit-text-size-adjust      : inherit;
         appearance                    : button;
         background-color              : whitesmoke;
         border-style                  : none;
@@ -889,18 +941,10 @@
         text-size-adjust              : inherit;
         text-spacing-trim             : inherit;
         text-transform                : inherit;
-        text-underline-position       : inherit;
-        -webkit-appearance            : button;
-        -webkit-font-feature-settings : inherit;
-        -webkit-font-kerning          : inherit;
-        -webkit-font-size-delta       : inherit;
-        -webkit-font-smoothing        : inherit;
-        -webkit-font-variant-ligatures: inherit;
-        -webkit-hyphenate-character   : inherit;
-        -webkit-text-size-adjust      : inherit
+        text-underline-position       : inherit
       }
         /* Pseudo > ::-moz-focus-inner */
-        input[type=file i]::-webkit-file-upload-button::-moz-focus-inner {
+        input[type=file /* i */]::-webkit-file-upload-button::-moz-focus-inner {
           padding-bottom: 0px;
           padding-left  : 0px;
           padding-right : 0px;
@@ -908,36 +952,31 @@
         }
 
       /* ::-webkit-inner-spin-button, ::-webkit-outer-spin-button */
-      input[type=number i]::-webkit-inner-spin-button,
-      input[type=number i]::-webkit-outer-spin-button { height: auto }
+      input[type=number /* i */]::-webkit-inner-spin-button,
+      input[type=number /* i */]::-webkit-outer-spin-button { height: auto }
 
       /* ::-webkit-search-decoration */
-      input[type=search i]::-webkit-search-decoration {
-        appearance        : none;
-        -webkit-appearance: none
+      input[type=search /* i */]::-webkit-search-decoration {
+        -webkit-appearance: none;
+        appearance        : none
       }
 
-  /* <input>, <meter>, <progress> */
-  input[type=file i], input[type=hidden i], input[type=image i],
-  meter,
-  progress { appearance: none }
-
   /* <input>, <pre>, <textarea> */
-  input[dir=auto i][type=email  i],
-  input[dir=auto i][type=search i],
-  input[dir=auto i][type=tel    i],
-  input[dir=auto i][type=url    i],
-  pre[dir=auto i],
-  textarea[dir=auto i] { unicode-bidi: plaintext }
+  input[dir=auto /* i */][type=email  /* i */],
+  input[dir=auto /* i */][type=search /* i */],
+  input[dir=auto /* i */][type=tel    /* i */],
+  input[dir=auto /* i */][type=url    /* i */],
+  pre[dir=auto /* i */],
+  textarea[dir=auto /* i */] { unicode-bidi: plaintext }
 
   /* <input>, <textarea> */
     /* Pseudo */
       /* Placeholder */
       input::placeholder, textarea::placeholder {
-        color         : inherit;
-        opacity       : 0.25;
         -khtml-opacity: 0.25;
-        -moz-opacity  : 0.25
+        -moz-opacity  : 0.25;
+        color         : inherit;
+        opacity       : 0.25
       }
 
       /* :-ms-input-placeholder */
@@ -947,18 +986,14 @@
 
       /* ::-ms-input-placeholder */
       input::-ms-input-placeholder, textarea::-ms-input-placeholder {
-        color         : inherit;
-        opacity       : 0.25;
-        -khtml-opacity: 0.25;
-        -moz-opacity  : 0.25
+        color  : inherit;
+        opacity: 0.25
       }
 
       /* ::-webkit-input-placeholder */
       input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
-        color         : inherit;
-        opacity       : 0.25;
-        -khtml-opacity: 0.25;
-        -moz-opacity  : 0.25
+        color  : inherit;
+        opacity: 0.25
       }
 
   /* <legend> */
@@ -969,8 +1004,8 @@
     white-space: normal
   }
 
-  /* <listing>, <plaintext>, <pre>, <textarea>, <xmp> */
-  listing, plaintext, pre, textarea[wrap=off i], xmp { white-space: pre }
+  /* <listing>, <plaintext>, <pre>, <xmp> */
+  listing, plaintext, pre, xmp { white-space: pre }
 
   /* <mark> */
   mark {
@@ -996,12 +1031,12 @@
 
       /* ::-webkit-meter-mar */
       meter::-webkit-meter-bar {
+        -webkit-grid-row-end  : none;
+        -webkit-grid-row-start: none;
         background            : none;
         border-style          : none;
         grid-row-end          : none;
-        grid-row-start        : none;
-        -webkit-grid-row-end  : none;
-        -webkit-grid-row-start: none
+        grid-row-start        : none
       }
 
       /* ::-webkit-meter-mar-… */
@@ -1015,21 +1050,17 @@
 
   /* <meter>, <progress> */
   meter, progress {
-    height            : 16px;
-    width             : 100px;
     -moz-appearance   : none;
     -ms-appearance    : none;
-    -webkit-appearance: none
+    -webkit-appearance: none;
+    appearance        : none;
+    height            : 16px;
+    width             : 100px
   }
     /* Pseudo */
       /* ::-moz-meter-bar, ::-moz-progress-bar */
       meter::-moz-meter-bar,
       progress::-moz-progress-bar {
-        transition-behavior               : inherit;
-        transition-delay                  : inherit;
-        transition-duration               : inherit;
-        transition-property               : background, width;
-        transition-timing-function        : inherit;
         -moz-transition-delay             : inherit;
         -moz-transition-duration          : inherit;
         -moz-transition-property          : background, width;
@@ -1037,7 +1068,12 @@
         -webkit-transition-delay          : inherit;
         -webkit-transition-duration       : inherit;
         -webkit-transition-property       : background, width;
-        -webkit-transition-timing-function: linear
+        -webkit-transition-timing-function: linear;
+        transition-behavior               : inherit;
+        transition-delay                  : inherit;
+        transition-duration               : inherit;
+        transition-property               : background, width;
+        transition-timing-function        : inherit
       }
 
       /* ::-webkit-meter-bar-, ::-webkit-progress-value */
@@ -1046,11 +1082,6 @@
       meter::-webkit-meter-optimum-value,
       meter::-webkit-meter-suboptimum-value,
       progress::-webkit-progress-value {
-        transition-behavior               : inherit;
-        transition-delay                  : inherit;
-        transition-duration               : inherit;
-        transition-property               : background, inline-size, width;
-        transition-timing-function        : inherit;
         -o-transition-delay               : inherit;
         -o-transition-duration            : inherit;
         -o-transition-property            : background, inline-size, width;
@@ -1058,7 +1089,12 @@
         -webkit-transition-delay          : inherit;
         -webkit-transition-duration       : inherit;
         -webkit-transition-property       : background, inline-size, width;
-        -webkit-transition-timing-function: linear
+        -webkit-transition-timing-function: linear;
+        transition-behavior               : inherit;
+        transition-delay                  : inherit;
+        transition-duration               : inherit;
+        transition-property               : background, inline-size, width;
+        transition-timing-function        : inherit
       }
 
   /* <nobr> */
@@ -1072,14 +1108,14 @@
     list-style-type: decimal
   }
 
-  /* <pre>, <textarea> */
-  pre[wrap], textarea { white-space: pre-wrap }
+  /* <pre> */
+  pre[wrap] { white-space: pre-wrap }
 
   /* <progress> */
   progress {
+    -webkit-appearance: none;
     appearance        : none;
-    outline-width     : 0px;
-    -webkit-appearance: none
+    outline-width     : 0px
   }
     /* Pseudo */
       /* ::-moz-progress-bar */
@@ -1132,9 +1168,15 @@
     border-spacing : 0;
     table-layout   : fixed
   }
+    /* <tbody>, <tfoot>, <thead>, <td>, <tr> */
+    table tbody, table tfoot, table thead, table td, table tr { vertical-align: inherit }
 
   /* <td> */
   td { overflow-wrap: anywhere }
+
+  /* <textarea> */
+  textarea                   { white-space: pre-wrap }
+  textarea[wrap=off /* i */] { white-space: pre }
 
   /* <time> */
   time { font-variant-numeric: tabular-nums }
@@ -1159,11 +1201,11 @@
 
   @media print {
     * {
-      print-color-adjust        : exact;
       -moz-print-color-adjust   : exact;
       -prince-image-magic       : ignore-icc-profile;
       -webkit-color-adjust      : exact;
-      -webkit-print-color-adjust: exact
+      -webkit-print-color-adjust: exact;
+      print-color-adjust        : exact
     }
   }
 
@@ -1173,3 +1215,32 @@
 
   /* Starting Style */
   @starting-style { /* Do nothing… */ }
+
+/* Components */
+  /* Progressive Internet Explorer */
+  button,
+  .pie {
+    -ms-behavior         : url(pie.htc);
+    -pie-lazy-init       : true;
+    -pie-png-fix         : true;
+    -pie-poll            : false;
+    -pie-track-active    : false;
+    -pie-track-hover     : false;
+    -pie-watch-ancestors : none;
+    /* -pie-background   : …; */
+    /* -pie-border-radius: …; */
+    /* -pie-box-shadow   : …; */
+    /* -pie-load-path    : …; */
+    behavior             : url(pie.htc);
+    position             : relative;
+    zoom                 : 1
+  }
+
+  input[type=button /* i */],
+  input[type=reset  /* i */],
+  input[type=submit /* i */] {
+    -ms-behavior: url(pie.htc);
+    behavior    : url(pie.htc);
+    position    : relative;
+    zoom        : 1
+  }

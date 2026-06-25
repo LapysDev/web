@@ -1527,16 +1527,16 @@ void function main() {
     /* Mathematics > ... */
     Mathematics.E       = 2.718281828459045;
     Mathematics.E_GAMMA = 0.57721566490153286060651209008240243104215933593992;
-    Mathematics.ETA     = 245850922 / 156513558;
+    Mathematics.ETA     = 245850922.0 / 156513558.0;
     Mathematics.LN2     = 0.6931471805599453;
-    Mathematics.LN10    = 2.302585092994046;
+    Mathematics.LN10    = 2.3025850929940460;
     Mathematics.LOG2E   = 1.4426950408889634;
     Mathematics.LOG10E  = 0.4342944819032518;
     Mathematics.PHI     = 1.618033988749894848204586834;
-    Mathematics.PI      = 245850922 / 78256779;
-    Mathematics.SQRT2   = 665857 / 470832;
-    Mathematics.SQRT3   = 97 / 56;
-    Mathematics.SQRT5   = 51841 / 23184;
+    Mathematics.PI      = 245850922.0 / 78256779.0;
+    Mathematics.SQRT2   = 665857.0    / 470832.0;
+    Mathematics.SQRT3   = 97.0        / 56.0;
+    Mathematics.SQRT5   = 51841.0     / 23184.0;
 
     Mathematics.abs = function absolute(number) {
       return number < +0 ? -number : number

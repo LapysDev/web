@@ -1,6 +1,7 @@
 @charset "UTF-8";
-@import    "test.css"; /* ->> Debug only… */
-@namespace url("http://www.w3.org/1999/xhtml");
+/*@import        "test.css";*/ /* ->> Debug only… */
+@namespace     "http://www.w3.org/1999/xhtml";
+@namespace svg "http://www.w3.org/2000/svg";
 
 /* Components > (Landscape, Portrait) */
 .landscape {}
@@ -14,14 +15,14 @@
     font-feature-settings  : "hist" 1;
     font-variant-alternates: historical-forms;
     font-weight            : 400;
-    src                    : local(Iosevka), url(../fonts/iosevka.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
+    src                    : local('🙂'), url(../fonts/iosevka.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
     unicode-range          : U+0020-007E
   }
     @font-face {
       font-display : swap;
       font-family  : Iosevka;
       font-weight  : 100;
-      src          : local("Iosevka Thin"), url(../fonts/iosevka-thin.woff2) format("woff2"), url(../fonts/iosevka-thin.woff) format("woff"), url(../fonts/iosevka-thin.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-thin.woff2) format("woff2"), url(../fonts/iosevka-thin.woff) format("woff"), url(../fonts/iosevka-thin.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -30,7 +31,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 100;
-      src          : local("Iosevka Thin"), url(../fonts/iosevka-thin-italic.woff2) format("woff2"), url(../fonts/iosevka-thin-italic.woff) format("woff"), url(../fonts/iosevka-thin-italic.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-thin-italic.woff2) format("woff2"), url(../fonts/iosevka-thin-italic.woff) format("woff"), url(../fonts/iosevka-thin-italic.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -39,7 +40,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 100;
-      src          : local("Iosevka Thin Oblique"), url(../fonts/iosevka-thin-oblique.woff2) format("woff2"), url(../fonts/iosevka-thin-oblique.woff) format("woff"), url(../fonts/iosevka-thin-oblique.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-thin-oblique.woff2) format("woff2"), url(../fonts/iosevka-thin-oblique.woff) format("woff"), url(../fonts/iosevka-thin-oblique.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -47,7 +48,7 @@
       font-display : swap;
       font-family  : Iosevka;
       font-weight  : 200;
-      src          : local("Iosevka Extralight"), url(../fonts/iosevka-extralight.woff2) format("woff2"), url(../fonts/iosevka-extralight.woff) format("woff"), url(../fonts/iosevka-extralight.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-extralight.woff2) format("woff2"), url(../fonts/iosevka-extralight.woff) format("woff"), url(../fonts/iosevka-extralight.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -56,7 +57,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 200;
-      src          : local("Iosevka Extralight"), url(../fonts/iosevka-extralight-italic.woff2) format("woff2"), url(../fonts/iosevka-extralight-italic.woff) format("woff"), url(../fonts/iosevka-extralight-italic.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-extralight-italic.woff2) format("woff2"), url(../fonts/iosevka-extralight-italic.woff) format("woff"), url(../fonts/iosevka-extralight-italic.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -65,7 +66,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 200;
-      src          : local("Iosevka Extralight Oblique"), url(../fonts/iosevka-extralight-oblique.woff2) format("woff2"), url(../fonts/iosevka-extralight-oblique.woff) format("woff"), url(../fonts/iosevka-extralight-oblique.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-extralight-oblique.woff2) format("woff2"), url(../fonts/iosevka-extralight-oblique.woff) format("woff"), url(../fonts/iosevka-extralight-oblique.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -73,7 +74,7 @@
       font-display : swap;
       font-family  : Iosevka;
       font-weight  : 300;
-      src          : local("Iosevka Light"), url(../fonts/iosevka-light.woff2) format("woff2"), url(../fonts/iosevka-light.woff) format("woff"), url(../fonts/iosevka-light.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-light.woff2) format("woff2"), url(../fonts/iosevka-light.woff) format("woff"), url(../fonts/iosevka-light.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -82,7 +83,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 300;
-      src          : local("Iosevka Light"), url(../fonts/iosevka-light-italic.woff2) format("woff2"), url(../fonts/iosevka-light-italic.woff) format("woff"), url(../fonts/iosevka-light-italic.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-light-italic.woff2) format("woff2"), url(../fonts/iosevka-light-italic.woff) format("woff"), url(../fonts/iosevka-light-italic.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -91,7 +92,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 300;
-      src          : local("Iosevka Light Oblique"), url(../fonts/iosevka-light-oblique.woff2) format("woff2"), url(../fonts/iosevka-light-oblique.woff) format("woff"), url(../fonts/iosevka-light-oblique.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-light-oblique.woff2) format("woff2"), url(../fonts/iosevka-light-oblique.woff) format("woff"), url(../fonts/iosevka-light-oblique.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -100,7 +101,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 400;
-      src          : local(Iosevka), url(../fonts/iosevka-italic.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-italic.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -109,7 +110,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 400;
-      src          : local("Iosevka Oblique"), url(../fonts/iosevka-oblique.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-oblique.woff2) format("woff2"), url(../fonts/iosevka.woff) format("woff"), url(../fonts/iosevka.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -117,7 +118,7 @@
       font-display : swap;
       font-family  : Iosevka;
       font-weight  : 500;
-      src          : local("Iosevka Medium"), url(../fonts/iosevka-medium.woff2) format("woff2"), url(../fonts/iosevka-medium.woff) format("woff"), url(../fonts/iosevka-medium.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-medium.woff2) format("woff2"), url(../fonts/iosevka-medium.woff) format("woff"), url(../fonts/iosevka-medium.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -126,7 +127,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 500;
-      src          : local("Iosevka Medium"), url(../fonts/iosevka-medium-italic.woff2) format("woff2"), url(../fonts/iosevka-medium-italic.woff) format("woff"), url(../fonts/iosevka-medium-italic.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-medium-italic.woff2) format("woff2"), url(../fonts/iosevka-medium-italic.woff) format("woff"), url(../fonts/iosevka-medium-italic.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -135,7 +136,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 500;
-      src          : local("Iosevka Medium Oblique"), url(../fonts/iosevka-medium-oblique.woff2) format("woff2"), url(../fonts/iosevka-medium-oblique.woff) format("woff"), url(../fonts/iosevka-medium-oblique.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-medium-oblique.woff2) format("woff2"), url(../fonts/iosevka-medium-oblique.woff) format("woff"), url(../fonts/iosevka-medium-oblique.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -143,7 +144,7 @@
       font-display : swap;
       font-family  : Iosevka;
       font-weight  : 600;
-      src          : local("Iosevka Semibold"), url(../fonts/iosevka-semibold.woff2) format("woff2"), url(../fonts/iosevka-semibold.woff) format("woff"), url(../fonts/iosevka-semibold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-semibold.woff2) format("woff2"), url(../fonts/iosevka-semibold.woff) format("woff"), url(../fonts/iosevka-semibold.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -152,7 +153,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 600;
-      src          : local("Iosevka Semibold"), url(../fonts/iosevka-semibold-italic.woff2) format("woff2"), url(../fonts/iosevka-semibold-italic.woff) format("woff"), url(../fonts/iosevka-semibold-italic.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-semibold-italic.woff2) format("woff2"), url(../fonts/iosevka-semibold-italic.woff) format("woff"), url(../fonts/iosevka-semibold-italic.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -161,7 +162,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 600;
-      src          : local("Iosevka Semibold Oblique"), url(../fonts/iosevka-semibold-oblique.woff2) format("woff2"), url(../fonts/iosevka-semibold-oblique.woff) format("woff"), url(../fonts/iosevka-semibold-oblique.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-semibold-oblique.woff2) format("woff2"), url(../fonts/iosevka-semibold-oblique.woff) format("woff"), url(../fonts/iosevka-semibold-oblique.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -169,7 +170,7 @@
       font-display : swap;
       font-family  : Iosevka;
       font-weight  : 700;
-      src          : local(Iosevka), url(../fonts/iosevka-bold.woff2) format("woff2"), url(../fonts/iosevka-bold.woff) format("woff"), url(../fonts/iosevka-bold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-bold.woff2) format("woff2"), url(../fonts/iosevka-bold.woff) format("woff"), url(../fonts/iosevka-bold.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -178,7 +179,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 700;
-      src          : local(Iosevka), url(../fonts/iosevka-bold-italic.woff2) format("woff2"), url(../fonts/iosevka-bold-italic.woff) format("woff"), url(../fonts/iosevka-bold-italic.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-bold-italic.woff2) format("woff2"), url(../fonts/iosevka-bold-italic.woff) format("woff"), url(../fonts/iosevka-bold-italic.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -187,7 +188,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 700;
-      src          : local("Iosevka Oblique"), url(../fonts/iosevka-bold-oblique.woff2) format("woff2"), url(../fonts/iosevka-bold-oblique.woff) format("woff"), url(../fonts/iosevka-bold-oblique.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-bold-oblique.woff2) format("woff2"), url(../fonts/iosevka-bold-oblique.woff) format("woff"), url(../fonts/iosevka-bold-oblique.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -195,7 +196,7 @@
       font-display : swap;
       font-family  : Iosevka;
       font-weight  : 800;
-      src          : local("Iosevka Extrabold"), url(../fonts/iosevka-extrabold.woff2) format("woff2"), url(../fonts/iosevka-extrabold.woff) format("woff"), url(../fonts/iosevka-extrabold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-extrabold.woff2) format("woff2"), url(../fonts/iosevka-extrabold.woff) format("woff"), url(../fonts/iosevka-extrabold.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -204,7 +205,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 800;
-      src          : local("Iosevka Extrabold"), url(../fonts/iosevka-extrabold-italic.woff2) format("woff2"), url(../fonts/iosevka-extrabold-italic.woff) format("woff"), url(../fonts/iosevka-extrabold-italic.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-extrabold-italic.woff2) format("woff2"), url(../fonts/iosevka-extrabold-italic.woff) format("woff"), url(../fonts/iosevka-extrabold-italic.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -213,7 +214,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 800;
-      src          : local("Iosevka Extrabold Oblique"), url(../fonts/iosevka-extrabold-oblique.woff2) format("woff2"), url(../fonts/iosevka-extrabold-oblique.woff) format("woff"), url(../fonts/iosevka-extrabold-oblique.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-extrabold-oblique.woff2) format("woff2"), url(../fonts/iosevka-extrabold-oblique.woff) format("woff"), url(../fonts/iosevka-extrabold-oblique.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -221,7 +222,7 @@
       font-display : swap;
       font-family  : Iosevka;
       font-weight  : 900;
-      src          : local("Iosevka Heavy"), url(../fonts/iosevka-heavy.woff2) format("woff2"), url(../fonts/iosevka-heavy.woff) format("woff"), url(../fonts/iosevka-heavy.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-heavy.woff2) format("woff2"), url(../fonts/iosevka-heavy.woff) format("woff"), url(../fonts/iosevka-heavy.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -230,7 +231,7 @@
       font-family  : Iosevka;
       font-style   : italic;
       font-weight  : 900;
-      src          : local("Iosevka Heavy"), url(../fonts/iosevka-heavy-italic.woff2) format("woff2"), url(../fonts/iosevka-heavy-italic.woff) format("woff"), url(../fonts/iosevka-heavy-italic.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-heavy-italic.woff2) format("woff2"), url(../fonts/iosevka-heavy-italic.woff) format("woff"), url(../fonts/iosevka-heavy-italic.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -239,7 +240,7 @@
       font-family  : Iosevka;
       font-style   : oblique;
       font-weight  : 900;
-      src          : local("Iosevka Heavy Oblique"), url(../fonts/iosevka-heavy-oblique.woff2) format("woff2"), url(../fonts/iosevka-heavy-oblique.woff) format("woff"), url(../fonts/iosevka-heavy-oblique.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/iosevka-heavy-oblique.woff2) format("woff2"), url(../fonts/iosevka-heavy-oblique.woff) format("woff"), url(../fonts/iosevka-heavy-oblique.ttf) format("truetype");
       unicode-range: U+0020-007E
     }
 
@@ -249,14 +250,14 @@
     font-feature-settings  : "hist" 1;
     font-variant-alternates: historical-forms;
     font-weight            : 400;
-    src                    : local("M PLUS 1 Code"), url(../fonts/m_plus_1_code.woff2) format("woff2"), url(../fonts/m_plus_1_code.woff) format("woff"), url(../fonts/m_plus_1_code.ttf) format("truetype");
+    src                    : local('🙂'), url(../fonts/m_plus_1_code.woff2) format("woff2"), url(../fonts/m_plus_1_code.woff) format("woff"), url(../fonts/m_plus_1_code.ttf) format("truetype");
     unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
   }
     @font-face {
       font-display : swap;
       font-family  : "M PLUS 1 Code";
       font-weight  : 100;
-      src          : local("M PLUS 1 Code Thin"), url(../fonts/m_plus_1_code-thin.woff2) format("woff2"), url(../fonts/m_plus_1_code-thin.woff) format("woff"), url(../fonts/m_plus_1_code-thin.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/m_plus_1_code-thin.woff2) format("woff2"), url(../fonts/m_plus_1_code-thin.woff) format("woff"), url(../fonts/m_plus_1_code-thin.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
@@ -264,7 +265,7 @@
       font-display : swap;
       font-family  : "M PLUS 1 Code";
       font-weight  : 200;
-      src          : local("M PLUS 1 Code ExtraLight"), url(../fonts/m_plus_1_code-extralight.woff2) format("woff2"), url(../fonts/m_plus_1_code-extralight.woff) format("woff"), url(../fonts/m_plus_1_code-extralight.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/m_plus_1_code-extralight.woff2) format("woff2"), url(../fonts/m_plus_1_code-extralight.woff) format("woff"), url(../fonts/m_plus_1_code-extralight.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
@@ -272,7 +273,7 @@
       font-display : swap;
       font-family  : "M PLUS 1 Code";
       font-weight  : 300;
-      src          : local("M PLUS 1 Code Light"), url(../fonts/m_plus_1_code-light.woff2) format("woff2"), url(../fonts/m_plus_1_code-light.woff) format("woff"), url(../fonts/m_plus_1_code-light.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/m_plus_1_code-light.woff2) format("woff2"), url(../fonts/m_plus_1_code-light.woff) format("woff"), url(../fonts/m_plus_1_code-light.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
@@ -280,7 +281,7 @@
       font-display : swap;
       font-family  : "M PLUS 1 Code";
       font-weight  : 500;
-      src          : local("M PLUS 1 Code Medium"), url(../fonts/m_plus_1_code-medium.woff2) format("woff2"), url(../fonts/m_plus_1_code-medium.woff) format("woff"), url(../fonts/m_plus_1_code-medium.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/m_plus_1_code-medium.woff2) format("woff2"), url(../fonts/m_plus_1_code-medium.woff) format("woff"), url(../fonts/m_plus_1_code-medium.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
@@ -288,7 +289,7 @@
       font-display : swap;
       font-family  : "M PLUS 1 Code";
       font-weight  : 600;
-      src          : local("M PLUS 1 Code SemiBold"), url(../fonts/m_plus_1_code-semibold.woff2) format("woff2"), url(../fonts/m_plus_1_code-semibold.woff) format("woff"), url(../fonts/m_plus_1_code-semibold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/m_plus_1_code-semibold.woff2) format("woff2"), url(../fonts/m_plus_1_code-semibold.woff) format("woff"), url(../fonts/m_plus_1_code-semibold.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
@@ -296,7 +297,7 @@
       font-display : swap;
       font-family  : "M PLUS 1 Code";
       font-weight  : 700 900;
-      src          : local("M PLUS 1 Code"), url(../fonts/m_plus_1_code-bold.woff2) format("woff2"), url(../fonts/m_plus_1_code-bold.woff) format("woff"), url(../fonts/m_plus_1_code-bold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/m_plus_1_code-bold.woff2) format("woff2"), url(../fonts/m_plus_1_code-bold.woff) format("woff"), url(../fonts/m_plus_1_code-bold.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+3000-303F, U+3040-309F, U+30A0-30FF, U+4E00-9FFF, U+FF00-FFEF
     }
 
@@ -306,14 +307,14 @@
     font-feature-settings  : "hist" 1;
     font-variant-alternates: historical-forms;
     font-weight            : 400;
-    src                    : local("Open Sans"), url(../fonts/open_sans.woff2) format("woff2"), url(../fonts/open_sans.woff) format("woff");
+    src                    : local('🙂'), url(../fonts/open_sans.woff2) format("woff2"), url(../fonts/open_sans.woff) format("woff");
     unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
   }
     @font-face {
       font-display : swap;
       font-family  : "Open Sans";
       font-weight  : 100 300;
-      src          : local("Open Sans Light"), url(../fonts/open_sans-light.woff2) format("woff2"), url(../fonts/open_sans-light.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-light.woff2) format("woff2"), url(../fonts/open_sans-light.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -322,7 +323,7 @@
       font-family  : "Open Sans";
       font-style   : italic;
       font-weight  : 100 300;
-      src          : local("Open Sans Light"), url(../fonts/open_sans-light-italic.woff2) format("woff2"), url(../fonts/open_sans-light-italic.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-light-italic.woff2) format("woff2"), url(../fonts/open_sans-light-italic.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -331,7 +332,7 @@
       font-family  : "Open Sans";
       font-style   : italic;
       font-weight  : 400;
-      src          : local("Open Sans"), url(../fonts/open_sans-italic.woff2) format("woff2"), url(../fonts/open_sans-italic.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-italic.woff2) format("woff2"), url(../fonts/open_sans-italic.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -339,7 +340,7 @@
       font-display : swap;
       font-family  : "Open Sans";
       font-weight  : 500 600;
-      src          : local("Open Sans Semibold"), url(../fonts/open_sans-semibold.woff2) format("woff2"), url(../fonts/open_sans-semibold.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-semibold.woff2) format("woff2"), url(../fonts/open_sans-semibold.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -348,7 +349,7 @@
       font-family  : "Open Sans";
       font-style   : italic;
       font-weight  : 500 600;
-      src          : local("Open Sans Semibold"), url(../fonts/open_sans-semibold-italic.woff2) format("woff2"), url(../fonts/open_sans-semibold-italic.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-semibold-italic.woff2) format("woff2"), url(../fonts/open_sans-semibold-italic.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -356,7 +357,7 @@
       font-display : swap;
       font-family  : "Open Sans";
       font-weight  : 700;
-      src          : local("Open Sans"), url(../fonts/open_sans-bold.woff2) format("woff2"), url(../fonts/open_sans-bold.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-bold.woff2) format("woff2"), url(../fonts/open_sans-bold.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -365,7 +366,7 @@
       font-family  : "Open Sans";
       font-style   : italic;
       font-weight  : 700;
-      src          : local("Open Sans"), url(../fonts/open_sans-bold-italic.woff2) format("woff2"), url(../fonts/open_sans-bold-italic.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-bold-italic.woff2) format("woff2"), url(../fonts/open_sans-bold-italic.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -373,7 +374,7 @@
       font-display : swap;
       font-family  : "Open Sans";
       font-weight  : 800 900;
-      src          : local("Open Sans Extrabold"), url(../fonts/open_sans-extrabold.woff2) format("woff2"), url(../fonts/open_sans-extrabold.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-extrabold.woff2) format("woff2"), url(../fonts/open_sans-extrabold.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -382,7 +383,7 @@
       font-family  : "Open Sans";
       font-style   : italic;
       font-weight  : 800 900;
-      src          : local("Open Sans Extrabold"), url(../fonts/open_sans-extrabold-italic.woff2) format("woff2"), url(../fonts/open_sans-extrabold-italic.woff) format("woff");
+      src          : local('🙂'), url(../fonts/open_sans-extrabold-italic.woff2) format("woff2"), url(../fonts/open_sans-extrabold-italic.woff) format("woff");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
@@ -392,14 +393,14 @@
     font-feature-settings  : normal;
     font-variant-alternates: initial;
     font-weight            : 400;
-    src                    : local("PT Sans"), url(../fonts/pt_sans.woff2) format("woff2"), url(../fonts/pt_sans.woff) format("woff"), url(../fonts/pt_sans.ttf) format("truetype");
+    src                    : local('🙂'), url(../fonts/pt_sans.woff2) format("woff2"), url(../fonts/pt_sans.woff) format("woff"), url(../fonts/pt_sans.ttf) format("truetype");
     unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0400-04FF
   }
     @font-face {
       font-display : swap;
       font-family  : "PT Sans";
       font-weight  : bold;
-      src          : local("PT Sans Bold"), url(../fonts/pt_sans-bold.woff2) format("woff2"), url(../fonts/pt_sans-bold.woff) format("woff"), url(../fonts/pt_sans-bold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/pt_sans-bold.woff2) format("woff2"), url(../fonts/pt_sans-bold.woff) format("woff"), url(../fonts/pt_sans-bold.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0400-04FF
     }
 
@@ -409,14 +410,14 @@
     font-feature-settings  : normal;
     font-variant-alternates: initial;
     font-weight            : 400;
-    src                    : local(Rajdhani), url(../fonts/rajdhani.woff2) format("woff2"), url(../fonts/rajdhani.woff) format("woff"), url(../fonts/rajdhani.ttf) format("truetype");
+    src                    : local('🙂'), url(../fonts/rajdhani.woff2) format("woff2"), url(../fonts/rajdhani.woff) format("woff"), url(../fonts/rajdhani.ttf) format("truetype");
     unicode-range          :  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
   }
     @font-face {
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 100 300;
-      src          : local("Rajdhani Light"), url(../fonts/rajdhani-light.woff2) format("woff2"), url(../fonts/rajdhani-light.woff) format("woff"), url(../fonts/rajdhani-light.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/rajdhani-light.woff2) format("woff2"), url(../fonts/rajdhani-light.woff) format("woff"), url(../fonts/rajdhani-light.ttf) format("truetype");
       unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
@@ -424,7 +425,7 @@
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 500;
-      src          : local("Rajdhani Medium"), url(../fonts/rajdhani-medium.woff2) format("woff2"), url(../fonts/rajdhani-medium.woff) format("woff"), url(../fonts/rajdhani-medium.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/rajdhani-medium.woff2) format("woff2"), url(../fonts/rajdhani-medium.woff) format("woff"), url(../fonts/rajdhani-medium.ttf) format("truetype");
       unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
@@ -432,7 +433,7 @@
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 600;
-      src          : local("Rajdhani Semibold"), url(../fonts/rajdhani-semibold.woff2) format("woff2"), url(../fonts/rajdhani-semibold.woff) format("woff"), url(../fonts/rajdhani-semibold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/rajdhani-semibold.woff2) format("woff2"), url(../fonts/rajdhani-semibold.woff) format("woff"), url(../fonts/rajdhani-semibold.ttf) format("truetype");
       unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
@@ -440,70 +441,86 @@
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 700 900;
-      src          : local("Rajdhani Bold"), url(../fonts/rajdhani-bold.woff2) format("woff2"), url(../fonts/rajdhani-bold.woff) format("woff"), url(../fonts/rajdhani-bold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/rajdhani-bold.woff2) format("woff2"), url(../fonts/rajdhani-bold.woff) format("woff"), url(../fonts/rajdhani-bold.ttf) format("truetype");
       unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
   /* Keyframes */
-    /* Click */
-    @keyframes click {
+    /* Button Breathe */
+    @keyframes button-breathe {
+      0%   { outline-offset: -0.2em }
+      50%  { outline-offset: -0.4em }
+      100% { outline-offset: -0.2em }
+    }
+
+    /* Button Click */
+    @keyframes button-click {
       50% {
-        border-width: 3px;
-        filter           : brightness(0.8);
-        transform        : translate(0, -2px);
-        -ms-filter       : "brightness(0.8)";
-        -ms-transform    : translate(0, -2px);
-        -o-transform     : translate(0, -2px);
-        -webkit-transform: translate(0, -2px);
+        -ms-filter         : "brightness(0.8) progid:DXImageTransform.Microsoft.Gradient(Enabled=true, EndColor=0xCC3F3F3F, EndColorStr='#CC3F3F3F', tartColor=0xCC3F3F3F, StartColorStr='#CC3F3F3F')";
+        -ms-transform      : translate(0, -2px);
+        -o-transform       : translate(0, -2px);
+        -webkit-transform  : translate(0, -2px);
+        border-bottom-style: inset;
+        border-bottom-width: 3px;
+        border-left-style  : inset;
+        border-left-width  : 3px;
+        border-right-style : inset;
+        border-right-width : 3px;
+        border-top-style   : inset;
+        border-top-width   : 3px;
+        filter             : brightness(0.8) progid:DXImageTransform.Microsoft.Gradient(Enabled=true, EndColor=0xCC3F3F3F, EndColorStr="#CC3F3F3F", tartColor=0xCC3F3F3F, StartColorStr="#CC3F3F3F");
+        transform          : translate(0, -2px);
+        translate          : none /* --> 0 -2px */
+      }
+    }
+
+    /* <noscript> */
+    @keyframes noscript {
+      to {
+        -khtml-opacity: 0.0;
+        -moz-opacity  : 0.0;
+        display       : none;
+        opacity       : 0.0
       }
     }
 
     /* Page In */
-    @keyframes pageIn {
+    @keyframes page-enter {
       from {
-        mix-blend-mode   : plus-lighter;
         -ms-transform    : translateY(100%);
         -o-transform     : translateY(100%);
-        -webkit-transform: translateY(100%)
+        -webkit-transform: translateY(100%);
+        mix-blend-mode   : plus-lighter
       }
 
       to {
-        mix-blend-mode   : plus-lighter;
         -ms-transform    : translateY(0%);
         -o-transform     : translateY(0%);
-        -webkit-transform: translateY(0%)
+        -webkit-transform: translateY(0%);
+        mix-blend-mode   : plus-lighter
       }
     }
 
     /* Page Out */
-    @keyframes pageOut {
+    @keyframes page-exit {
       from {
-        mix-blend-mode   : plus-lighter;
         -ms-transform    : translateY(0%);
         -o-transform     : translateY(0%);
-        -webkit-transform: translateY(0%)
+        -webkit-transform: translateY(0%);
+        mix-blend-mode   : plus-lighter
       }
 
       to {
-        mix-blend-mode   : plus-lighter;
         -ms-transform    : translateY(-100%);
         -o-transform     : translateY(-100%);
-        -webkit-transform: translateY(-100%)
+        -webkit-transform: translateY(-100%);
+        mix-blend-mode   : plus-lighter
       }
     }
 
   /* Media */
     /* Hover, Pointer */
-    @media (hover: hover) and (pointer: fine) {
-      /* Element > <a> > Pseudo > (Focus, Hover) */
-      a:focus, a:hover {
-        text-decoration-line      : underline;
-        text-decoration-style     : dashed;
-        text-decoration-thickness : from-font;
-        -moz-text-decoration-line : underline;
-        -moz-text-decoration-style: dashed
-      }
-    }
+    @media (hover: hover) and (pointer: fine) {}
 
     /* Landscape (e.g. desktops, handhelds, laptops, TVs, …) ->> Compact UI */
     @media (min-aspect-ratio: 4/3), (min-width: 769px), (width > 768px) {}
@@ -523,30 +540,105 @@
 
     /* Prefers Reduced Motion, Print */
     @media (prefers-reduced-motion: reduce), print {
+      @view-transition { navigation: none !important }
+
       /* DOM Elements > All */
       * {
-        animation                 : none !important;
-        print-color-adjust        : economy;
-        transition                : none !important;
-        -moz-animation            : none !important;
-        -moz-transition           : none !important;
-        -moz-print-color-adjust   : economy;
-        -ms-animation             : none !important;
-        -ms-transition            : none !important;
-        -o-animation              : none !important;
-        -o-transition             : none !important;
-        -webkit-animation         : none !important;
-        -webkit-color-adjust      : economy;
-        -webkit-print-color-adjust: economy;
-        -webkit-transition        : none !important
+        -moz-animation                    : none        !important;
+        -moz-animation-delay              : 2147483647s !important;
+        -moz-animation-duration           : 0s          !important;
+        -moz-animation-fill-mode          : none        !important;
+        -moz-animation-iteration-count    : 0           !important;
+        -moz-animation-name               : none        !important;
+        -moz-animation-play-state         : paused      !important;
+        -moz-animation-timing-function    : step-end    !important;
+        -moz-print-color-adjust           : economy;
+        -moz-transition                   : none        !important;
+        -moz-transition-delay             : 2147483647s !important;
+        -moz-transition-duration          : 0s          !important;
+        -moz-transition-property          : none        !important;
+        -moz-transition-timing-function   : step-end    !important;
+        -ms-animation                     : none        !important;
+        -ms-animation-delay               : 2147483647s !important;
+        -ms-animation-duration            : 0s          !important;
+        -ms-animation-fill-mode           : none        !important;
+        -ms-animation-iteration-count     : 0           !important;
+        -ms-animation-name                : none        !important;
+        -ms-animation-play-state          : paused      !important;
+        -ms-animation-timing-function     : step-end    !important;
+        -ms-transition                    : none        !important;
+        -ms-transition-delay              : 2147483647s !important;
+        -ms-transition-duration           : 0s          !important;
+        -ms-transition-property           : none        !important;
+        -ms-transition-timing-function    : step-end    !important;
+        -o-animation                      : none        !important;
+        -o-animation-delay                : 2147483647s !important;
+        -o-animation-duration             : 0s          !important;
+        -o-animation-fill-mode            : none        !important;
+        -o-animation-iteration-count      : 0           !important;
+        -o-animation-name                 : none        !important;
+        -o-animation-play-state           : paused      !important;
+        -o-animation-timing-function      : step-end    !important;
+        -o-transition                     : none        !important;
+        -o-transition-delay               : 2147483647s !important;
+        -o-transition-duration            : 0s          !important;
+        -o-transition-property            : none        !important;
+        -o-transition-timing-function     : step-end    !important;
+        -webkit-animation                 : none        !important;
+        -webkit-animation-delay           : 2147483647s !important;
+        -webkit-animation-duration        : 0s          !important;
+        -webkit-animation-fill-mode       : none        !important;
+        -webkit-animation-iteration-count : 0           !important;
+        -webkit-animation-name            : none        !important;
+        -webkit-animation-play-state      : paused      !important;
+        -webkit-animation-timing-function : step-end    !important;
+        -webkit-color-adjust              : economy;
+        -webkit-print-color-adjust        : economy;
+        -webkit-transition                : none        !important;
+        -webkit-transition-delay          : 2147483647s !important;
+        -webkit-transition-duration       : 0s          !important;
+        -webkit-transition-property       : none        !important;
+        -webkit-transition-timing-function: step-end    !important;
+        animation                         : none        !important;
+        animation-delay                   : 2147483647s !important;
+        animation-duration                : 0s          !important;
+        animation-fill-mode               : none        !important;
+        animation-iteration-count         : 0           !important;
+        animation-name                    : none        !important;
+        animation-play-state              : paused      !important;
+        animation-range                   : 0% 0%       !important;
+        animation-range-end               : 0%          !important;
+        animation-range-start             : 0%          !important;
+        animation-timeline                : none        !important;
+        animation-timing-function         : step-end    !important; /* --> cubic-bezier(0.0, 1.0, 0.0, 1.0) */
+        print-color-adjust                : economy;
+        transition                        : none        !important;
+        transition-behavior               : normal      !important;
+        transition-delay                  : 2147483647s !important;
+        transition-duration               : 0s          !important;
+        transition-property               : none        !important;
+        transition-timing-function        : step-end    !important /* --> cubic-bezier(0.0, 1.0, 0.0, 1.0) */
       }
 
       /* Components > Button */
       .button {
-        backdrop-filter        : none !important;
-        -webkit-backdrop-filter: none !important
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter        : none !important
       }
     }
+
+    /* ... */
+    @media all\0, all\9 {
+      .legacy-internet-explorer {}
+
+      [data-\:tooltip]:hover::before {
+        opacity: 0.0;
+        z-index: -1
+      }
+    }
+
+    @media (min-width: 0\0)                                       { [data-\:legacy~=internet-explorer-9],  [data-\:legacy~=internet-explorer-10] {} }
+    @media (-ms-high-contrast: active), (-ms-high-contrast: none) { [data-\:legacy~=internet-explorer-10], [data-\:legacy~=internet-explorer-11] {} }
 
   /* Page */
   @page {
@@ -560,6 +652,16 @@
 /* DOM Elements */
   /* All */
   * {
+    -moz-text-decoration-color : inherit;
+    -webkit-box-sizing         : border-box;
+    -webkit-mask-repeat-x      : no-repeat;
+    -webkit-mask-repeat-y      : no-repeat;
+    -webkit-tap-highlight-color: inherit;
+    -webkit-text-emphasis-color: inherit;
+    -webkit-touch-callout      : none;
+    mso-ansi-language          : en-US;
+    mso-bidi-language          : ar-SA;
+    mso-fareast-language       : zh-CN;
     accent-color               : #0000CF;
     background-color           : inherit;
     background-repeat          : no-repeat;
@@ -580,36 +682,22 @@
     color                      : currentColor;
     color-scheme               : inherit;
     column-rule-color          : inherit;
-    cursor                     : default;
+    cursor                     : inherit;
     fill                       : inherit;
     flood-color                : inherit;
     lighting-color             : inherit;
-    outline                    : inherit;
     outline-color              : inherit;
+    outline-width              : inherit;
     scrollbar-color            : inherit;
     speak                      : never;
     speak-as                   : normal;
     stop-color                 : inherit;
     stroke                     : inherit;
     text-decoration-color      : inherit;
-    text-emphasis-color        : inherit;
-    -moz-text-decoration-color : inherit;
-    -webkit-box-sizing         : border-box;
-    -webkit-mask-repeat-x      : no-repeat;
-    -webkit-mask-repeat-y      : no-repeat;
-    -webkit-tap-highlight-color: inherit;
-    -webkit-text-emphasis-color: inherit;
-    -webkit-touch-callout      : none;
-    mso-ansi-language          : en-US;
-    mso-bidi-language          : ar-SA;
-    mso-fareast-language       : zh-CN
+    text-emphasis-color        : inherit
   }
 
   *, ::after, ::before {
-    scroll-behavior                   : smooth;
-    transition-duration               : 100ms;
-    transition-timing-function        : ease-in-out;
-    transition-property               : opacity;
     -moz-transition-duration          : 100ms;
     -moz-transition-property          : opacity;
     -moz-transition-timing-function   : ease-in-out;
@@ -621,59 +709,204 @@
     -o-transition-timing-function     : ease-in-out;
     -webkit-transition-duration       : 100ms;
     -webkit-transition-property       : opacity;
-    -webkit-transition-timing-function: ease-in-out
+    -webkit-transition-timing-function: ease-in-out;
+    scroll-behavior                   : smooth;
+    transition-duration               : 100ms;
+    transition-timing-function        : ease-in-out;
+    transition-property               : opacity
   }
+
+  [data-\:tooltip]::before {
+    -moz-user-focus     : ignore;
+    interactivity       : inert;
+    interest-delay-end  : 0s;
+    interest-delay-start: 500ms;
+    pointer-events      : none
+  }
+
+  [hidden] { display: none !important }
     /* Pseudo */
       /* Active */
       :active { cursor: text }
+
+      /* Before */
+      [data-\:tooltip]::before {
+        -ah-border-bottom-left-radius     : 2px;
+        -ah-border-bottom-right-radius    : 2px;
+        -ah-border-top-left-radius        : 2px;
+        -ah-border-top-right-radius       : 2px;
+        -ah-box-shadow                    : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        -khtml-border-bottom-left-radius  : 2px;
+        -khtml-border-bottom-right-radius : 2px;
+        -khtml-border-top-left-radius     : 2px;
+        -khtml-border-top-right-radius    : 2px;
+        -khtml-box-shadow                 : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        -moz-border-bottom-left-radius    : 2px;
+        -moz-border-bottom-right-radius   : 2px;
+        -moz-border-top-left-radius       : 2px;
+        -moz-border-top-right-radius      : 2px;
+        -moz-box-shadow                   : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        -ms-filter                        : "progid:DXImageTransform.Microsoft.Gradient(StartColorstr='#03003F', EndColorstr='#3F3F3F', GradientType=0x0)";
+        -moz-transition-delay             : 0ms;
+        -moz-transition-property          : color, height, opacity, top, transform, translate;
+        -ms-transform                     : translate(-50%, -50%);
+        -ms-transition-delay              : 0ms;
+        -ms-transition-property           : color, height, opacity, top, transform, translate;
+        -o-text-overflow                  : clip;
+        -o-transform                      : translate(-50%, -50%);
+        -o-transition-delay               : 0ms;
+        -o-transition-property            : color, height, opacity, top, transform, translate;
+        -pie-border-radius                : 2px;
+        -pie-box-shadow                   : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        -webkit-border-bottom-left-radius : 2px;
+        -webkit-border-bottom-right-radius: 2px;
+        -webkit-border-top-left-radius    : 2px;
+        -webkit-border-top-right-radius   : 2px;
+        -webkit-box-shadow                : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        -webkit-filter                    : progid:DXImageTransform.Microsoft.Gradient(StartColorstr="#03003F", EndColorstr="#3F3F3F", GradientType=0x0);
+        -webkit-transform                 : translate(-50%, -50%);
+        -webkit-transition-delay          : 0ms;
+        -webkit-transition-property       : color, height, opacity, top, transform, translate;
+        background                        : -webkit-linear-gradient(30deg, #03003F 50%, #0F0F0F, #03003F);
+        background                        : -moz-linear-gradient(30deg, #03003F 50%, #0F0F0F, #03003F);
+        background                        : linear-gradient(30deg, #03003F 50%, #0F0F0F, #03003F);
+        background-color                  : #03003F;
+        border-bottom-color               : rgba(127, 127, 127, 0.5);
+        border-bottom-left-radius         : 2px;
+        border-bottom-right-radius        : 2px;
+        border-bottom-style               : ridge;
+        border-bottom-width               : 1.65px;
+        border-left-color                 : rgba(127, 127, 127, 0.5);
+        border-left-style                 : ridge;
+        border-left-width                 : 1.65px;
+        border-right-color                : rgba(127, 127, 127, 0.5);
+        border-right-style                : ridge;
+        border-right-width                : 1.65px;
+        border-top-color                  : rgba(127, 127, 127, 0.5);
+        border-top-left-radius            : 2px;
+        border-top-right-radius           : 2px;
+        border-top-style                  : ridge;
+        border-top-width                  : 1.65px;
+        box-shadow                        : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        color                             : rgba(240, 240, 240, 0.0);
+        content                           : attr(data-\:tooltip);
+        display                           : inline-block;
+        filter                            : progid:DXImageTransform.Microsoft.Gradient(StartColorstr="#03003F", EndColorstr="#3F3F3F", GradientType=0x0);
+        float                             : right;
+        font-family                       : sans-serif;
+        font-size                         : 12.8px;
+        font-size                         : 0.8rem;
+        font-weight                       : 500;
+        height                            : 0;
+        interpolate-size                  : allow-keywords;
+        left                              : 50%;
+        line-height                       : 24.0px;
+        line-height                       : 1.5rem;
+        opacity                           : 0.0;
+        overflow                          : hidden;
+        padding-bottom                    : 1.60px;
+        padding-bottom                    : 0.10rem;
+        padding-left                      : 12.0px;
+        padding-left                      : 0.75rem;
+        padding-right                     : 12.0px;
+        padding-right                     : 0.75rem;
+        padding-top                       : 1.60px;
+        padding-top                       : 0.10rem;
+        position                          : absolute;
+        text-overflow                     : clip;
+        text-transform                    : none;
+        top                               : 50%;
+        transform                         : translate(-50%, -50%);
+        transition-behavior               : allow-discrete;
+        transition-delay                  : 0ms;
+        transition-property               : color, height, opacity, top, transform, translate;
+        translate                         : none; /* --> -50% -50% */
+        white-space                       : nowrap;
+        z-index                           : -1
+      }
+        /* Pseudo > Empty */
+        [data-\:tooltip]::before:empty                { display: none }
+        [data-\:tooltip]::before:-moz-only-whitespace { display: none }
+
+      /* Hover */
+      [data-\:tooltip]:hover ~ [data-\:tooltip]::before {
+        -moz-transition-delay   : 0ms;
+        -ms-transition-delay    : 0ms;
+        -o-transition-delay     : 0ms;
+        -webkit-transition-delay: 0ms;
+        transition-delay        : 0ms
+      }
+        /* Pseudo > Before */
+        [data-\:tooltip]:hover::before {
+          -moz-transition-delay      : 500ms;
+          -moz-transition-duration   : 300ms;
+          -ms-transform              : translate(-50%, -100%);
+          -ms-transition-delay       : 500ms;
+          -ms-transition-duration    : 300ms;
+          -o-transform               : translate(-50%, -100%);
+          -o-transition-delay        : 500ms;
+          -o-transition-duration     : 300ms;
+          -webkit-transform          : translate(-50%, -100%);
+          -webkit-transition-delay   : 500ms;
+          -webkit-transition-duration: 300ms;
+          color                      : rgba(240, 240, 240, 0.8);
+          height                     : initial;
+          opacity                    : 1.0;
+          top                        : -10px;
+          transform                  : translate(-50%, -100%);
+          transition-delay           : 500ms;
+          transition-duration        : 300ms;
+          translate                  : none; /* --> -50% -100% */
+          z-index                    : 2147483647
+        }
+
       /* Language */
         /* ->> Arabic */
-        [lang|=ar i],
+        [lang|=ar /* i */],
         :lang(ar) { direction: rtl }
 
         /* ->> Arabic, Catalan, German, Greek, Spanish, Basque, Persian, French, Galician, Italian, Italian (Swiss), Norwegian (Bokmål, Nynorsk), Portuguese, Romansh --> « » ‹ › */
-        [lang|=ar i], [lang|=ca i], [lang|=de-CH i], [lang|=el i], [lang|=es i], [lang|=eu i], [lang|=fa i], [lang|=fr-CH i], [lang|=gl i], [lang|=it i], [lang|=it-CH i], [lang|=nb i], [lang|=nn i], [lang|=pt i], [lang|=rm i],
+        [lang|=ar /* i */], [lang|=ca /* i */], [lang|=de-CH /* i */], [lang|=el /* i */], [lang|=es /* i */], [lang|=eu /* i */], [lang|=fa /* i */], [lang|=fr-CH /* i */], [lang|=gl /* i */], [lang|=it /* i */], [lang|=it-CH /* i */], [lang|=nb /* i */], [lang|=nn /* i */], [lang|=pt /* i */], [lang|=rm /* i */],
         :lang(afir), :lang(ca), :lang(de-CH), :lang(el), :lang(es), :lang(eu), :lang(fa), :lang(fr-CH), :lang(gl), :lang(it), :lang(it-CH), :lang(nb), :lang(nn), :lang(pt), :lang(rm) { quotes: "\00AB" "\00BB" "\2039" "\203A" }
 
         /* ->> Belarusian, Macedonian, Russian, Ukrainian --> « » „ " */
-        [lang|=be i], [lang|=mk i], [lang|=ru i], [lang|=uk i],
+        [lang|=be /* i */], [lang|=mk /* i */], [lang|=ru /* i */], [lang|=uk /* i */],
         :lang(be), :lang(mk), :lang(ru), :lang(uk) { quotes: "\00AB" "\00BB" "\201E" "\201C" }
 
         /* ->> Bulgarian, Bosnian, Czech, German, Hebrew, Croatian, Slovak, Slovenian, Serbian --> „ " ‚ ' */
-        [lang|=bg i], [lang|=bs i], [lang|=cs i], [lang|=de i], [lang|=he i], [lang|=hr i], [lang|=sk i], [lang|=sl i], [lang|=sr i],
+        [lang|=bg /* i */], [lang|=bs /* i */], [lang|=cs /* i */], [lang|=de /* i */], [lang|=he /* i */], [lang|=hr /* i */], [lang|=sk /* i */], [lang|=sl /* i */], [lang|=sr /* i */],
         :lang(bg), :lang(bs), :lang(cs), :lang(de), :lang(he), :lang(hr), :lang(sk), :lang(sl), :lang(sr) { quotes: "\201E" "\201C" "\201A" "\2018" }
 
         /* ->> English, English (Australian, New Zealand), Danish, Korean, Dutch, Portuguese (Brazilian), Thai, Turkish, Vietnamese, Chinese, Chinese (Simplified, Singapore) --> “ ” ‘ ’ */
-        [lang|=en i], [lang|=en-AU i], [lang|=en-NZ i], [lang|=da i], [lang|=ko i], [lang|=nl i], [lang|=pt-BR i], [lang|=th i], [lang|=tr i], [lang|=vi i], [lang|=zh-CN i], [lang|=zh-Hans i], [lang|=zh-SG i],
+        [lang|=en /* i */], [lang|=en-AU /* i */], [lang|=en-NZ /* i */], [lang|=da /* i */], [lang|=ko /* i */], [lang|=nl /* i */], [lang|=pt-BR /* i */], [lang|=th /* i */], [lang|=tr /* i */], [lang|=vi /* i */], [lang|=zh-CN /* i */], [lang|=zh-Hans /* i */], [lang|=zh-SG /* i */],
         :lang(en), :lang(en-AU), :lang(en-NZ), :lang(da), :lang(ko), :lang(nl), :lang(pt-BR), :lang(th), :lang(tr), :lang(vi), :lang(zh-CN), :lang(zh-Hans), :lang(zh-SG) { quotes: "\201C" "\201D" "\2018" "\2019" }
 
         /* ->> Finnish, Swedish --> " " ' ' */
-        [lang|=fi i], [lang|=sv i],
+        [lang|=fi /* i */], [lang|=sv /* i */],
         :lang(fi), :lang(sv) { quotes: "\201D" "\201D" "\2019" "\2019" }
 
         /* ->> French --> « » ‹ › */
-        [lang|=fr i], [lang|=fr-BE i], [lang|=fr-LU i],
+        [lang|=fr /* i */], [lang|=fr-BE /* i */], [lang|=fr-LU /* i */],
         :lang(fr), :lang(fr-BE), :lang(fr-LU)
         { quotes: "\00AB\202F" "\202F\00BB" "\2039\202F" "\202F\203A" }
 
         /* ->> Hungarian, Lithuanian, Latvian, Polish, Romanian --> „ " ‚ ' */
-        [lang|=hu i], [lang|=lt i], [lang|=lv i], [lang|=pl i], [lang|=ro i],
+        [lang|=hu /* i */], [lang|=lt /* i */], [lang|=lv /* i */], [lang|=pl /* i */], [lang|=ro /* i */],
         :lang(hu), :lang(lt), :lang(lv), :lang(pl), :lang(ro) { quotes: "\201E" "\201D" "\201A" "\2019" }
 
         /* ->> Japanese, Chinese (Traditional, Hong Kong, Taiwan) --> 「 」 『 』 */
-        [lang|=ja i], [lang|=zh-Hant i], [lang|=zh-HK i], [lang|=zh-TW i],
+        [lang|=ja /* i */], [lang|=zh-Hant /* i */], [lang|=zh-HK /* i */], [lang|=zh-TW /* i */],
         :lang(ja), :lang(zh-Hant), :lang(zh-HK), :lang(zh-TW) { quotes: "\300C" "\300D" "\300E" "\300F" }
 
         /* ->> Japanese, Korean, Chinese (Simplified) */
-        [lang|=ja i], [lang|=ko i], [lang|=zh i],
+        [lang|=ja /* i */], [lang|=ko /* i */], [lang|=zh /* i */],
         :lang(ja), :lang(ko), :lang(zh) { line-height: 1.8 }
 
       /* (Search, Target) Text */
       ::search-text, /* --> …#:~:text=… */ ::target-text {
-        background-color: rebeccapurple;
+        background-color: rgba(102, 51, 153, 0.5); /* --> rebeccapurple */
         color           : white
       }
-  }
 
   /* All, <blockquote>, <q> */
     /* Pseudo > (After, Before) */
@@ -684,22 +917,36 @@
     [lang] blockquote::before, [lang] q::before, blockquote[lang]::before, q[lang]::before { content: open-quote }
 
   /* <a> */
-  a, a[href]:link {
-    color  : dodgerblue;
-    -o-link: dodgerblue
+  a {
+    -o-link: dodgerblue;
+    color  : dodgerblue
   }
-    /* Pseudo > Visited */
-    a[href]:visited { color: rebeccapurple }
+    /* Pseudo */
+      /* Focus, Hover */
+      a:focus, a:hover {
+        -moz-text-decoration-line : underline;
+        -moz-text-decoration-style: dashed;
+        text-decoration-line      : underline;
+        text-decoration-style     : dashed;
+        text-decoration-thickness : from-font
+      }
+
+      /* Link */
+      a[href]:link {
+        -o-link: dodgerblue;
+        color  : dodgerblue
+      }
+
+      /* Visited */
+      a[href]:visited { color: rebeccapurple }
 
   /* <a>, <abbr> */
-  a, abbr[title] { text-decoration-skip-ink: auto }
+  a                                 { text-decoration-skip-ink: auto }
+  abbr[data-\:tooltip], abbr[title] { text-decoration-skip-ink: auto }
 
-  /* <a>, <button>, <input>, <label>, <select> (> <option>) */
+  /* <a>, <button>, <label>, <select> (> <option>) */
   a,
   button,
-  input[type=button i],
-  input[type=reset  i],
-  input[type=submit i],
   label,
   select,
   select option { cursor: pointer }
@@ -721,8 +968,8 @@
   }
 
   area:-webkit-any-link, area[href]:-webkit-any-link:link {
-    color  : dodgerblue;
-    -o-link: dodgerblue
+    -o-link: dodgerblue;
+    color  : dodgerblue
   }
     /* Pseudo > Visited */
     area[href]:any-link:visited         { color: rebeccapurple }
@@ -731,30 +978,42 @@
 
   /* <area>, <audio>, <canvas>, <embed>, <figure>, <img>, <map>, <object>, <picture>, <source>, <svg>, <track>, <video> */
   area, audio, canvas, embed, figure, img, map, object, picture, source, svg, track, video {
-    image-rendering                    : smooth;
-    image-resolution                   : from-image;
     -ah-image-resolution               : from-image;
     -ah-image-smoothing                : true;
     -prince-background-image-resolution: auto;
     -prince-image-resolution           : normal;
-    -ro-image-resolution               : normal
+    -ro-image-resolution               : normal;
+    image-rendering                    : smooth;
+    image-resolution                   : from-image
   }
 
   /* <body> */
   body {
     background-color: rgba(3, 0, 63, 0.05);
     background-color: light-dark(rgba(0, 0, 0, 0.05), rgba(3, 0, 63, 0.05));
-    font-family     : "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif;
-    font-synthesis  : none
+    display         : table-cell
   }
+
+  .button,
+  body { font-family: "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif }
     /* All */
     body > * { background-color: transparent }
 
-  /* <button>, <input> */
-  button,
-  input[type=button i],
-  input[type=reset  i]
-  input[type=submit i] { outline: none }
+  /* <body>, <html> */
+  body, html {
+    -ms-scroll-chaining: none !important; /* ->> Prevent scroll bouncing? */
+    height             : 100%;
+    width              : 100%
+  }
+
+  /* <button> */
+  button { outline: none }
+
+  /* <code>, <kbd>, <listing>, <plaintext>, <pre>, <samp>, <tt>, <xmp> */
+  code, kbd, listing, plaintext, pre, samp, tt, xmp {
+    font-synthesis      : style weight;
+    font-synthesis-style: oblique-only
+  }
 
   /* <code>, <kbd> */
   code, kbd { font-variant-emoji: emoji }
@@ -768,19 +1027,30 @@
   /* <code>, <input>, <kbd>, <pre>, <samp>, <textarea> */
   code, input, kbd, pre, samp, textarea { cursor: text }
 
+  /* <code>, <kbd>, <listing>, <plaintext>, <pre>, <samp>, <tt>, <xmp> */
+  code, kbd, listing, plaintext, pre, samp, tt, xmp {
+    -ah-tab-stops: 2;
+    -moz-tab-size: 2;
+    -o-tab-size  : 2;
+    -ro-tab-size : 2;
+    tab-size     : 2
+  }
+
   /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
   h1, h2, h3, h4, h5, h6 {
+    -webkit-text-stroke-color: light-dark(#F0F0F0, #3F3F3F);
     cursor                   : default;
     font-family              : Rajdhani, "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, sans-serif;
+    font-synthesis           : small-caps style weight;
     font-weight              : 500;
-    -webkit-text-stroke-color: light-dark(#F0F0F0, #3F3F3F)
+    white-space              : nowrap
   }
 
   /* <h1> */
   h1 {
+    -webkit-text-stroke-width: 1px;
     font-weight              : bolder;
-    text-shadow              : 0 0 10px rgba(0, 0, 0, 0.1);
-    -webkit-text-stroke-width: 1px
+    text-shadow              : 0 0 10px rgba(0, 0, 0, 0.1)
   }
 
   /* <h1>, Mirrored */
@@ -789,22 +1059,33 @@
     -webkit-box-reflect: below 7px linear-gradient(transparent, rgba(255, 255, 255, 0.05))
   }
 
+  /* (<h1>, <h2>) > Pseudo > Selection */
+  h1::-moz-selection, h2::-moz-selection { -webkit-text-stroke-width: 0; text-shadow: none }
+  h1::selection,      h2::selection      { -webkit-text-stroke-width: 0; text-shadow: none }
+
   /* <h2> */
   h2 { font-weight: 900 }
 
-  /* (<h1>, <h2>) > Pseudo > Selection */
-  h1::selection, h2::selection {
-    text-shadow              : none;
-    -webkit-text-stroke-width: 0
-  }
-
   /* <html> */
   html {
+    -moz-animation-duration    : 300ms;
+    -moz-animation-fill-mode   : both;
+    -moz-text-decoration-color : currentColor;
+    -ms-animation-duration     : 300ms;
+    -ms-animation-fill-mode    : both;
+    -o-animation-duration      : 300ms;
+    -o-animation-fill-mode     : both;
+    -webkit-animation-duration : 300ms;
+    -webkit-animation-fill-mode: both;
+    -webkit-tap-highlight-color: currentColor;
+    -webkit-text-emphasis-color: currentColor;
+    animation-duration         : 300ms;
+    animation-fill-mode        : both;
     background-attachment      : fixed;
     background-blend-mode      : multiply;
     background-clip            : border-box;
     background-color           : transparent;
-    background-image           : /* --> ../icons/background-pattern-1.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAQMAAAD58POIAAAABlBMVEUAAABHcEyA51bHAAAAAnRSTlMEABL/CDwAAAE+SURBVHic5dW7kYMwFEbh4yFwSAmUsqVBaSqFEggdMOyix+he6bdnPWQeO+MkfEbSFb/dj28Ix9SFbejCwtwG+GnCDmMTHnBvwgZDE1a4NSEATVjOMPtwPpf35nDEMLmwxzC68Ijh7sIWw+DCGsPNhcgoECqjQKiMAqEyCoTKKBAqo0CojAKhMgoEY2QIxsgQjJEhGCNDMEaGYIwMwRgZgjEyBMdIEBwjQXCMBMExEgTHSBAcI0FwjATBMRIEz4iQZ2FxYY7BPZ+yd8Lhw/RW2H0Yr4ULr73w5/QDhX+/6dovgyyULKUstmwH2TC6pYJjPN+WsnFla8vml+MhB0iPWDDGi2MqB1mOugwDGRcyUHTkhMp4NbZksMnok+Eo41MGrI7gQDek136My6CXq0AuC7lO9MKRK0kurfr74PAH7iLbJ7qk3UMAAAAASUVORK5CYII=);
+    background-image           : /* --> ../icons/…/background-pattern-1.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAQMAAAD58POIAAAABlBMVEUAAABHcEyA51bHAAAAAnRSTlMEABL/CDwAAAE+SURBVHic5dW7kYMwFEbh4yFwSAmUsqVBaSqFEggdMOyix+he6bdnPWQeO+MkfEbSFb/dj28Ix9SFbejCwtwG+GnCDmMTHnBvwgZDE1a4NSEATVjOMPtwPpf35nDEMLmwxzC68Ijh7sIWw+DCGsPNhcgoECqjQKiMAqEyCoTKKBAqo0CojAKhMgoEY2QIxsgQjJEhGCNDMEaGYIwMwRgZgjEyBMdIEBwjQXCMBMExEgTHSBAcI0FwjATBMRIEz4iQZ2FxYY7BPZ+yd8Lhw/RW2H0Yr4ULr73w5/QDhX+/6dovgyyULKUstmwH2TC6pYJjPN+WsnFla8vml+MhB0iPWDDGi2MqB1mOugwDGRcyUHTkhMp4NbZksMnok+Eo41MGrI7gQDek136My6CXq0AuC7lO9MKRK0kurfr74PAH7iLbJ7qk3UMAAAAASUVORK5CYII=);
     background-origin          : border-box;
     background-position        : center center;
     background-position-x      : center;
@@ -829,52 +1110,71 @@
     color                      : light-dark(#3F3F3F, #F0F0F0);
     color-scheme               : light dark; /* ->> or otherwise `only dark` */
     column-rule-color          : currentColor;
+    display                    : table;
     fill                       : currentColor;
     flood-color                : currentColor;
+    interpolate-size           : numeric-only;
     lighting-color             : currentColor;
     outline                    : currentColor;
     outline-color              : currentColor;
+    overscroll-behavior        : none;
     stop-color                 : currentColor;
     stroke                     : currentColor;
     text-decoration-color      : currentColor;
     text-emphasis-color        : currentColor;
-    -moz-text-decoration-color : currentColor;
-    -webkit-tap-highlight-color: currentColor;
-    -webkit-text-emphasis-color: currentColor
+    transition-behavior        : normal;
+    view-transition-name       : root
   }
     /* At Rules > Media > Prefers Color Scheme */
-    @media (prefers-color-scheme: dark)  { html { background-image: /* --> ../icons/background-pattern-2.svg */ url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI4IiBoZWlnaHQ9IjI4Ij48cGF0aCBkPSJNMTEgMTRjMC0xLjcgMS4zLTMgMy0zIDEuNyAwIDMgMS4zIDMgMyAwIDEuNy0xLjMgMy0zIDMtMS43IDAtMy0xLjMtMy0zeiIgc3R5bGU9ImZpbGw6cmdiYSgyNTUsMjU1LDI1NSwuMDE2KSIvPjwvc3ZnPg==) } }
-    @media (prefers-color-scheme: light) { html { background-image: /* --> ../icons/background-pattern-1.svg */ url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2ZXJzaW9uPSIxLjIiPjxwYXRoIGQ9Im0xNTAuNyAzNy40IDY3LjkgNjcuOWMxMi41IDEyLjYgMTIuNSAzMi44IDAgNDUuNGwtNjcuOSA2Ny45Yy0xMi42IDEyLjUtMzIuOCAxMi41LTQ1LjQgMGwtNjcuOS02Ny45Yy0xMi41LTEyLjYtMTIuNS0zMi44IDAtNDUuNGw2Ny45LTY3LjljMTIuNi0xMi41IDMyLjgtMTIuNSA0NS40IDAiIHN0eWxlPSJmaWxsOnJnYmEoMCwwLDAsLjAxNikiIHRyYW5zZm9ybT0ibWF0cml4KC41MDAgMCAwIC41MDAgLS4wMTYgLS4wMTYpIi8+PC9zdmc+) } }
+    @media (prefers-color-scheme: dark)  { html { background-image: /* --> ../icons/…/background-pattern-2.svg */ url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI4IiBoZWlnaHQ9IjI4Ij48cGF0aCBkPSJNMTEgMTRjMC0xLjcgMS4zLTMgMy0zIDEuNyAwIDMgMS4zIDMgMyAwIDEuNy0xLjMgMy0zIDMtMS43IDAtMy0xLjMtMy0zeiIgc3R5bGU9ImZpbGw6cmdiYSgyNTUsMjU1LDI1NSwuMDE2KSIvPjwvc3ZnPg==) } }
+    @media (prefers-color-scheme: light) { html { background-image: /* --> ../icons/…/background-pattern-1.svg */ url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiB2ZXJzaW9uPSIxLjIiPjxwYXRoIGQ9Im0xNTAuNyAzNy40IDY3LjkgNjcuOWMxMi41IDEyLjYgMTIuNSAzMi44IDAgNDUuNGwtNjcuOSA2Ny45Yy0xMi42IDEyLjUtMzIuOCAxMi41LTQ1LjQgMGwtNjcuOS02Ny45Yy0xMi41LTEyLjYtMTIuNS0zMi44IDAtNDUuNGw2Ny45LTY3LjljMTIuNi0xMi41IDMyLjgtMTIuNSA0NS40IDAiIHN0eWxlPSJmaWxsOnJnYmEoMCwwLDAsLjAxNikiIHRyYW5zZm9ybT0ibWF0cml4KC41MDAgMCAwIC41MDAgLS4wMTYgLS4wMTYpIi8+PC9zdmc+) } }
 
-    /* Pseudo > View Transition (New, Old) */
+    /* Pseudo > View Transition … */
     html::view-transition-new(root) {
-      animation        : 300ms ease-in both pageIn;
-      -moz-animation   : 300ms ease-in both pageIn;
-      -ms-animation    : 300ms ease-in both pageIn;
-      -o-animation     : 300ms ease-in both pageIn;
-      -webkit-animation: 300ms ease-in both pageIn;
+      -moz-animation-name              : page-enter;
+      -moz-animation-timing-function   : ease-in;
+      -ms-animation-name               : page-enter;
+      -ms-animation-timing-function    : ease-in;
+      -o-animation-name                : page-enter;
+      -o-animation-timing-function     : ease-in;
+      -webkit-animation-name           : page-enter;
+      -webkit-animation-timing-function: ease-in;
+      animation-name                   : page-enter;
+      animation-timing-function        : ease-in
     }
 
     html::view-transition-old(root) {
-      animation        : 300ms ease-in both pageOut;
-      -moz-animation   : 300ms ease-in both pageOut;
-      -ms-animation    : 300ms ease-in both pageOut;
-      -o-animation     : 300ms ease-in both pageOut;
-      -webkit-animation: 300ms ease-in both pageOut;
+      -moz-animation-name              : page-exit;
+      -moz-animation-timing-function   : ease-out;
+      -ms-animation-name               : page-exit;
+      -ms-animation-timing-function    : ease-out;
+      -o-animation-name                : page-exit;
+      -o-animation-timing-function     : ease-out;
+      -webkit-animation-name           : page-exit;
+      -webkit-animation-timing-function: ease-out;
+      animation-name                   : page-exit;
+      animation-timing-function        : ease-out
     }
 
   /* <input> */
-  input[type=file i]::file-selector-button {
+  input[type=button /* i */],
+  input[type=reset  /* i */],
+  input[type=submit /* i */] {
     cursor : pointer;
     outline: none
   }
 
-  input[type=file i]::-ms-browse {
+  input[type=file /* i */]::file-selector-button {
     cursor : pointer;
     outline: none
   }
 
-  input[type=file i]::-webkit-file-upload-button {
+  input[type=file /* i */]::-ms-browse {
+    cursor : pointer;
+    outline: none
+  }
+
+  input[type=file /* i */]::-webkit-file-upload-button {
     cursor : pointer;
     outline: none
   }
@@ -882,56 +1182,442 @@
   /* <li> */
   li::after { content: ' ' }
 
+  /* <noscript> */
+  noscript {
+    -khtml-opacity                   : 1.0;
+    -moz-opacity                     : 1.0;
+    -moz-animation-delay             : 3000ms;
+    -moz-animation-duration          : 1000ms;
+    -moz-animation-fill-mode         : forwards;
+    -moz-animation-name              : noscript;
+    -moz-animation-timing-function   : ease;
+    -moz-transition-delay            : 2147483647ms;
+    -moz-transition-duration         : 100ms;
+    -ms-animation-delay              : 3000ms;
+    -ms-animation-duration           : 1000ms;
+    -ms-animation-fill-mode          : forwards;
+    -ms-animation-name               : noscript;
+    -ms-animation-timing-function    : ease;
+    -o-animation-delay               : 3000ms;
+    -o-animation-duration            : 1000ms;
+    -o-animation-fill-mode           : forwards;
+    -o-animation-name                : noscript;
+    -o-animation-timing-function     : ease;
+    -webkit-animation-delay          : 3000ms;
+    -webkit-animation-duration       : 1000ms;
+    -webkit-animation-fill-mode      : forwards;
+    -webkit-animation-name           : noscript;
+    -webkit-animation-timing-function: ease;
+    -webkit-transition-delay         : 2147483647ms;
+    -webkit-transition-duration      : 100ms;
+    animation-delay                  : 3000ms;
+    animation-duration               : 1000ms;
+    animation-fill-mode              : forwards;
+    animation-name                   : noscript;
+    animation-timing-function        : ease;
+    background-color                 : #03003F;
+    border-bottom                    : 1px solid;
+    color                            : #F0F0F0;
+    float                            : left;
+    height                           : 32px;
+    left                             : 0;
+    opacity                          : 1.0;
+    overflow                         : hidden;
+    position                         : absolute;
+    text-align                       : center;
+    transition-delay                 : 2147483647ms;
+    transition-duration              : 100ms;
+    top                              : 0;
+    width                            : 100%;
+    z-index                          : 2147483647
+  }
+
+  [data-\:legacy~=internet-explorer-5] noscript,
+  [data-\:legacy~=internet-explorer-6] noscript,
+  [data-\:legacy~=internet-explorer-7] noscript,
+  [data-\:legacy~=internet-explorer-8] noscript {
+    display   : none;
+    visibility: collapse
+  }
+    /* Pseudo > Hover */
+    noscript:hover {
+      -khtml-opacity          : 0.0;
+      -moz-opacity            : 0.0;
+      -moz-transition-delay   : 0ms;
+      -webkit-transition-delay: 0ms;
+      opacity                 : 0.0;
+      transition-delay        : 0ms
+    }
+
+    /* All */
+    noscript * {
+      display: table;
+      height : 100%;
+      width  : 100%
+    }
+      /* All */
+      noscript * * {
+        display       : table-cell;
+        height        : initial;
+        vertical-align: middle;
+        width         : initial
+      }
+        /* All */
+        noscript * * * { display: initial }
+
   /* <pre>, <samp> */
   pre, samp { font-variant-emoji: text }
 
 /* Components */
-  /* Zoom */
-  [data-\@zoom] {
-    transform       : scale(1.000);
-    transform-origin: center;
-    transition      : transform 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    will-change     : transform
+  /* Animate */
+  [data-\:animate] { /* will-change: transform, transform-origin, -ah-transform, -ah-transform-origin, -moz-transform-origin, -ms-transform, -ms-transform-origin, -o-transform, -o-transform-origin, -webkit-transform, -webkit-transform-origin */ }
+  [data-\:animate~=tilt3d] {
+    -ah-transform                     : perspective(1200px) rotateX(0.0deg) rotateY(0.0deg) scale(1.0);
+    -moz-transform-style              : preserve-3d;
+    -moz-transition-duration          : 5e3ms;
+    -moz-transition-property          : transform;
+    -moz-transition-timing-function   : linear;
+    -ms-transform                     : perspective(1200px) rotateX(0.0deg) rotateY(0.0deg) scale(1.0);
+    -ms-transform-style               : preserve-3d;
+    -ms-transition-property           : transform;
+    -ms-transition-timing-function    : linear;
+    -o-transform                      : perspective(1200px) rotateX(0.0deg) rotateY(0.0deg) scale(1.0);
+    -o-transition-property            : transform;
+    -o-transition-timing-function     : linear;
+    -webkit-transform                 : perspective(1200px) rotateX(0.0deg) rotateY(0.0deg) scale(1.0);
+    -webkit-transform-style           : preserve-3d;
+    -webkit-transition-duration       : 5e3ms;
+    -webkit-transition-property       : transform;
+    -webkit-transition-timing-function: linear;
+    transform                         : perspective(1200px) rotateX(0.0deg) rotateY(0.0deg) scale(1.0);
+    transform-style                   : preserve-3d;
+    transition-duration               : 5e3ms;
+    transition-property               : transform;
+    transition-timing-function        : linear
   }
+    /* Animated */
+    [data-\:animate~=magnify] [data-\:animated] {
+      -ah-transform                     : scale(1.000);
+      -ah-transform-origin              : center;
+      -moz-transform-origin             : center;
+      -moz-transition-duration          : 400ms;
+      -moz-transition-property          : transform;
+      -moz-transition-timing-function   : cubic-bezier(0.34, 1.56, 0.64, 1.00);
+      -ms-transform                     : scale(1.000);
+      -ms-transform-origin              : center;
+      -o-transform                      : scale(1.000);
+      -o-transform-origin               : center;
+      -webkit-transform                 : scale(1.000);
+      -webkit-transition-duration       : 400ms;
+      -webkit-transition-property       : transform;
+      -webkit-transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1.00);
+      transform                         : scale(1.000);
+      transform-origin                  : center;
+      transition-duration               : 400ms;
+      transition-property               : transform;
+      transition-timing-function        : cubic-bezier(0.34, 1.56, 0.64, 1.00);
+      will-change                       : transform
+    }
 
-  [data-\@zoom=bubble] { transform: scale(1.006) }
+    [data-\:animate~=magnify] [data-\:animated~=magnify] {
+      -ah-transform    : scale(1.006);
+      -ms-transform    : scale(1.006);
+      -o-transform     : scale(1.006);
+      -webkit-transform: scale(1.006);
+      transform        : scale(1.050)
+    }
 
   /* Button */
   .button {
-    backdrop-filter  : blur(10px);
-    border           : 1px solid rgba(127, 127, 127, 0.5);
-    filter           : brightness(1.0);
-    outline          : none;
-    text-transform   : uppercase;
-    transform        : translate(0px, -0px);
-    -ms-filter       : "brightness(1.0)";
-    -ms-transform    : translate(0px, -0px);
-    -o-transform     : translate(0px, -0px);
-    -webkit-transform: translate(0px, -0px)
+    -ah-auto-letter-spacing           : 0.05em;
+    -ah-text-decoration               : none;
+    -ah-text-decoration-color         : transparent;
+    -ah-text-decoration-line          : none;
+    -moz-animation-duration           : 3000ms;
+    -moz-animation-timing-function    : ease-in-out;
+    -moz-appearance                   : button;
+    -moz-text-decoration-color        : transparent;
+    -moz-text-decoration-line         : none;
+    -ms-animation-duration            : 3000ms;
+    -ms-animation-timing-function     : ease-in-out;
+    -ms-appearance                    : button;
+    -ms-behavior                      : url(pie.htc);
+    -ms-filter                        : "brightness(1.0) progid:DXImageTransform.Microsoft.Gradient(Enabled=true, EndColor=0xE63F3F3F, EndColorStr='#E63F3F3F', GradientType=0x0, StartColor=0xE63F3F3F, StartColorStr='#E63F3F3F')";
+    -ms-transform                     : translate(0px, -0px);
+    -o-animation-duration             : 3000ms;
+    -o-animation-timing-function      : ease-in-out;
+    -o-transform                      : translate(0px, -0px);
+    -pie-background                   : #3F3F3F;
+    -webkit-animation-duration        : 3000ms;
+    -webkit-animation-timing-function : ease-in-out;
+    -webkit-appearance                : button;
+    -webkit-backdrop-filter           : blur(10px);
+    -webkit-box-sizing                : border-box;
+    -webkit-text-decoration-color     : transparent;
+    -webkit-text-decoration-line      : none;
+    -webkit-transform                 : translate(0px, -0px);
+    animation-duration                : 3000ms;
+    animation-timing-function         : ease-in-out;
+    appearance                        : button;
+    backdrop-filter                   : blur(10px);
+    background                        : url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGO0fwYAAWoBJ0mZbskAAAAASUVORK5CYII=) repeat;
+    background                        : rgba(63, 63, 63, 0.9);
+    background                        : light-dark(rgba(63, 63, 63, 0.9), rgba(240, 240, 240, 0.9));
+    behavior                          : url(pie.htc);
+    border-bottom-color               : rgba(127, 127, 127, 0.5);
+    border-bottom-style               : outset;
+    border-bottom-width               : 1px;
+    border-left-color                 : rgba(127, 127, 127, 0.5);
+    border-left-style                 : outset;
+    border-left-width                 : 1px;
+    border-right-color                : rgba(127, 127, 127, 0.5);
+    border-right-style                : outset;
+    border-right-width                : 1px;
+    border-top-color                  : rgba(127, 127, 127, 0.5);
+    border-top-style                  : outset;
+    border-top-width                  : 1px;
+    box-sizing                        : border-box;
+    display                           : inline-block;
+    filter                            : brightness(1.0) progid:DXImageTransform.Microsoft.Gradient(Enabled=true, EndColor=0xE63F3F3F, EndColorStr="#E63F3F3F", tartColor=0xE63F3F3F, StartColorStr="#E63F3F3F");
+    font-size                         : 1.25em;
+    font-weight                       : 600;
+    letter-spacing                    : 0.05em;
+    line-height                       : 1.500;
+    outline-color                     : rgba(127, 127, 127, 0.0);
+    outline-offset                    : 0.0em;
+    outline-style                     : double;
+    outline-width                     : 0.0em;
+    padding-bottom                    : 0.50em;
+    padding-left                      : 1.25em;
+    padding-right                     : 1.25em;
+    padding-top                       : 0.50em;
+    position                          : relative;
+    text-decoration                   : none;
+    text-decoration-color             : transparent;
+    text-decoration-line              : none;
+    text-decoration-skip              : none;
+    text-decoration-thickness         : 0px;
+    text-transform                    : uppercase;
+    transform                         : translate(0px, -0px);
+    translate                         : 0px -0px;
+    word-spacing                      : 0.2em;
+    zoom                              : 1
+  }
+
+  .button,
+  .button[data-\:animated] {
+    -moz-transition-duration   : 300ms;
+    -moz-transition-property   : background-color, color, opacity, outline-color, outline-offset, outline-width, transform;
+    -ms-transition-duration    : 300ms;
+    -ms-transition-property    : background-color, color, opacity, outline-color, outline-offset, outline-width, transform;
+    -o-transition-duration     : 300ms;
+    -o-transition-property     : background-color, color, opacity, outline-color, outline-offset, outline-width, transform;
+    -webkit-transition-duration: 300ms;
+    -webkit-transition-property: background-color, color, opacity, outline-color, outline-offset, outline-width, transform;
+    transition-duration        : 300ms;
+    transition-property        : background-color, color, opacity, outline-color, outline-offset, outline-width, transform
+  }
+
+  .button[href],
+  .button[href]:link,
+  .button[href]:visited {
+    -o-link: #F0F0F0;
+    -o-link: light-dark(#F0F0F0, #3F3F3F);
+    color  : #F0F0F0;
+    color  : light-dark(#F0F0F0, #3F3F3F)
+  }
+
+  .button:nth-of-type(even) {
+    -ah-border-bottom-left-radius    : 4px;
+    -ah-border-top-right-radius      : 4px;
+    -khtml-border-bottom-left-radius : 4px;
+    -khtml-border-top-right-radius   : 4px;
+    -moz-border-bottom-left-radius   : 4px;
+    -moz-border-top-right-radius     : 4px;
+    -pie-border-radius               : 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -webkit-border-top-right-radius  : 4px;
+    border-bottom-left-radius        : 4px;
+    border-top-right-radius          : 4px
+  }
+
+  .button:nth-of-type(odd) {
+    -ah-border-bottom-right-radius    : 4px;
+    -ah-border-top-left-radius        : 4px;
+    -khtml-border-bottom-right-radius : 4px;
+    -khtml-border-top-left-radius     : 4px;
+    -moz-border-bottom-right-radius   : 4px;
+    -moz-border-top-left-radius       : 4px;
+    -pie-border-radius                : 4px;
+    -webkit-border-bottom-right-radius: 4px;
+    -webkit-border-top-left-radius    : 4px;
+    border-bottom-right-radius        : 4px;
+    border-top-left-radius            : 4px
   }
     /* Pseudo */
-      /* Active */
-      .button:active {
-        animation        : click 150ms ease-out;
-        -moz-animation   : click 150ms ease-out;
-        -ms-animation    : click 150ms ease-out;
-        -o-animation     : click 150ms ease-out;
-        -webkit-animation: click 150ms ease-out
+      /* Hover */
+      .button:hover {
+        -moz-animation-iteration-count   : infinite;
+        -moz-animation-name              : button-breathe;
+        -ms-animation-iteration-count    : infinite;
+        -ms-animation-name               : button-breathe;
+        -o-animation-iteration-count     : infinite;
+        -o-animation-name                : button-breathe;
+        -webkit-animation-iteration-count: infinite;
+        -webkit-animation-name           : button-breathe;
+        animation-iteration-count        : infinite;
+        animation-name                   : button-breathe;
+        outline-color                    : rgba(127, 127, 127, 0.4)
+      }
+
+      /* Focus, Hover */
+      .button:focus,
+      .button:hover {
+        outline-offset: -0.2em;
+        outline-width : 0.5em
+      }
+
+      .button:focus, .button[data-\:animated]:focus,
+      .button:hover, .button[data-\:animated]:hover {
+        -moz-transition-timing-function   : ease-in;
+        -ms-transition-timing-function    : ease-in;
+        -o-transition-timing-function     : ease-in;
+        -webkit-transition-timing-function: ease-in;
+        background                        : url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP88AwAAswB2I5mb10AAAAASUVORK5CYII=) repeat;
+        background                        : rgba(240, 240, 240, 0.1);
+        background                        : light-dark(rgba(240, 240, 240, 0.1), rgba(63, 63, 63, 0.1));
+        color                             : #3F3F3F;
+        color                             : light-dark(#3F3F3F, #F0F0F0);
+        transition-timing-function        : ease-in
       }
 
       /* Focus */
-      .button:focus { border-color: red }
+      .button:focus {
+        outline-color: rgba(127, 127, 127, 0.65);
+        outline-style: double
+      }
+
+      /* Active, Focus */
+      .button:active,
+      .button:focus {
+        -moz-animation-iteration-count   : 1;
+        -ms-animation-iteration-count    : 1;
+        -o-animation-iteration-count     : 1;
+        -webkit-animation-iteration-count: 1;
+        animation-iteration-count        : 1
+      }
+
+      /* Active */
+      .button:active {
+        -moz-animation-duration   : 150ms;
+        -moz-animation-name       : button-click;
+        -ms-animation-duration    : 150ms;
+        -ms-animation-name        : button-click;
+        -o-animation-duration     : 150ms;
+        -o-animation-name         : button-click;
+        -webkit-animation-duration: 150ms;
+        -webkit-animation-name    : button-click;
+        animation-duration        : 150ms;
+        animation-name            : button-click
+      }
+
+    /* All */
+    .button * {
+      -pie-background : transparent;
+      background-color: transparent
+    }
 
   /* Counter */
   .counter { font-variant-numeric: tabular-nums }
 
-  /* Section */
-  .section {
-    margin-left : auto;
-    margin-right: auto
+  /* Inline */
+  .inline {
+    display       : inline !important;
+    font-size     : 1.000em;
+    height        : 1.000em;
+    vertical-align: middle;
+    vertical-align: -0.125em
   }
-    /* <table> */
-    .section table {
-      margin-left : inherit;
-      margin-right: inherit
+
+  svg|*.inline {
+    display       : inline !important;
+    font-size     : 1.000em;
+    height        : 1.000em;
+    vertical-align: middle;
+    vertical-align: -0.125em
+  }
+
+  svg.inline     { width: 1em }
+  svg|svg.inline { width: 1em }
+    /* All */
+    .inline * {
+      font-size     : inherit;
+      height        : inherit;
+      vertical-align: inherit;
+      width         : inherit
+    }
+
+  /* No Select */
+  .noselect,
+  noscript:hover {
+    -moz-user-focus: ignore;
+    interactivity  : inert;
+    pointer-events : none
+  }
+
+  .button,
+  .noselect,
+  [data-\:tooltip]::before,
+  button,
+  input[type=button /* i */],
+  input[type=reset  /* i */],
+  input[type=submit /* i */] { -webkit-user-drag: none }
+
+  /* No Text Select */
+  .button,
+  .noselect,
+  .notextselect,
+  [data-\:tooltip]::before,
+  button,
+  input[type=button /* i */],
+  input[type=reset  /* i */],
+  input[type=submit /* i */],
+  noscript:hover {
+    -khtml-user-select   : none;
+    -moz-user-select     : none;
+    -ms-user-select      : none;
+    -webkit-user-select  : none;
+    -webkit-touch-callout: none;
+    user-select          : none
+  }
+    /* Pseudo > Selection */
+    .button::-moz-selection,                  .button                  ::-moz-selection,
+    .notextselect::-moz-selection,            .notextselect            ::-moz-selection,
+    [data-\:tooltip]::before::-moz-selection, [data-\:tooltip]::before ::-moz-selection,
+    button::-moz-selection,                   button                   ::-moz-selection,
+    input[type=button /* i */]::-moz-selection,     input[type=button /* i */]     ::-moz-selection,
+    input[type=reset  /* i */]::-moz-selection,     input[type=reset  /* i */]     ::-moz-selection,
+    input[type=submit /* i */]::-moz-selection,     input[type=submit /* i */]     ::-moz-selection { background-color: transparent }
+
+    .button::selection,                  .button                  ::selection,
+    .notextselect::selection,            .notextselect            ::selection,
+    [data-\:tooltip]::before::selection, [data-\:tooltip]::before ::selection,
+    button::selection,                   button                   ::selection,
+    input[type=button /* i */]::selection,     input[type=button /* i */]     ::selection,
+    input[type=reset  /* i */]::selection,     input[type=reset  /* i */]     ::selection,
+    input[type=submit /* i */]::selection,     input[type=submit /* i */]     ::selection { background-color: transparent }
+
+  /* Section */
+  [role~=banner],
+  [role~=region] {
+    margin-left : auto;
+    margin-right: auto;
+    text-align  : center;
+    width       : 100%
+  }
+    /* All */
+    [role~=banner] > *,
+    [role~=region] > * {
+      margin-left : auto;
+      margin-right: auto
     }

@@ -1,0 +1,17 @@
+{
+  "prefetch": [
+    {
+      "eagerness": "conservative",
+      "source"   : "document",
+      "where"    : {"regex": "^https://lapys\\.dev/.*\\.html$", "relative_to": "document"} // ->> Any HTML page directly on the `lapys.dev` domain
+    }
+  ],
+
+  "prerender": [
+    {
+      "eagerness": "immediate",
+      "source"   : "list",
+      "urls"     : ["https://lapys.dev", "https://lapys.dev/index.html"]
+    }
+  ]
+}
