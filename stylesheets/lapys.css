@@ -412,9 +412,10 @@
 
   /* <body>, <html> */
   body, html {
-    -ms-touch-action: pan-x pan-y;
-    touch-action    : pan-x pan-y;
-    width           : 100%
+    -ms-touch-action          : pan-x pan-y;
+    -webkit-overflow-scrolling: auto;
+    touch-action              : pan-x pan-y;
+    width                     : 100%
   }
 
   /* <blockquote>, <dd>, <figure> */
@@ -1162,6 +1163,15 @@
     vertical-align       : super
   }
 
+  /* <svg> */
+  svg { overflow: visible }
+
+  svg|svg {
+    image-rendering : pixelated;
+    image-resolution: snap;
+    overflow        : visible
+  }
+
   /* <table> */
   table {
     border-collapse: collapse;
@@ -1192,6 +1202,12 @@
     list-style-type: square;
     list-style-type: circle;
     list-style-type: disc
+  }
+
+  /* <v:…> */
+  v\:* {
+    -ms-behavior: url(#default#VML);
+    behavior    : url(#default#VML)
   }
 
 /* At Rules */

@@ -1,24 +1,12 @@
-var BACKGROUND_REEL_STARRY = 0x0;
-var BACKGROUND_REELS       = [BACKGROUND_REEL_STARRY];
-var BACKGROUND_ELEMENT     = getElementById("background");
-var BACKGROUND_CONTEXT     = typeof BACKGROUND_ELEMENT.getContext === "function" ? BACKGROUND_ELEMENT.getContext("2d", {"alpha": true, "colorSpace": "srgb", "desynchronized": true, "willReadFrequently": false}) : null;
+var BACKGROUND_REEL_STARRY       = 0x0;
+var BACKGROUND_REELS             = [BACKGROUND_REEL_STARRY];
+var BACKGROUND_ELEMENT           = getElementById("background");
+var BACKGROUND_CONTEXT           = typeof BACKGROUND_ELEMENT.getContext === "function" ? BACKGROUND_ELEMENT.getContext("2d", {"alpha": true, "colorSpace": "srgb", "desynchronized": true, "willReadFrequently": false}) : null;
+var BACKGROUND_STYLE_DECLARATION = getCSSStyleDeclaration(BACKGROUND_ELEMENT);
+var TAGLINE_ELEMENT              = getElementById("tagline");
 
-//
-if (null === BACKGROUND_CONTEXT) {
-  var backgroundElement = document.createElement("div");
-
-  // ...
-  backgroundElement.setAttribute("alt", "canvas");
-  void BACKGROUND_ELEMENT.parentNode.appendChild(backgroundElement);
-  void BACKGROUND_ELEMENT.parentNode.removeChild(BACKGROUND_ELEMENT);
-
-  for (var index = BACKGROUND_ELEMENT.attributes.length; index--; )
-  backgroundElement.setAttribute(BACKGROUND_ELEMENT.attributes.item(index).name, BACKGROUND_ELEMENT.attributes.item(index).value);
-
-  BACKGROUND_ELEMENT = backgroundElement
-}
-
-else {
+// ...
+if (null !== BACKGROUND_CONTEXT) {
   function resolution(_) {
     var backgroundElementBounds = getElementBounds(BACKGROUND_ELEMENT);
 
@@ -44,6 +32,8 @@ else {
       var COMET_RADIUS                = 3;
       var COMET_SPEED                 = 30.0;
       var COMET_LENGTH_MAXIMUM        = 200;
+      var STAR_COUNT_MAXIMUM          = 1200;
+      var STAR_COUNT_MINIMUM          = 200;
       var STAR_PULSE_MINIMUM          = 0.10; // ->> % percent
       var STAR_PULSE_SPEED            = 0.01; // ->> % percent
       var STAR_RADIUS_MAXIMUM         = 1.5;
@@ -84,7 +74,7 @@ else {
 
         for (var radius = 15; radius < radiusMaximum; radius += radiusIncrement)
         for (var count = Math.ceil(MATH_PI * radius), index = count, offset = MATH_PI * Math.random(); index--; ) {
-          if (reelTimeDelta >= 60.0 * 1.5 || stars.length === 1200)
+          if (STAR_COUNT_MAXIMUM <= stars.length || (STAR_COUNT_MINIMUM < stars.length && reelTimeDelta >= 60.0 * 1.5))
           return;
 
           if (Math.random() > 1.0 - (1.0 / radius)) {
@@ -106,7 +96,7 @@ else {
       function rippleStars(position, force) {
         var clusters = [];
 
-        return;
+        if (false) // TODO (Lapys)
         for (var index = stars.length; index--; ) {
           var star          = stars[index];
           var starDistance  = {x: position.x - star.position.x, y: position.y - star.position.y};
@@ -143,30 +133,18 @@ else {
       void poll(BACKGROUND_ELEMENT.parentNode, "mousedown", function(event) { rippleStars({x: event.clientX, y: event.clientY}, 50.0) }, {"capture": true, "passive": true});
       void poll(BACKGROUND_ELEMENT.parentNode, "mousemove", function(event) { rippleStars({x: event.clientX, y: event.clientY}, 20.0) }, {"capture": true, "passive": true});
 
-      for (var taglineElement = getElementById("tagline"), taglineNodes = null !== taglineElement ? taglineElement.childNodes : [], index = taglineNodes.length; index--; ) {
-        var taglineNode = taglineNodes.item(index);
-
-        if (taglineNode.nodeType === /* --> Node.TEXT_NODE */ 0x3) {
-          for (var taglineTexts = delimit(taglineNode.nodeValue, /\s+/g), subindex = 0, sublength = taglineTexts.length; subindex !== sublength; ++subindex) {
-            var taglineTextElement = document.createElement("span");
-            taglineElement.insertBefore(taglineTextElement, taglineNode).innerText = taglineTexts[subindex].value + taglineTexts[subindex].delimiter
-          }
-
-          taglineElement.removeChild(taglineNode)
-        }
-      }
-
       void LOOP_PROCEDURES.push(function reel() {
         var cometLengthMaximum    = Math.max(BACKGROUND_ELEMENT.width * 0.35, COMET_LENGTH_MAXIMUM);
         var reelPreviousTimestamp = reelTimestamp;
 
         // ...
+        // BACKGROUND_CONTEXT.filter = BACKGROUND_STYLE_DECLARATION.getPropertyValue("filter").replace(/\bhue-rotate\([-+\s]*/gi, "hue-rotate(-"); // ->> Oof! Thankfully this reel is achromatic/ monochrome
         reelTimestamp = timestamp();
         reelTimeDelta = reelTimestamp - reelPreviousTimestamp;
 
         BACKGROUND_CONTEXT.clearRect(0, 0, BACKGROUND_ELEMENT.width, BACKGROUND_ELEMENT.height);
-        void waitThrottled(createComets, 5.0e3);
-        void waitThrottled(createStars,  stars.length ? 10.0e3 : 0.0e3);
+        void waitEvery(createComets, 5.0e3);
+        void waitEvery(createStars,  stars.length ? 10.0e3 : 0.0e3);
 
         for (var index = comets.length; index--; ) {
           var comet = comets[index];
@@ -198,13 +176,13 @@ else {
 
             BACKGROUND_CONTEXT.beginPath();
             BACKGROUND_CONTEXT.moveTo   (Math.floor(comet.origin  .x), Math.floor(comet.origin  .y));
-            BACKGROUND_CONTEXT.arc      (Math.floor(comet.position.x), Math.floor(comet.position.y), COMET_RADIUS, cometAngle - MATH_ETA - cometTangentAngle, cometAngle + MATH_ETA + cometTangentAngle);
+            BACKGROUND_CONTEXT.arc      (Math.floor(comet.position.x), Math.floor(comet.position.y), COMET_RADIUS, cometAngle - MATH_ETA - cometTangentAngle, cometAngle + MATH_ETA + cometTangentAngle, false);
             BACKGROUND_CONTEXT.closePath();
             BACKGROUND_CONTEXT.fill     ();
 
             BACKGROUND_CONTEXT.beginPath();
             BACKGROUND_CONTEXT.moveTo   (comet.position.x, comet.position.y);
-            BACKGROUND_CONTEXT.arc      (Math.floor(comet.position.x), Math.floor(comet.position.y), Math.ceil(COMET_RADIUS * 0.65), 0.0, MATH_TAU);
+            BACKGROUND_CONTEXT.arc      (Math.floor(comet.position.x), Math.floor(comet.position.y), Math.ceil(COMET_RADIUS * 0.65), 0.0, MATH_TAU, false);
             BACKGROUND_CONTEXT.fill     ()
           }
         }
@@ -226,7 +204,7 @@ else {
 
             BACKGROUND_CONTEXT.beginPath();
             BACKGROUND_CONTEXT.moveTo   (star.position.x, star.position.y);
-            BACKGROUND_CONTEXT.arc      (Math.floor(star.position.x), Math.floor(star.position.y), star.radius, 0.0, MATH_TAU);
+            BACKGROUND_CONTEXT.arc      (Math.floor(star.position.x), Math.floor(star.position.y), star.radius, 0.0, MATH_TAU, false);
             BACKGROUND_CONTEXT.fill     ()
           }
         }
@@ -238,3 +216,23 @@ else {
     }
   }
 }
+
+else {
+  var backgroundElement = new Image() || document.createElement("img");
+
+  // ...
+  backgroundElement.alt = "canvas";
+  backgroundElement.src = "data:image/jpg;base64,/9j/4AAQSkZJRgABAQEBLAEsAAD/2wBDAAYEBAQFBAYFBQYJBgUGCQsIBgYICwwKCgsKCgwQDAwMDAwMEAwODxAPDgwTExQUExMcGxsbHCAgICAgICAgICD/2wBDAQcHBw0MDRgQEBgaFREVGiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAABAAEDAREAAhEBAxEB/8QAFAABAAAAAAAAAAAAAAAAAAAACP/EABQQAQAAAAAAAAAAAAAAAAAAAAD/xAAUAQEAAAAAAAAAAAAAAAAAAAAA/8QAFBEBAAAAAAAAAAAAAAAAAAAAAP/aAAwDAQACEQMRAD8AKoP/2Q==";
+
+  void BACKGROUND_ELEMENT.parentNode.insertBefore(backgroundElement, BACKGROUND_ELEMENT);
+  void BACKGROUND_ELEMENT.parentNode.removeChild (BACKGROUND_ELEMENT);
+
+  for (var index = BACKGROUND_ELEMENT.attributes.length; index--; )
+    backgroundElement.setAttribute(BACKGROUND_ELEMENT.attributes.item(index).name, BACKGROUND_ELEMENT.attributes.item(index).value);
+
+  BACKGROUND_ELEMENT = backgroundElement
+}
+
+// ...
+if (null !== TAGLINE_ELEMENT)
+void convertChildNodes(TAGLINE_ELEMENT, /* --> Node.TEXT_NODE */ 0x3, /* --> Node.ELEMENT_NODE */ 0x1)

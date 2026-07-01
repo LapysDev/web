@@ -1,23 +1,23 @@
 {
-  "background_color": "#0000CF",
+  "background_color": "#0F003F",
   "display"         : "standalone",
-  "description"     : "Lapys’ portfolio",
+  "description"     : "LapysDev — Software Developer (Games && Graphics)",
   "launch_handler"  : {"client_mode": "focus-existing"},
   "name"            : "Lapys",
-  "scope"           : "/",
+  "scope"           : "https://lapys.dev/",
   "short_name"      : "Lapys",
-  "start_url"       : "/",
+  "start_url"       : "https://lapys.dev/",
   "theme_color"     : "#0000CF",
 
   "icons": [
-    {"purpose": "any", "sizes": "any",       "src": "icons/lapys.svg",       "type": "image/svg+xml"},
-    {"purpose": "any", "sizes": "1024x1024", "src": "icons/lapys×1024.webp", "type": "image/webp"},
-    {"purpose": "any", "sizes": "512x512",   "src": "icons/lapys×512.webp",  "type": "image/webp"},
-    {"purpose": "any", "sizes": "180x180",   "src": "icons/lapys×180.webp",  "type": "image/webp"},
-    {"purpose": "any", "sizes": "144x144",   "src": "icons/lapys×144.webp",  "type": "image/webp"}
+    {"purpose": "any", "sizes": "any",       "src": "https://lapys.dev/icons/lapys.svg",       "type": "image/svg+xml"},
+    {"purpose": "any", "sizes": "1024x1024", "src": "https://lapys.dev/icons/lapys×1024.webp", "type": "image/webp"},
+    {"purpose": "any", "sizes": "512x512",   "src": "https://lapys.dev/icons/lapys×512.webp",  "type": "image/webp"},
+    {"purpose": "any", "sizes": "180x180",   "src": "https://lapys.dev/icons/lapys×180.webp",  "type": "image/webp"},
+    {"purpose": "any", "sizes": "144x144",   "src": "https://lapys.dev/icons/lapys×144.webp",  "type": "image/webp"}
   ],
 
   "screenshots": [
-    {"form_factor": "wide", "sizes": "1200x630", "src": "images/screenshot.avif", "type": "image/avif"}
+    {"form_factor": "wide", "sizes": "1200x630", "src": "https://lapys.dev/images/screenshot.avif", "type": "image/avif"}
   ]
 }

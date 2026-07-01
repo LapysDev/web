@@ -113,11 +113,51 @@ var COMPONENTS_CACHE          = []; // --> [...createComponentCache(…)]
 var BACKGROUND_PROCEDURES     = createProcedureCollection([function lazy() { Lazy.main() }, function portal() { Portal.main() }, function tooltip() { Tooltip.main() }]);
 var BACKGROUND_HANDLER        = nop;
 
+var nop         = (function() { try { if (typeof eval === "function") return eval("() => void 0x00") } catch (error) {} return nop })();
 var pageTilting = false;
 var pend        = typeof queueMicrotask === "function"                                     ? function pend(callback) { return queueMicrotask(callback) } : pend;
 var timestamp   = typeof performance === "object" && typeof performance.now === "function" ? function timestamp() { return performance.now() }           : timestamp;
 
 /* Function > ... */
+function convertChildNodes(element, nodeTypeA, nodeTypeB) /* TODO (Lapys) */ {
+  if (nodeTypeA === nodeTypeB)
+  return true;
+
+  switch (nodeTypeA) {
+    case /* --> Node.ELEMENT_NODE */                0x1: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.ATTRIBUTE_NODE */              0x2: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.TEXT_NODE */                   0x3: switch (nodeTypeB) { case 0x1: case 0x8: break; case 0xB: return true; default: return false } break;
+    case /* --> Node.CDATA_SECTION_NODE */          0x4: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.ENTITY_REFERENCE_NODE */       0x5: return false;
+    case /* --> Node.ENTITY_NODE */                 0x6: return false;
+    case /* --> Node.PROCESSING_INSTRUCTION_NODE */ 0x7: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.COMMENT_NODE */                0x8: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.DOCUMENT_NODE */               0x9: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.DOCUMENT_TYPE_NODE */          0xA: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.DOCUMENT_FRAGMENT_NODE */      0xB: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.NOTATION_NODE */               0xC: return false
+  }
+
+  for (var index = element.childNodes.length; index--; ) {
+    var node = element.childNodes.item(index);
+
+    if (node.nodeType === nodeTypeA)
+    switch (nodeTypeA) {
+      case 0x3: {
+        for (var texts = delimit(node.nodeValue, /\s+/g), subindex = 0, sublength = texts.length; subindex !== sublength; ++subindex)
+        switch (nodeTypeB) {
+          case 0x1:      element.insertBefore(document.createElement("span"), node).innerText = texts[subindex].value + texts[subindex].delimiter; break;
+          case 0x8: void element.insertBefore(document.createComment(texts[subindex].value + texts[subindex].delimiter), node)
+        }
+
+        element.removeChild(node)
+      }
+    }
+  }
+
+  return true
+}
+
 function createComponentCache(component) {
   return {component: component, cssText: "", elements: [], xpathText: ""}
 }
@@ -180,6 +220,52 @@ function delimit(string, delimiter) /* ->> `string.split(…)` that ignores pare
   return value
 }
 
+function escapeCSSSelector(selector) {
+  if (typeof CSS === "object" && typeof CSS.escape === "function")
+  return CSS.escape(selector);
+
+  if (typeof "".charCodeAt === "function") {
+    var entryCodeUnit   = selector.charCodeAt(0);
+    var escapedSelector = "";
+    var selectorLength  = selector.length;
+
+    // ...
+    if (entryCodeUnit === 0x002D && selectorLength === 1) escapedSelector = "\\-";
+    else for (var index = 0; index !== selectorLength; ++index) {
+      var codeUnit = selector.charCodeAt(index);
+      escapedSelector += (
+        // ->> NUL
+        codeUnit === 0x0000 ? '\uFFFD' :
+
+        // ->> Control characters or leading digits (e.g. `-2`)
+        (
+          (codeUnit >=  0x0030 && codeUnit <= 0x0039 && entryCodeUnit === 0x002D && index === 1) ||
+          (codeUnit >=  0x0030 && codeUnit <= 0x0039                             && index === 0) ||
+          (codeUnit >=  0x0001 && codeUnit <= 0x001F)                                            ||
+          (codeUnit === 0x007F)
+        ) ? '\\' + codeUnit.toString(16) + ' ' :
+
+        // ->> Identifier characters
+        (
+          (codeUnit >=  0x0030 && codeUnit <= 0x0039) || // --> [0-9]
+          (codeUnit >=  0x0041 && codeUnit <= 0x005A) || // --> [A-Z]
+          (codeUnit >=  0x0061 && codeUnit <= 0x007A) || // --> [a-z]
+          (codeUnit >=  0x0080) ||                       //
+          (codeUnit === 0x002D) ||                       // --> [-]
+          (codeUnit === 0x005F)                          // --> [_]
+        ) ? selector[index] :
+
+        // ->> …
+        '\\' + selector[index]
+      )
+    }
+
+    return escapedSelector
+  }
+
+  return selector
+}
+
 function extendComponentCache(element, componentCache) {
   void componentCache.elements.push(element)
 }
@@ -207,8 +293,8 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
   }, CANON_PASS = function(match, $1, $2, $3, $4) { return $4 ? $4 : match }, CANON_ONLY = "$4", CANON_MATCH = /^(?=([-+]?(?:0+(?:\.0*)?|\.0+)(?:[Ee][-+]?\d+)?)$|([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?)(deg|dppx|Hz|px|s)$)(\1|\2)\3$|^[\S\s]*$/i;
 
   var document           = element.ownerDocument || (function() { return this || globalThis })().document;
-  var groupingPredicates = arguments.length <= 3 || null === groupingPredicates ? getCSSGroupingPredicates()           : groupingPredicates;
-  var styleRules         = arguments.length <= 2 || null === styleRules         ? getCSSStyleRules(document, !!strict) : styleRules;
+  var groupingPredicates = arguments.length <= 3 || null === groupingPredicates ? {container: {name: [], query: []}, layer: null, media: null, scope: [], supports: null} : groupingPredicates;
+  var styleRules         = arguments.length <= 2 || null === styleRules         ? getCSSStyleRules(document, !!strict)                                                    : styleRules;
   var styleDeclaration   = getCSSStyleDeclaration(element);
 
   /* ... */
@@ -643,7 +729,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
           // ...
           switch (measurements["length"][2]) {
             case "rcap": case "rch": case "rem": case "rex": case "ric": case "rlh": {
-              for (var rootElement = property.element; null !== rootElement && rootElement.nodeType === 0x01; rootElement = rootElement.parentNode)
+              for (var rootElement = property.element; null !== rootElement && rootElement.nodeType === 0x1; rootElement = rootElement.parentNode)
               fontElement = rootElement // --> :root
             } break;
 
@@ -701,7 +787,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
 
               // ... ---> containerElement = …
               while (true) {
-                if (null === containerElement || containerElement.nodeType !== 0x01) {
+                if (null === containerElement || containerElement.nodeType !== 0x1) {
                   var documentBounds = getDocumentBounds();
 
                   // ...
@@ -803,7 +889,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
                 fontElement = null === rootElement ? fontPropertyName === property.name ? property.element.parentNode : property.element : rootElement;
 
                 while (true) {
-                  if (null === fontElement || fontElement.nodeType !== 0x01) {
+                  if (null === fontElement || fontElement.nodeType !== 0x1) {
                     if (fontPropertyName === "font-size") {
                       var containerNode         = /* --> :root */ document.documentElement || document;
                       var containerFontSize     = {priority: "", value: ""};
@@ -813,7 +899,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
 
                       // ...
                       if (null !== containerNode) {
-                        if (containerNode.nodeType === 0x01) {
+                        if (containerNode.nodeType === 0x1) {
                           containerStyle        = containerNode.style;
                           containerStyleInlined = null !== containerNode.getAttribute("style")
                         }
@@ -882,7 +968,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
               default: {
                 var containerElement = property.element.parentNode;
 
-                if (null !== containerElement && containerElement.nodeType === 0x01)
+                if (null !== containerElement && containerElement.nodeType === 0x1)
                 switch (property.axis) {
                   // ->> Assumes layout measurement
                   case HORIZONTAL_AXIS: measurement.value = ((measurements["length"][1] / 100.00) * getElementBounds(containerElement).width)  + "px"; break;
@@ -1225,7 +1311,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
 
                   // ...
                   if (!containerApplicable.name && null !== containerPropertyName) {
-                    for (; null !== containerElement && containerElement.nodeType === 0x01; containerElement = containerElement.parentNode)
+                    for (; null !== containerElement && containerElement.nodeType === 0x1; containerElement = containerElement.parentNode)
                     cascaded = cascade(containerElement, containerPropertyName, property, properties)
                   }
 
@@ -1333,7 +1419,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
                           case "snapped": {
                             var containerParentElement = containerElement.parentNode;
 
-                            if (null !== containerParentElement && containerParentElement.nodeType === 0x01)
+                            if (null !== containerParentElement && containerParentElement.nodeType === 0x1)
                             switch (functions["scroll-state"][2]) {
                               // ->> Approximate (with) scroll position without existing DOM API
                               case 'x': case "inline": containerApplicable.value = Math.abs(getElementBounds(containerElement).left - getElementBounds(containerParentElement).left) < 1.00; break;
@@ -1469,12 +1555,12 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
                   var root = null;
 
                   // ...
-                  for (var node = property.element; null !== node && node.nodeType === 0x01; node = node.parentNode)
+                  for (var node = property.element; null !== node && node.nodeType === 0x1; node = node.parentNode)
                   if  (matches(node, scope.start)) { root = node; break }
 
                   if (null === root) scopeApplicable = false;
                   else if (property.element !== root && null !== scope.end) {
-                    for (var node = element.parentNode; null !== node && node.nodeType === 0x01 && node !== root; node = node.parentNode)
+                    for (var node = element.parentNode; null !== node && node.nodeType === 0x1 && node !== root; node = node.parentNode)
                     if  (matches(node, scope.end)) { scopeApplicable = false; break }
                   }
                 }
@@ -1995,7 +2081,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
           }
 
           // ... ->> Choose inline styling
-          if (null === property.information || (CSS_TRANSITION_DESCRIPTOR !== property.animation.descriptor && new RegExp("\\s*\\b" + propertyName + "\\b[^;]*!important(\\s*;\\s*|$)", 'i').test(property.element.style.cssText.replace(/\/\*[\S\s]*?\*\//g, "")))) {
+          if (null === property.information || (CSS_TRANSITION_DESCRIPTOR !== property.animation.descriptor && new RegExp("\\s*\\b" + propertyName + "\\b[^;]*!important\\s*(;\\s*|$)", "gi").test(property.element.style.cssText.replace(/\/\*[\S\s]*?\*\//g, "")))) {
             var value = null;
 
             // ...
@@ -2953,7 +3039,7 @@ function getCSSStyleRules(document, strict /* = false */) {
   }
 
   for (var count = sheets.length, order = 0; count; count = sheets.length)
-  for (var index = 0, sheet = sheets.pop(), length = sheet.rules.length; index !== length; ++index) {
+  for (var index = 0, sheet = sheets.pop(), length = (sheet.rules || []).length; index !== length; ++index) {
     var rule = sheet.rules[index];
 
     // ...
@@ -3031,6 +3117,29 @@ function getDocumentBounds() {
   return {bottom: height, left: 0.0, height: height, right: width, top: 0.0, width: width, x: 0.0, y: 0.0}
 }
 
+function getDocumentElements() /* ->> May or may not be live or static */ {
+  if ("all" in document && !document.all)                  return document.all;
+  if (typeof document.getElementsByTagName === "function") return document.getElementsByTagName('*');
+  if (typeof document.querySelectorAll     === "function") return document.querySelectorAll    ('*');
+  var elements = [];
+
+  // ...
+  for (var index = 0, tree = [{element: document, nodes: document.children || document.childNodes}]; index !== tree.length; ++index) {
+    var branch = tree[index];
+
+    // ...
+    if (null === branch.nodes)
+      void elements.push(branch.element);
+
+    else for (var subindex = 0, sublength = branch.nodes.length; subindex !== sublength; ++subindex) {
+      var node = branch.nodes.item(subindex);
+      if (node.nodeType === 0x1) void tree.splice(index + (subindex * 2) + 1, 0, {element: node, nodes: null}, {element: node, nodes: node.children || node.childNodes})
+    }
+  }
+
+  return elements
+}
+
 function getDocumentScrollOffset() {
   return {
     x: (typeof scrollX === "number" ? scrollX : typeof pageXOffset === "number" ? pageXOffset : document.documentElement.scrollLeft || document.body.scrollLeft),
@@ -3039,7 +3148,7 @@ function getDocumentScrollOffset() {
 }
 
 function getElementAncestorByTagName(element, name) /* ->> `element` will also match its own tag `name` */ {
-  for (var name = name.toUpperCase(), node = element; null !== node && node.nodeType === 0x01; node = node.parentNode) {
+  for (var name = name.toUpperCase(), node = element; null !== node && node.nodeType === 0x1; node = node.parentNode) {
     if (name === node.tagName)
     return node
   }
@@ -3058,7 +3167,7 @@ function getElementBounds(element) /* TODO (Lapys) -> Ignores CSS transform tran
       top  += node.offsetTop
     }
 
-    for (var node = element.parentNode; null !== node && node.nodeType === /* --> Node.ELEMENT_NODE */ 0x01; node = node.parentNode) {
+    for (var node = element.parentNode; null !== node && node.nodeType === 0x1; node = node.parentNode) {
       left -= node.scrollLeft || 0.00;
       top  -= node.scrollTop  || 0.00
     }
@@ -3071,12 +3180,21 @@ function getElementBounds(element) /* TODO (Lapys) -> Ignores CSS transform tran
 }
 
 function getElementById(id) {
-  if (typeof document.getElementById === "function")
-  return document.getElementById(id);
+  if (typeof document.getElementById === "function") return document.getElementById(id);
+  if (typeof document.querySelector  === "function") return document.querySelector("[id=\"" + escapeCSSSelector(id).replace(/(^|[^\\])"/g, "\\\"") + "\"]");
+  var elements = getDocumentElements();
 
-  for (var index = document.all.length; index--; ) {
-    if (id === document.all.item(index).id)
-    return document.all.item(index)
+  // ...
+  if (typeof elements.namedItem === "function") {
+    var element = elements.namedItem(id);
+
+    if (element.id === id)
+    return element
+  }
+
+  for (var index = 0, length = elements.length; index !== length; ++index) {
+    if (elements[index].id === id)
+    return elements[index]
   }
 
   return null
@@ -3091,47 +3209,12 @@ function getElementsByComponent(component) {
     // ...
     if (0 === componentCache.elements.length) {
       if (null === searched && typeof document.querySelectorAll === "function") {
-        var escapedAttributeName = component.attributeName; // --> CSS.escape(…)
-
-        // ...
-        if (typeof "".charCodeAt === "function") {
-          var entryCodeUnit = component.attributeName.charCodeAt(0);
-
-          if (entryCodeUnit === 0x002D && component.attributeName.length === 1) escapedAttributeName = "\\-";
-          else for (var escapedAttributeName = "", index = 0, length = component.attributeName.length; index !== length; ++index) {
-            var codeUnit = component.attributeName.charCodeAt(index);
-            escapedAttributeName += (
-              // ->> NUL
-              codeUnit === 0x0000 ? '\uFFFD' :
-
-              // ->> Control characters or leading digits (e.g. `-2`)
-              (
-                (codeUnit >=  0x0030 && codeUnit <= 0x0039 && entryCodeUnit === 0x002D && index === 1) ||
-                (codeUnit >=  0x0030 && codeUnit <= 0x0039                             && index === 0) ||
-                (codeUnit >=  0x0001 && codeUnit <= 0x001F)                                            ||
-                (codeUnit === 0x007F)
-              ) ? '\\' + codeUnit.toString(16) + ' ' :
-
-              // ->> Identifier characters
-              (
-                (codeUnit >=  0x0030 && codeUnit <= 0x0039) || // --> [0-9]
-                (codeUnit >=  0x0041 && codeUnit <= 0x005A) || // --> [A-Z]
-                (codeUnit >=  0x0061 && codeUnit <= 0x007A) || // --> [a-z]
-                (codeUnit >=  0x0080) ||                       //
-                (codeUnit === 0x002D) ||                       // --> [-]
-                (codeUnit === 0x005F)                          // --> [_]
-              ) ? component.attributeName[index] :
-
-              // ->> …
-              '\\' + component.attributeName[index]
-            )
-          }
-        }
+        var attributeName = escapeCSSSelector(component.attributeName);
 
         // ...
         if (componentCache.cssText === "") {
           for (var index = component.tagNames.length; index--; )
-          componentCache.cssText += component.tagNames[index] + '[' + escapedAttributeName + ']' + (index ? ", " : "")
+          componentCache.cssText += component.tagNames[index] + '[' + attributeName + ']' + (index ? ", " : "")
         }
 
         if (componentCache.cssText !== "")
@@ -3146,7 +3229,7 @@ function getElementsByComponent(component) {
       if (null === searched && typeof document.evaluate === "function") {
         if (componentCache.xpathText === "") {
           for (var index = component.tagNames.length; index--; )
-          componentCache.xpathText += "//" + component.tagNames[index] + "[@*[name()=\"" + escapedAttributeName + "\"]]" + (index ? " | " : "")
+          componentCache.xpathText += "//" + component.tagNames[index] + "[@*[name()=\"" + attributeName + "\"]]" + (index ? " | " : "")
         }
 
         if (componentCache.xpathText !== "") {
@@ -3295,7 +3378,7 @@ function poll(target, types, handler, configuration) /* ->> `AbortSignal "signal
       function stop() { handler = null; if (typeof target.removeEventListener === "function") { target.removeEventListener(type, poll, configuration, configuration["capture"]); return true } return false }
       function poll(event) { if (null === handler) return; var handled = handler(event, stop); if (false === handled && typeof event.preventDefault === "function") { event.preventDefault() } return handled }
 
-      target.addEventListener(type, /* --> {handleEvent: poll} */ poll, configuration, configuration["capture"], false);
+      target.addEventListener(type, /* --> {handleEvent: poll} */ poll, configuration, configuration["capture"] /* , false */);
       return true // ->> Assume successfully added i.e. `.addEventListener("…", null, {get passive() { return SUPPORTED }})`
     }
 
@@ -3340,6 +3423,7 @@ function poll(target, types, handler, configuration) /* ->> `AbortSignal "signal
 
               if (listener.configuration["once"] && listener.once) listener.handler = null;
               else try {
+                event.target                   = event.target || event.srcElement;
                 event.stopPropagation          = EVENT_STOP_PROPAGATION;
                 event.stopImmediatePropagation = EVENT_STOP_IMMEDIATE_PROPAGATION;
                 event.preventDefault           = EVENT_PREVENT_DEFAULT;
@@ -3419,6 +3503,7 @@ function poll(target, types, handler, configuration) /* ->> `AbortSignal "signal
         target[type] = null;
 
         try {
+          pollEvent.target                   = pollEvent.target || pollEvent.srcElement;
           pollEvent.stopPropagation          = POLLS.stopPropagation;
           pollEvent.stopImmediatePropagation = POLLS.stopImmediatePropagation;
           pollEvent.preventDefault           = configuration["passive"] ? /* --> nop */ function preventDefault() {} : POLLS.preventDefault;
@@ -3466,7 +3551,7 @@ function timestamp() {
   return new Date().valueOf()
 }
 
-function waitThrottled(handler, delay) {
+function waitEvery(handler, delay) {
   for (var index = WAIT.throttled.length; ; ) {
     if (--index === -1) {
       void WAIT.throttled.push({handler: handler, timestamp: timestamp()});
@@ -3524,7 +3609,7 @@ Animate.main = function animateMain() {
     while (animateElementPresets.length)
     switch (animateElementPresets.pop()) {
       case "magnify": break;
-      case "tilt3d": animateElement.style.cssText = "transform: perspective(1200px) rotateX(" + tilt3DRotation.x + "deg) rotateY(" + tilt3DRotation.y + "deg) scale(" + tilt3DScale + "); transform-origin: " + tilt3DOrigin.x + "px " + tilt3DOrigin.y + "px; " + animateElement.style.cssText.replace(/\s*\b(transform|transform-origin)\b[^;]*(\s*;\s*|$)/gi, "")
+      case "tilt3d": animateElement.style.cssText = "transform: perspective(1200px) rotateX(" + tilt3DRotation.x + "deg) rotateY(" + tilt3DRotation.y + "deg) scale(" + tilt3DScale + "); transform-origin: " + tilt3DOrigin.x + "px " + tilt3DOrigin.y + "px; " + animateElement.style.cssText.replace(/\s*\b(transform|transform-origin)\b[^;]*(;\s*|$)/gi, "")
     }
   }
 };
@@ -3629,8 +3714,8 @@ Portal.main = function portalMain() /* ->> Static read-only reflection of target
       if (--subindex === -1) {
         portalTargetElement.setAttribute(Reflection.attributeName, "");
 
-        for (var nodes = Portal.all[Portal.all.push({destination: portalElement, nodes: [], source: portalTargetElement}) - 1].nodes; portalTargetElement.childNodes.length;)
-        void nodes.push(portalElement.appendChild(portalTargetElement.childNodes.item(0)));
+        for (var nodes = Portal.all[Portal.all.push({destination: portalElement, nodes: [], source: portalTargetElement}) - 1].nodes; portalTargetElement.hasChildNodes(); )
+        void nodes.push(portalElement.appendChild(portalTargetElement.firstChild));
 
         break
       }
@@ -3696,17 +3781,14 @@ if (null === COMPONENTS_HANDLER) {
   }
 
   function updateComponentCaches(event) {
-    var element = event.target || event.srcElement;
-
-    // ...
     COMPONENTS_HANDLER = updateComponentCaches;
     event.stopPropagation();
 
     for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
-      if (hasComponent(element, COMPONENTS_CACHE[componentCacheIndex].component))
+      if (hasComponent(event.target, COMPONENTS_CACHE[componentCacheIndex].component))
       switch (event.type) {
-        case "DOMNodeInserted": extendComponentCache(element, COMPONENTS_CACHE[componentCacheIndex]); break;
-        case "DOMNodeRemoved":  reduceComponentCache(element, COMPONENTS_CACHE[componentCacheIndex])
+        case "DOMNodeInserted": extendComponentCache(event.target, COMPONENTS_CACHE[componentCacheIndex]); break;
+        case "DOMNodeRemoved":  reduceComponentCache(event.target, COMPONENTS_CACHE[componentCacheIndex])
       }
     }
   }
@@ -3731,6 +3813,20 @@ switch (null !== BACKGROUND_HANDLER) {
   default:                                        BACKGROUND_PROCEDURES.main = BACKGROUND_PROCEDURE
 }
 
+if (typeof document.normalize === "function") {
+  document.normalize();
+
+  if (typeof MutationObserver === "function") {
+    try { (new MutationObserver(function normalizeDocumentNodes(records, observer) { while (records.length) { var record = records.pop(); for (var subindex = record.addedNodes.length; subindex--; ) record.addedNodes.item(subindex).normalize() } })).observe(document.documentElement, {attributeFilter: [], childList: true, subtree: true}) }
+    catch (error) /* --> SyntaxError | TypeError */ {}
+  }
+
+  else {
+    void poll(document, "DOMNodeInserted", function normalizeDocumentNode(event) { event.target.normalize() }, {"capture": true, "passive": true});
+    void poll(document, "propertychange",  function normalizeDocument    (event) { document    .normalize() }, {"capture": true, "passive": true})
+  }
+}
+
 void poll(window, ["blur", "mouseleave"], function(_) {
   for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {
     var animateElement        = animates[index];
@@ -3740,7 +3836,7 @@ void poll(window, ["blur", "mouseleave"], function(_) {
     while (animateElementPresets.length)
     switch (animateElementPresets.pop()) {
       case "magnify": break;
-      case "tilt3d": animateElement.style.cssText = animateElement.style.cssText.replace(/\s*\b(transform|transform-origin)\b[^;]*(\s*;\s*|$)/gi, "")
+      case "tilt3d": animateElement.style.cssText = animateElement.style.cssText.replace(/\s*\b(transform|transform-origin)\b[^;]*(;\s*|$)/gi, "")
     }
   }
 }, {"capture": true, "passive": true});
@@ -3791,7 +3887,7 @@ void poll(window, "mousemove", function(event) {
   Animate.tilt3D.x = ((event.clientX / documentBounds.width)  - 0.5) * 2.0;
   Animate.tilt3D.y = ((event.clientY / documentBounds.height) - 0.5) * 2.0;
 
-  for (var node = event.target; null !== node && node.nodeType === 0x01; node = node.parentNode)
+  for (var node = event.target; null !== node && node.nodeType === 0x1; node = node.parentNode)
   if (/\bmagnify\b/.test(node.getAttribute(Animate.attributeName))) {
     magnifiable = true;
     break
@@ -3799,7 +3895,7 @@ void poll(window, "mousemove", function(event) {
 
   if (magnifiable) {
     for (var index = Animate.magnify.observed.length; index--; )
-    if (event.target.contains(Animate.magnify.observed[index])) {
+    if (typeof event.target.contains === "function" && event.target.contains(Animate.magnify.observed[index])) {
       magnified = true;
       break
     }
@@ -3808,7 +3904,7 @@ void poll(window, "mousemove", function(event) {
     void Animate.magnify.observed.push(event.target)
   }
 
-  void waitThrottled(Animate.main, 0.5e2)
+  void waitEvery(Animate.main, 0.5e2)
 }, {"capture": true, "passive": true});
 
 void poll(window, "mousewheel", function(event) /* ->> Prevent scroll bouncing? */ {

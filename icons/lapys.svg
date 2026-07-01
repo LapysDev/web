@@ -1,5 +1,5 @@
-<svg width="256" height="256" xmlns="http://www.w3.org/2000/svg">
+<svg height="256" version="1.1" viewBox="0 0 256 256" width="256" xmlns="http://www.w3.org/2000/svg">
   <desc>🌙</desc>
   <title>lapys</title>
-  <path style="fill: #FFFFFF; stroke: #0000FF; stroke-width: 5.6; stroke-miterlimit: 9" d="M128 25.8A102.2 102.2 0 0 0 25.8 128 102.2 102.2 0 0 0 128 230.2 102.2 102.2 0 0 0 230.2 128a102 102 0 0 0-.772-12.407 79.985 79.985 0 0 1-79.212 70.175 79.985 79.985 0 0 1-79.983-79.984 79.985 79.985 0 0 1 70.174-79.212A102 102 0 0 0 128 25.8Z"/>
+  <path d="m128 3a129 130 0 0 0-125 125 130 130 0 0 0 125 125 130 130 0 0 0 125-125 130 130 0 0 0-1-15 98 98 0 0 1-97 87 98 98 0 0 1-96-99 98 98 0 0 1 84-97 130 130 0 0 0-15-1z" fill="#FFFFFF" stroke="#0000FF" stroke-miterlimit="9" stroke-width="6"/>
 </svg>
