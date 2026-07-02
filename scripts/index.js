@@ -38,8 +38,9 @@ if (null !== BACKGROUND_CONTEXT) {
       var STAR_PULSE_SPEED            = 0.01; // ->> % percent
       var STAR_RADIUS_MAXIMUM         = 1.5;
       var STAR_RADIUS_MINIMUM         = 0.5;
-      var STAR_RIPPLE_CLUSTER_MAXIMUM = 2;
+      var STAR_RIPPLE_CLUSTER_MAXIMUM = 4;
       var STAR_RIPPLE_FORCE           = 30.0;
+      var STAR_RIPPLE_RADIUS          = 200;
       var STAR_SPEED_MAXIMUM          = 0.25;
       var STAR_SPEED_MINIMUM          = 0.10;
 
@@ -47,15 +48,15 @@ if (null !== BACKGROUND_CONTEXT) {
       var reelTimeDelta          = 0.0;
       var reelTimestamp          = timestamp();
       var starClusterIDIncrement = 0;
-      var starRipple             = {x: 0.0, y: 0.0};
       var stars                  = [];
 
       /* ... */
       function createComets() {
         var position = {x: BACKGROUND_ELEMENT.width * Math.random(), y: BACKGROUND_ELEMENT.height * Math.random()};
         void comets.push({
-          origin  : {x: position.x, y: position.y},
-          position: {x: position.x, y: position.y}
+          origin     : {x: position.x, y: position.y},
+          position   : {x: position.x, y: position.y},
+          '__proto__': null
         })
       }
 
@@ -82,56 +83,88 @@ if (null !== BACKGROUND_CONTEXT) {
 
             scatter = scatter > 0.69 ? (scatter / 0.31) * 0.25 : 0.00;
             void stars.push({
-              cluster  : starClusterIDIncrement,
-              direction: Math.random() > 0.8 ? {x: -direction.x + scatter, y: -direction.y + scatter} : {x: +direction.x + scatter, y: +direction.y + scatter},
-              position : {x: origin.x + (radius * Math.cos((MATH_TAU * (offset + (index / count))))), y: origin.y + (radius * Math.sin((MATH_TAU * (offset + (index / count)))))},
-              pulse    : 0.0,
-              radius   : STAR_RADIUS_MINIMUM + ((STAR_RADIUS_MAXIMUM - STAR_RADIUS_MINIMUM) * Math.random()),
-              speed    : {x: STAR_SPEED_MINIMUM + ((STAR_SPEED_MAXIMUM - STAR_SPEED_MINIMUM) * Math.random()), y: STAR_SPEED_MINIMUM + ((STAR_SPEED_MAXIMUM - STAR_SPEED_MINIMUM) * Math.random())}
+              cluster    : starClusterIDIncrement,
+              direction  : Math.random() > 0.8 ? {x: -direction.x + scatter, y: -direction.y + scatter} : {x: +direction.x + scatter, y: +direction.y + scatter},
+              position   : {x: origin.x + (radius * Math.cos((MATH_TAU * (offset + (index / count))))), y: origin.y + (radius * Math.sin((MATH_TAU * (offset + (index / count)))))},
+              pulse      : 0.0,
+              radius     : STAR_RADIUS_MINIMUM + ((STAR_RADIUS_MAXIMUM - STAR_RADIUS_MINIMUM) * Math.random()),
+              ripple     : {x: 0.0, y: 0.0},
+              speed      : {x: STAR_SPEED_MINIMUM + ((STAR_SPEED_MAXIMUM - STAR_SPEED_MINIMUM) * Math.random()), y: STAR_SPEED_MINIMUM + ((STAR_SPEED_MAXIMUM - STAR_SPEED_MINIMUM) * Math.random())},
+              '__proto__': null
             })
           }
         }
       }
 
-      function rippleStars(position, force) {
-        var clusters = [];
+      function getStarDistance(star, position) {
+        var distance = {x: position.x - star.position.x, y: position.y - star.position.y};
+        return (distance.x * distance.x) + (distance.y * distance.y)
+      }
 
-        if (false) // TODO (Lapys)
+      function rippleStars(position, force) {
+        var clusterCount = 0;
+        var clusters     = [];
+
+        // ... ->> Maybe partition into spatial grids to optimize
         for (var index = stars.length; index--; ) {
-          var star          = stars[index];
-          var starDistance  = {x: position.x - star.position.x, y: position.y - star.position.y};
-          var starMagnitude = (starDistance.x * starDistance.x) + (starDistance.y * starDistance.y);
+          var clusterUniqueCount = clusterCount;
+          var star               = stars[index];
+          var starDistance       = getStarDistance(star, position);
 
           // ...
-          if (STAR_RIPPLE_CLUSTER_MAXIMUM > clusters.length)
-            void clusters.push(star);
+          for (var subindexA = clusterCount; subindexA--; )
+          for (var subindexB = clusterCount; subindexB--; ) {
+            if (subindexA > subindexB && clusters[subindexA].cluster === clusters[subindexB].cluster) {
+              var clusterStarIndex = clusterCount;
 
-          else for (var subindex = clusters.length; subindex--; ) {
-            var clusterStar          = clusters[subindex];
-            var clusterStarDistance  = {x: position.x - clusterStar.position.x, y: position.y - clusterStar.position.y};
-            var clusterStarMagnitude = (clusterStarDistance.x * clusterStarDistance.x) + (clusterStarDistance.y * clusterStarDistance.y);
-
-            // ...
-            if (clusterStarMagnitude > starMagnitude) {
-              // for (var subindex = clusters.length; subindex--; )
-              // if (clusters[subindex].chunk === star.chunk)
-
-              break
+              while (clusters[--clusterStarIndex].cluster !== clusters[subindexA].cluster) continue;
+              if (clusterStarIndex === subindexA) --clusterUniqueCount
             }
           }
 
-          starMagnitude
-          STAR_RIPPLE_FORCE
-          // 2 chunks
-          // (a-b).sqrMagnitude
+          if (STAR_RIPPLE_RADIUS * STAR_RIPPLE_RADIUS < starDistance)
+          continue;
+
+          // ...
+          if (STAR_RIPPLE_CLUSTER_MAXIMUM > clusterUniqueCount)
+            clusterCount = clusters.push(star);
+
+          else {
+            var closestClusterStarDistance = -0.0;
+            var closestClusterStarIndex    = -1;
+            var starSharesCluster          = false;
+
+            // ...
+            for (var clusterStarIndex = clusterCount; clusterStarIndex--; ) {
+              var clusterStar         = clusters[clusterStarIndex];
+              var clusterStarDistance = getStarDistance(clusterStar, position);
+
+              // ...
+              if (clusterStarDistance > starDistance) {
+                if (clusterStar.cluster === star.cluster)
+                starSharesCluster = true;
+
+                if ((closestClusterStarIndex === -1 || closestClusterStarDistance > clusterStarDistance) && (!starSharesCluster || clusterStar.cluster === star.cluster)) {
+                  closestClusterStarDistance = clusterStarDistance;
+                  closestClusterStarIndex    = clusterStarIndex
+                }
+              }
+            }
+
+            if (closestClusterStarIndex !== -1)
+            clusters[closestClusterStarIndex] = star
+          }
         }
+
+        while (clusterCount--) // star.ripple.x|.y is direction+magnitude override
+        clusters.pop().rippled = 2000
       }
 
       // ...
       createPlanetoids();
 
       void poll(BACKGROUND_ELEMENT.parentNode, "mousedown", function(event) { rippleStars({x: event.clientX, y: event.clientY}, 50.0) }, {"capture": true, "passive": true});
-      void poll(BACKGROUND_ELEMENT.parentNode, "mousemove", function(event) { rippleStars({x: event.clientX, y: event.clientY}, 20.0) }, {"capture": true, "passive": true});
+      // void poll(BACKGROUND_ELEMENT.parentNode, "mousemove", function(event) { rippleStars({x: event.clientX, y: event.clientY}, 20.0) }, {"capture": true, "passive": true});
 
       void LOOP_PROCEDURES.push(function reel() {
         var cometLengthMaximum    = Math.max(BACKGROUND_ELEMENT.width * 0.35, COMET_LENGTH_MAXIMUM);
@@ -144,7 +177,7 @@ if (null !== BACKGROUND_CONTEXT) {
 
         BACKGROUND_CONTEXT.clearRect(0, 0, BACKGROUND_ELEMENT.width, BACKGROUND_ELEMENT.height);
         void waitEvery(createComets, 5.0e3);
-        void waitEvery(createStars,  stars.length ? 10.0e3 : 0.0e3);
+        void waitEvery(createStars,  stars.length ? 0.7 * 10.0e3 : 0.0e3); // TODO (Lapys)
 
         for (var index = comets.length; index--; ) {
           var comet = comets[index];

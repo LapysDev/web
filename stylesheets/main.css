@@ -308,14 +308,14 @@
     font-variant-alternates: historical-forms;
     font-weight            : 400;
     src                    : local('🙂'), url(../fonts/open_sans.woff2) format("woff2"), url(../fonts/open_sans.woff) format("woff");
-    unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+    unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
   }
     @font-face {
       font-display : swap;
       font-family  : "Open Sans";
       font-weight  : 100 300;
       src          : local('🙂'), url(../fonts/open_sans-light.woff2) format("woff2"), url(../fonts/open_sans-light.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
@@ -324,7 +324,7 @@
       font-style   : italic;
       font-weight  : 100 300;
       src          : local('🙂'), url(../fonts/open_sans-light-italic.woff2) format("woff2"), url(../fonts/open_sans-light-italic.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
@@ -333,7 +333,7 @@
       font-style   : italic;
       font-weight  : 400;
       src          : local('🙂'), url(../fonts/open_sans-italic.woff2) format("woff2"), url(../fonts/open_sans-italic.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
@@ -341,7 +341,7 @@
       font-family  : "Open Sans";
       font-weight  : 500 600;
       src          : local('🙂'), url(../fonts/open_sans-semibold.woff2) format("woff2"), url(../fonts/open_sans-semibold.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
@@ -350,7 +350,7 @@
       font-style   : italic;
       font-weight  : 500 600;
       src          : local('🙂'), url(../fonts/open_sans-semibold-italic.woff2) format("woff2"), url(../fonts/open_sans-semibold-italic.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
@@ -358,7 +358,7 @@
       font-family  : "Open Sans";
       font-weight  : 700;
       src          : local('🙂'), url(../fonts/open_sans-bold.woff2) format("woff2"), url(../fonts/open_sans-bold.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
@@ -367,7 +367,7 @@
       font-style   : italic;
       font-weight  : 700;
       src          : local('🙂'), url(../fonts/open_sans-bold-italic.woff2) format("woff2"), url(../fonts/open_sans-bold-italic.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
@@ -375,7 +375,7 @@
       font-family  : "Open Sans";
       font-weight  : 800 900;
       src          : local('🙂'), url(../fonts/open_sans-extrabold.woff2) format("woff2"), url(../fonts/open_sans-extrabold.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
     @font-face {
@@ -384,7 +384,7 @@
       font-style   : italic;
       font-weight  : 800 900;
       src          : local('🙂'), url(../fonts/open_sans-extrabold-italic.woff2) format("woff2"), url(../fonts/open_sans-extrabold-italic.woff) format("woff");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0370-03FF, U+0400-04FF
     }
 
   @font-face /* ->> PT Sans --- CITE (Lapys) -> ParaType Ltd (Alexandra Korolkova, Olga Umpeleva, Vladimir Yefimov) @ `https://paratype.com/public` */ {
@@ -394,14 +394,14 @@
     font-variant-alternates: initial;
     font-weight            : 400;
     src                    : local('🙂'), url(../fonts/pt_sans.woff2) format("woff2"), url(../fonts/pt_sans.woff) format("woff"), url(../fonts/pt_sans.ttf) format("truetype");
-    unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0400-04FF
+    unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0400-04FF
   }
     @font-face {
       font-display : swap;
       font-family  : "PT Sans";
       font-weight  : bold;
       src          : local('🙂'), url(../fonts/pt_sans-bold.woff2) format("woff2"), url(../fonts/pt_sans-bold.woff) format("woff"), url(../fonts/pt_sans-bold.ttf) format("truetype");
-      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0400-04FF
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+0300-036F, U+1E00-1EFF, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0400-04FF
     }
 
   @font-face /* ->> Rajdhani --- CITE (Lapys) -> Indian Type Foundry (Devanagari: Satya Rajpurohit, Jyotish Sonowal, Shiva Nalleperumal) */ {
@@ -411,14 +411,14 @@
     font-variant-alternates: initial;
     font-weight            : 400;
     src                    : local('🙂'), url(../fonts/rajdhani.woff2) format("woff2"), url(../fonts/rajdhani.woff) format("woff"), url(../fonts/rajdhani.ttf) format("truetype");
-    unicode-range          :  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
+    unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
   }
     @font-face {
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 100 300;
       src          : local('🙂'), url(../fonts/rajdhani-light.woff2) format("woff2"), url(../fonts/rajdhani-light.woff) format("woff"), url(../fonts/rajdhani-light.ttf) format("truetype");
-      unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
     @font-face {
@@ -426,7 +426,7 @@
       font-family  : Rajdhani;
       font-weight  : 500;
       src          : local('🙂'), url(../fonts/rajdhani-medium.woff2) format("woff2"), url(../fonts/rajdhani-medium.woff) format("woff"), url(../fonts/rajdhani-medium.ttf) format("truetype");
-      unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
     @font-face {
@@ -434,7 +434,7 @@
       font-family  : Rajdhani;
       font-weight  : 600;
       src          : local('🙂'), url(../fonts/rajdhani-semibold.woff2) format("woff2"), url(../fonts/rajdhani-semibold.woff) format("woff"), url(../fonts/rajdhani-semibold.ttf) format("truetype");
-      unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
     @font-face {
@@ -442,7 +442,7 @@
       font-family  : Rajdhani;
       font-weight  : 700 900;
       src          : local('🙂'), url(../fonts/rajdhani-bold.woff2) format("woff2"), url(../fonts/rajdhani-bold.woff) format("woff"), url(../fonts/rajdhani-bold.ttf) format("truetype");
-      unicode-range:  U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
+      unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
   /* Keyframes */
@@ -745,6 +745,7 @@
         -ah-border-top-right-radius       : 2px;
         -ah-box-shadow                    : 0 0 5px 0 rgba(0, 0, 0, 0.5);
         -ah-transform                     : translate(-50%, -50%);
+        -ebup-text-transform              : none;
         -khtml-border-bottom-left-radius  : 2px;
         -khtml-border-bottom-right-radius : 2px;
         -khtml-border-top-left-radius     : 2px;
@@ -1090,8 +1091,8 @@
     text-shadow              : 0 0 10px rgba(0, 0, 0, 0.1)
   }
     /* At Rules > Media > Prefers Color Scheme */
-    @media (prefers-color-scheme: dark)  { h1, h2, h3, h4, h5, h6 { -webkit-text-stroke-color: #3F3F3F } }
-    @media (prefers-color-scheme: light) { h1, h2, h3, h4, h5, h6 { -webkit-text-stroke-color: #F0F0F0 } }
+    @media (prefers-color-scheme: dark)  { h1, h2, h3, h4, h5, h6 { -webkit-text-stroke-color: rgba(63, 63, 63, 0.5) } }
+    @media (prefers-color-scheme: light) { h1, h2, h3, h4, h5, h6 { -webkit-text-stroke-color: rgba(240, 240, 240, 0.5) } }
 
   /* (<h1>, <h2>) > Pseudo > Selection */
   h1::-moz-selection, h2::-moz-selection { -webkit-text-stroke-width: 0; text-shadow: none }
@@ -1206,6 +1207,7 @@
 
   /* <noscript> */
   noscript {
+    -ah-text-align                   : center;
     -khtml-opacity                   : 1.0;
     -moz-opacity                     : 1.0;
     -moz-animation-delay             : 3000ms;
@@ -1359,6 +1361,7 @@
     -ah-text-decoration-color         : transparent;
     -ah-text-decoration-line          : none;
     -ah-transform                     : translate(0px, -0px);
+    -ebup-text-transform              : uppercase;
     -moz-animation-duration           : 3000ms;
     -moz-animation-timing-function    : ease-in-out;
     -moz-appearance                   : button;
@@ -1562,7 +1565,14 @@
   /* Counter */
   .counter { font-variant-numeric: tabular-nums }
 
-  /* Inline */
+  /* Emoji */
+  .emoji {
+    cursor            : default;
+    font-variant-emoji: emoji
+  }
+
+  /* Emoji, Inline */
+  .emoji,
   .inline {
     display       : inline !important;
     font-size     : 1.000em;
@@ -1579,9 +1589,10 @@
     vertical-align: -0.125em
   }
 
-  svg.inline     { width: 1em }
-  svg|svg.inline { width: 1em }
+  svg.emoji, svg.inline { width: 1em }
+  svg|svg.inline        { width: 1em }
     /* All */
+    .emoji  *,
     .inline * {
       font-size     : inherit;
       height        : inherit;
@@ -1679,10 +1690,11 @@
   /* Section */
   [role~=banner],
   [role~=region] {
-    margin-left : auto;
-    margin-right: auto;
-    text-align  : center;
-    width       : 100%
+    -ah-text-align: center;
+    margin-left   : auto;
+    margin-right  : auto;
+    text-align    : center;
+    width         : 100%
   }
     /* All */
     [role~=banner] > *,

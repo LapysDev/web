@@ -134,8 +134,8 @@
 
     /* Hero */
     #hero {
-      height     : 80%;
-      height     : 80vh;
+      height     : 75%;
+      height     : 75vh;
       padding-top: 5%
     }
       /* Button */
@@ -161,6 +161,7 @@
         }
           /* Avatar */
           #avatar {
+            -ah-text-align                   : center;
             -moz-animation-delay             : 0ms;
             -moz-animation-duration          : 3000ms;
             -moz-animation-iteration-count   : infinite;
@@ -202,13 +203,14 @@
 
           /* Title */
           #title {
-            padding-right: 15%;
-            text-align   : right
+            -ah-text-align: right;
+            padding-right : 15%;
+            text-align    : right
           }
 
           #title                        { font-size  : 500% }
           #title, [data-\:portal=title] { font-weight: 900 }
-          [data-\:portal=title]         { font-size  : 400% }
+          [data-\:portal=title]         { font-size  : 365% }
             /* All */
             #title *, [data-\:portal=title] * {
               -webkit-text-stroke-width: 2.5px !important;
@@ -252,17 +254,25 @@
 
       /* Tagline */
       #tagline {
-        max-width: 50%;
-        min-width: 300px
+        -ah-text-align: center;
+        max-width     : 50%;
+        min-width     : 300px;
+        text-align    : center
       }
+        /* <span> */
         #tagline span {
           display       : inline-block;
           vertical-align: baseline;
           white-space   : pre-wrap
         }
+          /* Pseudo > Not */
+          #tagline span:not(:hover) { font-variant-emoji: text }
 
     /* Hero, Socials */
-    #hero, #socials { text-align: center }
+    #hero, #socials {
+      -ah-text-align: center;
+      text-align    : center
+    }
 
     /* Socials */
     #socials {
@@ -272,6 +282,7 @@
     }
       /* All */
       #socials * {
+        -ah-text-align: center;
         display       : table-cell;
         text-align    : center;
         vertical-align: middle

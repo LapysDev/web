@@ -546,7 +546,10 @@
   }
 
   /* <button>, <select> */
-  button, select { text-transform: none }
+  button, select {
+    -ebup-text-transform: none;
+    text-transform      : none
+  }
 
   /* <canvas> */
   canvas { -prince-image-magic: snap-to-integer-coords }
@@ -567,7 +570,10 @@
   }
 
   /* <caption> */
-  caption { text-align: inherit }
+  caption {
+    -ah-text-align: inherit;
+    text-align    : inherit
+  }
 
   /* <cite>, <dfn>, <em>, <i>, <var> */
   cite, dfn, em, i, var { font-style: italic }
@@ -609,8 +615,9 @@
 
   /* <h1> */
   h1 {
-    font-size     : 200%; /* --> xx-large */
-    text-transform: capitalize
+    -epub-text-transform: capitalize;
+    font-size           : 200%; /* --> xx-large */
+    text-transform      : capitalize
   }
 
   /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
@@ -857,6 +864,7 @@
 
       /* ::-ms-browse */
       input[type=file /* i */]::-ms-browse {
+        -ebup-text-transform       : inherit;
         -ms-appearance             : button;
         -ms-font-feature-settings  : inherit;
         -ms-text-kashida-space     : inherit;
@@ -900,6 +908,7 @@
 
       /* ::-webkit-file-upload-button */
       input[type=file /* i */]::-webkit-file-upload-button {
+        -ebup-text-transform          : inherit;
         -webkit-appearance            : button;
         -webkit-font-feature-settings : inherit;
         -webkit-font-kerning          : inherit;

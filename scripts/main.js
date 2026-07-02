@@ -3914,7 +3914,7 @@ void poll(window, "mousewheel", function(event) /* ->> Prevent scroll bouncing? 
       var scrollingElement = scrollingElements.pop();
 
       if (
-        ((event.wheelDelta || event.deltaY) > 0.0 && 0                             === scrollingElement.scrollTop) ||
+        // ((event.wheelDelta || event.deltaY) > 0.0 && 0 === scrollingElement.scrollTop) ||
         ((event.wheelDelta || event.deltaY) < 0.0 && scrollingElement.clientHeight === scrollingElement.scrollHeight - scrollingElement.scrollTop)
       ) { event.preventDefault(); return EVENT_PREVENT_DEFAULT }
     }
