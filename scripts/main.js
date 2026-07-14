@@ -1,5 +1,5 @@
 /* Namespace > ... */
-var Animate    = {all: [],   attributeName: "data-:animate", magnify: {animated: [], observed: []}, main: nop,                                                        tagNames: ['*'], tilt3D: {angle: /* ->> deg° */ 1.0, maximumDownscaleAdjustment: /* --> percent % */ 0.025, maximumOriginDistance: Math.SQRT2 || Math.sqrt(2.0), x: 0.0, y: 0.0},                                                                                                                                                                                                     '__proto__': null};
+var Animate    = {all: [],   attributeName: "data-:animate", magnify: {animated: [], observed: []}, main: nop,                                                        tagNames: ['*'], tilt3D: {angle: /* ->> ° degrees */ 1.0, maximumDownscaleAdjustment: /* --> percent % */ 0.025, maximumOriginDistance: Math.SQRT2 || Math.sqrt(2.0), x: 0.0, y: 0.0},                                                                                                                                                                                                     '__proto__': null};
 var Lazy       = {all: null, attributeName: "data-:lazy", awaiting: null, awaitingTimeout: null,    main: nop, next: nop, observer: null, observed: [], prompted: [], tagNames: ["embed", "iframe", "img", "input", "link", "object", "script", "source", "track", "video"], threshold: 0.0,                                                                                                                                                                                                                                                                '__proto__': null}; // ->> Considered `https://github.com/whatwg/html/issues/2271` for underscore attributes
 var Legacy     =            {attributeName: "data-:legacy",                                                                                                           tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                                      '__proto__': null};
 var Portal     = {all: [],   attributeName: "data-:portal",                                         main: nop,                                                        tagNames: ['*' /* --> 'a', "address", 'b', "blockquote", "body", "caption", "cite", "code", "dd", "dfn", "div", "dl", "dt", "em", "form", "h1", "h2", "h3", "h4", "h5", "h6", 'i', "kbd", "li", "map", "ol", "option", 'p', "pre", 'q', "samp", "select", "small", "span", "strong", "sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "tr", "ul", "var" */], '__proto__': null}; //     — but ultimately went with `data-:` custom attribute prefix
@@ -96,17 +96,19 @@ var POLLS                     = {attached: [], preventDefault: function() { this
 var PROBE_ELEMENT             = document.createElement("canvas", {"customElementRegistry": null} /* ->> or {"is": null} */);
 var LOOP_PROCEDURES           = createProcedureCollection([nop]);
 var LOOP_HANDLER              = typeof requestAnimationFrame !== "function" ? nop : requestAnimationFrame;
-var MATH_TAU                  = 491701844.0 / 78256779.0; // --> 2π
-var MATH_SQRT5                = 51841.0     / 23184.0;
-var MATH_SQRT3                = 97.0        / 56.0;
-var MATH_SQRT2                = 665857.0    / 470832.0;
-var MATH_PI                   = 245850922.0 / 78256779.0;
-var MATH_LOG10E               = 0.4342944819032518;
-var MATH_LOG2E                = 1.4426950408889634;
-var MATH_LN10                 = 2.3025850929940460;
-var MATH_LN2                  = 0.6931471805599453;
-var MATH_ETA                  = 245850922.0 / 156513558.0; // --> ½π
-var MATH_E                    = 2.718281828459045;
+var MATH_TAU                  = 491701844.0   / 78256779.0;  // --> 2π
+var MATH_SQRT5                = 51841.0       / 23184.0;     // --> √5
+var MATH_SQRT3                = 97.0          / 56.0;        // --> √3
+var MATH_SQRT2                = 665857.0      / 470832.0;    // --> √2
+var MATH_RAD_TO_DEG           = 14086220220.0 / 245850922.0; // --> 180° ÷ π
+var MATH_PI                   = 245850922.0   / 78256779.0;  // ->> Archimedes’ constant
+var MATH_LOG10E               = 0.4342944819032518;          // --> ㏑(e)
+var MATH_LOG2E                = 1.4426950408889634;          // --> ㏒(e)
+var MATH_LN10                 = 2.3025850929940460;          // --> ㏑(10)
+var MATH_LN2                  = 0.6931471805599453;          // --> ㏑(2)
+var MATH_ETA                  = 245850922.0 / 156513558.0;   // --> ½π
+var MATH_E                    = 2.718281828459045;           // ->> Golden Ratio (Natural Logarithm Base)
+var MATH_DEG_TO_RAD           = 245850922.0 / 14086220220.0; // --> π ÷ 180°
 var EVENT_PREVENT_DEFAULT     = false;
 var COMPONENTS_HANDLER        = null;
 var COMPONENTS_CACHE          = []; // --> [...createComponentCache(…)]
@@ -119,6 +121,23 @@ var pend        = typeof queueMicrotask === "function"                          
 var timestamp   = typeof performance === "object" && typeof performance.now === "function" ? function timestamp() { return performance.now() }           : timestamp;
 
 /* Function > ... */
+function colorRGBHueRotate(rgb, angle) {
+  var angleCosine  = Math.cos(MATH_DEG_TO_RAD * angle);
+  var angleSine    = Math.sin(MATH_DEG_TO_RAD * angle);
+  var coefficients = [
+    // ->> W3C matrix coefficients for preserving perceived luminance
+    {blue: 0.072 - (angleCosine * 0.072) + (angleSine * 0.928), green: 0.715 - (angleCosine * 0.715) - (angleSine * 0.715), red: 0.213 + (angleCosine * 0.787) - (angleSine * 0.213)},
+    {blue: 0.072 - (angleCosine * 0.072) - (angleSine * 0.283), green: 0.715 + (angleCosine * 0.285) + (angleSine * 0.140), red: 0.213 - (angleCosine * 0.213) + (angleSine * 0.143)},
+    {blue: 0.072 + (angleCosine * 0.928) + (angleSine * 0.072), green: 0.715 - (angleCosine * 0.715) + (angleSine * 0.715), red: 0.213 - (angleCosine * 0.213) - (angleSine * 0.787)}
+  ];
+
+  return {
+    blue : Math.min(Math.max(Math.round((coefficients[2].blue * rgb.blue) + (coefficients[2].green * rgb.green) + (coefficients[2].red * rgb.red)), 0), 255),
+    green: Math.min(Math.max(Math.round((coefficients[1].blue * rgb.blue) + (coefficients[1].green * rgb.green) + (coefficients[1].red * rgb.red)), 0), 255),
+    red  : Math.min(Math.max(Math.round((coefficients[0].blue * rgb.blue) + (coefficients[0].green * rgb.green) + (coefficients[0].red * rgb.red)), 0), 255)
+  }
+}
+
 function convertChildNodes(element, nodeTypeA, nodeTypeB) /* TODO (Lapys) */ {
   if (nodeTypeA === nodeTypeB)
   return true;
@@ -220,6 +239,10 @@ function delimit(string, delimiter) /* ->> `string.split(…)` that ignores pare
   return value
 }
 
+function distance2D(positionA, positionB) {
+  return Math.pow(positionB.x - positionA.x, 2) + Math.pow(positionB.y - positionA.y, 2)
+}
+
 function escapeCSSSelector(selector) {
   if (typeof CSS === "object" && typeof CSS.escape === "function")
   return CSS.escape(selector);
@@ -280,16 +303,16 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
   var GRID_TEMPLATE_COLUMNS             = 0x01, GRID_TEMPLATE_ROWS       = 0x02;
   var PRESENTATIONAL_HINT               = true, USER_AGENT               = true;
   var MEASUREMENTS                      = {
-    '%'                 : /^([-+]?(?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(%)$/,
-    "angle"             : /^([-+]?(?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(deg|grad|rad|turn)$/i,
+    '%'                 : /^([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(%)$/,
+    "angle"             : /^([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(deg|grad|rad|turn)$/i,
     "color"             : /^((?:currentColor|transparent|AccentColor|AccentColorText|ActiveText|ButtonBorder|ButtonFace|ButtonText|Canvas|CanvasText|Field|FieldText|GrayText|Highlight|HighlightText|LinkText|Mark|MarkText|SelectedItem|SelectedItemText|VisitedText)|(?:aliceblue|antiquewhite|aqua|aquamarine|azure|beige|bisque|black|blanchedalmond|blue|blueviolet|brown|burlywood|cadetblue|chartreuse|chocolate|coral|cornflowerblue|cornsilk|crimson|cyan|darkblue|darkcyan|darkgoldenrod|darkgray|darkgreen|darkgrey|darkkhaki|darkmagenta|darkolivegreen|darkorange|darkorchid|darkred|darksalmon|darkseagreen|darkslateblue|darkslategray|darkslategrey|darkturquoise|darkviolet|deeppink|deepskyblue|dimgray|dimgrey|dodgerblue|firebrick|floralwhite|forestgreen|fuchsia|gainsboro|ghostwhite|gold|goldenrod|gray|green|greenyellow|grey|honeydew|hotpink|indianred|indigo|ivory|khaki|lavender|lavenderblush|lawngreen|lemonchiffon|lightblue|lightcoral|lightcyan|lightgoldenrodyellow|lightgray|lightgreen|lightgrey|lightpink|lightsalmon|lightseagreen|lightskyblue|lightslategray|lightslategrey|lightsteelblue|lightyellow|lime|limegreen|linen|magenta|maroon|mediumaquamarine|mediumblue|mediumorchid|mediumpurple|mediumseagreen|mediumslateblue|mediumspringgreen|mediumturquoise|mediumvioletred|midnightblue|mintcream|mistyrose|moccasin|navajowhite|navy|oldlace|olive|olivedrab|orange|orangered|orchid|palegoldenrod|palegreen|paleturquoise|palevioletred|papayawhip|peachpuff|peru|pink|plum|powderblue|purple|rebeccapurple|red|rosybrown|royalblue|saddlebrown|salmon|sandybrown|seagreen|seashell|sienna|silver|skyblue|slateblue|slategray|slategrey|snow|springgreen|steelblue|tan|teal|thistle|tomato|turquoise|violet|wheat|white|whitesmoke|yellow|yellowgreen)|(?:#[A-F\d]{3,4}|#[A-F\d]{6}|#[A-F\d]{8}))$/i,
-    "duration"          : /^((?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(ms|s)$/i,
-    "frequency"         : /^((?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(kHz|Hz)$/i,
+    "duration"          : /^((?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(ms|s)$/i,
+    "frequency"         : /^((?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(kHz|Hz)$/i,
     "function-color"    : /^(color|color-mix|contrast-color|device-cmyk|hdr-color|hsl|hsla|hwb|ictcp|jzazbz|jzczhz|lab|lch|light-dark|oklab|oklch|rgb|rgba)\(\s*([\S\s]+)\s*\)$/,
     "function-transform": /^(?:(matrix)\(\s*((?:@n\s*,\s*){5}@n)\s*\)|(matrix3d)\(\s*((?:@n\s*,\s*){15}@n)\s*\)|(perspective)\(\s*(@n)\s*\)|(rotate[XYZ]?)\(\s*(@0|@n(?:deg))\s*\)|(rotate3d)\(\s*((?:@n\s*,\s*){3}(?:@0|@n(?:deg)))\s*\)|(scale)\(\s*(@n(?:\s*,\s*@n)?)\s*\)|(scale[XYZ])\(\s*(@n)\s*\)|(scale3d)\(\s*((?:@n\s*,\s*){2}@n)\s*\)|(skew)\(\s*((?:@0|@n(?:deg))(?:\s*,\s*(?:@0|@n(?:deg)))?)\s*\)|(skew[XY])\(\s*(@0|@n(?:deg))\s*\)|(translate)\(\s*((?:@0|@n<length>)(?:\s*,\s*(?:@0|@n<length>))?)\s*\)|(translate[XYZ])\(\s*(@0|@n<length>)\s*\)|(translate3d)\(\s*((?:(?:@0|@n<length>)\s*,\s*){2}(?:@0|@n<length>))\s*\))$/,
     "function-value"    : /^(abs|acos|asin|atan|atan2|calc|calc-size|clamp|cos|exp|hypot|log|max|min|mod|pow|progress|rem|round|sign|sin|sqrt|tan)\(\s*([\S\s]+)\s*\)$/,
-    "length"            : /^([-+]?(?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(%|cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvmax|dvmin|dvw|em|ex|ic|ic|in|lh|lvb|lvh|lvi|lvmax|lvmin|lvw|mm|pc|pt|px|Q|rcap|rch|rem|rex|ric|rlh|svb|svh|svi|svmax|svmin|svw|vb|vh|vi|vmax|vmin|vw)$/i,
-    "resolution"        : /^((?:d+(?:.d*)?|.d+)(?:[Ee][-+]?d+)?)(dpcm|dpi|dppx|x)$/i
+    "length"            : /^([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(%|cap|ch|cm|cqb|cqh|cqi|cqmax|cqmin|cqw|dvb|dvh|dvi|dvmax|dvmin|dvw|em|ex|ic|ic|in|lh|lvb|lvh|lvi|lvmax|lvmin|lvw|mm|pc|pt|px|Q|rcap|rch|rem|rex|ric|rlh|svb|svh|svi|svmax|svmin|svw|vb|vh|vi|vmax|vmin|vw)$/i,
+    "resolution"        : /^((?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(dpcm|dpi|dppx|x)$/i
   }, CANON_PASS = function(match, $1, $2, $3, $4) { return $4 ? $4 : match }, CANON_ONLY = "$4", CANON_MATCH = /^(?=([-+]?(?:0+(?:\.0*)?|\.0+)(?:[Ee][-+]?\d+)?)$|([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[Ee][-+]?\d+)?)(deg|dppx|Hz|px|s)$)(\1|\2)\3$|^[\S\s]*$/i;
 
   var document           = element.ownerDocument || (function() { return this || globalThis })().document;
@@ -517,10 +540,10 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
         // ... ->> Canonicalize `measurement.value`
         if (measurements["angle"] = measurement.value.match(MEASUREMENTS["angle"]))
         switch (measurements["angle"][2]) {
-          case "deg":  measurement.value = (measurements["angle"][1])                      + "deg"; break;
-          case "grad": measurement.value = (measurements["angle"][1] * 0.90)               + "deg"; break;
-          case "rad" : measurement.value = (measurements["angle"][1] * (180.00 / Math.PI)) + "deg"; break;
-          case "turn": measurement.value = (measurements["angle"][1] * 360.00)             + "deg"
+          case "deg":  measurement.value = (measurements["angle"][1])                   + "deg"; break;
+          case "grad": measurement.value = (measurements["angle"][1] * 0.90)            + "deg"; break;
+          case "rad" : measurement.value = (measurements["angle"][1] * MATH_RAD_TO_DEG) + "deg"; break;
+          case "turn": measurement.value = (measurements["angle"][1] * 360.00)          + "deg"
         }
 
         else if (measurements["color"] = measurement.value.match(MEASUREMENTS["color"]))
@@ -1074,7 +1097,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
     }
   }
 
-  function lerp(valueA, valueB) {
+  function lerp(valueA, valueB, progress) {
     var scalarA       = +valueA, scalarB = +valueB;
     var interpolation = (progress * (scalarB - scalarA)) + scalarA;
 
@@ -1176,7 +1199,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
     return specificity
   }
 
-  function slerp(quaternionA, quaternionB) {
+  function slerp(quaternionA, quaternionB, progress) {
     var distance      = (quaternionA.w * quaternionB.w) + (quaternionA.x * quaternionB.x) + (quaternionA.y * quaternionB.y) + (quaternionA.z * quaternionB.z);
     var interpolation = {w: 0.00, x: 0.00, y: 0.00, z: 0.00};
 
@@ -1184,13 +1207,11 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
     if (distance > 0.9995) {
       var n;
 
-      interpolation.w = lerp(quaternionA.w, quaternionB.w);
-      interpolation.x = lerp(quaternionA.x, quaternionB.x);
-      interpolation.y = lerp(quaternionA.y, quaternionB.y);
-      interpolation.z = lerp(quaternionA.z, quaternionB.z);
-
-      n = Math.sqrt((interpolation.w * interpolation.w) + (interpolation.x * interpolation.x) + (interpolation.y * interpolation.y) + (interpolation.z * interpolation.z)); // --> Math.hypot(...interpolation)
-
+      interpolation.w  = lerp(quaternionA.w, quaternionB.w, progress);
+      interpolation.x  = lerp(quaternionA.x, quaternionB.x, progress);
+      interpolation.y  = lerp(quaternionA.y, quaternionB.y, progress);
+      interpolation.z  = lerp(quaternionA.z, quaternionB.z, progress);
+      n                = Math.sqrt(Math.pow(interpolation.w, 2) + Math.pow(interpolation.x, 2) + Math.pow(interpolation.y, 2) + Math.pow(interpolation.z, 2)); // --> Math.hypot(...interpolation)
       interpolation.w /= n;
       interpolation.x /= n;
       interpolation.y /= n;
@@ -1199,8 +1220,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
 
     else {
       if (distance < 0.0000) { distance = -distance; quaternionB.w = -quaternionB.w; quaternionB.x = -quaternionB.x; quaternionB.y = -quaternionB.y; quaternionB.z = -quaternionB.z }
-      var angularDistance = Math.acos(distance);
-      var s               = [Math.cos(angularDistance * progress) - (distance * (Math.sin(angularDistance * progress) / Math.sin(angularDistance))), Math.sin(angularDistance * progress) / Math.sin(angularDistance)];
+      var angularDistance = Math.acos(distance), s = [Math.cos(angularDistance * progress) - (distance * (Math.sin(angularDistance * progress) / Math.sin(angularDistance))), Math.sin(angularDistance * progress) / Math.sin(angularDistance)];
 
       interpolation.w = (quaternionA.w * s[0]) + (quaternionB.w * s[1]);
       interpolation.x = (quaternionA.x * s[0]) + (quaternionB.x * s[1]);
@@ -1907,7 +1927,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
                     if (MEASUREMENTS["function-color"].test(valueA.value) && MEASUREMENTS["function-color"].test(valueB.value)) /* --> "rgb(…, …, …)" | "rgba(…, …, …, …)" */ {
                       valueA.value  = (valueA.value.replace(/^rgba?\(\s*|\s*\)$/g, "") + (valueA.value.indexOf('a') === -1 ? ", 1" : "")).split(/\s*,\s*/);
                       valueB.value  = (valueB.value.replace(/^rgba?\(\s*|\s*\)$/g, "") + (valueB.value.indexOf('a') === -1 ? ", 1" : "")).split(/\s*,\s*/);
-                      interpolation = "rgba(" + Math.floor(lerp(valueA.value[0], valueB.value[0])) + ", " + Math.floor(lerp(valueA.value[1], valueB.value[1])) + ", " + Math.floor(lerp(valueA.value[2], valueB.value[2])) + ", " + lerp(valueA.value[3], valueB.value[3]) + ')'
+                      interpolation = "rgba(" + Math.floor(lerp(valueA.value[0], valueB.value[0], progress)) + ", " + Math.floor(lerp(valueA.value[1], valueB.value[1], progress)) + ", " + Math.floor(lerp(valueA.value[2], valueB.value[2], progress)) + ", " + lerp(valueA.value[3], valueB.value[3], progress) + ')'
                     }
 
                     else if (MEASUREMENTS["function-transform"].test(valueA.value) && MEASUREMENTS["function-transform"].test(valueB.value)) /* --> "matrix(…, …, …, …, …, …)" | "matrix3d(…, …, …, …, …, …, …, …, …, …, …, …, …, …, …, …)" */ {
@@ -2004,11 +2024,11 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
 
                       if (null !== valueA.value && null !== valueB.value) {
                         var matrix = {
-                          perspective: [lerp(valueA.value.perspective[0], valueB.value.perspective[0]), lerp(valueA.value.perspective[1], valueB.value.perspective[1]), lerp(valueA.value.perspective[2], valueB.value.perspective[2]), lerp(valueA.value.perspective[3], valueB.value.perspective[3])],
-                          quaternion : slerp(valueA.value.quaternion, valueB.value.quaternion),
-                          scale      : {x:  lerp(valueA.value.scale      .x,  valueB.value.scale      .x),  y:  lerp(valueA.value.scale      .y,  valueB.value.scale      .y),  z:  lerp(valueA.value.scale      .z,  valueB.value.scale      .z)},
-                          skew       : {xy: lerp(valueA.value.skew       .xy, valueB.value.skew       .xy), xz: lerp(valueA.value.skew       .xz, valueB.value.skew       .xz), yz: lerp(valueA.value.skew       .yz, valueB.value.skew       .yz)},
-                          translation: {x:  lerp(valueA.value.translation.x,  valueB.value.translation.x),  y:  lerp(valueA.value.translation.y,  valueB.value.translation.y),  z:  lerp(valueA.value.translation.z,  valueB.value.translation.z)}
+                          perspective: [lerp(valueA.value.perspective[0], valueB.value.perspective[0], progress), lerp(valueA.value.perspective[1], valueB.value.perspective[1], progress), lerp(valueA.value.perspective[2], valueB.value.perspective[2], progress), lerp(valueA.value.perspective[3], valueB.value.perspective[3], progress)],
+                          quaternion : slerp(valueA.value.quaternion, valueB.value.quaternion, progress),
+                          scale      : {x : lerp(valueA.value.scale      .x,  valueB.value.scale      .x,  progress), y : lerp(valueA.value.scale      .y,  valueB.value.scale      .y,  progress), z : lerp(valueA.value.scale      .z,  valueB.value.scale      .z,  progress)},
+                          skew       : {xy: lerp(valueA.value.skew       .xy, valueB.value.skew       .xy, progress), xz: lerp(valueA.value.skew       .xz, valueB.value.skew       .xz, progress), yz: lerp(valueA.value.skew       .yz, valueB.value.skew       .yz, progress)},
+                          translation: {x : lerp(valueA.value.translation.x,  valueB.value.translation.x,  progress), y : lerp(valueA.value.translation.y,  valueB.value.translation.y,  progress), z : lerp(valueA.value.translation.z,  valueB.value.translation.z,  progress)}
                         }, rotations = [
                           [1.00 - (((matrix.quaternion.y * matrix.quaternion.y) + (matrix.quaternion.z * matrix.quaternion.z)) * 2.00),        (((matrix.quaternion.x * matrix.quaternion.y) + (matrix.quaternion.w * matrix.quaternion.z)) * 2.00),        (((matrix.quaternion.x * matrix.quaternion.z) - (matrix.quaternion.w * matrix.quaternion.y)) * 2.00)],
                           [       (((matrix.quaternion.x * matrix.quaternion.y) - (matrix.quaternion.w * matrix.quaternion.z)) * 2.00), 1.00 - (((matrix.quaternion.x * matrix.quaternion.x) + (matrix.quaternion.z * matrix.quaternion.z)) * 2.00),        (((matrix.quaternion.y * matrix.quaternion.z) + (matrix.quaternion.w * matrix.quaternion.x)) * 2.00)],
@@ -2024,28 +2044,28 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
                       }
                     }
 
-                    else if (MEASUREMENTS['%']         .test(valueA.value) && MEASUREMENTS['%']         .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/%$/,    ""), valueB.value.replace(/%$/,    ""))  + '%';
-                    else if (MEASUREMENTS["angle"]     .test(valueA.value) && MEASUREMENTS["angle"]     .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/%$/,    ""), valueB.value.replace(/%$/,    ""))  + "deg";
-                    else if (MEASUREMENTS["duration"]  .test(valueA.value) && MEASUREMENTS["duration"]  .test(valueB.value)) interpolation = Math.floor(lerp(valueA.value.replace(/ms$/,   ""), valueB.value.replace(/ms$/,   ""))) + "ms";
-                    else if (MEASUREMENTS["frequency"] .test(valueA.value) && MEASUREMENTS["frequency"] .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/Hz$/,   ""), valueB.value.replace(/Hz$/,   ""))  + "Hz";
-                    else if (MEASUREMENTS["length"]    .test(valueA.value) && MEASUREMENTS["length"]    .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/px$/,   ""), valueB.value.replace(/px$/,   ""))  + "px";
-                    else if (MEASUREMENTS["resolution"].test(valueA.value) && MEASUREMENTS["resolution"].test(valueB.value)) interpolation =            lerp(valueA.value.replace(/dppx$/, ""), valueB.value.replace(/dppx$/, ""))  + "dppx";
+                    else if (MEASUREMENTS['%']         .test(valueA.value) && MEASUREMENTS['%']         .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/%$/,    ""), valueB.value.replace(/%$/,    ""), progress)  + '%';
+                    else if (MEASUREMENTS["angle"]     .test(valueA.value) && MEASUREMENTS["angle"]     .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/%$/,    ""), valueB.value.replace(/%$/,    ""), progress)  + "deg";
+                    else if (MEASUREMENTS["duration"]  .test(valueA.value) && MEASUREMENTS["duration"]  .test(valueB.value)) interpolation = Math.floor(lerp(valueA.value.replace(/ms$/,   ""), valueB.value.replace(/ms$/,   ""), progress)) + "ms";
+                    else if (MEASUREMENTS["frequency"] .test(valueA.value) && MEASUREMENTS["frequency"] .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/Hz$/,   ""), valueB.value.replace(/Hz$/,   ""), progress)  + "Hz";
+                    else if (MEASUREMENTS["length"]    .test(valueA.value) && MEASUREMENTS["length"]    .test(valueB.value)) interpolation =            lerp(valueA.value.replace(/px$/,   ""), valueB.value.replace(/px$/,   ""), progress)  + "px";
+                    else if (MEASUREMENTS["resolution"].test(valueA.value) && MEASUREMENTS["resolution"].test(valueB.value)) interpolation =            lerp(valueA.value.replace(/dppx$/, ""), valueB.value.replace(/dppx$/, ""), progress)  + "dppx";
                     else switch (name) {
                       case "aspect-ratio":
                       case "fill-opacity": case "flex-grow": case "flex-shrink": case "flood-opacity": case "font-size-adjust": case "font-variation-settings":
                       case "opacity":
                       case "scale": case "shape-image-threshold": case "stop-opacity": case "stroke-dasharray": case "stroke-dashoffset": case "stroke-miterlimit": case "stroke-opacity": case "stroke-width":
-                        interpolation = lerp(valueA.value, valueB.value) + "";
+                        interpolation = lerp(valueA.value, valueB.value, progress) + "";
                         break;
 
                       case "column-count": case "math-depth":
                       case "order":        case "orphans":
                       case "widows":       case "z-index":
-                        interpolation = Math.floor(lerp(valueA.value, valueB.value)) + "";
+                        interpolation = Math.floor(lerp(valueA.value, valueB.value, progress)) + "";
                         break;
 
                       case "font-weight":
-                        interpolation = (Math.floor(lerp(valueA.value, valueB.value) / 100) * 100) + ""
+                        interpolation = (Math.floor(lerp(valueA.value, valueB.value, progress) / 100) * 100) + ""
                     }
 
                     animationProperty.value += interpolation.replace(/(\.\d{6})\d+/g, "$1").replace(/(\.\d*[1-9])0+([^\d]|$)/g, "$1$2").replace(/\.0+([^\d]|$)/g, "$1") + (valueA.delimiter || valueB.delimiter).replace(/\s*([,])+\s*/, "$1 ")
@@ -3110,6 +3130,33 @@ function getCSSStyleRules(document, strict /* = false */) {
   return rules
 }
 
+function getDocumentActiveElement() /* ->> `.querySelector(":focus")` and then some */ {
+  var activeElement = null;
+
+  // ...
+  if (typeof document.activeElement === "object")
+  for (activeElement = document.activeElement; null !== activeElement; ) {
+    if (null !== activeElement.shadowRoot && null !== activeElement.shadowRoot.activeElement) {
+      activeElement = activeElement.shadowRoot.activeElement;
+      continue
+    }
+
+    if (activeElement.tagName === "IFRAME")
+    try {
+      var activeWindow = activeElement.contentWindow;
+
+      if (null !== activeWindow && null !== activeWindow.document.activeElement) {
+        activeElement = activeWindow.document.activeElement;
+        continue
+      }
+    } catch (error) { break }
+
+    break
+  }
+
+  return activeElement
+}
+
 function getDocumentBounds() {
   var height = typeof innerHeight === "number" && innerHeight === innerHeight >>> 0 ? innerHeight : (document.documentElement.clientHeight || document.body.clientHeight);
   var width  = typeof innerWidth  === "number" && innerWidth  === innerWidth  >>> 0 ? innerWidth  : (document.documentElement.clientWidth  || document.body.clientWidth);
@@ -3731,7 +3778,7 @@ Tooltip.main = function tooltipMain() {
     for (var tooltips = getElementsByComponent(Tooltip), length = tooltips.length, index = 0; index !== length; ++index) {
       var tooltipElement = tooltips[index];
 
-      tooltipElement.title = tooltipElement.title || tooltipElement.getAttribute(Tooltip.attributeName);
+      tooltipElement.title = tooltipElement.title || tooltipElement.getAttribute(Tooltip.attributeName).replace(/(\s)\s*/g, "$1");
       tooltipElement.removeAttribute(Tooltip.attributeName)
     }
 
@@ -3826,6 +3873,15 @@ if (typeof document.normalize === "function") {
     void poll(document, "propertychange",  function normalizeDocument    (event) { document    .normalize() }, {"capture": true, "passive": true})
   }
 }
+
+void poll(document, "keydown", function(event) {
+  if ((event.keyCode || event.which) === 0x1B) {
+    var element = getDocumentActiveElement();
+
+    if (null !== element && typeof element.blur === "function")
+    element.blur()
+  }
+}, {"capture": true, "passive": true});
 
 void poll(window, ["blur", "mouseleave"], function(_) {
   for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {

@@ -5,7 +5,7 @@
 
 /* Components > (Landscape, Portrait) */
 .landscape {}
-.portrait  { display: none; visibility: collapse }
+.portrait  { content-visibility: hidden; display: none; empty-cells: hide; visibility: collapse }
 
 /* At Rules */
   /* Font Face */
@@ -481,10 +481,12 @@
     /* <noscript> */
     @keyframes noscript {
       to {
-        -khtml-opacity: 0.0;
-        -moz-opacity  : 0.0;
-        display       : none;
-        opacity       : 0.0
+        -khtml-opacity    : 0.0;
+        -moz-opacity      : 0.0;
+        content-visibility: hidden;
+        display           : none;
+        empty-cells       : hide;
+        opacity           : 0.0
       }
     }
 
@@ -536,8 +538,8 @@
     /* Portrait (e.g. electronic readers, phones, smart watches, …) ->> Cozy UI */
     @media (max-aspect-ratio: 3/4), (max-width: 768px), (width <= 768px) {
       /* Components > (Landscape, Portrait) */
-      .landscape { display: none;    visibility: collapse }
-      .portrait  { display: initial; visibility: initial }
+      .landscape { content-visibility: hidden;  display: none;    empty-cells: hide; visibility: collapse }
+      .portrait  { content-visibility: visible; display: initial; empty-cells: show; visibility: initial }
     }
 
     /* Prefers Contrast */
@@ -707,6 +709,7 @@
     speak-as                   : normal;
     stop-color                 : inherit;
     stroke                     : inherit;
+    table-layout               : fixed;
     text-decoration-color      : inherit;
     text-emphasis-color        : inherit;
     transform-origin           : center
@@ -732,7 +735,13 @@
   }
 
   [data-\:tooltip] { position: relative }
-  [hidden]         { display : none !important }
+
+  [hidden] {
+    content-visibility: hidden   !important;
+    display           : none     !important;
+    empty-cells       : hide     !important;
+    visibility        : collapse !important
+  }
     /* Pseudo */
       /* Active */
       :active { cursor: text }
@@ -1207,7 +1216,6 @@
 
   /* <noscript> */
   noscript {
-    -ah-text-align                   : center;
     -khtml-opacity                   : 1.0;
     -moz-opacity                     : 1.0;
     -moz-animation-delay             : 3000ms;
@@ -1248,7 +1256,6 @@
     opacity                          : 1.0;
     overflow                         : hidden;
     position                         : absolute;
-    text-align                       : center;
     transition-delay                 : 2147483647ms;
     transition-duration              : 100ms;
     top                              : 0;
@@ -1260,8 +1267,10 @@
   [data-\:legacy~=internet-explorer-6] noscript,
   [data-\:legacy~=internet-explorer-7] noscript,
   [data-\:legacy~=internet-explorer-8] noscript {
-    display   : none;
-    visibility: collapse
+    content-visibility: hidden;
+    display           : none;
+    empty-cells       : hide;
+    visibility        : collapse
   }
     /* Pseudo > Hover */
     noscript:hover {
@@ -1443,15 +1452,15 @@
   .button,
   .button[data-\:animated] {
     -moz-transition-duration   : 300ms;
-    -moz-transition-property   : -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform, background-color, color, opacity, outline-color, outline-offset, outline-width, transform;
+    -moz-transition-property   : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
     -ms-transition-duration    : 300ms;
-    -ms-transition-property    : -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform, background-color, color, opacity, outline-color, outline-offset, outline-width, transform;
+    -ms-transition-property    : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
     -o-transition-duration     : 300ms;
-    -o-transition-property     : -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform, background-color, color, opacity, outline-color, outline-offset, outline-width, transform;
+    -o-transition-property     : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
     -webkit-transition-duration: 300ms;
-    -webkit-transition-property: -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform, background-color, color, opacity, outline-color, outline-offset, outline-width, transform;
+    -webkit-transition-property: background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
     transition-duration        : 300ms;
-    transition-property        : -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform, background-color, color, opacity, outline-color, outline-offset, outline-width, transform
+    transition-property        : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform
   }
 
   .button[href],
@@ -1522,7 +1531,7 @@
         background                        : rgba(240, 240, 240, 0.1);
         background                        : light-dark(rgba(240, 240, 240, 0.1), rgba(63, 63, 63, 0.1));
         color                             : #3F3F3F;
-        color                             : light-dark(#3F3F3F, #F0F0F0);
+        color                             : light-dark(#3F3F3F, #F0F0F0) !important; /* ->> Chrome being funny? */
         transition-timing-function        : ease-in
       }
 
@@ -1561,6 +1570,15 @@
       -pie-background : transparent;
       background-color: transparent
     }
+
+  /* Center */
+  .center,
+  noscript {
+    -ah-text-align    : center;
+    -ah-vertical-align: middle;
+    text-align        : center;
+    vertical-align    : middle
+  }
 
   /* Counter */
   .counter { font-variant-numeric: tabular-nums }
@@ -1690,11 +1708,13 @@
   /* Section */
   [role~=banner],
   [role~=region] {
-    -ah-text-align: center;
-    margin-left   : auto;
-    margin-right  : auto;
-    text-align    : center;
-    width         : 100%
+    -ah-text-align    : center;
+    -ah-vertical-align: middle;
+    margin-left       : auto;
+    margin-right      : auto;
+    text-align        : center;
+    vertical-align    : middle;
+    width             : 100%
   }
     /* All */
     [role~=banner] > *,

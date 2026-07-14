@@ -7,7 +7,13 @@
   /* Keyframes */
     /* Avatar */
     @keyframes avatar {
-      50% { transform: translate(0, 5px) }
+      50% {
+        -ah-transform    : translate(0, 5px);
+        -ms-transform    : translate(0, 5px);
+        -o-transform     : translate(0, 5px);
+        -webkit-transform: translate(0, 5px);
+        transform        : translate(0, 5px)
+      }
     }
 
     /* Background (Color, Size) */
@@ -100,12 +106,12 @@
       animation-iteration-count        : infinite;
       animation-name                   : background-color, background-size;
       animation-timing-function        : ease-in-out;
-      background-image                 :    -moz-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,    rgba(255, 0, 0, 0.1));
-      background-image                 :     -ms-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,    rgba(255, 0, 0, 0.1));
-      background-image                 :      -o-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,    rgba(255, 0, 0, 0.1));
-      background-image                 :        -webkit-gradient(linear, left top, left bottom, color-stop(65%, rgba(255, 0, 0, 0.0)), to(rgba(255, 0, 0, 0.1)));
-      background-image                 : -webkit-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,    rgba(255, 0, 0, 0.1));
-      background-image                 :         linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,    rgba(255, 0, 0, 0.1));
+      background-image                 :    -moz-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :     -ms-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :      -o-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :        -webkit-gradient(linear, left top, left bottom, color-stop(65%, rgba(255, 0, 0, 0.0)), color-stop(rgba(255, 0, 0, 0.1)), to(rgba(255, 0, 0, 0.0)));
+      background-image                 : -webkit-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :         linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
       background-position              : bottom;
       background-position-x            : center;
       background-position-y            : bottom;
@@ -134,8 +140,8 @@
 
     /* Hero */
     #hero {
-      height     : 75%;
-      height     : 75vh;
+      height     : 80%;
+      height     : 80vh;
       padding-top: 5%
     }
       /* Button */
@@ -154,14 +160,12 @@
       /* Region */
         /* <table> */
         #hero table {
-          margin-left   : 10%; /* --> auto */
-          margin-right  : 10%; /* --> auto */
-          vertical-align: middle;
-          width         : 80%
+          margin-left : 10%; /* --> auto */
+          margin-right: 10%; /* --> auto */
+          width       : 80%
         }
           /* Avatar */
           #avatar {
-            -ah-text-align                   : center;
             -moz-animation-delay             : 0ms;
             -moz-animation-duration          : 3000ms;
             -moz-animation-iteration-count   : infinite;
@@ -189,9 +193,8 @@
             animation-timing-function        : ease-in-out;
             padding-left                     : 65px;
             padding-right                    : 65px;
-            text-align                       : center;
             width                            : 40%;
-            will-change                      : transform
+            will-change                      : transform, translate, -ah-transform, -ms-transform, -o-transform, -webkit-transform
           }
             #avatar img { width: 100% }
 
@@ -254,10 +257,9 @@
 
       /* Tagline */
       #tagline {
-        -ah-text-align: center;
-        max-width     : 50%;
-        min-width     : 300px;
-        text-align    : center
+        line-height: 1.5;
+        max-width  : 50%;
+        min-width  : 320px
       }
         /* <span> */
         #tagline span {
@@ -276,16 +278,18 @@
 
     /* Socials */
     #socials {
-      display: table;
-      height : 20%;
-      height : 20vh
+      display    : table;
+      height     : 20%;
+      height     : 20vh;
+      min-width  : 440px;
+      white-space: nowrap;
+      width      : 70%
     }
       /* All */
       #socials * {
-        -ah-text-align: center;
-        display       : table-cell;
-        text-align    : center;
-        vertical-align: middle
+        -ah-vertical-align: middle;
+        display           : table-cell;
+        vertical-align    : middle
       }
 
       #background ~ #socials [alt=Email i] {
@@ -293,6 +297,12 @@
         -webkit-filter: invert(1);
         filter        : invert(1)
       }
+
+      /* <tbody> */
+      #socials tbody { display: table-row-group }
+
+      /* <tr> */
+      #socials tr { display: table-row }
 
       /* Social */
       #socials .social {
@@ -308,35 +318,85 @@
         -moz-border-bottom-right-radius   : 50%;
         -moz-border-top-left-radius       : 50%;
         -moz-border-top-right-radius      : 50%;
+        -moz-transition-duration          : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
+        -moz-transition-property          : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        -ms-transition-duration           : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
+        -ms-transition-property           : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        -o-transition-duration            : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
+        -o-transition-property            : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
         -pie-border-radius                : 50%;
         -webkit-border-bottom-left-radius : 50%;
         -webkit-border-bottom-right-radius: 50%;
         -webkit-border-top-left-radius    : 50%;
         -webkit-border-top-right-radius   : 50%;
+        -webkit-transition-duration       : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
+        -webkit-transition-property       : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        border-bottom-color               : rgba(127, 127, 127, 0.5);
         border-bottom-left-radius         : 50%;
         border-bottom-right-radius        : 50%;
+        border-bottom-style               : solid;
+        border-bottom-width               : 1px;
+        border-collapse                   : separate;
+        border-left-color                 : rgba(127, 127, 127, 0.5);
+        border-left-style                 : solid;
+        border-left-width                 : 1px;
+        border-right-color                : rgba(127, 127, 127, 0.5);
+        border-right-style                : solid;
+        border-right-width                : 1px;
+        border-top-color                  : rgba(127, 127, 127, 0.5);
         border-top-left-radius            : 50%;
         border-top-right-radius           : 50%;
-        display                           : inline-block;
+        border-top-style                  : solid;
+        border-top-width                  : 1px;
+        display                           : inline-table;
         font-size                         : 200%;
-        height                            : 2em;
-        line-height                       : 2em;
-        margin-left                       : 0.5em;
-        margin-right                      : 0.5em;
+        height                            : 2.00em;
+        line-height                       : 1.75em;
+        max-height                        : 100%;
+        max-width                         : 100%;
+        min-height                        : 2.00em;
+        min-width                         : 2.00em;
+        outline-color                     : transparent;
+        outline-style                     : solid;
+        outline-width                     : 1px;
         scale                             : 1.0;
-        width                             : 2em
+        transition-duration               : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
+        transition-property               : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        width                             : 2.00em
       }
 
       #socials .social[data-\:animated~=magnify] { scale: 1.1 }
         /* All */
         #socials .social * { display: initial }
 
-        /* Pseudo > Hover */
-        #socials .social[data-\:tooltip]:hover::before {
-          -moz-transition-delay   : 200ms;
-          -ms-transition-delay    : 200ms;
-          -o-transition-delay     : 200ms;
-          -webkit-transition-delay: 200ms;
-          transition-delay        : 200ms;
-          transition-duration     : 200ms
-        }
+        /* Pseudo */
+          /* Focus */
+          #socials .social:focus /* ->> Ensures `[alt=Email i]` displays its border */ {
+            border-bottom-color: #F0F0F0 !important;
+            border-left-color  : #F0F0F0 !important;
+            border-right-color : #F0F0F0 !important;
+            border-top-color   : #F0F0F0 !important
+          }
+
+          /* Focus, Hover */
+          #socials .social:focus,
+          #socials .social:hover {
+            border-bottom-left-radius : 9px;
+            border-bottom-right-radius: 9px;
+            border-top-left-radius    : 9px;
+            border-top-right-radius   : 9px
+          }
+
+          /* Hover */
+          #socials .social:hover {
+            min-height: 1.75em;
+            min-width : 1.75em
+          }
+
+          #socials .social[data-\:tooltip]:hover::before {
+            -moz-transition-delay   : 200ms;
+            -ms-transition-delay    : 200ms;
+            -o-transition-delay     : 200ms;
+            -webkit-transition-delay: 200ms;
+            transition-delay        : 200ms;
+          }
