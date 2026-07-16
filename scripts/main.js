@@ -121,6 +121,22 @@ var pend        = typeof queueMicrotask === "function"                          
 var timestamp   = typeof performance === "object" && typeof performance.now === "function" ? function timestamp() { return performance.now() }           : timestamp;
 
 /* Function > ... */
+function colorRGBBrightness(color, ratio) {
+  return {
+    red  : Math.min(Math.max(Math.round(color.red   * ratio), 0x00), 0xFF),
+    green: Math.min(Math.max(Math.round(color.green * ratio), 0x00), 0xFF),
+    blue : Math.min(Math.max(Math.round(color.blue  * ratio), 0x00), 0xFF)
+  }
+}
+
+function colorRGBContrast(color, ratio) {
+  return {
+    red  : Math.min(Math.max(Math.round((ratio * (color.red   - 127.5)) + 127.5), 0x00), 0xFF),
+    green: Math.min(Math.max(Math.round((ratio * (color.green - 127.5)) + 127.5), 0x00), 0xFF),
+    blue : Math.min(Math.max(Math.round((ratio * (color.blue  - 127.5)) + 127.5), 0x00), 0xFF)
+  }
+}
+
 function colorRGBHueRotate(rgb, angle) {
   var angleCosine  = Math.cos(MATH_DEG_TO_RAD * angle);
   var angleSine    = Math.sin(MATH_DEG_TO_RAD * angle);
@@ -132,10 +148,32 @@ function colorRGBHueRotate(rgb, angle) {
   ];
 
   return {
-    blue : Math.min(Math.max(Math.round((coefficients[2].blue * rgb.blue) + (coefficients[2].green * rgb.green) + (coefficients[2].red * rgb.red)), 0), 255),
-    green: Math.min(Math.max(Math.round((coefficients[1].blue * rgb.blue) + (coefficients[1].green * rgb.green) + (coefficients[1].red * rgb.red)), 0), 255),
-    red  : Math.min(Math.max(Math.round((coefficients[0].blue * rgb.blue) + (coefficients[0].green * rgb.green) + (coefficients[0].red * rgb.red)), 0), 255)
+    red  : Math.min(Math.max(Math.round((coefficients[0].blue * rgb.blue) + (coefficients[0].green * rgb.green) + (coefficients[0].red * rgb.red)), 0x00), 0xFF),
+    green: Math.min(Math.max(Math.round((coefficients[1].blue * rgb.blue) + (coefficients[1].green * rgb.green) + (coefficients[1].red * rgb.red)), 0x00), 0xFF),
+    blue : Math.min(Math.max(Math.round((coefficients[2].blue * rgb.blue) + (coefficients[2].green * rgb.green) + (coefficients[2].red * rgb.red)), 0x00), 0xFF)
   }
+}
+
+function colorRGBInversion(color, ratio) {
+  return {
+    red  : Math.min(Math.max(Math.round((ratio * 0xFF) + (color.red   * (1.0 - (ratio * 2.0)))), 0x00), 0xFF),
+    green: Math.min(Math.max(Math.round((ratio * 0xFF) + (color.green * (1.0 - (ratio * 2.0)))), 0x00), 0xFF),
+    blue : Math.min(Math.max(Math.round((ratio * 0xFF) + (color.blue  * (1.0 - (ratio * 2.0)))), 0x00), 0xFF)
+  }
+}
+
+function colorRGBSaturation(color, ratio) {
+  var luminance = 0.2126 * color.red + 0.7152 * color.green + 0.0722 * color.blue;
+
+  return {
+    red  : Math.min(Math.max(Math.round(luminance + (ratio * (color.red   - luminance))), 0x00), 0xFF),
+    green: Math.min(Math.max(Math.round(luminance + (ratio * (color.green - luminance))), 0x00), 0xFF),
+    blue : Math.min(Math.max(Math.round(luminance + (ratio * (color.blue  - luminance))), 0x00), 0xFF)
+  }
+}
+
+function colorRGBAToString(color, alpha) {
+  return "rgba(" + color.red + ", " + color.green + ", " + color.blue + ", " + alpha + ')'
 }
 
 function convertChildNodes(element, nodeTypeA, nodeTypeB) /* TODO (Lapys) */ {

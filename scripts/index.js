@@ -7,6 +7,65 @@ var TAGLINE_ELEMENT              = getElementById("tagline");
 
 // ...
 if (null !== BACKGROUND_CONTEXT) {
+  function colorRGBInvertFilters(color, filter) {
+    var color   = color;
+    var filters = [filter["brightness"], filter["contrast"], filter["hue-rotate"], filter["invert"], filter["saturate"]].sort(function(filterA, filterB) { return filterA.index - filterB.index });
+
+    // ... ->> `filters` possibly too destructive to be inverted
+    while (filters.length)
+    switch (filters.pop()) {
+      case filter["brightness"]: if (filter["brightness"].index !== -1) color = colorRGBBrightness(color, 1.0 / filter["brightness"].value); break;
+      case filter["contrast"]:   if (filter["contrast"]  .index !== -1) color = colorRGBContrast  (color, 1.0 / filter["contrast"]  .value); break;
+      case filter["hue-rotate"]: if (filter["hue-rotate"].index !== -1) color = colorRGBHueRotate (color, -filter["hue-rotate"]     .value); break;
+      case filter["invert"]:     if (filter["invert"]    .index !== -1) color = colorRGBInversion (color, 1.0 / filter["invert"]    .value); break;
+      case filter["saturate"]:   if (filter["saturate"]  .index !== -1) color = colorRGBSaturation(color, 1.0 / filter["saturate"]  .value); break;
+    }
+
+    return color
+  }
+
+  function filters() {
+    var filter      = {"brightness": null, "contrast": null, "hue-rotate": null, "invert": null, "saturate": null};
+    var filterMatch = null;
+    var filterValue = BACKGROUND_STYLE_DECLARATION.getPropertyValue("filter") || "";
+
+    // ...
+    switch ((filterMatch = filterValue.match(/\bbrightness\(\s*([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(|%)\s*\)/i) || [null, null])[2]) {
+      case "":  filter["brightness"] = {index: filterMatch.index, value: +filterMatch[1]};         break;
+      case '%': filter["brightness"] = {index: filterMatch.index, value:  filterMatch[1] / 100.0}; break;
+      default:  filter["brightness"] = {index: -1,                value: 0.0}
+    }
+
+    switch ((filterMatch = filterValue.match(/\bcontrast\(\s*([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(|%)\s*\)/i) || [null, null])[2]) {
+      case "":  filter["contrast"] = {index: filterMatch.index, value: +filterMatch[1]};         break;
+      case '%': filter["contrast"] = {index: filterMatch.index, value:  filterMatch[1] / 100.0}; break;
+      default:  filter["contrast"] = {index: -1,                value: 0.0}
+    }
+
+    switch ((filterMatch = filterValue.match(/\bhue-rotate\(\s*([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(deg|grad|rad|turn)\s*\)/i) || [null, null])[2]) {
+      case "deg":  filter["hue-rotate"] = {index: filterMatch.index, value: +filterMatch[1]};                   break;
+      case "grad": filter["hue-rotate"] = {index: filterMatch.index, value:  filterMatch[1] * 0.9};             break;
+      case "rad":  filter["hue-rotate"] = {index: filterMatch.index, value:  filterMatch[1] * MATH_RAD_TO_DEG}; break;
+      case "turn": filter["hue-rotate"] = {index: filterMatch.index, value:  filterMatch[1] * 360.0};           break;
+      default:     filter["hue-rotate"] = {index: -1,                value: 0.0}
+    }
+
+    switch ((filterMatch = filterValue.match(/\binvert\(\s*([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(|%)\s*\)/i) || [null, null])[2]) {
+      case "":  filter["invert"] = {index: filterMatch.index, value: +filterMatch[1]};         break;
+      case '%': filter["invert"] = {index: filterMatch.index, value:  filterMatch[1] / 100.0}; break;
+      default:  filter["invert"] = {index: -1,                value: 0.0}
+    }
+
+    switch ((filterMatch = filterValue.match(/\bsaturate\(\s*([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(|%)\s*\)/i) || [null, null])[2]) {
+      case "":  filter["saturate"] = {index: filterMatch.index, value: +filterMatch[1]};         break;
+      case '%': filter["saturate"] = {index: filterMatch.index, value:  filterMatch[1] / 100.0}; break;
+      default:  filter["saturate"] = {index: -1,                value: 0.0}
+    }
+
+    // ...
+    return filter
+  }
+
   function resolution(_) {
     var backgroundElementBounds = getElementBounds(BACKGROUND_ELEMENT);
 
@@ -20,6 +79,7 @@ if (null !== BACKGROUND_CONTEXT) {
     BACKGROUND_CONTEXT.textRendering         = "optimizeSpeed"
   }
 
+  /* ... */
   resolution();
   void poll(window, "load",   resolution, {"capture": true, "once": true,  "passive": true});
   void poll(window, "resize", resolution, {"capture": true, "once": false, "passive": true});
@@ -194,19 +254,14 @@ if (null !== BACKGROUND_CONTEXT) {
       void poll(window,                        "scroll",    function(event) { cometCreateIntervalRate += 2.00 },                                                                                                                                                                                   {"capture": true, "passive": true});
 
       void LOOP_PROCEDURES.push(function reel() {
-        var cometLengthMaximum    = Math.max(BACKGROUND_ELEMENT.width * 0.35, COMET_LENGTH_MAXIMUM);
-        var reelHueRotation       = (BACKGROUND_STYLE_DECLARATION.getPropertyValue("filter") || "").match(/\bhue-rotate\(\s*([-+]?(?:\d+(?:.\d*)?|.\d+)(?:[Ee][-+]?\d+)?)(deg|grad|rad|turn)\s*\)/i);
         var reelPreviousTimestamp = reelTimestamp;
+        var reelFilters           = filters();
+        var starColor             = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
+        var planetoidRippleColor  = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
+        var cometLengthMaximum    = Math.max(BACKGROUND_ELEMENT.width * 0.35, COMET_LENGTH_MAXIMUM);
+        var cometColor            = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
 
         // ...
-        switch (null !== reelHueRotation ? reelHueRotation[2] : null) {
-          case "deg":  reelHueRotation = +reelHueRotation[1];                      break;
-          case "grad": reelHueRotation = (reelHueRotation[1] * (0.9));             break;
-          case "rad" : reelHueRotation = (reelHueRotation[1] * (180.0 / MATH_PI)); break;
-          case "turn": reelHueRotation = (reelHueRotation[1] * (360.0));           break;
-          default:     reelHueRotation = 0.0
-        }
-
         BACKGROUND_CONTEXT.globalCompositeOperation = "source-over";
         reelTimestamp                               = timestamp();
         reelTimeDelta                               = reelTimestamp - reelPreviousTimestamp;
@@ -239,9 +294,8 @@ if (null !== BACKGROUND_CONTEXT) {
             comet.position.y            += cometSpeed.y;
 
             // ...
-            void colorRGBHueRotate({blue: 255, green: 255, red: 255}, reelHueRotation); // TODO (Lapys)
-            BACKGROUND_CONTEXT.fillStyle.addColorStop(0.0, "rgba(255, 255, 255, 0.0)");
-            BACKGROUND_CONTEXT.fillStyle.addColorStop(1.0, "rgba(255, 255, 255, 0.6)");
+            BACKGROUND_CONTEXT.fillStyle.addColorStop(0.0, colorRGBAToString(cometColor, 0.0));
+            BACKGROUND_CONTEXT.fillStyle.addColorStop(1.0, colorRGBAToString(cometColor, 0.6));
 
             BACKGROUND_CONTEXT.beginPath();
             BACKGROUND_CONTEXT.moveTo   (Math.floor(comet.origin  .x), Math.floor(comet.origin  .y));
@@ -273,7 +327,7 @@ if (null !== BACKGROUND_CONTEXT) {
             star.pulse                   = (star.pulse + (STAR_PULSE_SPEED * Math.random())) % 1.0;
             star.position.x             += (star.ripple.x ? Math.abs(star.direction.x) < Math.abs(star.ripple.x) ? star.ripple.x : (star.direction.x + star.ripple.x) / 2.0 : star.direction.x) * (star.speed.x * (((Math.abs(star.position.x - (BACKGROUND_ELEMENT.width  / 2.0)) / BACKGROUND_ELEMENT.width)  * 20.0) + 1.0));
             star.position.y             += (star.ripple.y ? Math.abs(star.direction.y) < Math.abs(star.ripple.y) ? star.ripple.y : (star.direction.y + star.ripple.y) / 2.0 : star.direction.y) * (star.speed.y * (((Math.abs(star.position.y - (BACKGROUND_ELEMENT.height / 2.0)) / BACKGROUND_ELEMENT.height) * 20.0) + 1.0));
-            BACKGROUND_CONTEXT.fillStyle = "rgba(255, 255, 255, " + (STAR_PULSE_MINIMUM + ((star.pulse > 0.5 ? 1.0 - star.pulse : star.pulse) * (1.0 - STAR_PULSE_MINIMUM) * 2.0)) + ')';
+            BACKGROUND_CONTEXT.fillStyle = colorRGBAToString(starColor, STAR_PULSE_MINIMUM + ((star.pulse > 0.5 ? 1.0 - star.pulse : star.pulse) * (1.0 - STAR_PULSE_MINIMUM) * 2.0));
 
             BACKGROUND_CONTEXT.beginPath();
             BACKGROUND_CONTEXT.moveTo   (star.position.x, star.position.y);
@@ -306,7 +360,7 @@ if (null !== BACKGROUND_CONTEXT) {
             var rippleCastPoints  = [{x: 0, y: -planetoidRadius}, {x: 0, y: +planetoidRadius}, {x: rippleCastLength, y: +planetoidRadius * 6.0}, {x: rippleCastLength, y: -planetoidRadius * 6.0}];
 
             // ...
-            BACKGROUND_CONTEXT.fillStyle = "rgba(255, 255, 255, " + (planetoid.ripple * 0.4) + ')';
+            BACKGROUND_CONTEXT.fillStyle = colorRGBAToString(planetoidRippleColor, planetoid.ripple * 0.4);
 
             BACKGROUND_CONTEXT.beginPath();
             BACKGROUND_CONTEXT.moveTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[0].x) - (rippleAngleSine * rippleCastPoints[0].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[0].x) + (rippleAngleCosine * rippleCastPoints[0].y));
@@ -323,7 +377,7 @@ if (null !== BACKGROUND_CONTEXT) {
           var planetoidRadius = planetoid.size / 2.0;
 
           // ... ->> Body
-          BACKGROUND_CONTEXT.fillStyle                = "#FFFFFF";
+          BACKGROUND_CONTEXT.fillStyle                = "rgba(255, 255, 255, 1.0)";
           BACKGROUND_CONTEXT.globalCompositeOperation = "destination-out";
 
           BACKGROUND_CONTEXT.beginPath();
@@ -350,8 +404,8 @@ if (null !== BACKGROUND_CONTEXT) {
             BACKGROUND_CONTEXT.fillStyle = BACKGROUND_CONTEXT.createLinearGradient(planetoid.position.x, planetoid.position.y, planetoid.position.x + (planetoidRadius * Math.cos(rippleAngle)), planetoid.position.y + (planetoidRadius * Math.sin(rippleAngle)));
 
             // ...
-            BACKGROUND_CONTEXT.fillStyle.addColorStop(0.00, "rgba(255, 255, 255, 0.0)");
-            BACKGROUND_CONTEXT.fillStyle.addColorStop(1.00, "rgba(255, 255, 255, 0.4)");
+            BACKGROUND_CONTEXT.fillStyle.addColorStop(0.00, colorRGBAToString(planetoidRippleColor, 0.0));
+            BACKGROUND_CONTEXT.fillStyle.addColorStop(1.00, colorRGBAToString(planetoidRippleColor, 0.4));
 
             BACKGROUND_CONTEXT.beginPath();
             BACKGROUND_CONTEXT.moveTo   (planetoid.position.x, planetoid.position.y);
@@ -363,7 +417,7 @@ if (null !== BACKGROUND_CONTEXT) {
         }
 
         // ... ->> Fade out
-        BACKGROUND_CONTEXT.fillStyle                = "#FFFFFF";
+        BACKGROUND_CONTEXT.fillStyle                = "rgba(255, 255, 255, 1.0)";
         BACKGROUND_CONTEXT.globalCompositeOperation = "destination-out";
 
         BACKGROUND_CONTEXT.beginPath();
