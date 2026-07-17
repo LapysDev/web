@@ -156,19 +156,27 @@
       </div>
 
       <!-- Socials -->
-      <table class=notextselect data-:animate=magnify id=socials role=region>
-        <tr>
-          <td> <a class="pie social" data-:tooltip="GITHUB   · @LapysDev"    href=https://github.com/LapysDev          style="border-bottom-right-radius: 9px; border-top-left-radius: 9px"> <img alt=GitHub   class="inline noselect" src="icons/others/github.png"/>   </a> </td>
-          <td> <a class="pie social" data-:tooltip="LINKEDIN · Funto Oshodi" href=https://linkedin.com/in/funto-oshodi style="border-bottom-right-radius: 9px; border-top-left-radius: 9px"> <img alt=LinkedIn class="inline noselect" src="icons/others/linkedin.png"/> </a> </td>
-          <td> <a class="pie social" data-:tooltip="ITCH.I/O · @lapys"       href=https://lapys.itch.io                style="border-bottom-right-radius: 9px; border-top-left-radius: 9px"> <img alt=Itch.I/O class="inline noselect" src="icons/others/itch.io.png"/>  </a> </td>
+      <table class="notextselect nowrap" data-:animate=magnify id=socials role=region>
+        <tr class=landscape id=#profiles>
+          <td>                 <a class="pie social" data-:tooltip="GITHUB   · @LapysDev"    href=https://github.com/LapysDev          style="border-bottom-right-radius: 9px; border-top-left-radius: 9px"> <img alt=GitHub   class="inline noselect" src="icons/others/github.png"/>   </a> </td>
+          <td>                 <a class="pie social" data-:tooltip="LINKEDIN · Funto Oshodi" href=https://linkedin.com/in/funto-oshodi style="border-bottom-right-radius: 9px; border-top-left-radius: 9px"> <img alt=LinkedIn class="inline noselect" src="icons/others/linkedin.png"/> </a> </td>
+          <td class=landscape> <a class="pie social" data-:tooltip="ITCH.I/O · @lapys"       href=https://lapys.itch.io                style="border-bottom-right-radius: 9px; border-top-left-radius: 9px"> <img alt=Itch.I/O class="inline noselect" src="icons/others/itch.io.png"/>  </a> </td>
 
           <td> <a class="pie social" href=#contact style="border-color: transparent; border-radius: 50%"> <picture aria-label=contact-email role=img> <source media=all type=image/svg+xml srcset="icons/utility/email.svg"/> <img alt=Email class="inline noselect" src="icons/utility/email.png"/> </picture> </a> </td>
 
-          <td> <a class="pie social" data-:tooltip="DISCORD        · @_lapys#2791" href=https://discord.com/users/502933952588152842  style="border-bottom-left-radius: 9px; border-top-right-radius: 9px"> <img alt=Discord       class="inline noselect" src="icons/others/discord.png"/>        </a> </td>
-          <td> <a class="pie social" data-:tooltip="ARTSTATION     · @lapys"       href=https://artstation.com/lapys                  style="border-bottom-left-radius: 9px; border-top-right-radius: 9px"> <img alt=ArtStation    class="inline noselect" src="icons/others/artstation.png"/>     </a> </td>
-          <td> <a class="pie social" data-:tooltip="STACK OVERFLOW · @Lapys"       href=https://stackoverflow.com/users/7364573/lapys style="border-bottom-left-radius: 9px; border-top-right-radius: 9px"> <img alt=StackOverflow class="inline noselect" src="icons/others/stack-overflow.png"/> </a> </td>
+          <td>                 <a class="pie social"            data-:tooltip="DISCORD        · @_lapys#2791" href=https://discord.com/users/502933952588152842  style="border-bottom-left-radius: 9px; border-top-right-radius: 9px"> <img alt=Discord       class="inline noselect" src="icons/others/discord.png"/>        </a> </td>
+          <td>                 <a class="pie social"            data-:tooltip="ARTSTATION     · @lapys"       href=https://artstation.com/lapys                  style="border-bottom-left-radius: 9px; border-top-right-radius: 9px"> <img alt=ArtStation    class="inline noselect" src="icons/others/artstation.png"/>     </a> </td>
+          <td class=landscape> <a class="pie social" data-:tooltip="STACK OVERFLOW · @Lapys"       href=https://stackoverflow.com/users/7364573/lapys style="border-bottom-left-radius: 9px; border-top-right-radius: 9px"> <img alt=StackOverflow class="inline noselect" src="icons/others/stack-overflow.png"/> </a> </td>
         </tr>
+
+        <tr class=portrait data-:portal=#profiles> </tr>
       </table>
+
+      <!-- Projects -->
+      <div data-:animate=magnify id=projects role=region>
+        <h2 style="text-transform: uppercase"> Projects </h2>
+        <p> Work-in-progress&hellip; </p>
+      </div>
 
       <!-- Expertise -->
       <div data-:animate=magnify id=expertise role=region style="overflow: hidden; width: 75%">
@@ -187,7 +195,7 @@
                 </tr>
               </table>
 
-              <table id=education>
+              <table class=landscape id=education>
                 <tr> <th colspan=2> <h2> Education </h2> </th> </tr>
                 <tr>
                   <td>
@@ -201,7 +209,7 @@
             </td>
 
             <td>
-              <table id=skills>
+              <table class=landscape id=skills>
                 <tr> <th> <h2> Skills </h2> </th> </tr>
 
                 <tr>
@@ -254,17 +262,24 @@
               </table>
             </td>
           </tr>
+
+          <tr> <td class=portrait data-:portal=education> </td> </tr>
+          <tr> <td class=portrait data-:portal=skills>    </td> </tr>
         </table>
       </div>
 
-      <!-- Projects -->
-      <!-- <div data-:animate=magnify id=projects role=region> PROJECTS <table> </table> </div> -->
-
       <!-- Game -->
-      <!-- <div data-:animate=magnify id=game role=region> GAME <iframe> </iframe> </div> -->
+      <div data-:animate=magnify id=game role=region>
+        <h2 style="text-transform: uppercase"> Game </h2>
+        <p> Minigame coming soon&hellip; </p>
+        <iframe> </iframe>
+      </div>
 
       <!-- Contact -->
-      <!-- <div data-:animate=magnify id=contact role=region> CONTACT <table> </table> </div> -->
+      <div data-:animate=magnify id=contact role=region>
+        <h2 style="text-transform: uppercase"> Contacts </h2>
+        <p> Coming soon&hellip; </p>
+      </div>
 
       <!-- ... -->
       <noscript role=dialog> <div> <tt> Enable scripting for responsive view </tt> </div> </noscript>

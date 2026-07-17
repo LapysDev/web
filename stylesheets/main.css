@@ -532,14 +532,14 @@
     /* Hover, Pointer */
     @media (hover: hover) and (pointer: fine) {}
 
-    /* Landscape (e.g. desktops, handhelds, laptops, TVs, …) ->> Compact UI */
+    /* Landscape (e.g. desktops, handhelds, laptops, TVs, …) ->> Cozy */
     @media (min-aspect-ratio: 4/3), (min-width: 769px), (width > 768px) {}
 
-    /* Portrait (e.g. electronic readers, phones, smart watches, …) ->> Cozy UI */
+    /* Portrait (e.g. electronic readers, phones, smart watches, …) ->> Compact */
     @media (max-aspect-ratio: 3/4), (max-width: 768px), (width <= 768px) {
       /* Components > (Landscape, Portrait) */
-      .landscape { content-visibility: hidden;  display: none;    empty-cells: hide; visibility: collapse }
-      .portrait  { content-visibility: visible; display: initial; empty-cells: show; visibility: initial }
+      .landscape { content-visibility: hidden;  display: none !important; empty-cells: hide; visibility: collapse }
+      .portrait  { content-visibility: visible; display: initial;         empty-cells: show; visibility: initial }
     }
 
     /* Prefers Contrast */
@@ -778,6 +778,7 @@
         -o-transition-property            : color, height, opacity, top, transform, translate;
         -pie-border-radius                : 2px;
         -pie-box-shadow                   : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        -prince-text-wrap                 : nowrap;
         -webkit-border-bottom-left-radius : 2px;
         -webkit-border-bottom-right-radius: 2px;
         -webkit-border-top-left-radius    : 2px;
@@ -841,6 +842,7 @@
         position                          : absolute;
         text-overflow                     : clip;
         text-transform                    : none;
+        text-wrap                         : nowrap;
         top                               : 50%;
         transform                         : translate(-50%, -50%);
         transition-behavior               : allow-discrete;
@@ -1089,8 +1091,7 @@
     font-family   : Rajdhani, "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, sans-serif;
     font-synthesis: small-caps style weight;
     font-weight   : 500;
-    text-rendering: geometricPrecision;
-    white-space   : nowrap
+    text-rendering: geometricPrecision
   }
 
   /* <h1> */
@@ -1340,19 +1341,19 @@
     [data-\:animate~=magnify] [data-\:animated] {
       -ah-transform                     : scale(1.000);
       -moz-transition-duration          : 400ms;
-      -moz-transition-property          : transform;
+      -moz-transition-property          : scale, transform;
       -moz-transition-timing-function   : cubic-bezier(0.34, 1.56, 0.64, 1.00);
       -ms-transform                     : scale(1.000);
       -o-transform                      : scale(1.000);
       -webkit-transform                 : scale(1.000);
       -webkit-transition-duration       : 400ms;
-      -webkit-transition-property       : transform;
+      -webkit-transition-property       : scale, transform;
       -webkit-transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1.00);
       transform                         : scale(1.000);
       transition-duration               : 400ms;
-      transition-property               : transform;
+      transition-property               : scale, transform;
       transition-timing-function        : cubic-bezier(0.34, 1.56, 0.64, 1.00);
-      will-change                       : transform
+      will-change                       : scale, transform
     }
 
     [data-\:animate~=magnify] [data-\:animated~=magnify] {
@@ -1640,7 +1641,7 @@
     overflow: clip clip
   }
 
-  .nooverflow, .nooverflow-x {
+  .button, .nooverflow, .nooverflow-x, .nowrap {
     -ms-overflow-x: hidden;
     overflow-x    : hidden;
     overflow-x    : -moz-hidden-unscrollable;
@@ -1704,6 +1705,19 @@
     input[type=button /* i */]::selection,     input[type=button /* i */]     ::selection,
     input[type=reset  /* i */]::selection,     input[type=reset  /* i */]     ::selection,
     input[type=submit /* i */]::selection,     input[type=submit /* i */]     ::selection { background-color: transparent }
+
+  /* No Wrap */
+  h1, h2, h3, h4, h5, h6, .button, .nowrap {
+    -ah-flex-wrap    : nowrap;
+    -ms-flex-wrap    : nowrap;
+    -prince-text-wrap: nowrap;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap        : nowrap;
+    text-wrap        : nowrap;
+    text-wrap-mode   : nowrap;
+    text-wrap-style  : auto;
+    white-space      : nowrap
+  }
 
   /* Section */
   [role~=banner],

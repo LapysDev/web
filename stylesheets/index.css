@@ -140,8 +140,8 @@
 
     /* Hero */
     #hero {
-      height     : 80%;
-      height     : 80vh;
+      height     : 85%;
+      height     : 85vh;
       padding-top: 5%
     }
       /* Button */
@@ -153,7 +153,7 @@
         margin-top   : 1.00em
       }
 
-      #hero [data-\:portal=actions] .button { font-size: 100% }
+      #hero .portrait .button { font-size: 70% }
         /* All */
         #hero .button svg|* { stroke: currentColor }
 
@@ -191,11 +191,14 @@
             animation-iteration-count        : infinite;
             animation-name                   : avatar;
             animation-timing-function        : ease-in-out;
-            padding-left                     : 65px;
-            padding-right                    : 65px;
+            padding-left                     : 5%;
+            padding-right                    : 5%;
             width                            : 40%;
             will-change                      : transform, translate, -ah-transform, -ms-transform, -o-transform, -webkit-transform
           }
+
+          #avatar, #avatar img { min-width: 200px }
+            /* <img> */
             #avatar img { width: 100% }
 
           /* Subtitle, Title */
@@ -213,7 +216,7 @@
 
           #title                        { font-size  : 500% }
           #title, [data-\:portal=title] { font-weight: 900 }
-          [data-\:portal=title]         { font-size  : 365% }
+          [data-\:portal=title]         { font-size  : 300% }
             /* All */
             #title *, [data-\:portal=title] * {
               -webkit-text-stroke-width: 2.5px !important;
@@ -278,12 +281,11 @@
 
     /* Socials */
     #socials {
-      display    : table;
-      height     : 20%;
-      height     : 20vh;
-      min-width  : 440px;
-      white-space: nowrap;
-      width      : 70%
+      display  : table;
+      height   : 15%;
+      height   : 15vh;
+      min-width: 320px;
+      width    : 70%
     }
       /* All */
       #socials * {
@@ -365,7 +367,8 @@
         width                             : 2.00em
       }
 
-      #socials .social[data-\:animated~=magnify] { scale: 1.1 }
+      #socials .social[data-\:animated~=magnify] { scale    : 1.1 }
+      #socials .portrait .social                 { font-size: 165% }
         /* All */
         #socials .social * { display: initial }
 

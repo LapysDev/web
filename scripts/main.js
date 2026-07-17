@@ -1,5 +1,5 @@
 /* Namespace > ... */
-var Animate    = {all: [],   attributeName: "data-:animate", magnify: {animated: [], observed: []}, main: nop,                                                        tagNames: ['*'], tilt3D: {angle: /* ->> ° degrees */ 1.0, maximumDownscaleAdjustment: /* --> percent % */ 0.025, maximumOriginDistance: Math.SQRT2 || Math.sqrt(2.0), x: 0.0, y: 0.0},                                                                                                                                                                                                     '__proto__': null};
+var Animate    = {all: [],   attributeName: "data-:animate", magnify: {animated: [], observed: []}, main: nop,                                                        tagNames: ['*'], tilt3D: {angle: /* ->> ° degrees */ 1.0, maximumDownscaleAdjustment: /* --> percent % */ 0.025, maximumOriginDistance: Math.SQRT2 || Math.sqrt(2.0), x: 0.0, y: 0.0},                                                                                                                                                                                                '__proto__': null};
 var Lazy       = {all: null, attributeName: "data-:lazy", awaiting: null, awaitingTimeout: null,    main: nop, next: nop, observer: null, observed: [], prompted: [], tagNames: ["embed", "iframe", "img", "input", "link", "object", "script", "source", "track", "video"], threshold: 0.0,                                                                                                                                                                                                                                                                '__proto__': null}; // ->> Considered `https://github.com/whatwg/html/issues/2271` for underscore attributes
 var Legacy     =            {attributeName: "data-:legacy",                                                                                                           tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                                      '__proto__': null};
 var Portal     = {all: [],   attributeName: "data-:portal",                                         main: nop,                                                        tagNames: ['*' /* --> 'a', "address", 'b', "blockquote", "body", "caption", "cite", "code", "dd", "dfn", "div", "dl", "dt", "em", "form", "h1", "h2", "h3", "h4", "h5", "h6", 'i', "kbd", "li", "map", "ol", "option", 'p', "pre", 'q', "samp", "select", "small", "span", "strong", "sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "tr", "ul", "var" */], '__proto__': null}; //     — but ultimately went with `data-:` custom attribute prefix
@@ -94,6 +94,10 @@ var STYLE_SHORTHANDS = [
 var STYLE_GROUPING_PREDICATES = {container: {name: [], query: []}, layer: null, media: null, scope: [], supports: null};
 var POLLS                     = {attached: [], preventDefault: function() { this.defaultPrevented = true; this.returnValue = false }, stopImmediatePropagation: function() { this.cancelBubble = true }, stopPropagation: function() { this.cancelBubble = true }};
 var PROBE_ELEMENT             = document.createElement("canvas", {"customElementRegistry": null} /* ->> or {"is": null} */);
+var ORIENTATION_SQUARE        = 0x03; // --> ORIENTATION_LANDSCAPE | ORIENTATION_PORTRAIT
+var ORIENTATION_PORTRAIT      = 0x02;
+var ORIENTATION_PANORAMIC     = 0x04;
+var ORIENTATION_LANDSCAPE     = 0x01;
 var LOOP_PROCEDURES           = createProcedureCollection([nop]);
 var LOOP_HANDLER              = typeof requestAnimationFrame !== "function" ? nop : requestAnimationFrame;
 var MATH_TAU                  = 491701844.0   / 78256779.0;  // --> 2π
@@ -115,10 +119,9 @@ var COMPONENTS_CACHE          = []; // --> [...createComponentCache(…)]
 var BACKGROUND_PROCEDURES     = createProcedureCollection([function lazy() { Lazy.main() }, function portal() { Portal.main() }, function tooltip() { Tooltip.main() }]);
 var BACKGROUND_HANDLER        = nop;
 
-var nop         = (function() { try { if (typeof eval === "function") return eval("() => void 0x00") } catch (error) {} return nop })();
-var pageTilting = false;
-var pend        = typeof queueMicrotask === "function"                                     ? function pend(callback) { return queueMicrotask(callback) } : pend;
-var timestamp   = typeof performance === "object" && typeof performance.now === "function" ? function timestamp() { return performance.now() }           : timestamp;
+var nop       = (function() { try { if (typeof eval === "function") return eval("() => void 0x00") } catch (error) {} return nop })();
+var pend      = typeof queueMicrotask === "function" ? function pend(callback) { return queueMicrotask(callback) } : pend;
+var timestamp = typeof performance === "object" && typeof performance.now === "function" ? function timestamp() { return performance.now() } : typeof performance.webkitNow === "function" ? function timestamp() { return performance.webkitNow() } : timestamp;
 
 /* Function > ... */
 function colorRGBBrightness(color, ratio) {
@@ -3223,6 +3226,11 @@ function getDocumentElements() /* ->> May or may not be live or static */ {
   }
 
   return elements
+}
+
+function getDocumentOrientation() {
+  var documentBounds = getDocumentBounds();
+  return documentBounds.width <= Math.min(documentBounds.height * (3.0 / 4.0), 768) ? ORIENTATION_PORTRAIT : documentBounds.height !== documentBounds.width ? ORIENTATION_LANDSCAPE : ORIENTATION_SQUARE
 }
 
 function getDocumentScrollOffset() {

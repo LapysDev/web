@@ -255,174 +255,180 @@ if (null !== BACKGROUND_CONTEXT) {
 
       void LOOP_PROCEDURES.push(function reel() {
         var reelPreviousTimestamp = reelTimestamp;
-        var reelFilters           = filters();
-        var starColor             = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
-        var planetoidRippleColor  = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
-        var cometLengthMaximum    = Math.max(BACKGROUND_ELEMENT.width * 0.35, COMET_LENGTH_MAXIMUM);
-        var cometColor            = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
 
         // ...
         BACKGROUND_CONTEXT.globalCompositeOperation = "source-over";
         reelTimestamp                               = timestamp();
         reelTimeDelta                               = reelTimestamp - reelPreviousTimestamp;
-        cometCreateIntervalRate                     = Math.max(cometCreateIntervalRate - (cometCreateIntervalRate !== 1.00 ? 1.75 : 0.00), 1.00);
 
         BACKGROUND_CONTEXT.clearRect(0, 0, BACKGROUND_ELEMENT.width, BACKGROUND_ELEMENT.height);
-        void waitEvery(createCometsAtRandomPosition, COMET_CREATE_INTERVAL / cometCreateIntervalRate);
-        void waitEvery(createStarsAtRandomPosition,  stars.length ? 10.0e3 : 0.0e3);
 
-        // ... ->> Comets
-        for (var index = comets.length; index--; ) {
-          var comet = comets[index];
+        if (ORIENTATION_LANDSCAPE === getDocumentOrientation()) {
+          var reelFilters           = filters();
+          var starColor             = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
+          var planetoidRippleColor  = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
+          var cometLengthMaximum    = Math.max(BACKGROUND_ELEMENT.width * 0.35, COMET_LENGTH_MAXIMUM);
+          var cometColor            = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
 
           // ...
-          if (comet.position.x <= 0.0 - cometLengthMaximum || BACKGROUND_ELEMENT.height <= comet.position.y - cometLengthMaximum) {
-            comets[index] = comets[comets.length - 1];
-            comets.length--
+          cometCreateIntervalRate = Math.max(cometCreateIntervalRate - (cometCreateIntervalRate !== 1.00 ? 1.75 : 0.00), 1.00);
+
+          void waitEvery(createCometsAtRandomPosition, COMET_CREATE_INTERVAL / cometCreateIntervalRate);
+          void waitEvery(createStarsAtRandomPosition,  stars.length ? 10.0e3 : 0.0e3);
+
+          // ... ->> Comets
+          for (var index = comets.length; index--; ) {
+            var comet = comets[index];
+
+            // ...
+            if (comet.position.x <= 0.0 - cometLengthMaximum || BACKGROUND_ELEMENT.height <= comet.position.y - cometLengthMaximum) {
+              comets[index] = comets[comets.length - 1];
+              comets.length--
+            }
+
+            else {
+              var cometSpeed  = {x: COMET_SPEED * 1.0,                 y: COMET_SPEED * 0.6};
+              var cometLength = {x: comet.origin.x - comet.position.x, y: comet.position.y - comet.origin.y};
+              var cometAngle  = Math.atan2(cometLength.y, -cometLength.x), cometTangentAngle = Math.asin(COMET_SIZE / Math.sqrt(Math.pow(cometLength.x, 2) + Math.pow(cometLength.y, 2)));
+
+              // ...
+              BACKGROUND_CONTEXT.fillStyle = BACKGROUND_CONTEXT.createLinearGradient(comet.origin.x, comet.origin.y, comet.position.x, comet.position.y);
+              comet.origin.x              -= cometLengthMaximum < cometLength.x || cometLengthMaximum < cometLength.y ? cometSpeed.x : 0;
+              comet.origin.y              += cometLengthMaximum < cometLength.x || cometLengthMaximum < cometLength.y ? cometSpeed.y : 0;
+              comet.position.x            -= cometSpeed.x;
+              comet.position.y            += cometSpeed.y;
+
+              // ...
+              BACKGROUND_CONTEXT.fillStyle.addColorStop(0.0, colorRGBAToString(cometColor, 0.0));
+              BACKGROUND_CONTEXT.fillStyle.addColorStop(1.0, colorRGBAToString(cometColor, 0.6));
+
+              BACKGROUND_CONTEXT.beginPath();
+              BACKGROUND_CONTEXT.moveTo   (Math.floor(comet.origin  .x), Math.floor(comet.origin  .y));
+              BACKGROUND_CONTEXT.arc      (Math.floor(comet.position.x), Math.floor(comet.position.y), COMET_SIZE, cometAngle - MATH_ETA - cometTangentAngle, cometAngle + MATH_ETA + cometTangentAngle, false);
+              BACKGROUND_CONTEXT.closePath();
+              BACKGROUND_CONTEXT.fill     ();
+
+              BACKGROUND_CONTEXT.beginPath();
+              BACKGROUND_CONTEXT.moveTo   (comet.position.x, comet.position.y);
+              BACKGROUND_CONTEXT.arc      (Math.floor(comet.position.x), Math.floor(comet.position.y), Math.ceil(COMET_SIZE * 0.65), 0.0, MATH_TAU, false);
+              BACKGROUND_CONTEXT.closePath();
+              BACKGROUND_CONTEXT.fill     ()
+            }
           }
 
-          else {
-            var cometSpeed  = {x: COMET_SPEED * 1.0,                 y: COMET_SPEED * 0.6};
-            var cometLength = {x: comet.origin.x - comet.position.x, y: comet.position.y - comet.origin.y};
-            var cometAngle  = Math.atan2(cometLength.y, -cometLength.x), cometTangentAngle = Math.asin(COMET_SIZE / Math.sqrt(Math.pow(cometLength.x, 2) + Math.pow(cometLength.y, 2)));
+          // ... ->> Stars
+          for (var index = stars.length; index--; ) {
+            var star = stars[index];
 
             // ...
-            BACKGROUND_CONTEXT.fillStyle = BACKGROUND_CONTEXT.createLinearGradient(comet.origin.x, comet.origin.y, comet.position.x, comet.position.y);
-            comet.origin.x              -= cometLengthMaximum < cometLength.x || cometLengthMaximum < cometLength.y ? cometSpeed.x : 0;
-            comet.origin.y              += cometLengthMaximum < cometLength.x || cometLengthMaximum < cometLength.y ? cometSpeed.y : 0;
-            comet.position.x            -= cometSpeed.x;
-            comet.position.y            += cometSpeed.y;
+            if ((BACKGROUND_ELEMENT.width <= star.position.x || star.position.x <= 0.0) || (BACKGROUND_ELEMENT.height <= star.position.y || star.position.y <= 0.0)) {
+              stars[index] = stars[stars.length - 1];
+              stars.length--
+            }
+
+            else {
+              star.ripple.x                = STAR_RIPPLE_FALLOFF <= Math.abs(star.ripple.x) ? star.ripple.x - (STAR_RIPPLE_FALLOFF * (star.ripple.x > -0.0 ? +1 : -1)) : 0.0;
+              star.ripple.y                = STAR_RIPPLE_FALLOFF <= Math.abs(star.ripple.y) ? star.ripple.y - (STAR_RIPPLE_FALLOFF * (star.ripple.y > -0.0 ? +1 : -1)) : 0.0;
+              star.pulse                   = (star.pulse + (STAR_PULSE_SPEED * Math.random())) % 1.0;
+              star.position.x             += (star.ripple.x ? Math.abs(star.direction.x) < Math.abs(star.ripple.x) ? star.ripple.x : (star.direction.x + star.ripple.x) / 2.0 : star.direction.x) * (star.speed.x * (((Math.abs(star.position.x - (BACKGROUND_ELEMENT.width  / 2.0)) / BACKGROUND_ELEMENT.width)  * 20.0) + 1.0));
+              star.position.y             += (star.ripple.y ? Math.abs(star.direction.y) < Math.abs(star.ripple.y) ? star.ripple.y : (star.direction.y + star.ripple.y) / 2.0 : star.direction.y) * (star.speed.y * (((Math.abs(star.position.y - (BACKGROUND_ELEMENT.height / 2.0)) / BACKGROUND_ELEMENT.height) * 20.0) + 1.0));
+              BACKGROUND_CONTEXT.fillStyle = colorRGBAToString(starColor, STAR_PULSE_MINIMUM + ((star.pulse > 0.5 ? 1.0 - star.pulse : star.pulse) * (1.0 - STAR_PULSE_MINIMUM) * 2.0));
+
+              BACKGROUND_CONTEXT.beginPath();
+              BACKGROUND_CONTEXT.moveTo   (star.position.x, star.position.y);
+              BACKGROUND_CONTEXT.arc      (Math.floor(star.position.x), Math.floor(star.position.y), star.size, 0.0, MATH_TAU, false);
+              BACKGROUND_CONTEXT.closePath();
+              BACKGROUND_CONTEXT.fill     ()
+            }
+          }
+
+          // ... ->> Planetoids (rippled in the dark)
+          for (var index = planetoids.length; index--; ) {
+            var planetoid       = planetoids[index];
+            var planetoidRadius = planetoid.size / 2.0;
 
             // ...
-            BACKGROUND_CONTEXT.fillStyle.addColorStop(0.0, colorRGBAToString(cometColor, 0.0));
-            BACKGROUND_CONTEXT.fillStyle.addColorStop(1.0, colorRGBAToString(cometColor, 0.6));
+            planetoid.position.x = BACKGROUND_ELEMENT.width > planetoid.position.x - planetoidRadius ? planetoid.position.x + (BACKGROUND_ELEMENT.width * planetoid.speed) : -planetoidRadius;
+            planetoid.ripple     = Math.max(planetoid.ripple - PLANETOID_RIPPLE_FALLOFF, 0.0)
+          }
+
+          for (var index = planetoids.length; index--; ) {
+            var planetoid = planetoids[index];
+
+            // ... ->> Back-lighting
+            if (planetoid.ripple) {
+              var planetoidRadius   = planetoid.size / 2.0;
+              var rippleAngle       = Math.atan2(ripplePosition.y - planetoid.position.y, ripplePosition.x - planetoid.position.x) + MATH_PI; // ->> ∠ radians
+              var rippleAngleCosine = Math.cos(rippleAngle);
+              var rippleAngleSine   = Math.sin(rippleAngle);
+              var rippleCastLength  = Math.max(BACKGROUND_ELEMENT.height, BACKGROUND_ELEMENT.width);
+              var rippleCastPoints  = [{x: 0, y: -planetoidRadius}, {x: 0, y: +planetoidRadius}, {x: rippleCastLength, y: +planetoidRadius * 6.0}, {x: rippleCastLength, y: -planetoidRadius * 6.0}];
+
+              // ...
+              BACKGROUND_CONTEXT.fillStyle = colorRGBAToString(planetoidRippleColor, planetoid.ripple * 0.4);
+
+              BACKGROUND_CONTEXT.beginPath();
+              BACKGROUND_CONTEXT.moveTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[0].x) - (rippleAngleSine * rippleCastPoints[0].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[0].x) + (rippleAngleCosine * rippleCastPoints[0].y));
+              BACKGROUND_CONTEXT.lineTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[1].x) - (rippleAngleSine * rippleCastPoints[1].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[1].x) + (rippleAngleCosine * rippleCastPoints[1].y));
+              BACKGROUND_CONTEXT.lineTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[2].x) - (rippleAngleSine * rippleCastPoints[2].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[2].x) + (rippleAngleCosine * rippleCastPoints[2].y));
+              BACKGROUND_CONTEXT.lineTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[3].x) - (rippleAngleSine * rippleCastPoints[3].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[3].x) + (rippleAngleCosine * rippleCastPoints[3].y));
+              BACKGROUND_CONTEXT.closePath();
+              BACKGROUND_CONTEXT.fill     ()
+            }
+          }
+
+          for (var index = planetoids.length; index--; ) {
+            var planetoid       = planetoids[index];
+            var planetoidRadius = planetoid.size / 2.0;
+
+            // ... ->> Body
+            BACKGROUND_CONTEXT.fillStyle                = "rgba(255, 255, 255, 1.0)";
+            BACKGROUND_CONTEXT.globalCompositeOperation = "destination-out";
 
             BACKGROUND_CONTEXT.beginPath();
-            BACKGROUND_CONTEXT.moveTo   (Math.floor(comet.origin  .x), Math.floor(comet.origin  .y));
-            BACKGROUND_CONTEXT.arc      (Math.floor(comet.position.x), Math.floor(comet.position.y), COMET_SIZE, cometAngle - MATH_ETA - cometTangentAngle, cometAngle + MATH_ETA + cometTangentAngle, false);
+            BACKGROUND_CONTEXT.moveTo   (planetoid.position.x + planetoidRadius, planetoid.position.y);
+            BACKGROUND_CONTEXT.arc      (Math.floor(planetoid.position.x), Math.floor(planetoid.position.y), planetoidRadius, 0.0, MATH_TAU, false);
             BACKGROUND_CONTEXT.closePath();
             BACKGROUND_CONTEXT.fill     ();
 
-            BACKGROUND_CONTEXT.beginPath();
-            BACKGROUND_CONTEXT.moveTo   (comet.position.x, comet.position.y);
-            BACKGROUND_CONTEXT.arc      (Math.floor(comet.position.x), Math.floor(comet.position.y), Math.ceil(COMET_SIZE * 0.65), 0.0, MATH_TAU, false);
-            BACKGROUND_CONTEXT.closePath();
-            BACKGROUND_CONTEXT.fill     ()
+            // ... ->> Raycast
+            BACKGROUND_CONTEXT.globalCompositeOperation = "source-over";
+
+            if (planetoid.ripple) {
+              var ripple                      = planetoid.ripple * planetoidRadius;
+              var rippleAngle                 = Math.atan2(ripplePosition.y - planetoid.position.y, ripplePosition.x - planetoid.position.x); // ->> ∠ radians
+              var rippleContactCirclePosition = {x: planetoid.position.x - (ripple * Math.cos(rippleAngle) * 1.0), y: planetoid.position.y - (ripple * Math.sin(rippleAngle) * 1.0)};
+              var rippleMidpoint              = {x: planetoid.position.x - (ripple * Math.cos(rippleAngle) * 0.5), y: planetoid.position.y - (ripple * Math.sin(rippleAngle) * 0.5)}; // ->> Midpoint between `.position` and `rippleContactCirclePosition`
+              var rippleMidpointDistance      = Math.sqrt(Math.pow(planetoidRadius, 2) - (Math.pow(ripple, 2) * 0.25));
+              var rippleIntersections         = [
+                {x: rippleMidpoint.x - (rippleMidpointDistance * +Math.sin(rippleAngle)), y: rippleMidpoint.y - (rippleMidpointDistance * -Math.cos(rippleAngle))},
+                {x: rippleMidpoint.x + (rippleMidpointDistance * +Math.sin(rippleAngle)), y: rippleMidpoint.y + (rippleMidpointDistance * -Math.cos(rippleAngle))}
+              ];
+
+              // ...
+              BACKGROUND_CONTEXT.fillStyle = BACKGROUND_CONTEXT.createLinearGradient(planetoid.position.x, planetoid.position.y, planetoid.position.x + (planetoidRadius * Math.cos(rippleAngle)), planetoid.position.y + (planetoidRadius * Math.sin(rippleAngle)));
+
+              // ...
+              BACKGROUND_CONTEXT.fillStyle.addColorStop(0.00, colorRGBAToString(planetoidRippleColor, 0.0));
+              BACKGROUND_CONTEXT.fillStyle.addColorStop(1.00, colorRGBAToString(planetoidRippleColor, 0.4));
+
+              BACKGROUND_CONTEXT.beginPath();
+              BACKGROUND_CONTEXT.moveTo   (planetoid.position.x, planetoid.position.y);
+              BACKGROUND_CONTEXT.arc      (planetoid.position.x,          planetoid.position.y,          planetoidRadius, Math.atan2(rippleIntersections[1].y - planetoid.position.y,          rippleIntersections[1].x - planetoid.position.x),          Math.atan2(rippleIntersections[0].y - planetoid.position.y,          rippleIntersections[0].x - planetoid.position.x),          false);
+              BACKGROUND_CONTEXT.arc      (rippleContactCirclePosition.x, rippleContactCirclePosition.y, planetoidRadius, Math.atan2(rippleIntersections[0].y - rippleContactCirclePosition.y, rippleIntersections[0].x - rippleContactCirclePosition.x), Math.atan2(rippleIntersections[1].y - rippleContactCirclePosition.y, rippleIntersections[1].x - rippleContactCirclePosition.x), true);
+              BACKGROUND_CONTEXT.fill     ();
+              BACKGROUND_CONTEXT.closePath()
+            }
           }
-        }
 
-        // ... ->> Stars
-        for (var index = stars.length; index--; ) {
-          var star = stars[index];
-
-          // ...
-          if ((BACKGROUND_ELEMENT.width <= star.position.x || star.position.x <= 0.0) || (BACKGROUND_ELEMENT.height <= star.position.y || star.position.y <= 0.0)) {
-            stars[index] = stars[stars.length - 1];
-            stars.length--
-          }
-
-          else {
-            star.ripple.x                = STAR_RIPPLE_FALLOFF <= Math.abs(star.ripple.x) ? star.ripple.x - (STAR_RIPPLE_FALLOFF * (star.ripple.x > -0.0 ? +1 : -1)) : 0.0;
-            star.ripple.y                = STAR_RIPPLE_FALLOFF <= Math.abs(star.ripple.y) ? star.ripple.y - (STAR_RIPPLE_FALLOFF * (star.ripple.y > -0.0 ? +1 : -1)) : 0.0;
-            star.pulse                   = (star.pulse + (STAR_PULSE_SPEED * Math.random())) % 1.0;
-            star.position.x             += (star.ripple.x ? Math.abs(star.direction.x) < Math.abs(star.ripple.x) ? star.ripple.x : (star.direction.x + star.ripple.x) / 2.0 : star.direction.x) * (star.speed.x * (((Math.abs(star.position.x - (BACKGROUND_ELEMENT.width  / 2.0)) / BACKGROUND_ELEMENT.width)  * 20.0) + 1.0));
-            star.position.y             += (star.ripple.y ? Math.abs(star.direction.y) < Math.abs(star.ripple.y) ? star.ripple.y : (star.direction.y + star.ripple.y) / 2.0 : star.direction.y) * (star.speed.y * (((Math.abs(star.position.y - (BACKGROUND_ELEMENT.height / 2.0)) / BACKGROUND_ELEMENT.height) * 20.0) + 1.0));
-            BACKGROUND_CONTEXT.fillStyle = colorRGBAToString(starColor, STAR_PULSE_MINIMUM + ((star.pulse > 0.5 ? 1.0 - star.pulse : star.pulse) * (1.0 - STAR_PULSE_MINIMUM) * 2.0));
-
-            BACKGROUND_CONTEXT.beginPath();
-            BACKGROUND_CONTEXT.moveTo   (star.position.x, star.position.y);
-            BACKGROUND_CONTEXT.arc      (Math.floor(star.position.x), Math.floor(star.position.y), star.size, 0.0, MATH_TAU, false);
-            BACKGROUND_CONTEXT.closePath();
-            BACKGROUND_CONTEXT.fill     ()
-          }
-        }
-
-        // ... ->> Planetoids (rippled in the dark)
-        for (var index = planetoids.length; index--; ) {
-          var planetoid       = planetoids[index];
-          var planetoidRadius = planetoid.size / 2.0;
-
-          // ...
-          planetoid.position.x = BACKGROUND_ELEMENT.width > planetoid.position.x - planetoidRadius ? planetoid.position.x + (BACKGROUND_ELEMENT.width * planetoid.speed) : -planetoidRadius;
-          planetoid.ripple     = Math.max(planetoid.ripple - PLANETOID_RIPPLE_FALLOFF, 0.0)
-        }
-
-        for (var index = planetoids.length; index--; ) {
-          var planetoid = planetoids[index];
-
-          // ... ->> Back-lighting
-          if (planetoid.ripple) {
-            var planetoidRadius   = planetoid.size / 2.0;
-            var rippleAngle       = Math.atan2(ripplePosition.y - planetoid.position.y, ripplePosition.x - planetoid.position.x) + MATH_PI; // ->> ∠ radians
-            var rippleAngleCosine = Math.cos(rippleAngle);
-            var rippleAngleSine   = Math.sin(rippleAngle);
-            var rippleCastLength  = Math.max(BACKGROUND_ELEMENT.height, BACKGROUND_ELEMENT.width);
-            var rippleCastPoints  = [{x: 0, y: -planetoidRadius}, {x: 0, y: +planetoidRadius}, {x: rippleCastLength, y: +planetoidRadius * 6.0}, {x: rippleCastLength, y: -planetoidRadius * 6.0}];
-
-            // ...
-            BACKGROUND_CONTEXT.fillStyle = colorRGBAToString(planetoidRippleColor, planetoid.ripple * 0.4);
-
-            BACKGROUND_CONTEXT.beginPath();
-            BACKGROUND_CONTEXT.moveTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[0].x) - (rippleAngleSine * rippleCastPoints[0].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[0].x) + (rippleAngleCosine * rippleCastPoints[0].y));
-            BACKGROUND_CONTEXT.lineTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[1].x) - (rippleAngleSine * rippleCastPoints[1].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[1].x) + (rippleAngleCosine * rippleCastPoints[1].y));
-            BACKGROUND_CONTEXT.lineTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[2].x) - (rippleAngleSine * rippleCastPoints[2].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[2].x) + (rippleAngleCosine * rippleCastPoints[2].y));
-            BACKGROUND_CONTEXT.lineTo   (planetoid.position.x + (rippleAngleCosine * rippleCastPoints[3].x) - (rippleAngleSine * rippleCastPoints[3].y), planetoid.position.y + (rippleAngleSine * rippleCastPoints[3].x) + (rippleAngleCosine * rippleCastPoints[3].y));
-            BACKGROUND_CONTEXT.closePath();
-            BACKGROUND_CONTEXT.fill     ()
-          }
-        }
-
-        for (var index = planetoids.length; index--; ) {
-          var planetoid       = planetoids[index];
-          var planetoidRadius = planetoid.size / 2.0;
-
-          // ... ->> Body
+          // ... ->> Fade out
           BACKGROUND_CONTEXT.fillStyle                = "rgba(255, 255, 255, 1.0)";
           BACKGROUND_CONTEXT.globalCompositeOperation = "destination-out";
 
           BACKGROUND_CONTEXT.beginPath();
-          BACKGROUND_CONTEXT.moveTo   (planetoid.position.x + planetoidRadius, planetoid.position.y);
-          BACKGROUND_CONTEXT.arc      (Math.floor(planetoid.position.x), Math.floor(planetoid.position.y), planetoidRadius, 0.0, MATH_TAU, false);
-          BACKGROUND_CONTEXT.closePath();
-          BACKGROUND_CONTEXT.fill     ();
-
-          // ... ->> Raycast
-          BACKGROUND_CONTEXT.globalCompositeOperation = "source-over";
-
-          if (planetoid.ripple) {
-            var ripple                      = planetoid.ripple * planetoidRadius;
-            var rippleAngle                 = Math.atan2(ripplePosition.y - planetoid.position.y, ripplePosition.x - planetoid.position.x); // ->> ∠ radians
-            var rippleContactCirclePosition = {x: planetoid.position.x - (ripple * Math.cos(rippleAngle) * 1.0), y: planetoid.position.y - (ripple * Math.sin(rippleAngle) * 1.0)};
-            var rippleMidpoint              = {x: planetoid.position.x - (ripple * Math.cos(rippleAngle) * 0.5), y: planetoid.position.y - (ripple * Math.sin(rippleAngle) * 0.5)}; // ->> Midpoint between `.position` and `rippleContactCirclePosition`
-            var rippleMidpointDistance      = Math.sqrt(Math.pow(planetoidRadius, 2) - (Math.pow(ripple, 2) * 0.25));
-            var rippleIntersections         = [
-              {x: rippleMidpoint.x - (rippleMidpointDistance * +Math.sin(rippleAngle)), y: rippleMidpoint.y - (rippleMidpointDistance * -Math.cos(rippleAngle))},
-              {x: rippleMidpoint.x + (rippleMidpointDistance * +Math.sin(rippleAngle)), y: rippleMidpoint.y + (rippleMidpointDistance * -Math.cos(rippleAngle))}
-            ];
-
-            // ...
-            BACKGROUND_CONTEXT.fillStyle = BACKGROUND_CONTEXT.createLinearGradient(planetoid.position.x, planetoid.position.y, planetoid.position.x + (planetoidRadius * Math.cos(rippleAngle)), planetoid.position.y + (planetoidRadius * Math.sin(rippleAngle)));
-
-            // ...
-            BACKGROUND_CONTEXT.fillStyle.addColorStop(0.00, colorRGBAToString(planetoidRippleColor, 0.0));
-            BACKGROUND_CONTEXT.fillStyle.addColorStop(1.00, colorRGBAToString(planetoidRippleColor, 0.4));
-
-            BACKGROUND_CONTEXT.beginPath();
-            BACKGROUND_CONTEXT.moveTo   (planetoid.position.x, planetoid.position.y);
-            BACKGROUND_CONTEXT.arc      (planetoid.position.x,          planetoid.position.y,          planetoidRadius, Math.atan2(rippleIntersections[1].y - planetoid.position.y,          rippleIntersections[1].x - planetoid.position.x),          Math.atan2(rippleIntersections[0].y - planetoid.position.y,          rippleIntersections[0].x - planetoid.position.x),          false);
-            BACKGROUND_CONTEXT.arc      (rippleContactCirclePosition.x, rippleContactCirclePosition.y, planetoidRadius, Math.atan2(rippleIntersections[0].y - rippleContactCirclePosition.y, rippleIntersections[0].x - rippleContactCirclePosition.x), Math.atan2(rippleIntersections[1].y - rippleContactCirclePosition.y, rippleIntersections[1].x - rippleContactCirclePosition.x), true);
-            BACKGROUND_CONTEXT.fill     ();
-            BACKGROUND_CONTEXT.closePath()
-          }
+          BACKGROUND_CONTEXT.ellipse  (Math.floor(BACKGROUND_ELEMENT.width / 2.0), BACKGROUND_ELEMENT.height, BACKGROUND_ELEMENT.width / 2.0, BACKGROUND_ELEMENT.height * 0.2, 0.0, 0.0, MATH_TAU, false);
+          BACKGROUND_CONTEXT.fill     ()
         }
-
-        // ... ->> Fade out
-        BACKGROUND_CONTEXT.fillStyle                = "rgba(255, 255, 255, 1.0)";
-        BACKGROUND_CONTEXT.globalCompositeOperation = "destination-out";
-
-        BACKGROUND_CONTEXT.beginPath();
-        BACKGROUND_CONTEXT.ellipse  (Math.floor(BACKGROUND_ELEMENT.width / 2.0), BACKGROUND_ELEMENT.height, BACKGROUND_ELEMENT.width / 2.0, BACKGROUND_ELEMENT.height * 0.2, 0.0, 0.0, MATH_TAU, false);
-        BACKGROUND_CONTEXT.fill     ()
       })
     }
   }
