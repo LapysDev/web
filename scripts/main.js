@@ -1,10 +1,10 @@
 /* Namespace > ... */
-var Animate    = {all: [],   attributeName: "data-:animate", magnify: {animated: [], observed: []}, main: nop,                                                        tagNames: ['*'], tilt3D: {angle: /* ->> ° degrees */ 1.0, maximumDownscaleAdjustment: /* --> percent % */ 0.025, maximumOriginDistance: Math.SQRT2 || Math.sqrt(2.0), x: 0.0, y: 0.0},                                                                                                                                                                                                '__proto__': null};
-var Lazy       = {all: null, attributeName: "data-:lazy", awaiting: null, awaitingTimeout: null,    main: nop, next: nop, observer: null, observed: [], prompted: [], tagNames: ["embed", "iframe", "img", "input", "link", "object", "script", "source", "track", "video"], threshold: 0.0,                                                                                                                                                                                                                                                                '__proto__': null}; // ->> Considered `https://github.com/whatwg/html/issues/2271` for underscore attributes
-var Legacy     =            {attributeName: "data-:legacy",                                                                                                           tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                                      '__proto__': null};
-var Portal     = {all: [],   attributeName: "data-:portal",                                         main: nop,                                                        tagNames: ['*' /* --> 'a', "address", 'b', "blockquote", "body", "caption", "cite", "code", "dd", "dfn", "div", "dl", "dt", "em", "form", "h1", "h2", "h3", "h4", "h5", "h6", 'i', "kbd", "li", "map", "ol", "option", 'p', "pre", 'q', "samp", "select", "small", "span", "strong", "sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "tr", "ul", "var" */], '__proto__': null}; //     — but ultimately went with `data-:` custom attribute prefix
-var Reflection =            {attributeName: "data-:reflect",                                                                                                          tagNames: [],                                                                                                                                                                                                                                                                                                                                                                         '__proto__': null};
-var Tooltip    =            {attributeName: "data-:tooltip",                                        main: nop, supported: true,                                       tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                                      '__proto__': null};
+var Animate          = {all: [],        attributeName: "data-:animate", main: nop, tagNames: ['*'],                                                                                                                                                          MAXIMUM_DOWNSCALE_ADJUSTMENT: /* --> percent % */ 0.025, MAXIMUM_ORIGIN_DISTANCE: Math.SQRT2 || Math.sqrt(2.0), magnify: {animated: [], observed: []}, tilt3D: {angle: /* ->> ° degrees */ 1.0, x: 0.0, y: 0.0}, '__proto__': null}; // ->> Considered `https://github.com/whatwg/html/issues/2271` for underscore attributes
+var Lazy             = {all: null,      attributeName: "data-:lazy",    main: nop, tagNames: ["embed", "iframe", "img", "input", "link", "object", "script", "source", "track", "video"],                                                                                                                                                                       awaiting: null, awaitingTimeout: null, next: nop, observer: null, observed: [], prompted: [], threshold: 0.0, '__proto__': null}; //     — but ultimately went with `data-:` custom attribute prefix
+var Legacy           = {all: undefined, attributeName: "data-:legacy",  main: nop, tagNames: ["html"],                                                                                                                                                                                                                                                                                                                                                                        '__proto__': null};
+var Portal           = {all: [],        attributeName: "data-:portal",  main: nop, tagNames: ['a', "address", 'b', "blockquote", "body", "caption", "cite", "code", "dd", "dfn", "div", "dl", "dt", "em", "form", "h1", "h2", "h3", "h4", "h5", "h6", 'i', "kbd", "li", "map", "ol", "option", 'p', "pre", 'q', "samp", "select", "small", "span", "strong", "sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "tr", "ul", "var"], responsive: false, '__proto__': null};
+var PortalReflection = {all: undefined, attributeName: "data-:reflect", main: nop, tagNames: [],                                                                                                                                                                                                                                                                                                                                                                              '__proto__': null};
+var Tooltip          = {all: undefined, attributeName: "data-:tooltip", main: nop, tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                          supported: true, '__proto__': null};
 
 /* Global > ... */
 function BACKGROUND_PROCEDURE() { /* Do something… */                                   BACKGROUND_PROCEDURES[BACKGROUND_PROCEDURES.index = ++BACKGROUND_PROCEDURES.index % BACKGROUND_PROCEDURES.length](); return void BACKGROUND_HANDLER(BACKGROUND_PROCEDURE) }
@@ -106,6 +106,7 @@ var MATH_SQRT3                = 97.0          / 56.0;        // --> √3
 var MATH_SQRT2                = 665857.0      / 470832.0;    // --> √2
 var MATH_RAD_TO_DEG           = 14086220220.0 / 245850922.0; // --> 180° ÷ π
 var MATH_PI                   = 245850922.0   / 78256779.0;  // ->> Archimedes’ constant
+var MATH_KAPPA                = 0.5522847498307935;          // ->> Ellipse Bézier Tangent --> ⁴⁄₃ × (√2 - 1)
 var MATH_LOG10E               = 0.4342944819032518;          // --> ㏑(e)
 var MATH_LOG2E                = 1.4426950408889634;          // --> ㏒(e)
 var MATH_LN10                 = 2.3025850929940460;          // --> ㏑(10)
@@ -1898,7 +1899,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
                           case "end":   case "jump-end": default: progress = Math.floor((progress * (functions["step"][1] - 0)) + 0.00) / (functions["step"][1] - 0)
                         }
 
-                      else if (functions["linear"] = easing.match(/^linear\(([\S\s]+)\)$/)) /* CITE (Lapys) -> https://developer.mozilla.org/docs/Web/CSS/Reference/Values/easing-function/linear */ {
+                      else if (functions["linear"] = easing.match(/^linear\(([\S\s]+)\)$/)) /* -@> https://developer.mozilla.org/docs/Web/CSS/Reference/Values/easing-function/linear */ {
                         var points = [];
                         var tokens = functions["linear"].split(/\s*,\s*/);
 
@@ -2152,7 +2153,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
             property.information = null !== value ? {layer: null, matches: true, order: 0, priority: "", specificity: null, text: null, value: value} : null
           }
 
-          // ... ->> Choose standards-default styling --- CITE (Lapys) -> https://html.spec.whatwg.org/multipage/rendering.html
+          // ... ->> Choose standards-default styling -@> https://html.spec.whatwg.org/multipage/rendering.html
           if (null === property.information) {
             var appearance = "auto";
             var charset    = ((document.characterSet || document.charset) + "").toUpperCase();
@@ -3143,7 +3144,7 @@ function getCSSStyleRules(document, strict /* = false */) {
 
       // --> CSSRule.MEDIA_RULE === CSSMediaRule::type --> @media
       case 0x04: if (typeof rule.cssRules === "object" && typeof matchMedia === "function") {
-        if (matchMedia(typeof rule.media === "object" && typeof rule.media.mediaText === "string" ? rule.media.mediaText : typeof rule.conditionText === "string" ? rule.conditionText : "all"))
+        if (matchMedia(typeof rule.media === "object" && typeof rule.media.mediaText === "string" ? rule.media.mediaText : typeof rule.conditionText === "string" ? rule.conditionText : "all").matches)
         void sheets.splice(count, 0, {containers: sheet.containers, layer: sheet.layer, rules: rule.cssRules, scopes: sheet.scopes})
       } break;
 
@@ -3229,6 +3230,8 @@ function getDocumentElements() /* ->> May or may not be live or static */ {
 }
 
 function getDocumentOrientation() {
+  if (typeof matchMedia === "function") return matchMedia("(max-aspect-ratio: 3/4), (max-width: 768px), (width <= 768px)").matches ? ORIENTATION_PORTRAIT : matchMedia("(min-aspect-ratio: 4/3), (min-width: 769px), (width > 768px)").matches ? ORIENTATION_LANDSCAPE : ORIENTATION_SQUARE;
+
   var documentBounds = getDocumentBounds();
   return documentBounds.width <= Math.min(documentBounds.height * (3.0 / 4.0), 768) ? ORIENTATION_PORTRAIT : documentBounds.height !== documentBounds.width ? ORIENTATION_LANDSCAPE : ORIENTATION_SQUARE
 }
@@ -3675,7 +3678,7 @@ Animate.main = function animateMain() {
   var scrollOffset   = getDocumentScrollOffset();
   var tilt3DOrigin   = {x: scrollOffset.x + (documentBounds.width / 2.0), y: scrollOffset.y + (documentBounds.height / 2.0)};
   var tilt3DRotation = {x: Animate.tilt3D.angle * -Animate.tilt3D.y, y: Animate.tilt3D.angle * Animate.tilt3D.y};
-  var tilt3DScale    = 1.0 - (Animate.tilt3D.maximumDownscaleAdjustment * (Math.sqrt((Animate.tilt3D.x * Animate.tilt3D.x) + (Animate.tilt3D.y * Animate.tilt3D.y)) / Animate.tilt3D.maximumOriginDistance));
+  var tilt3DScale    = 1.0 - (Animate.tilt3D.MAXIMUM_DOWNSCALE_ADJUSTMENT * (Math.sqrt((Animate.tilt3D.x * Animate.tilt3D.x) + (Animate.tilt3D.y * Animate.tilt3D.y)) / Animate.tilt3D.MAXIMUM_ORIGIN_DISTANCE));
 
   // ...
   while (Animate.magnify.animated.length)
@@ -3776,45 +3779,54 @@ Lazy.main = function lazyMain() {
     for (var index = Lazy.observed.length; index--; ) if (Lazy.awaiting === Lazy.observed[index]) { void Lazy.observed.splice(index, 1); break }
     for (var index = Lazy.prompted.length; index--; ) if (Lazy.awaiting === Lazy.prompted[index]) { void Lazy.prompted.splice(index, 1); break }
 
-    Lazy.awaiting = null;
+    Lazy.awaiting = null
   };
 
 Portal.main = function portalMain() /* ->> Static read-only reflection of target element’s DOM tree */ {
   for (var portals = getElementsByComponent(Portal), length = portals.length, index = 0; index !== length; ++index) {
-    var portalElement       = portals[index];
-    var portalTargetId      = portalElement.getAttribute(Portal.attributeName);
-    var portalTargetElement = null;
+    var portalElement  = portals[index];
+    var portalTargetId = portalElement.getAttribute(Portal.attributeName);
 
     // ...
-    if (null === portalTargetId || portalTargetId === "")
-    continue;
+    if (null !== portalTargetId && portalTargetId !== "") {
+      var portalTargetElement = getElementById(portalTargetId);
 
-    portalTargetElement = getElementById(portalTargetId);
+      // ...
+      if (Portal.responsive ? (
+        /(^|\s)landscape(\s|$)/.test(portalElement      .className) ?
+        /(^|\s)portrait(\s|$)/ .test(portalTargetElement.className) :
 
-    if (!isCSSVisible(portalElement) || isVisible(portalTargetElement)) {
-      for (var subindex = Portal.all.length; subindex--; )
-      if (Portal.all[subindex].destination === portalElement && Portal.all[subindex].source === portalTargetElement) {
-        portalTargetElement.removeAttribute(Reflection.attributeName);
+        /(^|\s)portrait(\s|$)/ .test(portalElement      .className) ?
+        /(^|\s)landscape(\s|$)/.test(portalTargetElement.className) :
 
-        for (var nodes = Portal.all.splice(subindex, 1)[0].nodes, subindex = 0; nodes.length !== subindex; ++subindex)
-        void portalTargetElement.appendChild(nodes[subindex]);
+        /(^|\s)(landscape|portrait)(\s|$)/.test(portalTargetElement.className)
+      ) : isCSSVisible(portalElement) && !isVisible(portalTargetElement)) {
+        for (var subindex = Portal.all.length; ; ) {
+          if (--subindex === -1) {
+            portalTargetElement.setAttribute(PortalReflection.attributeName, "");
 
-        break
+            for (var nodes = Portal.all[Portal.all.push({destination: portalElement, nodes: [], source: portalTargetElement}) - 1].nodes; portalTargetElement.hasChildNodes(); )
+            void nodes.push(portalElement.appendChild(portalTargetElement.firstChild));
+
+            break
+          }
+
+          if (Portal.all[subindex].source === portalTargetElement)
+          break
+        }
       }
-    }
 
-    else for (var subindex = Portal.all.length; ; ) {
-      if (--subindex === -1) {
-        portalTargetElement.setAttribute(Reflection.attributeName, "");
+      else {
+        for (var subindex = Portal.all.length; subindex--; )
+        if (Portal.all[subindex].destination === portalElement && Portal.all[subindex].source === portalTargetElement) {
+          portalTargetElement.removeAttribute(PortalReflection.attributeName);
 
-        for (var nodes = Portal.all[Portal.all.push({destination: portalElement, nodes: [], source: portalTargetElement}) - 1].nodes; portalTargetElement.hasChildNodes(); )
-        void nodes.push(portalElement.appendChild(portalTargetElement.firstChild));
+          for (var nodes = Portal.all.splice(subindex, 1)[0].nodes, subindex = 0; nodes.length !== subindex; ++subindex)
+          void portalTargetElement.appendChild(nodes[subindex]);
 
-        break
+          break
+        }
       }
-
-      if (Portal.all[subindex].source === portalTargetElement)
-      break
     }
   }
 };
@@ -3929,6 +3941,16 @@ void poll(document, "keydown", function(event) {
   }
 }, {"capture": true, "passive": true});
 
+void poll(window, "afterprint", function(_) {
+  Portal.responsive = false;
+  Portal.main()
+}, {"capture": true, "passive": true});
+
+void poll(window, "beforeprint", function(_) {
+  Portal.responsive = true;
+  Portal.main()
+}, {"capture": true, "passive": true});
+
 void poll(window, ["blur", "mouseleave"], function(_) {
   for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {
     var animateElement        = animates[index];
@@ -3981,35 +4003,37 @@ void poll(window, "load", function start(_) /* --> document.readyState === "comp
 }, {"capture": true, "once": true, "passive": true});
 
 void poll(window, "mousemove", function(event) {
-  var documentBounds = getDocumentBounds();
-  var magnifiable    = false;
-  var magnified      = false;
+  if (ORIENTATION_PORTRAIT !== getDocumentOrientation()) {
+    var documentBounds = getDocumentBounds();
+    var magnifiable    = false;
+    var magnified      = false;
 
-  // ... ->> Normalized between [-1.0, +1.0] relative to the document’s viewport
-  Animate.tilt3D.x = ((event.clientX / documentBounds.width)  - 0.5) * 2.0;
-  Animate.tilt3D.y = ((event.clientY / documentBounds.height) - 0.5) * 2.0;
+    // ... ->> Normalized between [-1.0, +1.0] relative to the document’s viewport
+    Animate.tilt3D.x = ((event.clientX / documentBounds.width)  - 0.5) * 2.0;
+    Animate.tilt3D.y = ((event.clientY / documentBounds.height) - 0.5) * 2.0;
 
-  for (var node = event.target; null !== node && node.nodeType === 0x1; node = node.parentNode)
-  if (/\bmagnify\b/.test(node.getAttribute(Animate.attributeName))) {
-    magnifiable = true;
-    break
-  }
-
-  if (magnifiable) {
-    for (var index = Animate.magnify.observed.length; index--; )
-    if (typeof event.target.contains === "function" && event.target.contains(Animate.magnify.observed[index])) {
-      magnified = true;
+    for (var node = event.target; null !== node && node.nodeType === 0x1; node = node.parentNode)
+    if (/\bmagnify\b/.test(node.getAttribute(Animate.attributeName))) {
+      magnifiable = true;
       break
     }
 
-    if (!magnified)
-    void Animate.magnify.observed.push(event.target)
-  }
+    if (magnifiable) {
+      for (var index = Animate.magnify.observed.length; index--; )
+      if (typeof event.target.contains === "function" && event.target.contains(Animate.magnify.observed[index])) {
+        magnified = true;
+        break
+      }
 
-  void waitEvery(Animate.main, 0.5e2)
+      if (!magnified)
+      void Animate.magnify.observed.push(event.target)
+    }
+
+    void waitEvery(Animate.main, 0.5e2)
+  }
 }, {"capture": true, "passive": true});
 
-void poll(window, "mousewheel", function(event) /* ->> Prevent scroll bouncing? */ {
+void poll(window, "mousewheel", function(event) /* ->> Prevent over-scroll bouncing? */ {
   for (var legacy = getElementsByComponent(Legacy), index = legacy.length; index--; )
   if (/\binternet-explorer-\d+\b/.test(legacy[index].getAttribute(Legacy.attributeName))) {
     for (var scrollingElements = [document.scrollingElement || null, document.documentElement, document.body]; scrollingElements.length; ) {

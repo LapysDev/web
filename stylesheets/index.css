@@ -19,11 +19,11 @@
     /* Background (Color, Size) */
     @keyframes background-color {
       50% {
-        -ms-filter    : "hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2)";
+        -ms-filter    : "hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)";
         -webkit-filter: hue-rotate(595deg);
-        -webkit-filter: hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2);
+        -webkit-filter: hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
         filter        : hue-rotate(595deg);
-        filter        : hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2)
+        filter        : hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)
       }
     }
 
@@ -38,18 +38,24 @@
     }
 
   /* Media > ... */
-  @media all\0, all\9 {
-    /* Background */
-    #background { background-color: #0F0F0F }
+    /* Prefers Color Scheme > Dark */
+    @media (prefers-color-scheme: dark) {
+      /* Socials > ... */
+      #background ~ #socials [alt=Email i] {
+        -ms-filter    : "grayscale(1.0) invert(1.0)";
+        -webkit-filter: grayscale(1.0) invert(1.0);
+        filter        : grayscale(1.0) invert(1.0)
+      }
+    }
 
-    /* Hero */
-    #hero, #hero * { color: #F0F0F0 }
-  }
+    /* ... */
+    @media all\0, all\9 {
+      /* Background */
+      #background { background-color: #0F0F0F }
 
-/* DOM Elements */
-  /* Pseudo > Selection */
-  ::-moz-selection { background-color: rgba(240, 240, 240, 0.5) } /* --> #F0F0F07F */
-  ::selection      { background-color: rgba(240, 240, 240, 0.5) } /* --> #F0F0F07F */
+      /* Hero */
+      #hero, #hero * { color: #F0F0F0 }
+    }
 
 /* Features */
   /* Main */
@@ -80,7 +86,7 @@
       -ms-animation-iteration-count    : infinite;
       -ms-animation-name               : background-color, background-size;
       -ms-animation-timing-function    : ease-in-out;
-      -ms-filter                       : "hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2)";
+      -ms-filter                       : "hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)";
       -o-animation-delay               : 0ms;
       -o-animation-duration            : 27000ms, 5000ms;
       -o-animation-iteration-count     : infinite;
@@ -94,11 +100,11 @@
       -webkit-animation-timing-function: ease-in-out;
       -webkit-background-size          : 100% 100%;
       -webkit-filter                   : hue-rotate(235deg);
-      -webkit-filter                   : hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2);
-      -webkit-mask-image               : -webkit-gradient(radial, center center, 0, center center, 720, from(rgba(0, 0, 0, 1.0)), to(rgba(0, 0, 0, 0.0)));
-      -webkit-mask-position            : center;
-      -webkit-mask-position-x          : center;
-      -webkit-mask-position-y          : center;
+      -webkit-filter                   : hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
+      -webkit-mask-image               : -webkit-gradient(radial, center center, 0, center center, 64, from(rgba(0, 0, 0, 0.75)), to(rgba(0, 0, 0, 0.00))), -webkit-gradient(linear, left top, left bottom, from(rgb(0, 0, 0, 0.00)), color-stop(0.2, rgb(0, 0, 0, 0.75)), to(rgb(0, 0, 0, 0.00)));
+      -webkit-mask-position            : 50% 20%;
+      -webkit-mask-position-x          : 50%;
+      -webkit-mask-position-y          : 20%;
       -webkit-mask-repeat              : no-repeat;
       -webkit-mask-size                : contain;
       animation-delay                  : 0ms;
@@ -106,26 +112,27 @@
       animation-iteration-count        : infinite;
       animation-name                   : background-color, background-size;
       animation-timing-function        : ease-in-out;
-      background-image                 :    -moz-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
-      background-image                 :     -ms-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
-      background-image                 :      -o-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
-      background-image                 :        -webkit-gradient(linear, left top, left bottom, color-stop(65%, rgba(255, 0, 0, 0.0)), color-stop(rgba(255, 0, 0, 0.1)), to(rgba(255, 0, 0, 0.0)));
-      background-image                 : -webkit-linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
-      background-image                 :         linear-gradient(                               rgba(255, 0, 0, 0.0)              65%,            rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :    -moz-linear-gradient(                                               rgba(255, 0, 0, 0.0) 65%,                rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :     -ms-linear-gradient(                                               rgba(255, 0, 0, 0.0) 65%,                rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :      -o-linear-gradient(                                               rgba(255, 0, 0, 0.0) 65%,                rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :        -webkit-gradient(linear, left top, left bottom, color-stop(65%, rgba(255, 0, 0, 0.0)), color-stop(82.5%, rgba(255, 0, 0, 0.1)), to(rgba(255, 0, 0, 0.0)));
+      background-image                 : -webkit-linear-gradient(                                               rgba(255, 0, 0, 0.0) 65%,                rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
+      background-image                 :         linear-gradient(                                               rgba(255, 0, 0, 0.0) 65%,                rgba(255, 0, 0, 0.1),     rgba(255, 0, 0, 0.0));
       background-position              : bottom;
       background-position-x            : center;
       background-position-y            : bottom;
       background-size                  : 100% 100%;
       bottom                           : 0;
       filter                           : hue-rotate(235deg);
-      filter                           : hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=100, Style=0x2);
+      filter                           : hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
       height                           : 100%;
+      image-rendering                  : optimizeSpeed; /* --> pixelated */
       left                             : 0;
       margin-left                      : auto;
       margin-right                     : auto;
-      mask                             : url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4Ij48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMSIgLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IndoaXRlIiBzdG9wLW9wYWNpdHk9IjAiIC8+PC9yYWRpYWxHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9IjEyOCIgaGVpZ2h0PSIxMjgiIGZpbGw9InVybCgjZykiIC8+PC9zdmc+DQo=);
-      mask-image                       : radial-gradient(circle, rgba(0, 0, 0, 1.0) 0%, rgba(0, 0, 0, 0.0) 100%);
-      mask-position                    : center;
+      mask                             : url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGhlaWdodD0iMTI4IiB3aWR0aD0iMTI4IiBmaWxsPSJ1cmwoI2cpIi8+PC9zdmc+DQo=), url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjU2IDEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IndoaXRlIiBzdG9wLW9wYWNpdHk9IjAiLz48c3RvcCBvZmZzZXQ9IjAuMiIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjZykiIGhlaWdodD0iMTI4IiB3aWR0aD0iMjU2Ii8+PC9zdmc+DQo=);
+      mask-image                       : radial-gradient(circle, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.00)), linear-gradient(to bottom, rgba(0, 0, 0, 0.00), rgba(0, 0, 0, 0.75) 20%, rgba(0, 0, 0, 0.00));
+      mask-position                    : 50% 20%;
       mask-repeat                      : no-repeat;
       mask-size                        : contain;
       max-width                        : 100%;
@@ -138,10 +145,126 @@
       zoom                             : 1.0
     }
 
+    /* Expertise */
+    #expertise {
+      min-height: 75vh;
+      width     : 75%
+    }
+      /* <table> */
+      #expertise table {
+        height    : 100%;
+        min-height: inherit
+      }
+
+      /* Résumé */
+      #expertise .résumé {
+        -ah-text-align            : start;
+        border-bottom-left-radius : 9px;
+        border-bottom-right-radius: 9px;
+        border-collapse           : separate;
+        border-top-left-radius    : 9px;
+        border-top-right-radius   : 9px;
+        display                   : table;
+        height                    : 100%;
+        margin-left               : auto;
+        margin-right              : auto;
+        text-align                : start;
+        width                     : 95%
+      }
+        /* <th> */
+        #expertise .résumé th {
+          -ah-text-align    : end;
+          -ah-vertical-align: bottom;
+          height            : 3.5em;
+          text-align        : end;
+          vertical-align    : bottom
+        }
+
+        #expertise .résumé.portrait th,
+        #expertise .résumé#skills   th {
+          -ah-text-align: start;
+          text-align    : start
+        }
+          /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
+          #expertise .résumé th h1,
+          #expertise .résumé th h2,
+          #expertise .résumé th h3,
+          #expertise .résumé th h4,
+          #expertise .résumé th h5,
+          #expertise .résumé th h6 {
+            -epub-text-transform: capitalize;
+            border-bottom-color : inherit;
+            border-bottom-style : dashed;
+            border-bottom-width : 2.00px;
+            border-bottom-width : 0.08em;
+            font-size           : 2em;
+            font-size           : 200%;
+            padding-bottom      : 0.5%;
+            padding-left        : 5.0%;
+            padding-right       : 5.0%;
+            padding-top         : 0.5%;
+            text-transform      : capitalize
+          }
+            /* Pseudo > After */
+            #expertise .résumé th h1::after,
+            #expertise .résumé th h2::after,
+            #expertise .résumé th h3::after,
+            #expertise .résumé th h4::after,
+            #expertise .résumé th h5::after,
+            #expertise .résumé th h6::after {
+              -ah-text-align            : center;
+              border: 1px solid red;
+              border-bottom-left-radius : 50%;
+              border-bottom-right-radius: 50%;
+              border-top-left-radius    : 50%;
+              border-top-right-radius   : 50%;
+              content                   : ".";
+              float                     : left;
+              height                    : 1.5em;
+              text-align                : center;
+              transform                 : translate(0px, 0.65em);
+              width                     : 1.5em
+            }
+
+            #expertise .résumé.portrait th h1::after,
+            #expertise .résumé.portrait th h2::after,
+            #expertise .résumé.portrait th h3::after,
+            #expertise .résumé.portrait th h4::after,
+            #expertise .résumé.portrait th h5::after,
+            #expertise .résumé.portrait th h6::after,
+            #expertise .résumé#skills   th h1::after,
+            #expertise .résumé#skills   th h2::after,
+            #expertise .résumé#skills   th h3::after,
+            #expertise .résumé#skills   th h4::after,
+            #expertise .résumé#skills   th h5::after,
+            #expertise .résumé#skills   th h6::after { float: right }
+
+    /* Expertise, Socials */
+      /* Resume, Social */
+      #expertise .résumé,
+      #socials   .social {
+        border-bottom-color: rgba(127, 127, 127, 0.65);
+        border-bottom-style: solid;
+        border-bottom-width: 1.00px;
+        border-bottom-width: 0.05em;
+        border-left-color  : rgba(127, 127, 127, 0.65);
+        border-left-style  : solid;
+        border-left-width  : 1.00px;
+        border-left-width  : 0.05em;
+        border-right-color : rgba(127, 127, 127, 0.65);
+        border-right-style : solid;
+        border-right-width : 1.00px;
+        border-right-width : 0.05em;
+        border-top-color   : rgba(127, 127, 127, 0.65);
+        border-top-style   : solid;
+        border-top-width   : 1.00px;
+        border-top-width   : 0.05em
+      }
+
     /* Hero */
     #hero {
-      height     : 85%;
-      height     : 85vh;
+      height     : 83.5%;
+      height     : 83.5vh;
       padding-top: 5%
     }
       /* Button */
@@ -152,8 +275,6 @@
         margin-right : 0.75em;
         margin-top   : 1.00em
       }
-
-      #hero .portrait .button { font-size: 70% }
         /* All */
         #hero .button svg|* { stroke: currentColor }
 
@@ -196,10 +317,14 @@
             width                            : 40%;
             will-change                      : transform, translate, -ah-transform, -ms-transform, -o-transform, -webkit-transform
           }
-
-          #avatar, #avatar img { min-width: 200px }
             /* <img> */
-            #avatar img { width: 100% }
+            #avatar img {
+              max-height: 50vw;
+              max-width : 50vw;
+              min-height: 200px;
+              min-width : 200px;
+              width     : 100%
+            }
 
           /* Subtitle, Title */
           #subtitle, #title, [data-\:portal=title] {
@@ -208,19 +333,27 @@
           }
 
           /* Title */
-          #title {
-            -ah-text-align: right;
-            padding-right : 15%;
-            text-align    : right
+          #title, [data-\:portal=title] {
+            -webkit-text-stroke-width: 2.5px;
+            -webkit-text-stroke-width: 0.5vmin;
+            font-weight              : 900
           }
 
-          #title                        { font-size  : 500% }
-          #title, [data-\:portal=title] { font-weight: 900 }
-          [data-\:portal=title]         { font-size  : 300% }
+          #title {
+            -ah-text-align: right;
+            color         : #F0F0F0;
+            font-size     : 500%;
+            padding-right : 15%;
+            text-align    : right;
+            text-shadow   : 0 0 2px #000000
+          }
+
+          [data-\:portal=title] { font-size: 500% }
             /* All */
-            #title *, [data-\:portal=title] * {
-              -webkit-text-stroke-width: 2.5px !important;
-              -webkit-text-stroke-width: 2.5px;
+            #title                *,
+            [data-\:portal=title] * {
+              -webkit-text-stroke-width: inherit;
+              color                    : inherit;
               font-weight              : inherit;
               margin                   : 0
             }
@@ -231,6 +364,8 @@
               font-size                : 50%;
               font-weight              : normal
             }
+
+            #hero .portrait #subtitle { font-size: 40% }
               /* Pseudo > After */
               #subtitle::after {
                 -moz-transition-property   : font-size, opacity;
@@ -279,25 +414,36 @@
       text-align    : center
     }
 
+    /* Projects */
+    #projects {
+      /*background-image:    -moz-radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
+      /*background-image:     -ms-radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
+      /*background-image:      -o-radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
+      /*background-image:        -webkit-gradient(radial, center center, 0, center center, 720, from(rgba(0, 0, 0, 0.0)), to(rgba(0, 0, 0, 0.3)));*/
+      /*background-image: -webkit-radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
+      /*background-image:         radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
+    }
+
     /* Socials */
     #socials {
-      display  : table;
-      height   : 15%;
-      height   : 15vh;
-      min-width: 320px;
-      width    : 70%
+      -ms-overflow-x     : visible;
+      -webkit-box-sizing : border-box;
+      border-bottom-color: transparent;
+      border-bottom-style: solid;
+      border-bottom-width: 8.5vh;
+      box-sizing         : border-box;
+      display            : table;
+      height             : 16.5%;
+      height             : 16.5vh;
+      min-width          : 320px;
+      overflow-x         : visible;
+      width              : 70%
     }
       /* All */
       #socials * {
         -ah-vertical-align: middle;
         display           : table-cell;
         vertical-align    : middle
-      }
-
-      #background ~ #socials [alt=Email i] {
-        -ms-filter    : "invert(1)";
-        -webkit-filter: invert(1);
-        filter        : invert(1)
       }
 
       /* <tbody> */
@@ -333,23 +479,11 @@
         -webkit-border-top-right-radius   : 50%;
         -webkit-transition-duration       : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
         -webkit-transition-property       : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
-        border-bottom-color               : rgba(127, 127, 127, 0.5);
         border-bottom-left-radius         : 50%;
         border-bottom-right-radius        : 50%;
-        border-bottom-style               : solid;
-        border-bottom-width               : 1px;
         border-collapse                   : separate;
-        border-left-color                 : rgba(127, 127, 127, 0.5);
-        border-left-style                 : solid;
-        border-left-width                 : 1px;
-        border-right-color                : rgba(127, 127, 127, 0.5);
-        border-right-style                : solid;
-        border-right-width                : 1px;
-        border-top-color                  : rgba(127, 127, 127, 0.5);
         border-top-left-radius            : 50%;
         border-top-right-radius           : 50%;
-        border-top-style                  : solid;
-        border-top-width                  : 1px;
         display                           : inline-table;
         font-size                         : 200%;
         height                            : 2.00em;
@@ -367,18 +501,17 @@
         width                             : 2.00em
       }
 
-      #socials .social[data-\:animated~=magnify] { scale    : 1.1 }
-      #socials .portrait .social                 { font-size: 165% }
+      #socials .social[data-\:animated~=magnify] { scale: 1.1 }
         /* All */
         #socials .social * { display: initial }
 
         /* Pseudo */
           /* Focus */
           #socials .social:focus /* ->> Ensures `[alt=Email i]` displays its border */ {
-            border-bottom-color: #F0F0F0 !important;
-            border-left-color  : #F0F0F0 !important;
-            border-right-color : #F0F0F0 !important;
-            border-top-color   : #F0F0F0 !important
+            border-bottom-color: light-dark(#3F3F3F, #F0F0F0) !important;
+            border-left-color  : light-dark(#3F3F3F, #F0F0F0) !important;
+            border-right-color : light-dark(#3F3F3F, #F0F0F0) !important;
+            border-top-color   : light-dark(#3F3F3F, #F0F0F0) !important
           }
 
           /* Focus, Hover */

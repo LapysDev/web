@@ -64,6 +64,7 @@ var Lapys = (function(description, version) {
 
 /* Namespace > ... */
 if (false) {
+  // "toString" in {__proto__: null}
   var Console = {
     print: null
   };
