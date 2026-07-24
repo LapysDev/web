@@ -145,6 +145,12 @@
       zoom                             : 1.0
     }
 
+    /* Background, Hero */
+    #background, #hero {
+      min-height: 55em;
+      min-height: 550px
+    }
+
     /* Expertise */
     #expertise {
       min-height: 75vh;
@@ -175,7 +181,8 @@
         #expertise .résumé th {
           -ah-text-align    : end;
           -ah-vertical-align: bottom;
-          height            : 3.5em;
+          height            : 3.50em;
+          padding-bottom    : 1.65em;
           text-align        : end;
           vertical-align    : bottom
         }
@@ -202,7 +209,7 @@
             padding-bottom      : 0.5%;
             padding-left        : 5.0%;
             padding-right       : 5.0%;
-            padding-top         : 0.5%;
+            padding-top         : 1.5%;
             text-transform      : capitalize
           }
             /* Pseudo > After */
@@ -212,17 +219,39 @@
             #expertise .résumé th h4::after,
             #expertise .résumé th h5::after,
             #expertise .résumé th h6::after {
+              /* TODO (Lapys) -> Make this an actual element (oof) */
               -ah-text-align            : center;
-              border: 1px solid red;
+              -ah-transform             : translate(0px, 0.3em);
+              -ms-transform             : translate(0px, 0.3em);
+              -o-transform              : translate(0px, 0.3em);
+              -webkit-transform         : translate(0px, 0.3em);
+              background-color          : #7F7F7F;
+              background-image          : attr(data-\:bruh);
+              border-bottom-color       : inherit;
               border-bottom-left-radius : 50%;
               border-bottom-right-radius: 50%;
+              border-bottom-style       : solid;
+              border-bottom-width       : 1px;
+              border-left-color         : inherit;
+              border-left-style         : solid;
+              border-left-width         : 1px;
+              border-right-color        : inherit;
+              border-right-style        : solid;
+              border-right-width        : 1px;
+              border-top-color          : inherit;
               border-top-left-radius    : 50%;
               border-top-right-radius   : 50%;
-              content                   : ".";
+              border-top-style          : solid;
+              border-top-width          : 1px;
+              content                   : "";
+              display                   : inline-block;
               float                     : left;
               height                    : 1.5em;
+              left                      : 0;
+              line-height               : 0;
               text-align                : center;
-              transform                 : translate(0px, 0.65em);
+              transform                 : translate(0px, 0.3em);
+              translate                 : none;
               width                     : 1.5em
             }
 
@@ -237,29 +266,37 @@
             #expertise .résumé#skills   th h3::after,
             #expertise .résumé#skills   th h4::after,
             #expertise .résumé#skills   th h5::after,
-            #expertise .résumé#skills   th h6::after { float: right }
+            #expertise .résumé#skills   th h6::after {
+              float: right;
+              left : auto;
+              right: 0
+            }
 
-    /* Expertise, Socials */
-      /* Resume, Social */
-      #expertise .résumé,
-      #socials   .social {
-        border-bottom-color: rgba(127, 127, 127, 0.65);
-        border-bottom-style: solid;
-        border-bottom-width: 1.00px;
-        border-bottom-width: 0.05em;
-        border-left-color  : rgba(127, 127, 127, 0.65);
-        border-left-style  : solid;
-        border-left-width  : 1.00px;
-        border-left-width  : 0.05em;
-        border-right-color : rgba(127, 127, 127, 0.65);
-        border-right-style : solid;
-        border-right-width : 1.00px;
-        border-right-width : 0.05em;
-        border-top-color   : rgba(127, 127, 127, 0.65);
-        border-top-style   : solid;
-        border-top-width   : 1.00px;
-        border-top-width   : 0.05em
-      }
+    /* (Expertise, Socials) > ... */
+    #expertise .résumé,
+    #socials   .social {
+      border-bottom-style: solid;
+      border-left-style  : solid;
+      border-right-style : solid;
+      border-top-style   : solid
+    }
+
+    #expertise .résumé,
+    #expertise .résumé *,
+    #socials   .social {
+      border-bottom-color: rgba(127, 127, 127, 0.65);
+      border-bottom-width: 1.00px;
+      border-bottom-width: 0.05em;
+      border-left-color  : rgba(127, 127, 127, 0.65);
+      border-left-width  : 1.00px;
+      border-left-width  : 0.05em;
+      border-right-color : rgba(127, 127, 127, 0.65);
+      border-right-width : 1.00px;
+      border-right-width : 0.05em;
+      border-top-color   : rgba(127, 127, 127, 0.65);
+      border-top-width   : 1.00px;
+      border-top-width   : 0.05em
+    }
 
     /* Hero */
     #hero {
@@ -275,6 +312,8 @@
         margin-right : 0.75em;
         margin-top   : 1.00em
       }
+
+      #hero .portrait .button { font-size: 145% }
         /* All */
         #hero .button svg|* { stroke: currentColor }
 
@@ -315,7 +354,7 @@
             padding-left                     : 5%;
             padding-right                    : 5%;
             width                            : 40%;
-            will-change                      : transform, translate, -ah-transform, -ms-transform, -o-transform, -webkit-transform
+            /* will-change: transform, translate, -ah-transform, -ms-transform, -o-transform, -webkit-transform */
           }
             /* <img> */
             #avatar img {
@@ -341,11 +380,10 @@
 
           #title {
             -ah-text-align: right;
-            color         : #F0F0F0;
             font-size     : 500%;
             padding-right : 15%;
             text-align    : right;
-            text-shadow   : 0 0 2px #000000
+            text-shadow   : 0 0 1px #000000
           }
 
           [data-\:portal=title] { font-size: 500% }
@@ -360,7 +398,7 @@
 
             /* Subtitle */
             #subtitle {
-              -webkit-text-stroke-width: 0 !important;
+              -webkit-text-stroke-width: 0;
               font-size                : 50%;
               font-weight              : normal
             }
@@ -383,6 +421,8 @@
                 transition-property        : font-size, opacity;
                 transition-timing-function : linear
               }
+
+              .portrait #subtitle::after { display: none }
 
               /* Hover > Pseudo > After */
               #subtitle:hover::after {
@@ -435,9 +475,10 @@
       display            : table;
       height             : 16.5%;
       height             : 16.5vh;
+      max-width          : 768px;
       min-width          : 320px;
       overflow-x         : visible;
-      width              : 70%
+      width              : 100%
     }
       /* All */
       #socials * {

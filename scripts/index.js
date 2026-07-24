@@ -96,6 +96,7 @@ if (null !== BACKGROUND_CONTEXT) {
       var COMET_SPEED                 = 30.0;
       var PLANETOID_RIPPLE_FALLOFF    = 0.005; // ->> % percent per frame
       var REEL_DARK_SCHEME            = typeof matchMedia === "function" ? matchMedia("(prefers-color-scheme: dark)") : {matches: false, onchange: null};
+      var REEL_FRAMERATE_STABLE       = 60.0;
       var STAR_COUNT_MAXIMUM          = 1200;
       var STAR_COUNT_MINIMUM          = 200;
       var STAR_PULSE_MINIMUM          = 0.10; // ->> % percent
@@ -151,7 +152,7 @@ if (null !== BACKGROUND_CONTEXT) {
 
         for (var radius = 15; radius < radiusMaximum; radius += radiusIncrement)
         for (var count = Math.ceil(MATH_PI * radius), index = count, offset = MATH_PI * Math.random(); index--; ) {
-          if (STAR_COUNT_MAXIMUM <= stars.length || (STAR_COUNT_MINIMUM < stars.length && reelTimeDelta >= 60.0 * 1.5))
+          if (STAR_COUNT_MAXIMUM <= stars.length || (STAR_COUNT_MINIMUM < stars.length && REEL_FRAMERATE_STABLE * 1.5 <= reelTimeDelta))
           return;
 
           if (Math.random() > 1.0 - (1.0 / radius)) {
@@ -175,7 +176,7 @@ if (null !== BACKGROUND_CONTEXT) {
         function createStarsAtRipplePosition() { return createStars(ripplePosition) }
 
       function rereel(darkScheme) {
-        BACKGROUND_ELEMENT.style.cssText = (!darkScheme ? "-webkit-mask-composite: source-in; mask-intersect: intersect; " : "") + BACKGROUND_ELEMENT.style.cssText.replace(/\s*\b(mask-intersect|-webkit-mask-composite)\b[^;]*(;\s*|$)/gi, "")
+        BACKGROUND_ELEMENT.style.cssText = (!darkScheme ? "-webkit-mask-composite: source-in; mask-intersect: intersect; opacity: 0.5; " : "") + BACKGROUND_ELEMENT.style.cssText.replace(/(^|;)\s*(mask-intersect|opacity|-webkit-mask-composite)\s*:\s*(([^;"']|"([^"\\]|\\.)*"|'([^'\\]|\\.)*')*)(?=;|$)/gi, "")
       }
 
       function ripplePlanetoids(force) {
@@ -270,7 +271,7 @@ if (null !== BACKGROUND_CONTEXT) {
         BACKGROUND_CONTEXT.fillRect(0, 0, BACKGROUND_ELEMENT.width, BACKGROUND_ELEMENT.height);
         rereel(REEL_DARK_SCHEME.matches);
 
-        if (ORIENTATION_LANDSCAPE === getDocumentOrientation()) {
+        if (REEL_FRAMERATE_STABLE * 2.5 > reelTimeDelta) {
           var reelFilters           = filters();
           var starColor             = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);
           var planetoidRippleColor  = colorRGBInvertFilters({red: 0xFF, green: 0xFF, blue: 0xFF}, reelFilters);

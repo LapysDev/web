@@ -90,7 +90,7 @@ var STYLE_SHORTHANDS = [
   {name: "transition",             composition: delimit("transition-property         transition-duration transition-timing-function transition-delay transition-behavior"                                                                                                                           .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
   {name: "view-timeline",          composition: delimit("view-timeline-name          view-timeline-axis  view-timeline-inset"                                                                                                                                                                       .replace(/\s+/g, ' '), /[,\/\s\0]+/g)},
   {name: "white-space",            composition: delimit("white-space-collapse        text-wrap-mode"                                                                                                                                                                                                .replace(/\s+/g, ' '), /[,\/\s\0]+/g)}
-],  STYLE_RULES               = getCSSStyleRules(document, false);
+],  STYLE_RULES               = getCSSStyleRules(null, document, false);
 var STYLE_GROUPING_PREDICATES = {container: {name: [], query: []}, layer: null, media: null, scope: [], supports: null};
 var POLLS                     = {attached: [], preventDefault: function() { this.defaultPrevented = true; this.returnValue = false }, stopImmediatePropagation: function() { this.cancelBubble = true }, stopPropagation: function() { this.cancelBubble = true }};
 var PROBE_ELEMENT             = document.createElement("canvas", {"customElementRegistry": null} /* ->> or {"is": null} */);
@@ -359,7 +359,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
 
   var document           = element.ownerDocument || (function() { return this || globalThis })().document;
   var groupingPredicates = arguments.length <= 3 || null === groupingPredicates ? {container: {name: [], query: []}, layer: null, media: null, scope: [], supports: null} : groupingPredicates;
-  var styleRules         = arguments.length <= 2 || null === styleRules         ? getCSSStyleRules(document, !!strict)                                                    : styleRules;
+  var styleRules         = arguments.length <= 2 || null === styleRules         ? getCSSStyleRules(element, document, !!strict)                                           : styleRules;
   var styleDeclaration   = getCSSStyleDeclaration(element);
 
   /* ... */
@@ -2143,7 +2143,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
           }
 
           // ... ->> Choose inline styling
-          if (null === property.information || (CSS_TRANSITION_DESCRIPTOR !== property.animation.descriptor && new RegExp("\\s*\\b" + propertyName + "\\b[^;]*!important\\s*(;\\s*|$)", "gi").test(property.element.style.cssText.replace(/\/\*[\S\s]*?\*\//g, "")))) {
+          if (null === property.information || (CSS_TRANSITION_DESCRIPTOR !== property.animation.descriptor && new RegExp("(^|;)\\s*" + propertyName + "\\s*:\\s*(([^;\"']|\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*')*)!important\\s*(?=;|$)", "gi").test(property.element.style.cssText))) {
             var value = null;
 
             // ...
@@ -3073,16 +3073,23 @@ function getCSSStyleDeclaration(element) {
   return styleDeclaration
 }
 
-function getCSSStyleRules(document, strict /* = false */) {
+function getCSSStyleRules(element, document, strict /* = false */) {
   var layers = [""]; // --> String[]
   var rules  = [];   // --> {container: {name: String, query: String}*, layer: String, layers: String[], order: Number(Uint32), scope: {end: String, start: String}*, value: CSSStyleRule}[]
   var sheets = [];   // --> {containers: {name: String, query: String}[], layer: String, rules: CSSRuleList | DOMCSSRuleList, scopes: {end: String, start: String}[]}[]
 
   // ...
-  if (typeof getMatchedCSSRules === "function")
-    sheets = [{containers: [], layer: layers[0], rules: getMatchedCSSRules(element, ""), scopes: []}]; // ->> WebKit-specific and non-canonicalized; Gecko-polyfill here: `mozGetMatchedCSSRules(…)` @ `https://gist.github.com/ydaniv/3033012`
+  if (typeof getMatchedCSSRules === "function" && null !== element) {
+    rules  = getMatchedCSSRules(element, "");
+    sheets = [{containers: [], layer: layers[0], rules: rules, scopes: []}]; // ->> WebKit-specific and non-canonicalized; Gecko-polyfill here: `mozGetMatchedCSSRules(…)` @ `https://gist.github.com/ydaniv/3033012` (`https://web.archive.org/web/20240805105725/https://gist.github.com/ydaniv/3033012`)
 
-  else {
+    if (null === rules || 0 === rules.length) {
+      rules  = [];
+      sheets = []
+    }
+  }
+
+  if (0 === sheets.length) {
     if (typeof document.adoptedStyleSheets === "object") // --> … instanceof CSSStyleSheet[]
     for (var index = document.adoptedStyleSheets.length; index; ) {
       var sheet = document.adoptedStyleSheets[--index];
@@ -3631,7 +3638,7 @@ function poll(target, types, handler, configuration) /* ->> `AbortSignal "signal
 }
 
 function probe(style) {
-  PROBE_ELEMENT.style.cssText = "animation: none !important; display: block !important; transition: none !important; -moz-animation: none !important; -moz-transition: none !important; -ms-animation: none !important; -ms-transition: none !important; -o-animation: none !important; -o-transition: none !important; -webkit-animation: none !important; -webkit-transition: none !important;" + (style ? ' ' + style : "");
+  PROBE_ELEMENT.style.cssText = "-moz-animation: none !important; -moz-transition: none !important; -ms-animation: none !important; -ms-transition: none !important; -o-animation: none !important; -o-transition: none !important; -webkit-animation: none !important; -webkit-transition: none !important; animation: none !important; display: block !important; transition: none !important;" + (style ? ' ' + style : "");
   return PROBE_ELEMENT
 }
 
@@ -3698,14 +3705,15 @@ Animate.main = function animateMain() {
   }
 
   for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {
-    var animateElement        = animates[index];
-    var animateElementPresets = animateElement.getAttribute(Animate.attributeName).split(' ');
-
-    // ...
-    while (animateElementPresets.length)
-    switch (animateElementPresets.pop()) {
+    for (var presets = animates[index].getAttribute(Animate.attributeName).split(/\s+/); presets.length; )
+    switch (presets.pop()) {
       case "magnify": break;
-      case "tilt3d": animateElement.style.cssText = "transform: perspective(1200px) rotateX(" + tilt3DRotation.x + "deg) rotateY(" + tilt3DRotation.y + "deg) scale(" + tilt3DScale + "); transform-origin: " + tilt3DOrigin.x + "px " + tilt3DOrigin.y + "px; " + animateElement.style.cssText.replace(/\s*\b(transform|transform-origin)\b[^;]*(;\s*|$)/gi, "")
+      case "tilt3d": {
+        var transform       = "perspective(1200px) rotateX(" + tilt3DRotation.x + "deg) rotateY(" + tilt3DRotation.y + "deg) scale(" + tilt3DScale + ')';
+        var transformOrigin = tilt3DOrigin.x + "px " + tilt3DOrigin.y + "px";
+
+        animates[index].style.cssText = "-ah-transform: " + transform + "; -ah-transform-origin: " + transformOrigin + "; -moz-transform-origin: " + transformOrigin + "; -ms-transform: " + transform + "; -ms-transform-origin: " + transformOrigin + "; -o-transform: " + transform + "; -o-transform-origin: " + transformOrigin + "; -webkit-transform: " + transform + "; transform: " + transform + "; transform-origin: " + transformOrigin + "; " + animates[index].style.cssText.replace(/(^|;)\s*((-ah-|-ms-|-o-|-webkit-|)transform|(-ah-|-moz-|-ms-|-o-|)transform-origin)\s*:\s*(([^;"']|"([^"\\]|\\.)*"|'([^'\\]|\\.)*')*)(?=;|$)/gi, "")
+      }
     }
   }
 };
@@ -3953,14 +3961,10 @@ void poll(window, "beforeprint", function(_) {
 
 void poll(window, ["blur", "mouseleave"], function(_) {
   for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {
-    var animateElement        = animates[index];
-    var animateElementPresets = animateElement.getAttribute(Animate.attributeName).split(' ');
-
-    // ...
-    while (animateElementPresets.length)
-    switch (animateElementPresets.pop()) {
+    for (var presets = animates[index].getAttribute(Animate.attributeName).split(/\s+/); presets.length; )
+    switch (presets.pop()) {
       case "magnify": break;
-      case "tilt3d": animateElement.style.cssText = animateElement.style.cssText.replace(/\s*\b(transform|transform-origin)\b[^;]*(;\s*|$)/gi, "")
+      case "tilt3d": animates[index].style.cssText = animates[index].style.cssText.replace(/(^|;)\s*(transform|transform-origin)\s*:\s*(([^;"']|"([^"\\]|\\.)*"|'([^'\\]|\\.)*')*)(?=;|$)/gi, "")
     }
   }
 }, {"capture": true, "passive": true});

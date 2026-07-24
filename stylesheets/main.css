@@ -376,7 +376,7 @@
     background-attachment: fixed;
     background-blend-mode: screen;
     background-clip      : border-box;
-    background-color     : rgba(3, 0, 63, 0.05);
+    background-color     : rgba(240, 240, 240, 0.50);
     background-color     : light-dark(rgba(0, 0, 0, 0.05), rgba(3, 0, 63, 0.05));
     background-image     : /* --> ../icons/…/background-pattern-2.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcAQMAAABIw03XAAAABlBMVEVHcEz///+flKJDAAAAAnRSTlMACQ9PdZwAAAAiSURBVHicncwxEQAADMLAOEBCrVY6x8xGhh8DYwr3jdYjBrX1ApuUMU0LAAAAAElFTkSuQmCC);
     background-image     : /* --> ../icons/…/background-pattern-1.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAQMAAAD58POIAAAABlBMVEVHcEwAAACfKoRRAAAAAnRSTlMACpZGJCYAAAEYSURBVHic5ZWxDcMgEEWDXLj0CIzCaDBaRmEElxQWlzgYc5+PFCtVlLjjFfAMd/9ut3/8lq0DXgKsjUgEMIsk3EIEN7EiGYATke4QwWOea7njqXjutIMVNVBk2cGGGiiya4CIf4GAGlrEFBBRQ4vMBSTU0CK2gNxpKBF/gIAaTcRUEFGjicwVJNRoIraC3GmcIv4EATWqiGkgokYVmRtIqFFFbAO50zhEvAJhCNS6mPXAaBAvgUmD9ZvBBz/3/sYu3LpTYPyU9NhUDlQwVFJUdFyWDjUGpU3FT+1BDUQtRk3IbepQY9DqFAYUFxQoFDkUShxbDjUG0UfhSPFJAUsRTCHNMe6kC3rbjwIaFjROaODQSOKh9QvfAwdMS2RFNT3zAAAAAElFTkSuQmCC);
@@ -439,11 +439,13 @@
 
   /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
   h1, h2, h3, h4, h5, h6 {
-    cursor        : default;
-    font-family   : Rajdhani, "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, sans-serif;
-    font-synthesis: small-caps style weight;
-    font-weight   : 500;
-    text-rendering: geometricPrecision
+    -webkit-text-stroke-color: transparent;
+    -webkit-text-stroke-color: light-dark(rgba(63, 63, 63, 0.25), rgba(240, 240, 240, 0.50));
+    cursor                   : default;
+    font-family              : Rajdhani, "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, sans-serif;
+    font-synthesis           : small-caps style weight;
+    font-weight              : 500;
+    text-rendering           : geometricPrecision
   }
 
   /* <h1> */
@@ -452,9 +454,6 @@
     font-weight              : bolder;
     text-shadow              : 0 0 10px rgba(0, 0, 0, 0.1)
   }
-    /* At Rules > Media > Prefers Color Scheme > (Dark, Light) */
-    @media (prefers-color-scheme: dark)  { h1, h2, h3, h4, h5, h6 { -webkit-text-stroke-color: rgba(240, 240, 240, 0.5) } }
-    @media (prefers-color-scheme: light) { h1, h2, h3, h4, h5, h6 { -webkit-text-stroke-color: rgba(63, 63, 63, 0.5) } }
 
   /* (<h1>, <h2>) > Pseudo > Selection */
   h1::-moz-selection, h2::-moz-selection { -webkit-text-stroke-width: 0; text-shadow: none }
@@ -494,6 +493,7 @@
     border-top-color           : currentColor;
     caret-color                : currentColor;
     color                      : CanvasText;
+    color                      : #3F3F3F;
     color-scheme               : light dark; /* ->> or otherwise `only dark` */
     column-rule-color          : currentColor;
     display                    : table;
@@ -542,7 +542,8 @@
   /* <html>, <input> */
   html, input {
     font-size: 16px;
-    font-size: 2vmin /* ->> Zoom-agnostic */
+    font-size: 2.5vmin;
+    font-size: max(16px, 2vmin) /* ->> Zoom-agnostic */
   }
 
   /* <input> */
@@ -718,7 +719,7 @@
       -o-transform     : scale(1.05);
       -webkit-transform: scale(1.05);
       transform        : scale(1.05);
-      will-change      : scale, transform, -ah-transform, -ms-transform, -o-transform, -webkit-transform
+      /* will-change: scale, transform, -ah-transform, -ms-transform, -o-transform, -webkit-transform */
     }
 
   /* Button */
@@ -902,7 +903,7 @@
         background                        : url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGP88AwAAswB2I5mb10AAAAASUVORK5CYII=) repeat;
         background                        : rgba(240, 240, 240, 0.9);
         background                        : light-dark(rgba(240, 240, 240, 0.6), rgba(63, 63, 63, 0.3));
-        color                             : #3F3F3F;
+        color                             : #3F3F3F                      !important;
         color                             : light-dark(#3F3F3F, #F0F0F0) !important; /* ->> Chromium? */
         transition-timing-function        : ease-in
       }
@@ -1694,7 +1695,10 @@
     /* Portrait (e.g. electronic readers, phones, smart watches, …) ->> Compact */
     @media (max-width: 768px) and (scripting: enabled), (width <= 768px) and (scripting: enabled), print {
       /* DOM Elements > (<html>, <input>) */
-      html, input { font-size: 1.1vmax }
+      html, input {
+        font-size: 1.5vmax;
+        font-size: max(1.5vmax, 2.0vmin)
+      }
 
       /* Components > (Landscape, Portrait) */
       .landscape { content-visibility: hidden;  display: none !important; empty-cells: hide; visibility: collapse }
