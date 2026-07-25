@@ -38,24 +38,44 @@
     }
 
   /* Media > ... */
-    /* Prefers Color Scheme > Dark */
-    @media (prefers-color-scheme: dark) {
-      /* Socials > ... */
-      #background ~ #socials [alt=Email i] {
-        -ms-filter    : "grayscale(1.0) invert(1.0)";
-        -webkit-filter: grayscale(1.0) invert(1.0);
-        filter        : grayscale(1.0) invert(1.0)
+    /* Prefers Color Scheme */
+      /* Dark */
+      @media (prefers-color-scheme: dark) {
+        /* Expertise > Résumé > <th> > <img> */
+        #expertise .résumé th img {
+          -ms-filter    : "brightness(0.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF)";
+          -webkit-filter: brightness(0.0) invert(1.0);
+          filter        : brightness(0.0) invert(1.0);
+          filter        : brightness(0.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF)
+        }
+
+        /* Socials > ... */
+        #background ~ #socials [alt=Email i] {
+          -ms-filter    : "grayscale(1.0) invert(1.0)";
+          -webkit-filter: grayscale(1.0) invert(1.0);
+          filter        : grayscale(1.0) invert(1.0)
+        }
       }
-    }
 
-    /* ... */
-    @media all\0, all\9 {
-      /* Background */
-      #background { background-color: #0F0F0F }
+      /* Light */
+      @media (prefers-color-scheme: light) {
+        /* Expertise > Résumé > <th> > <img> */
+        #expertise .résumé th img {
+          -ms-filter    : "brightness(0.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FF000000) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FF000000)";
+          -webkit-filter: brightness(0.0);
+          filter        : brightness(0.0);
+          filter        : brightness(0.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FF000000) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FF000000)
+        }
+      }
 
-      /* Hero */
-      #hero, #hero * { color: #F0F0F0 }
-    }
+      /* ... */
+      @media all\0, all\9 {
+        /* Background */
+        #background { background-color: #0F0F0F }
+
+        /* Hero */
+        #hero, #hero * { color: #F0F0F0 }
+      }
 
 /* Features */
   /* Main */
@@ -105,7 +125,6 @@
       -webkit-mask-position            : 50% 20%;
       -webkit-mask-position-x          : 50%;
       -webkit-mask-position-y          : 20%;
-      -webkit-mask-repeat              : no-repeat;
       -webkit-mask-size                : contain;
       animation-delay                  : 0ms;
       animation-duration               : 27000ms, 5000ms;
@@ -133,7 +152,6 @@
       mask                             : url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTI4IDEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cmFkaWFsR3JhZGllbnQgaWQ9ImciIGN4PSI1MCUiIGN5PSI1MCUiIHI9IjUwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMSIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMCIvPjwvcmFkaWFsR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGhlaWdodD0iMTI4IiB3aWR0aD0iMTI4IiBmaWxsPSJ1cmwoI2cpIi8+PC9zdmc+DQo=), url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMjU2IDEyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjAiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IndoaXRlIiBzdG9wLW9wYWNpdHk9IjAiLz48c3RvcCBvZmZzZXQ9IjAuMiIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0id2hpdGUiIHN0b3Atb3BhY2l0eT0iMCIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IGZpbGw9InVybCgjZykiIGhlaWdodD0iMTI4IiB3aWR0aD0iMjU2Ii8+PC9zdmc+DQo=);
       mask-image                       : radial-gradient(circle, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.00)), linear-gradient(to bottom, rgba(0, 0, 0, 0.00), rgba(0, 0, 0, 0.75) 20%, rgba(0, 0, 0, 0.00));
       mask-position                    : 50% 20%;
-      mask-repeat                      : no-repeat;
       mask-size                        : contain;
       max-width                        : 100%;
       object-fit                       : cover;
@@ -181,8 +199,10 @@
         #expertise .résumé th {
           -ah-text-align    : end;
           -ah-vertical-align: bottom;
-          height            : 3.50em;
-          padding-bottom    : 1.65em;
+          font-size         : 2em;
+          font-size         : 200%;
+          height            : 3.0em;
+          padding-bottom    : 0.5em;
           text-align        : end;
           vertical-align    : bottom
         }
@@ -192,6 +212,9 @@
           -ah-text-align: start;
           text-align    : start
         }
+          /* All */
+          #expertise .résumé th * { font-size: 100% }
+
           /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
           #expertise .résumé th h1,
           #expertise .résumé th h2,
@@ -199,78 +222,86 @@
           #expertise .résumé th h4,
           #expertise .résumé th h5,
           #expertise .résumé th h6 {
-            -epub-text-transform: capitalize;
-            border-bottom-color : inherit;
-            border-bottom-style : dashed;
-            border-bottom-width : 2.00px;
-            border-bottom-width : 0.08em;
-            font-size           : 2em;
-            font-size           : 200%;
-            padding-bottom      : 0.5%;
-            padding-left        : 5.0%;
-            padding-right       : 5.0%;
-            padding-top         : 1.5%;
-            text-transform      : capitalize
+            -epub-text-transform  : capitalize;
+            -webkit-mask-composite: xor;
+            -webkit-mask-image    : webkit-gradient(linear, left top, left bottom, from(#000000), to(#000000)), -webkit-gradient(radial, 10.5% bottom, 0, 10.5% bottom, 32, color-stop(0.99, rgba(0, 0, 0, 1.0)), to(rgba(0, 0, 0, 0.0)));
+            border-bottom-color   : inherit;
+            border-bottom-style   : dashed;
+            border-bottom-width   : 2.00px;
+            border-bottom-width   : 0.08em;
+            mask-composite        : exclude;
+            mask-image            : linear-gradient(#000000), radial-gradient(circle 0.875em at 10.5% bottom, rgba(0, 0, 0, 1.0) 99%, rgba(0, 0, 0, 0.0) 100%);
+            margin-bottom         : 0;
+            margin-left           : 0;
+            margin-right          : 0;
+            margin-top            : 0;
+            padding-bottom        : 0.5%;
+            padding-left          : 5.0%;
+            padding-right         : 5.0%;
+            padding-top           : 1.5%;
+            text-transform        : capitalize
           }
-            /* Pseudo > After */
-            #expertise .résumé th h1::after,
-            #expertise .résumé th h2::after,
-            #expertise .résumé th h3::after,
-            #expertise .résumé th h4::after,
-            #expertise .résumé th h5::after,
-            #expertise .résumé th h6::after {
-              /* TODO (Lapys) -> Make this an actual element (oof) */
-              -ah-text-align            : center;
-              -ah-transform             : translate(0px, 0.3em);
-              -ms-transform             : translate(0px, 0.3em);
-              -o-transform              : translate(0px, 0.3em);
-              -webkit-transform         : translate(0px, 0.3em);
-              background-color          : #7F7F7F;
-              background-image          : attr(data-\:bruh);
-              border-bottom-color       : inherit;
-              border-bottom-left-radius : 50%;
-              border-bottom-right-radius: 50%;
-              border-bottom-style       : solid;
-              border-bottom-width       : 1px;
-              border-left-color         : inherit;
-              border-left-style         : solid;
-              border-left-width         : 1px;
-              border-right-color        : inherit;
-              border-right-style        : solid;
-              border-right-width        : 1px;
-              border-top-color          : inherit;
-              border-top-left-radius    : 50%;
-              border-top-right-radius   : 50%;
-              border-top-style          : solid;
-              border-top-width          : 1px;
-              content                   : "";
-              display                   : inline-block;
-              float                     : left;
-              height                    : 1.5em;
-              left                      : 0;
-              line-height               : 0;
-              text-align                : center;
-              transform                 : translate(0px, 0.3em);
-              translate                 : none;
-              width                     : 1.5em
-            }
 
-            #expertise .résumé.portrait th h1::after,
-            #expertise .résumé.portrait th h2::after,
-            #expertise .résumé.portrait th h3::after,
-            #expertise .résumé.portrait th h4::after,
-            #expertise .résumé.portrait th h5::after,
-            #expertise .résumé.portrait th h6::after,
-            #expertise .résumé#skills   th h1::after,
-            #expertise .résumé#skills   th h2::after,
-            #expertise .résumé#skills   th h3::after,
-            #expertise .résumé#skills   th h4::after,
-            #expertise .résumé#skills   th h5::after,
-            #expertise .résumé#skills   th h6::after {
-              float: right;
-              left : auto;
-              right: 0
-            }
+          #expertise .résumé.portrait th h1,
+          #expertise .résumé.portrait th h2,
+          #expertise .résumé.portrait th h3,
+          #expertise .résumé.portrait th h4,
+          #expertise .résumé.portrait th h5,
+          #expertise .résumé.portrait th h6,
+          #expertise .résumé#skills   th h1,
+          #expertise .résumé#skills   th h2,
+          #expertise .résumé#skills   th h3,
+          #expertise .résumé#skills   th h4,
+          #expertise .résumé#skills   th h5,
+          #expertise .résumé#skills   th h6 {
+            -webkit-mask-image: webkit-gradient(linear, left top, left bottom, from(#000000), to(#000000)), -webkit-gradient(radial, 89.5% bottom, 0, 10.5% bottom, 32, color-stop(0.99, rgba(0, 0, 0, 1.0)), to(rgba(0, 0, 0, 0.0)));
+            mask-image        : linear-gradient(#000000), radial-gradient(circle 0.875em at 89.5% bottom, rgba(0, 0, 0, 1.0) 99%, rgba(0, 0, 0, 0.0) 100%);
+          }
+
+          /* <img> */
+          #expertise .résumé th img {
+            -ah-text-align            : center;
+            -webkit-box-sizing        : border-box;
+            border-bottom-color       : inherit;
+            border-bottom-left-radius : 50%;
+            border-bottom-right-radius: 50%;
+            border-bottom-style       : solid;
+            border-bottom-width       : 1px;
+            border-left-color         : inherit;
+            border-left-style         : solid;
+            border-left-width         : 1px;
+            border-right-color        : inherit;
+            border-right-style        : solid;
+            border-right-width        : 1px;
+            border-top-color          : inherit;
+            border-top-left-radius    : 50%;
+            border-top-right-radius   : 50%;
+            border-top-style          : solid;
+            border-top-width          : 1px;
+            box-sizing                : border-box;
+            display                   : inline-block;
+            float                     : left;
+            height                    : 1.750em;
+            left                      : 0;
+            line-height               : 0;
+            margin-left               : 5%;
+            margin-right              : 5%;
+            margin-top                : -0.875em;
+            padding-bottom            : 0.150em;
+            padding-left              : 0.150em;
+            padding-right             : 0.150em;
+            padding-top               : 0.150em;
+            text-align                : center;
+            translate                 : none;
+            width                     : 1.750em
+          }
+
+          #expertise .résumé.portrait th img,
+          #expertise .résumé#skills   th img {
+            float: right;
+            left : auto;
+            right: 0
+          }
 
     /* (Expertise, Socials) > ... */
     #expertise .résumé,
@@ -300,138 +331,169 @@
 
     /* Hero */
     #hero {
+      height     : 550px;
       height     : 83.5%;
       height     : 83.5vh;
       padding-top: 5%
     }
+      /* All */
+      #hero * {
+        -ah-vertical-align: bottom;
+        vertical-align    : bottom
+      }
+
       /* Button */
       #hero .button {
-        font-size    : 180%;
+        font-size    : 145%;
         margin-bottom: 1.00em;
         margin-left  : 0.75em;
         margin-right : 0.75em;
-        margin-top   : 1.00em
+        margin-top   : 1.00em;
+        min-width    : 15%
       }
-
-      #hero .portrait .button { font-size: 145% }
         /* All */
         #hero .button svg|* { stroke: currentColor }
 
       /* Region */
-        /* <table> */
-        #hero table {
-          margin-left : 10%; /* --> auto */
-          margin-right: 10%; /* --> auto */
-          width       : 80%
+        /* Identity */
+        #identity {
+          -ah-align-items        : flex-end;
+          -ah-justify-content    : flex-end;
+          -moz-box-align         : end;
+          -moz-box-pack          : end;
+          -ms-flex-align         : end;
+          -ms-flex-pack          : end;
+          -webkit-align-items    : flex-end;
+          -webkit-box-align      : end;
+          -webkit-box-pack       : end;
+          -webkit-justify-content: flex-end;
+          align-items            : flex-end;
+          display                : -moz-box;
+          display                : -ms-flexbox;
+          display                : -webkit-box;
+          display                : -webkit-flex;
+          display                : flex;
+          justify-content        : flex-end;
+          min-height             : 50%
         }
-          /* Avatar */
-          #avatar {
-            -moz-animation-delay             : 0ms;
-            -moz-animation-duration          : 3000ms;
-            -moz-animation-iteration-count   : infinite;
-            -moz-animation-name              : avatar;
-            -moz-animation-timing-function   : ease-in-out;
-            -ms-animation-delay              : 0ms;
-            -ms-animation-duration           : 3000ms;
-            -ms-animation-iteration-count    : infinite;
-            -ms-animation-name               : avatar;
-            -ms-animation-timing-function    : ease-in-out;
-            -o-animation-delay               : 0ms;
-            -o-animation-duration            : 3000ms;
-            -o-animation-iteration-count     : infinite;
-            -o-animation-name                : avatar;
-            -o-animation-timing-function     : ease-in-out;
-            -webkit-animation-delay          : 0ms;
-            -webkit-animation-duration       : 3000ms;
-            -webkit-animation-iteration-count: infinite;
-            -webkit-animation-name           : avatar;
-            -webkit-animation-timing-function: ease-in-out;
-            animation-delay                  : 0ms;
-            animation-duration               : 3000ms;
-            animation-iteration-count        : infinite;
-            animation-name                   : avatar;
-            animation-timing-function        : ease-in-out;
-            padding-left                     : 5%;
-            padding-right                    : 5%;
-            width                            : 40%;
-            /* will-change: transform, translate, -ah-transform, -ms-transform, -o-transform, -webkit-transform */
+          /* <table> */
+          #identity table {
+            -webkit-margin-before: auto; /* --> margin-block-start */
+            height               : 100.00%;
+            margin-left          : 8.25%; /* --> auto */
+            margin-right         : 8.25%; /* --> auto */
+            margin-top           : auto;
+            width                : 83.50%
           }
-            /* <img> */
-            #avatar img {
-              max-height: 50vw;
-              max-width : 50vw;
-              min-height: 200px;
-              min-width : 200px;
-              width     : 100%
+            /* Avatar */
+            #avatar {
+              -moz-animation-delay             : 0ms;
+              -moz-animation-duration          : 3000ms;
+              -moz-animation-iteration-count   : infinite;
+              -moz-animation-name              : avatar;
+              -moz-animation-timing-function   : ease-in-out;
+              -ms-animation-delay              : 0ms;
+              -ms-animation-duration           : 3000ms;
+              -ms-animation-iteration-count    : infinite;
+              -ms-animation-name               : avatar;
+              -ms-animation-timing-function    : ease-in-out;
+              -o-animation-delay               : 0ms;
+              -o-animation-duration            : 3000ms;
+              -o-animation-iteration-count     : infinite;
+              -o-animation-name                : avatar;
+              -o-animation-timing-function     : ease-in-out;
+              -webkit-animation-delay          : 0ms;
+              -webkit-animation-duration       : 3000ms;
+              -webkit-animation-iteration-count: infinite;
+              -webkit-animation-name           : avatar;
+              -webkit-animation-timing-function: ease-in-out;
+              animation-delay                  : 0ms;
+              animation-duration               : 3000ms;
+              animation-iteration-count        : infinite;
+              animation-name                   : avatar;
+              animation-timing-function        : ease-in-out;
+              padding-left                     : 5%;
+              padding-right                    : 5%;
+              width                            : 40%;
+              /* will-change: transform, translate, -ah-transform, -ms-transform, -o-transform, -webkit-transform */
             }
-
-          /* Subtitle, Title */
-          #subtitle, #title, [data-\:portal=title] {
-            font-synthesis: style weight;
-            font-variant  : normal
-          }
-
-          /* Title */
-          #title, [data-\:portal=title] {
-            -webkit-text-stroke-width: 2.5px;
-            -webkit-text-stroke-width: 0.5vmin;
-            font-weight              : 900
-          }
-
-          #title {
-            -ah-text-align: right;
-            font-size     : 500%;
-            padding-right : 15%;
-            text-align    : right;
-            text-shadow   : 0 0 1px #000000
-          }
-
-          [data-\:portal=title] { font-size: 500% }
-            /* All */
-            #title                *,
-            [data-\:portal=title] * {
-              -webkit-text-stroke-width: inherit;
-              color                    : inherit;
-              font-weight              : inherit;
-              margin                   : 0
-            }
-
-            /* Subtitle */
-            #subtitle {
-              -webkit-text-stroke-width: 0;
-              font-size                : 50%;
-              font-weight              : normal
-            }
-
-            #hero .portrait #subtitle { font-size: 40% }
-              /* Pseudo > After */
-              #subtitle::after {
-                -moz-transition-property   : font-size, opacity;
-                -ms-transition-property    : font-size, opacity;
-                -o-transition-property     : font-size, opacity;
-                -webkit-transition-property: font-size, opacity;
-                -khtml-opacity             : 0.0;
-                -moz-opacity               : 0.0;
-                color                      : inherit;
-                content                    : " circa 2016";
-                display                    : block;
-                font-size                  : 0%;
-                font-style                 : oblique;
-                opacity                    : 0.0;
-                transition-property        : font-size, opacity;
-                transition-timing-function : linear
+              /* <img> */
+              #avatar img {
+                max-height: 50vw;
+                max-width : 50vw;
+                min-height: 200px;
+                min-width : 200px;
+                width     : 100%
               }
 
-              .portrait #subtitle::after { display: none }
+            /* Subtitle, Title */
+            #subtitle, #title, [data-\:portal=title] {
+              font-synthesis: style weight;
+              font-variant  : normal
+            }
 
-              /* Hover > Pseudo > After */
-              #subtitle:hover::after {
-                -khtml-opacity: 1.0;
-                -moz-opacity  : 1.0;
-                font-size     : 75%;
-                font-size     : 30px; /* ->> Internet Explorer failed the `transition` */
-                opacity       : 1.0
+            /* Title */
+            #title, [data-\:portal=title] {
+              -webkit-text-stroke-width: 2.5px;
+              -webkit-text-stroke-width: 0.5vmin;
+              font-weight              : 900
+            }
+
+            #title {
+              -ah-text-align: right;
+              font-size     : 500%;
+              padding-right : 15%;
+              text-align    : right;
+              text-shadow   : 0 0 1px #000000
+            }
+
+            [data-\:portal=title] { font-size: 500% }
+              /* All */
+              #title                *,
+              [data-\:portal=title] * {
+                -webkit-text-stroke-width: inherit;
+                color                    : inherit;
+                font-weight              : inherit;
+                margin                   : 0
               }
+
+              /* Subtitle */
+              #subtitle {
+                -webkit-text-stroke-width: 0;
+                font-size                : 50%;
+                font-size                : min(0.4em, 50%);
+                font-weight              : normal
+              }
+
+              #hero .portrait #subtitle { font-size: 40% }
+                /* Pseudo > After */
+                #subtitle::after {
+                  -moz-transition-property   : font-size, opacity;
+                  -ms-transition-property    : font-size, opacity;
+                  -o-transition-property     : font-size, opacity;
+                  -webkit-transition-property: font-size, opacity;
+                  -khtml-opacity             : 0.0;
+                  -moz-opacity               : 0.0;
+                  color                      : inherit;
+                  content                    : " circa 2016";
+                  display                    : block;
+                  font-size                  : 0%;
+                  font-style                 : oblique;
+                  opacity                    : 0.0;
+                  transition-property        : font-size, opacity;
+                  transition-timing-function : linear
+                }
+
+                .portrait #subtitle::after { display: none }
+
+                /* Hover > Pseudo > After */
+                #subtitle:hover::after {
+                  -khtml-opacity: 1.0;
+                  -moz-opacity  : 1.0;
+                  font-size     : 75%;
+                  font-size     : 30px; /* ->> Internet Explorer failed the `transition` */
+                  opacity       : 1.0
+                }
 
       /* Tagline */
       #tagline {
@@ -476,9 +538,9 @@
       height             : 16.5%;
       height             : 16.5vh;
       max-width          : 768px;
+      max-width          : 50em;
       min-width          : 320px;
-      overflow-x         : visible;
-      width              : 100%
+      overflow-x         : visible
     }
       /* All */
       #socials * {
@@ -544,7 +606,11 @@
 
       #socials .social[data-\:animated~=magnify] { scale: 1.1 }
         /* All */
-        #socials .social * { display: initial }
+        #socials .social * {
+          display: initial;
+          height : 50%;
+          width  : 50%
+        }
 
         /* Pseudo */
           /* Focus */

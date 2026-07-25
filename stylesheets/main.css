@@ -12,14 +12,17 @@
   * {
     -ah-transform-origin       : center;
     -moz-text-decoration-color : inherit;
+    -moz-text-size-adjust      : none;
     -moz-transform-origin      : center;
     -ms-transform-origin       : center;
     -o-transform-origin        : center;
     -webkit-box-sizing         : border-box;
+    -webkit-mask-repeat        : no-repeat;
     -webkit-mask-repeat-x      : no-repeat;
     -webkit-mask-repeat-y      : no-repeat;
     -webkit-tap-highlight-color: inherit;
     -webkit-text-emphasis-color: inherit;
+    -webkit-text-size-adjust   : none;
     -webkit-touch-callout      : none;
     -webkit-transform-origin   : center;
     -webkit-transform-origin-x : center;
@@ -51,6 +54,7 @@
     fill                       : inherit;
     flood-color                : inherit;
     lighting-color             : inherit;
+    mask-repeat                : no-repeat;
     outline-color              : inherit;
     outline-width              : inherit;
     scrollbar-color            : inherit;
@@ -61,6 +65,7 @@
     table-layout               : fixed;
     text-decoration-color      : inherit;
     text-emphasis-color        : inherit;
+    text-size-adjust           : none;
     transform-origin           : center
   }
 
@@ -379,7 +384,7 @@
     background-color     : rgba(240, 240, 240, 0.50);
     background-color     : light-dark(rgba(0, 0, 0, 0.05), rgba(3, 0, 63, 0.05));
     background-image     : /* --> ../icons/…/background-pattern-2.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcAQMAAABIw03XAAAABlBMVEVHcEz///+flKJDAAAAAnRSTlMACQ9PdZwAAAAiSURBVHicncwxEQAADMLAOEBCrVY6x8xGhh8DYwr3jdYjBrX1ApuUMU0LAAAAAElFTkSuQmCC);
-    background-image     : /* --> ../icons/…/background-pattern-1.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACAAQMAAAD58POIAAAABlBMVEVHcEwAAACfKoRRAAAAAnRSTlMACpZGJCYAAAEYSURBVHic5ZWxDcMgEEWDXLj0CIzCaDBaRmEElxQWlzgYc5+PFCtVlLjjFfAMd/9ut3/8lq0DXgKsjUgEMIsk3EIEN7EiGYATke4QwWOea7njqXjutIMVNVBk2cGGGiiya4CIf4GAGlrEFBBRQ4vMBSTU0CK2gNxpKBF/gIAaTcRUEFGjicwVJNRoIraC3GmcIv4EATWqiGkgokYVmRtIqFFFbAO50zhEvAJhCNS6mPXAaBAvgUmD9ZvBBz/3/sYu3LpTYPyU9NhUDlQwVFJUdFyWDjUGpU3FT+1BDUQtRk3IbepQY9DqFAYUFxQoFDkUShxbDjUG0UfhSPFJAUsRTCHNMe6kC3rbjwIaFjROaODQSOKh9QvfAwdMS2RFNT3zAAAAAElFTkSuQmCC);
+    background-image     : /* --> ../icons/…/background-pattern-1.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEVHcEwAAACfKoRRAAAAAnRSTlMACQ9PdZwAAABlSURBVHic1ZCxDYAwDASDUqRkBEbJaDBaRmEESgqUA+mtp6ZCcXWNz/9OaYSZzoB8BZQeMBOwsAkqTbCyC+CQBiTKIFGBHhoIDRLVB9pn8LqFPuGjjuFgb1SHdx0XdGU/wW/5b25QF1ENbUN/sgAAAABJRU5ErkJggg==);
     background-origin    : border-box;
     background-position  : center center;
     background-position-x: center;
@@ -397,8 +402,8 @@
   .button,
   body { font-family: "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif }
     /* At Rules > Media > Prefers Color Scheme > (Dark, Light) */
-    @media (prefers-color-scheme: dark)  { body { background-image: /* --> ../icons/…/background-pattern-2.svg */ url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjI4IiB2ZXJzaW9uPSIxLjAiIHdpZHRoPSIyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEgMTRjMC0xLjcgMS4zLTMgMy0zIDEuNyAwIDMgMS4zIDMgMyAwIDEuNy0xLjMgMy0zIDMtMS43IDAtMy0xLjMtMy0zeiIgZmlsbD0iI0ZGRkZGRiIgZmlsbC1vcGFjaXR5PSIwLjAxNiIvPjwvc3ZnPg==) } }
-    @media (prefers-color-scheme: light) { body { background-image: /* --> ../icons/…/background-pattern-1.svg */ url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEyOCIgdmVyc2lvbj0iMS4wIiB3aWR0aD0iMTI4IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im0xNTAuNyAzNy40IDY3LjkgNjcuOWMxMi41IDEyLjYgMTIuNSAzMi44IDAgNDUuNGwtNjcuOSA2Ny45Yy0xMi42IDEyLjUtMzIuOCAxMi41LTQ1LjQgMGwtNjcuOS02Ny45Yy0xMi41LTEyLjYtMTIuNS0zMi44IDAtNDUuNGw2Ny45LTY3LjljMTIuNi0xMi41IDMyLjgtMTIuNSA0NS40IDAiIGZpbGw9IiMwMDAwMDAiIGZpbGwtb3BhY2l0eT0iMC4wMzIiIHRyYW5zZm9ybT0ibWF0cml4KC41MDAgMCAwIC41MDAgLS4wMTYgLS4wMTYpIi8+PC9zdmc+) } }
+    @media (prefers-color-scheme: dark)  { body { background-color: rgba(3, 0, 63, 0.05); background-image: /* --> ../icons/…/background-pattern-2.svg */ url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjI4IiB2ZXJzaW9uPSIxLjAiIHdpZHRoPSIyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEgMTRjMC0xLjcgMS4zLTMgMy0zIDEuNyAwIDMgMS4zIDMgMyAwIDEuNy0xLjMgMy0zIDMtMS43IDAtMy0xLjMtMy0zeiIgZmlsbD0iI0ZGRkZGRiIgZmlsbC1vcGFjaXR5PSIwLjAxNiIvPjwvc3ZnPg==) } }
+    @media (prefers-color-scheme: light) { body { background-color: rgba(0, 0, 0,  0.05); background-image: /* --> ../icons/…/background-pattern-1.svg */ url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjAiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMzcuNiAxOS41IDEwLjkgMTAuOWMyIDIuMDIgMiA1LjI1IDAgNy4yN2wtMTAuOSAxMC45Yy0yLjAyIDItNS4yNSAyLTcuMjcgMGwtMTAuOS0xMC45Yy0yLTIuMDItMi01LjI1IDAtNy4yN2wxMC45LTEwLjljMi4wMi0yIDUuMjUtMiA3LjI3IDAiIGZpbGwtb3BhY2l0eT0iLjAzMiIgc3Ryb2tlLXdpZHRoPSIuMTYiLz48L3N2Zz4=) } }
 
   /* <body>, <html> */
   body, html {
@@ -467,7 +472,6 @@
     -moz-animation-duration    : 300ms;
     -moz-animation-fill-mode   : both;
     -moz-text-decoration-color : currentColor;
-    -moz-text-size-adjust      : none;
     -ms-animation-duration     : 300ms;
     -ms-animation-fill-mode    : both;
     -o-animation-duration      : 300ms;
@@ -476,7 +480,6 @@
     -webkit-animation-fill-mode: both;
     -webkit-tap-highlight-color: currentColor;
     -webkit-text-emphasis-color: currentColor;
-    -webkit-text-size-adjust   : none;
     animation-duration         : 300ms;
     animation-fill-mode        : both;
     background-color           : transparent;
@@ -508,7 +511,6 @@
     text-decoration-color      : currentColor;
     text-emphasis-color        : currentColor;
     text-rendering             : optimizeSpeed;
-    text-size-adjust           : none;
     transition-behavior        : normal;
     view-transition-name       : root
   }
@@ -835,31 +837,31 @@
   }
 
   .button:nth-of-type(even) {
-    -ah-border-bottom-left-radius    : 4px;
-    -ah-border-top-right-radius      : 4px;
-    -khtml-border-bottom-left-radius : 4px;
-    -khtml-border-top-right-radius   : 4px;
-    -moz-border-bottom-left-radius   : 4px;
-    -moz-border-top-right-radius     : 4px;
-    -pie-border-radius               : 4px;
-    -webkit-border-bottom-left-radius: 4px;
-    -webkit-border-top-right-radius  : 4px;
-    border-bottom-left-radius        : 4px;
-    border-top-right-radius          : 4px
+    -ah-border-bottom-left-radius    : 6px;
+    -ah-border-top-right-radius      : 6px;
+    -khtml-border-bottom-left-radius : 6px;
+    -khtml-border-top-right-radius   : 6px;
+    -moz-border-bottom-left-radius   : 6px;
+    -moz-border-top-right-radius     : 6px;
+    -pie-border-radius               : 6px;
+    -webkit-border-bottom-left-radius: 6px;
+    -webkit-border-top-right-radius  : 6px;
+    border-bottom-left-radius        : 6px;
+    border-top-right-radius          : 6px
   }
 
   .button:nth-of-type(odd) {
-    -ah-border-bottom-right-radius    : 4px;
-    -ah-border-top-left-radius        : 4px;
-    -khtml-border-bottom-right-radius : 4px;
-    -khtml-border-top-left-radius     : 4px;
-    -moz-border-bottom-right-radius   : 4px;
-    -moz-border-top-left-radius       : 4px;
-    -pie-border-radius                : 4px;
-    -webkit-border-bottom-right-radius: 4px;
-    -webkit-border-top-left-radius    : 4px;
-    border-bottom-right-radius        : 4px;
-    border-top-left-radius            : 4px
+    -ah-border-bottom-right-radius    : 6px;
+    -ah-border-top-left-radius        : 6px;
+    -khtml-border-bottom-right-radius : 6px;
+    -khtml-border-top-left-radius     : 6px;
+    -moz-border-bottom-right-radius   : 6px;
+    -moz-border-top-left-radius       : 6px;
+    -pie-border-radius                : 6px;
+    -webkit-border-bottom-right-radius: 6px;
+    -webkit-border-top-left-radius    : 6px;
+    border-bottom-right-radius        : 6px;
+    border-top-left-radius            : 6px
   }
     /* At Rules > Media > Prefers Color Scheme > Light */
     @media (prefers-color-scheme: light) {
