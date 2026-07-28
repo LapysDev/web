@@ -12,7 +12,7 @@
   * {
     -ah-transform-origin       : center;
     -moz-text-decoration-color : inherit;
-    -moz-text-size-adjust      : none;
+    -moz-text-size-adjust      : 100% !important;
     -moz-transform-origin      : center;
     -ms-transform-origin       : center;
     -o-transform-origin        : center;
@@ -22,7 +22,7 @@
     -webkit-mask-repeat-y      : no-repeat;
     -webkit-tap-highlight-color: inherit;
     -webkit-text-emphasis-color: inherit;
-    -webkit-text-size-adjust   : none;
+    -webkit-text-size-adjust   : 100% !important;
     -webkit-touch-callout      : none;
     -webkit-transform-origin   : center;
     -webkit-transform-origin-x : center;
@@ -65,7 +65,7 @@
     table-layout               : fixed;
     text-decoration-color      : inherit;
     text-emphasis-color        : inherit;
-    text-size-adjust           : none;
+    text-size-adjust           : 100% !important;
     transform-origin           : center
   }
 
@@ -85,7 +85,7 @@
     scroll-behavior                   : smooth;
     transition-duration               : 100ms;
     transition-timing-function        : ease-in-out;
-    transition-property               : opacity
+    transition-property               : filter, opacity
   }
 
   [data-\:tooltip] { position: relative }
@@ -119,7 +119,7 @@
         -moz-border-top-left-radius       : 2px;
         -moz-border-top-right-radius      : 2px;
         -moz-box-shadow                   : 0 0 5px 0 rgba(0, 0, 0, 0.5);
-        -ms-filter                        : "progid:DXImageTransform.Microsoft.Gradient(StartColorstr='#03003F', EndColorstr='#3F3F3F', GradientType=0x0)";
+        -ms-filter                        : "progid:DXImageTransform.Microsoft.Gradient(Enabled=true, EndColorstr='#3F3F3F', GradientType=0x0, StartColorstr='#03003F')";
         -moz-transition-delay             : 0ms;
         -moz-transition-property          : color, height, opacity, top, transform, translate;
         -moz-user-focus                   : ignore;
@@ -168,7 +168,7 @@
         color                             : rgba(240, 240, 240, 0.0);
         content                           : attr(data-\:tooltip);
         display                           : inline-block;
-        filter                            : progid:DXImageTransform.Microsoft.Gradient(StartColorstr="#03003F", EndColorstr="#3F3F3F", GradientType=0x0);
+        filter                            : progid:DXImageTransform.Microsoft.Gradient(Enabled=true, EndColorstr="#3F3F3F", GradientType=0x0, StartColorstr="#03003F");
         float                             : right;
         font-family                       : sans-serif;
         font-size                         : 12.8px;
@@ -331,6 +331,9 @@
   a                                 { text-decoration-skip-ink: auto }
   abbr[data-\:tooltip], abbr[title] { text-decoration-skip-ink: auto }
 
+  /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <big>, <blockquote>, <body>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dl>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <html>, <i>, <iframe>, <img>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <output>, <p>, <pre>, <progress>, <q>, <ruby>, <s>, <samp>, <section>, <small>, <span>, <strike>, <strong>, <sub>, <sub>, <summary>, <sup>, <sup>, <table>, <tbody>, <td>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <ul>, <var>, <video> */
+  a, abbr, acronym, address, applet, article, aside, audio, b, big, blockquote, body, canvas, caption, center, cite, code, dd, del, details, dfn, div, dl, dt, em, embed, fieldset, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, output, p, pre, progress, q, ruby, s, samp, section, small, span, strike, strong, sub, sub, summary, sup, sup, table, tbody, td, tfoot, th, thead, time, tr, tt, u, ul, var, video { vertical-align: inherit }
+
   /* <a>, <button>, <label>, <select> (> <option>) */
   a,
   button,
@@ -338,7 +341,23 @@
   select,
   select option { cursor: pointer }
 
-  /* <area> > Pseudo > … */
+  /* All, <abbr>, <acronym> */
+  [data-\:abbreviate], abbr, acronym {
+    -ah-text-decoration-line    : none;
+    -moz-text-decoration-line   : none;
+    -webkit-text-decoration-line: none;
+    border-bottom               : none;
+    border-bottom-style         : none;
+    text-decoration-line        : none
+  }
+    /* Pseudo > Hover */
+    [data-\:abbreviate]:hover, abbr:hover, acronym:hover {
+      font-variant-caps: normal;
+      text-wrap-mode   : wrap;
+      word-break       : break-word
+    }
+
+  /* <area> > Pseudo > ... */
   area:any-link         { cursor: pointer }
   area:-khtml-any-link  { cursor: pointer }
   area:-moz-any-link    { cursor: pointer }
@@ -403,7 +422,7 @@
   body { font-family: "PT Sans", "Open Sans", Roboto, Verdana, "Calibri Light", Calibri, system-ui, -apple-system, sans-serif }
     /* At Rules > Media > Prefers Color Scheme > (Dark, Light) */
     @media (prefers-color-scheme: dark)  { body { background-color: rgba(3, 0, 63, 0.05); background-image: /* --> ../icons/…/background-pattern-2.svg */ url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjI4IiB2ZXJzaW9uPSIxLjAiIHdpZHRoPSIyOCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTEgMTRjMC0xLjcgMS4zLTMgMy0zIDEuNyAwIDMgMS4zIDMgMyAwIDEuNy0xLjMgMy0zIDMtMS43IDAtMy0xLjMtMy0zeiIgZmlsbD0iI0ZGRkZGRiIgZmlsbC1vcGFjaXR5PSIwLjAxNiIvPjwvc3ZnPg==) } }
-    @media (prefers-color-scheme: light) { body { background-color: rgba(0, 0, 0,  0.05); background-image: /* --> ../icons/…/background-pattern-1.svg */ url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjAiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMzcuNiAxOS41IDEwLjkgMTAuOWMyIDIuMDIgMiA1LjI1IDAgNy4yN2wtMTAuOSAxMC45Yy0yLjAyIDItNS4yNSAyLTcuMjcgMGwtMTAuOS0xMC45Yy0yLTIuMDItMi01LjI1IDAtNy4yN2wxMC45LTEwLjljMi4wMi0yIDUuMjUtMiA3LjI3IDAiIGZpbGwtb3BhY2l0eT0iLjAzMiIgc3Ryb2tlLXdpZHRoPSIuMTYiLz48L3N2Zz4=) } }
+    @media (prefers-color-scheme: light) { body { background-color: rgba(0, 0, 0,  0.05); background-image: /* --> ../icons/…/background-pattern-1.svg */ url(data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjY0IiB2ZXJzaW9uPSIxLjAiIHdpZHRoPSI2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJtMzcuNiAxOS41IDEwLjkgMTAuOWMyIDIuMDIgMiA1LjI1IDAgNy4yN2wtMTAuOSAxMC45Yy0yLjAyIDItNS4yNSAyLTcuMjcgMGwtMTAuOS0xMC45Yy0yLTIuMDItMi01LjI1IDAtNy4yN2wxMC45LTEwLjljMi4wMi0yIDUuMjUtMiA3LjI3IDAiIGZpbGwtb3BhY2l0eT0iLjAzMiIgc3Ryb2tlLXdpZHRoPSIuMTYiLz48L3N2Zz4=) } }
 
   /* <body>, <html> */
   body, html {
@@ -469,50 +488,54 @@
 
   /* <html> */
   html {
-    -moz-animation-duration    : 300ms;
-    -moz-animation-fill-mode   : both;
-    -moz-text-decoration-color : currentColor;
-    -ms-animation-duration     : 300ms;
-    -ms-animation-fill-mode    : both;
-    -o-animation-duration      : 300ms;
-    -o-animation-fill-mode     : both;
-    -webkit-animation-duration : 300ms;
-    -webkit-animation-fill-mode: both;
-    -webkit-tap-highlight-color: currentColor;
-    -webkit-text-emphasis-color: currentColor;
-    animation-duration         : 300ms;
-    animation-fill-mode        : both;
-    background-color           : transparent;
-    border-block-color         : currentColor;
-    border-block-end-color     : currentColor;
-    border-block-start-color   : currentColor;
-    border-bottom-color        : currentColor;
-    border-color               : currentColor;
-    border-inline-color        : currentColor;
-    border-inline-end-color    : currentColor;
-    border-inline-start-color  : currentColor;
-    border-left-color          : currentColor;
-    border-right-color         : currentColor;
-    border-top-color           : currentColor;
-    caret-color                : currentColor;
-    color                      : CanvasText;
-    color                      : #3F3F3F;
-    color-scheme               : light dark; /* ->> or otherwise `only dark` */
-    column-rule-color          : currentColor;
-    display                    : table;
-    fill                       : currentColor;
-    flood-color                : currentColor;
-    interpolate-size           : numeric-only;
-    lighting-color             : currentColor;
-    outline                    : currentColor;
-    outline-color              : currentColor;
-    stop-color                 : currentColor;
-    stroke                     : currentColor;
-    text-decoration-color      : currentColor;
-    text-emphasis-color        : currentColor;
-    text-rendering             : optimizeSpeed;
-    transition-behavior        : normal;
-    view-transition-name       : root
+    -ah-text-decoration-color    : currentColor;
+    -ah-vertical-align           : baseline;
+    -moz-animation-duration      : 300ms;
+    -moz-animation-fill-mode     : both;
+    -moz-text-decoration-color   : currentColor;
+    -ms-animation-duration       : 300ms;
+    -ms-animation-fill-mode      : both;
+    -o-animation-duration        : 300ms;
+    -o-animation-fill-mode       : both;
+    -webkit-animation-duration   : 300ms;
+    -webkit-animation-fill-mode  : both;
+    -webkit-tap-highlight-color  : currentColor;
+    -webkit-text-decoration-color: currentColor;
+    -webkit-text-emphasis-color  : currentColor;
+    animation-duration           : 300ms;
+    animation-fill-mode          : both;
+    background-color             : transparent;
+    border-block-color           : currentColor;
+    border-block-end-color       : currentColor;
+    border-block-start-color     : currentColor;
+    border-bottom-color          : currentColor;
+    border-color                 : currentColor;
+    border-inline-color          : currentColor;
+    border-inline-end-color      : currentColor;
+    border-inline-start-color    : currentColor;
+    border-left-color            : currentColor;
+    border-right-color           : currentColor;
+    border-top-color             : currentColor;
+    caret-color                  : currentColor;
+    color                        : CanvasText;
+    color                        : #3F3F3F;
+    color-scheme                 : light dark; /* ->> or otherwise `only dark` */
+    column-rule-color            : currentColor;
+    display                      : table;
+    fill                         : currentColor;
+    flood-color                  : currentColor;
+    interpolate-size             : numeric-only;
+    lighting-color               : currentColor;
+    outline                      : currentColor;
+    outline-color                : currentColor;
+    stop-color                   : currentColor;
+    stroke                       : currentColor;
+    text-decoration-color        : currentColor;
+    text-emphasis-color          : currentColor;
+    text-rendering               : optimizeSpeed;
+    transition-behavior          : normal;
+    vertical-align               : baseline;
+    view-transition-name         : root
   }
     /* Pseudo > View Transition … */
     html::view-transition-new(root) {
@@ -801,7 +824,6 @@
     padding-left                      : 1.25em;
     padding-right                     : 1.25em;
     padding-top                       : 0.50em;
-    position                          : relative;
     text-decoration                   : none;
     text-decoration-color             : transparent;
     text-decoration-line              : none;
@@ -810,8 +832,7 @@
     text-transform                    : uppercase;
     transform                         : translate(0px, -0px);
     translate                         : 0px -0px;
-    word-spacing                      : 0.2em;
-    zoom                              : 1
+    word-spacing                      : 0.2em
   }
 
   .button,
@@ -947,6 +968,12 @@
       color           : currentColor
     }
 
+  /* Button, Silhouette */
+  .button, .silhouette, .silhouette-medium, .silhouette-thick, .silhouette-thin {
+    position: relative;
+    zoom    : 1
+  }
+
   /* Center */
   .center,
   noscript {
@@ -1007,11 +1034,26 @@
   .button:focus,
   .button:hover,
   .mirrored {
-    /* ->> Modern alternatives: `background-image: -moz-element(…)`, `filter: progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, Mirror=true)`? */
+    /* ->> Alternatives: `background-image: -moz-element(…)` or `filter: progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, Mirror=true)`? */
     -webkit-box-reflect: below 7px      -o-linear-gradient(                                    rgba(255, 255, 255, 0.00),     rgba(255, 255, 255, 0.05));
     -webkit-box-reflect: below 7px        -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 0.00)), to(rgba(255, 255, 255, 0.05)));
     -webkit-box-reflect: below 7px -webkit-linear-gradient(                                    rgba(255, 255, 255, 0.00),     rgba(255, 255, 255, 0.05));
     -webkit-box-reflect: below 7px         linear-gradient(                                    rgba(255, 255, 255, 0.00),     rgba(255, 255, 255, 0.05))
+  }
+
+  /* Monochrome ... */
+  .monochrome {
+    -ms-filter    : "grayscale(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)";
+    -webkit-filter: grayscale(1.0);
+    filter        : grayscale(1.0);
+    filter        : grayscale(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)
+  }
+
+  .monochrome-invert {
+    -ms-filter    : "grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true, Invert=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)";
+    -webkit-filter: grayscale(1.0) invert(1.0);
+    filter        : grayscale(1.0) invert(1.0);
+    filter        : grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true, Invert=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)
   }
 
   /* No Font */
@@ -1035,6 +1077,30 @@
     font-variant-emoji       : text;
     font-variant-ligatures   : no-common-ligatures no-discretionary-ligatures no-historical-ligatures no-contextual
   }
+
+  /* No List */
+  dd.nolist, dir.nolist, menu.nolist, ol.nolist, ul.nolist {
+    -moz-padding-start   : 0;
+    -webkit-padding-start: 0;
+    list-style           : none; /* ->> `outside` by default */
+    list-style-position  : outside;
+    list-style-type      : none;
+    padding-bottom       : 0;
+    margin-left          : 0;
+    padding-left         : 0;
+    padding-inline-start : 0;
+    padding-right        : 0;
+    padding-top          : 0
+  }
+    /* <li> */
+    dd.nolist   li,
+    dir.nolist  li,
+    menu.nolist li,
+    ol.nolist   li,
+    ul.nolist   li {
+      display    : block;
+      margin-left: 0
+    }
 
   /* No Overflow (X, Y) */
   .nooverflow {
@@ -1133,6 +1199,62 @@
     white-space      : nowrap
   }
 
+  /* Reveal */
+  @property --reveal-onshow-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
+  @property --reveal-onshow-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
+  @property --reveal-onshow-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
+
+  @property --reveal-onshow_hover-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
+  @property --reveal-onshow_hover-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
+  @property --reveal-onshow_hover-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
+
+  @keyframes reveal-onshow {
+    from { --reveal-onshow-opacity: 0; --reveal-onshow-scale: 0.85; --reveal-onshow-translate-y: 12.5% }
+    to   { --reveal-onshow-opacity: 1; --reveal-onshow-scale: 1.00; --reveal-onshow-translate-y: 0.0% }
+  }
+
+  .reveal-onshow {
+    --reveal-onshow_hover-opacity    : 0;
+    --reveal-onshow_hover-scale      : 0.85;
+    --reveal-onshow_hover-translate-y: 12.5%;
+    -moz-animation-duration          : 1ms;
+    -moz-animation-fill-mode         : both;
+    -moz-animation-name              : reveal-onshow;
+    -moz-animation-timing-function   : ease-in;
+    -moz-transition-property         : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
+    -ms-animation-duration           : 1ms;
+    -ms-animation-fill-mode          : both;
+    -ms-animation-name               : reveal-onshow;
+    -ms-animation-timing-function    : ease-in;
+    -ms-transition-property          : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
+    -o-animation-duration            : 1ms;
+    -o-animation-fill-mode           : both;
+    -o-animation-name                : reveal-onshow;
+    -o-animation-timing-function     : ease-in;
+    -o-transition-property           : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
+    -webkit-animation-duration       : 1ms;
+    -webkit-animation-fill-mode      : both;
+    -webkit-animation-name           : reveal-onshow;
+    -webkit-animation-timing-function: ease-in;
+    -webkit-transition-property      : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
+    animation-duration               : 1ms;
+    animation-fill-mode              : both;
+    animation-name                   : reveal-onshow;
+    animation-range                  : entry 10% cover 25%;
+    animation-timeline               : view();
+    animation-timing-function        : ease-in;
+    opacity                          :   max(var(--reveal-onshow-opacity),     var(--reveal-onshow_hover-opacity));
+    scale                            :   max(var(--reveal-onshow-scale),       var(--reveal-onshow_hover-scale));
+    translate                        : 0 min(var(--reveal-onshow-translate-y), var(--reveal-onshow_hover-translate-y));
+    transition-property              : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y
+  }
+    /* Pseudo > Hover */
+    .reveal-onshow:hover {
+      --reveal-onshow_hover-opacity    : 1;
+      --reveal-onshow_hover-scale      : 1.00;
+      --reveal-onshow_hover-translate-y: 0.0%
+    }
+
   /* Section */
   [role~=banner],
   [role~=region] {
@@ -1150,6 +1272,28 @@
       margin-left : auto;
       margin-right: auto
     }
+
+  /* Silhouette ... */
+  .silhouette, .silhouette-medium /* ->> `currentColor` presumably opaque */ {
+    -ms-filter    : "drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=3)";
+    -webkit-filter: drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0);
+    filter        : drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0);
+    filter        : drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=3)
+  }
+
+  .silhouette-thick /* ->> `currentColor` presumably opaque */ {
+    -ms-filter    : "drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=5)";
+    -webkit-filter: drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0);
+    filter        : drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0);
+    filter        : drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=5)
+  }
+
+  .silhouette-thin /* ->> Based on `color` */ {
+    -ms-filter    : "drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=1)";
+    -webkit-filter: drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0);
+    filter        : drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0);
+    filter        : drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=1)
+  }
 
 /* At Rules */
   /* Font Face */
@@ -1679,6 +1823,12 @@
       }
     }
 
+    /* Reveal … */
+    @keyframes reveal-onshow2 {
+      from { opacity: 0; scale: 0.85; translate: 0 12.5% }
+      to   { opacity: 1; scale: 1.00; translate: 0 0.0% }
+    }
+
   /* Media */
     /* Forced Colors */
     @media (forced-colors: active) {
@@ -1705,6 +1855,24 @@
       /* Components > (Landscape, Portrait) */
       .landscape { content-visibility: hidden;  display: none !important; empty-cells: hide; visibility: collapse }
       .portrait  { content-visibility: visible; display: initial;         empty-cells: show; visibility: initial }
+    }
+
+    /* Prefers Color Scheme > Dark */
+    @media (prefers-color-scheme: dark) {
+      /* Features > Monochrome ... */
+      .monochrome {
+        -ms-filter    : "grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)";
+        -webkit-filter: grayscale(1.0) invert(1.0);
+        filter        : grayscale(1.0) invert(1.0);
+        filter        : grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)
+      }
+
+      .monochrome-invert {
+        -ms-filter    : "grayscale(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)";
+        -webkit-filter: grayscale(1.0);
+        filter        : grayscale(1.0);
+        filter        : grayscale(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)
+      }
     }
 
     /* Prefers Contrast */

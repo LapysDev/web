@@ -3,80 +3,6 @@
 @namespace     "http://www.w3.org/1999/xhtml";
 @namespace svg "http://www.w3.org/2000/svg";
 
-/* At Rules */
-  /* Keyframes */
-    /* Avatar */
-    @keyframes avatar {
-      50% {
-        -ah-transform    : translate(0, 5px);
-        -ms-transform    : translate(0, 5px);
-        -o-transform     : translate(0, 5px);
-        -webkit-transform: translate(0, 5px);
-        transform        : translate(0, 5px)
-      }
-    }
-
-    /* Background (Color, Size) */
-    @keyframes background-color {
-      50% {
-        -ms-filter    : "hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)";
-        -webkit-filter: hue-rotate(595deg);
-        -webkit-filter: hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
-        filter        : hue-rotate(595deg);
-        filter        : hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)
-      }
-    }
-
-    @keyframes background-size {
-      50% {
-        -ah-background-size    : 100% 50%;
-        -khtml-background-size : 100% 50%;
-        -moz-background-size   : 100% 50%;
-        -webkit-background-size: 100% 50%;
-        background-size        : 100% 50%
-      }
-    }
-
-  /* Media > ... */
-    /* Prefers Color Scheme */
-      /* Dark */
-      @media (prefers-color-scheme: dark) {
-        /* Expertise > Résumé > <th> > <img> */
-        #expertise .résumé th img {
-          -ms-filter    : "brightness(0.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF)";
-          -webkit-filter: brightness(0.0) invert(1.0);
-          filter        : brightness(0.0) invert(1.0);
-          filter        : brightness(0.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF)
-        }
-
-        /* Socials > ... */
-        #background ~ #socials [alt=Email i] {
-          -ms-filter    : "grayscale(1.0) invert(1.0)";
-          -webkit-filter: grayscale(1.0) invert(1.0);
-          filter        : grayscale(1.0) invert(1.0)
-        }
-      }
-
-      /* Light */
-      @media (prefers-color-scheme: light) {
-        /* Expertise > Résumé > <th> > <img> */
-        #expertise .résumé th img {
-          -ms-filter    : "brightness(0.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FF000000) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FF000000)";
-          -webkit-filter: brightness(0.0);
-          filter        : brightness(0.0);
-          filter        : brightness(0.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FF000000) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FF000000)
-        }
-      }
-
-      /* ... */
-      @media all\0, all\9 {
-        /* Background */
-        #background { background-color: #0F0F0F }
-
-        /* Hero */
-        #hero, #hero * { color: #F0F0F0 }
-      }
-
 /* Features */
   /* Main */
   #main {
@@ -106,7 +32,7 @@
       -ms-animation-iteration-count    : infinite;
       -ms-animation-name               : background-color, background-size;
       -ms-animation-timing-function    : ease-in-out;
-      -ms-filter                       : "hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)";
+      -ms-filter                       : "hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)";
       -o-animation-delay               : 0ms;
       -o-animation-duration            : 27000ms, 5000ms;
       -o-animation-iteration-count     : infinite;
@@ -120,7 +46,7 @@
       -webkit-animation-timing-function: ease-in-out;
       -webkit-background-size          : 100% 100%;
       -webkit-filter                   : hue-rotate(235deg);
-      -webkit-filter                   : hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
+      -webkit-filter                   : hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
       -webkit-mask-image               : -webkit-gradient(radial, center center, 0, center center, 64, from(rgba(0, 0, 0, 0.75)), to(rgba(0, 0, 0, 0.00))), -webkit-gradient(linear, left top, left bottom, from(rgb(0, 0, 0, 0.00)), color-stop(0.2, rgb(0, 0, 0, 0.75)), to(rgb(0, 0, 0, 0.00)));
       -webkit-mask-position            : 50% 20%;
       -webkit-mask-position-x          : 50%;
@@ -143,8 +69,9 @@
       background-size                  : 100% 100%;
       bottom                           : 0;
       filter                           : hue-rotate(235deg);
-      filter                           : hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
+      filter                           : hue-rotate(235deg) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
       height                           : 100%;
+      height                           : 100vh; /* ->> Allows correct determination of its `CanvasRenderingContext2d`’s resolution */
       image-rendering                  : optimizeSpeed; /* --> pixelated */
       left                             : 0;
       margin-left                      : auto;
@@ -171,8 +98,8 @@
 
     /* Expertise */
     #expertise {
-      min-height: 75vh;
-      width     : 75%
+      min-width: 240px;
+      width    : 65%
     }
       /* <table> */
       #expertise table {
@@ -214,49 +141,6 @@
         }
           /* All */
           #expertise .résumé th * { font-size: 100% }
-
-          /* <h1>, <h2>, <h3>, <h4>, <h5>, <h6> */
-          #expertise .résumé th h1,
-          #expertise .résumé th h2,
-          #expertise .résumé th h3,
-          #expertise .résumé th h4,
-          #expertise .résumé th h5,
-          #expertise .résumé th h6 {
-            -epub-text-transform  : capitalize;
-            -webkit-mask-composite: xor;
-            -webkit-mask-image    : webkit-gradient(linear, left top, left bottom, from(#000000), to(#000000)), -webkit-gradient(radial, 10.5% bottom, 0, 10.5% bottom, 32, color-stop(0.99, rgba(0, 0, 0, 1.0)), to(rgba(0, 0, 0, 0.0)));
-            border-bottom-color   : inherit;
-            border-bottom-style   : dashed;
-            border-bottom-width   : 2.00px;
-            border-bottom-width   : 0.08em;
-            mask-composite        : exclude;
-            mask-image            : linear-gradient(#000000), radial-gradient(circle 0.875em at 10.5% bottom, rgba(0, 0, 0, 1.0) 99%, rgba(0, 0, 0, 0.0) 100%);
-            margin-bottom         : 0;
-            margin-left           : 0;
-            margin-right          : 0;
-            margin-top            : 0;
-            padding-bottom        : 0.5%;
-            padding-left          : 5.0%;
-            padding-right         : 5.0%;
-            padding-top           : 1.5%;
-            text-transform        : capitalize
-          }
-
-          #expertise .résumé.portrait th h1,
-          #expertise .résumé.portrait th h2,
-          #expertise .résumé.portrait th h3,
-          #expertise .résumé.portrait th h4,
-          #expertise .résumé.portrait th h5,
-          #expertise .résumé.portrait th h6,
-          #expertise .résumé#skills   th h1,
-          #expertise .résumé#skills   th h2,
-          #expertise .résumé#skills   th h3,
-          #expertise .résumé#skills   th h4,
-          #expertise .résumé#skills   th h5,
-          #expertise .résumé#skills   th h6 {
-            -webkit-mask-image: webkit-gradient(linear, left top, left bottom, from(#000000), to(#000000)), -webkit-gradient(radial, 89.5% bottom, 0, 10.5% bottom, 32, color-stop(0.99, rgba(0, 0, 0, 1.0)), to(rgba(0, 0, 0, 0.0)));
-            mask-image        : linear-gradient(#000000), radial-gradient(circle 0.875em at 89.5% bottom, rgba(0, 0, 0, 1.0) 99%, rgba(0, 0, 0, 0.0) 100%);
-          }
 
           /* <img> */
           #expertise .résumé th img {
@@ -302,6 +186,95 @@
             left : auto;
             right: 0
           }
+
+          /* Heading */
+          #expertise .résumé th .heading {
+            -epub-text-transform  : capitalize;
+            -webkit-mask-composite: xor;
+            -webkit-mask-image    : webkit-gradient(linear, left top, left bottom, from(#000000), to(#000000)), -webkit-gradient(radial, 10.5% bottom, 0, 10.5% bottom, 32, color-stop(0.99, rgba(0, 0, 0, 1.0)), to(rgba(0, 0, 0, 0.0)));
+            border-bottom-color   : inherit;
+            border-bottom-style   : dashed;
+            border-bottom-width   : 2.00px;
+            border-bottom-width   : 0.08em;
+            mask-composite        : exclude;
+            mask-image            : linear-gradient(#000000), radial-gradient(circle 0.875em at 10.5% bottom, rgba(0, 0, 0, 1.0) 99%, rgba(0, 0, 0, 0.0) 100%);
+            margin-bottom         : 0;
+            margin-left           : 0;
+            margin-right          : 0;
+            margin-top            : 0;
+            padding-bottom        : 0.5%;
+            padding-left          : 5.0%;
+            padding-right         : 5.0%;
+            padding-top           : 1.5%;
+            text-transform        : capitalize
+          }
+
+          #expertise .résumé.portrait th .heading,
+          #expertise .résumé#skills   th .heading {
+            -webkit-mask-image: webkit-gradient(linear, left top, left bottom, from(#000000), to(#000000)), -webkit-gradient(radial, 89.5% bottom, 0, 10.5% bottom, 32, color-stop(0.99, rgba(0, 0, 0, 1.0)), to(rgba(0, 0, 0, 0.0)));
+            mask-image        : linear-gradient(#000000), radial-gradient(circle 0.875em at 89.5% bottom, rgba(0, 0, 0, 1.0) 99%, rgba(0, 0, 0, 0.0) 100%);
+          }
+
+        /* Entry */
+          /* Title */
+          #expertise .résumé .entry .title {
+            font-weight   : bolder;
+            text-wrap-mode: wrap;
+            word-break    : break-word
+          }
+
+          /* Timeline > <div> */
+          #expertise .résumé .entry .timeline div {
+            border-left: 1px solid;
+            height        : 50%;
+            padding-bottom: 5%;
+            padding-top   : 5%
+          }
+
+      /* Skills */
+        /* Entry */
+        #skills                .entry,
+        [data-\:portal=skills] .entry {
+          -ah-vertical-align: top;
+          vertical-align    : top
+        }
+          /* <ul> */
+          #skills                .entry ul,
+          [data-\:portal=skills] .entry ul {
+            -ah-vertical-align: inherit;
+            vertical-align    : inherit
+          }
+            /* <ul> > <li> */
+            #skills                .entry li,
+            [data-\:portal=skills] .entry li {
+              display    : inline-block;
+              margin-left: 0
+            }
+              /* Caption */
+              #skills                .entry li div,
+              [data-\:portal=skills] .entry li div { cursor: default }
+                /* Pseudo > Active */
+                #skills                .entry li div:active,
+                [data-\:portal=skills] .entry li div:active { cursor: text }
+
+              /* <img> */
+              #skills                .entry li img,
+              [data-\:portal=skills] .entry li img {
+                -pie-border-radius        : 9px;
+                border-bottom-left-radius : 9px;
+                border-bottom-right-radius: 9px;
+                border-top-right-radius   : 9px;
+                color                     : light-dark(rgba(63, 63, 63, 0.25), rgba(127, 127, 127, 0.25));
+                height                    : 40px;
+                height                    : 2.5em;
+                width                     : 40px;
+                width                     : 2.5em
+              }
+
+    /* Expertise, Projects */
+    #expertise, #projects {
+      min-height: 75vh
+    }
 
     /* (Expertise, Socials) > ... */
     #expertise .résumé,
@@ -434,9 +407,22 @@
 
             /* Title */
             #title, [data-\:portal=title] {
-              -webkit-text-stroke-width: 2.5px;
-              -webkit-text-stroke-width: 0.5vmin;
-              font-weight              : 900
+              -moz-animation-delay      : 0ms;
+              -moz-animation-duration   : 650ms;
+              -moz-animation-name       : title-entry;
+              -ms-animation-delay       : 0ms;
+              -ms-animation-duration    : 650ms;
+              -ms-animation-name        : title-entry;
+              -o-animation-delay        : 0ms;
+              -o-animation-duration     : 650ms;
+              -o-animation-name         : title-entry;
+              -webkit-animation-duration: 650ms;
+              -webkit-text-stroke-width : 2.5px;
+              -webkit-text-stroke-width : 0.5vmin;
+              animation-delay           : 0ms;
+              animation-duration        : 650ms;
+              animation-name            : title-entry;
+              font-weight               : 900
             }
 
             #title {
@@ -454,6 +440,7 @@
                 -webkit-text-stroke-width: inherit;
                 color                    : inherit;
                 font-weight              : inherit;
+                interpolate-size         : allow-keywords;
                 margin                   : 0
               }
 
@@ -518,12 +505,12 @@
 
     /* Projects */
     #projects {
-      /*background-image:    -moz-radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
-      /*background-image:     -ms-radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
-      /*background-image:      -o-radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
-      /*background-image:        -webkit-gradient(radial, center center, 0, center center, 720, from(rgba(0, 0, 0, 0.0)), to(rgba(0, 0, 0, 0.3)));*/
-      /*background-image: -webkit-radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
-      /*background-image:         radial-gradient(                                                   rgba(0, 0, 0, 0.0),     rgba(0, 0, 0, 0.3));*/
+      background-image:    -moz-radial-gradient(                                                   rgba(0, 0, 0, 0.0),                         rgba(0, 0, 0, 0.1),                         rgba(0, 0, 0, 0.0) 70.710678%);
+      background-image:     -ms-radial-gradient(                                                   rgba(0, 0, 0, 0.0),                         rgba(0, 0, 0, 0.1),                         rgba(0, 0, 0, 0.0) 70.710678%);
+      background-image:      -o-radial-gradient(                                                   rgba(0, 0, 0, 0.0),                         rgba(0, 0, 0, 0.1),                         rgba(0, 0, 0, 0.0) 70.710678%);
+      background-image:        -webkit-gradient(radial, center center, 0, center center, 720, from(rgba(0, 0, 0, 0.0)), color-stop(35.355339%, rgba(0, 0, 0, 0.1)), color-stop(70.710678%, rgba(0, 0, 0, 0.0)));
+      background-image: -webkit-radial-gradient(                                                   rgba(0, 0, 0, 0.0),                         rgba(0, 0, 0, 0.1),                         rgba(0, 0, 0, 0.0) 70.710678%);
+      background-image:         radial-gradient(                                                   rgba(0, 0, 0, 0.0),                         rgba(0, 0, 0, 0.1),                         rgba(0, 0, 0, 0.0) 70.710678%)
     }
 
     /* Socials */
@@ -608,7 +595,6 @@
         /* All */
         #socials .social * {
           display: initial;
-          height : 50%;
           width  : 50%
         }
 
@@ -643,3 +629,52 @@
             -webkit-transition-delay: 200ms;
             transition-delay        : 200ms;
           }
+
+/* At Rules */
+  /* Keyframes */
+    /* Avatar */
+    @keyframes avatar {
+      50% {
+        -ah-transform    : translate(0, 5px);
+        -ms-transform    : translate(0, 5px);
+        -o-transform     : translate(0, 5px);
+        -webkit-transform: translate(0, 5px);
+        transform        : translate(0, 5px)
+      }
+    }
+
+    /* Background (Color, Size) */
+    @keyframes background-color {
+      50% {
+        -ms-filter    : "hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)";
+        -webkit-filter: hue-rotate(595deg);
+        -webkit-filter: hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1);
+        filter        : hue-rotate(595deg);
+        filter        : hue-rotate(595deg) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, Opacity=75, Style=0x2) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=75, FinishX=0, FinishY=20 Opacity=0, StartX=0, StartY=0, Style=0x1) progid:DXImageTransform.Microsoft.Alpha(Enabled=true, FinishOpacity=0, FinishX=0, FinishY=100, Opacity=100, StartX=0, StartY=20, Style=0x1)
+      }
+    }
+
+    @keyframes background-size {
+      50% {
+        -ah-background-size    : 100% 50%;
+        -khtml-background-size : 100% 50%;
+        -moz-background-size   : 100% 50%;
+        -webkit-background-size: 100% 50%;
+        background-size        : 100% 50%
+      }
+    }
+
+    /* Title Entry */
+    @keyframes title-entry {
+      from {
+        color                    : transparent;
+        -webkit-text-stroke-color: transparent
+      }
+    }
+
+  /* Media > ... */
+  @media all\0, all\9 {
+    /* Features > Main > (Background, Hero) */
+    #background    { background-color: #0F0F0F }
+    #hero, #hero * { color           : #F0F0F0 }
+  }

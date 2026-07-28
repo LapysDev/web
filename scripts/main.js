@@ -1,10 +1,11 @@
 /* Namespace > ... */
-var Animate          = {all: [],        attributeName: "data-:animate", main: nop, tagNames: ['*'],                                                                                                                                                          MAXIMUM_DOWNSCALE_ADJUSTMENT: /* --> percent % */ 0.025, MAXIMUM_ORIGIN_DISTANCE: Math.SQRT2 || Math.sqrt(2.0), magnify: {animated: [], observed: []}, tilt3D: {angle: /* ->> ° degrees */ 1.0, x: 0.0, y: 0.0}, '__proto__': null}; // ->> Considered `https://github.com/whatwg/html/issues/2271` for underscore attributes
-var Lazy             = {all: null,      attributeName: "data-:lazy",    main: nop, tagNames: ["embed", "iframe", "img", "input", "link", "object", "script", "source", "track", "video"],                                                                                                                                                                       awaiting: null, awaitingTimeout: null, next: nop, observer: null, observed: [], prompted: [], threshold: 0.0, '__proto__': null}; //     — but ultimately went with `data-:` custom attribute prefix
-var Legacy           = {all: undefined, attributeName: "data-:legacy",  main: nop, tagNames: ["html"],                                                                                                                                                                                                                                                                                                                                                                        '__proto__': null};
-var Portal           = {all: [],        attributeName: "data-:portal",  main: nop, tagNames: ['a', "address", 'b', "blockquote", "body", "caption", "cite", "code", "dd", "dfn", "div", "dl", "dt", "em", "form", "h1", "h2", "h3", "h4", "h5", "h6", 'i', "kbd", "li", "map", "ol", "option", 'p', "pre", 'q', "samp", "select", "small", "span", "strong", "sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "tr", "ul", "var"], responsive: false, '__proto__': null};
-var PortalReflection = {all: undefined, attributeName: "data-:reflect", main: nop, tagNames: [],                                                                                                                                                                                                                                                                                                                                                                              '__proto__': null};
-var Tooltip          = {all: undefined, attributeName: "data-:tooltip", main: nop, tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                          supported: true, '__proto__': null};
+var Abbreviation     = {all: [],        attributeName: "data-:abbreviate", main: nop, tagNames: ["abbr", "acronym"],                                                                                                                                                                                                                                                                                                                                                             '__proto__': null};
+var Animate          = {all: [],        attributeName: "data-:animate",    main: nop, tagNames: ['*'],                                                                                                                                                          MAXIMUM_DOWNSCALE_ADJUSTMENT: /* --> percent % */ 0.025, MAXIMUM_ORIGIN_DISTANCE: Math.SQRT2 || Math.sqrt(2.0), magnify: {animated: [], observed: []}, tilt3D: {angle: /* ->> ° degrees */ 1.0, x: 0.0, y: 0.0}, '__proto__': null}; // ->> Considered `https://github.com/whatwg/html/issues/2271` for underscore attributes
+var Lazy             = {all: null,      attributeName: "data-:lazy",       main: nop, tagNames: ["embed", "iframe", "img", "input", "link", "object", "script", "source", "track", "video"],                                                                                                                                                                       awaiting: null, awaitingTimeout: null, next: nop, observer: null, observed: [], prompted: [], threshold: 0.0, '__proto__': null}; //     — but ultimately went with `data-:` custom attribute prefix
+var Legacy           = {all: undefined, attributeName: "data-:legacy",     main: nop, tagNames: ["html"],                                                                                                                                                                                                                                                                                                                                                                        '__proto__': null};
+var Portal           = {all: [],        attributeName: "data-:portal",     main: nop, tagNames: ['a', "address", 'b', "blockquote", "body", "caption", "cite", "code", "dd", "dfn", "div", "dl", "dt", "em", "form", "h1", "h2", "h3", "h4", "h5", "h6", 'i', "kbd", "li", "map", "ol", "option", 'p', "pre", 'q', "samp", "select", "small", "span", "strong", "sub", "sup", "table", "tbody", "td", "textarea", "tfoot", "th", "thead", "tr", "ul", "var"], responsive: false, '__proto__': null};
+var PortalReflection = {all: undefined, attributeName: "data-:reflect",    main: nop, tagNames: [],                                                                                                                                                                                                                                                                                                                                                                              '__proto__': null};
+var Tooltip          = {all: undefined, attributeName: "data-:tooltip",    main: nop, tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                          supported: true, '__proto__': null};
 
 /* Global > ... */
 function BACKGROUND_PROCEDURE() { /* Do something… */                                   BACKGROUND_PROCEDURES[BACKGROUND_PROCEDURES.index = ++BACKGROUND_PROCEDURES.index % BACKGROUND_PROCEDURES.length](); return void BACKGROUND_HANDLER(BACKGROUND_PROCEDURE) }
@@ -178,45 +179,6 @@ function colorRGBSaturation(color, ratio) {
 
 function colorRGBAToString(color, alpha) {
   return "rgba(" + color.red + ", " + color.green + ", " + color.blue + ", " + alpha + ')'
-}
-
-function convertChildNodes(element, nodeTypeA, nodeTypeB) /* TODO (Lapys) */ {
-  if (nodeTypeA === nodeTypeB)
-  return true;
-
-  switch (nodeTypeA) {
-    case /* --> Node.ELEMENT_NODE */                0x1: switch (nodeTypeB) { default: return false } break;
-    case /* --> Node.ATTRIBUTE_NODE */              0x2: switch (nodeTypeB) { default: return false } break;
-    case /* --> Node.TEXT_NODE */                   0x3: switch (nodeTypeB) { case 0x1: case 0x8: break; case 0xB: return true; default: return false } break;
-    case /* --> Node.CDATA_SECTION_NODE */          0x4: switch (nodeTypeB) { default: return false } break;
-    case /* --> Node.ENTITY_REFERENCE_NODE */       0x5: return false;
-    case /* --> Node.ENTITY_NODE */                 0x6: return false;
-    case /* --> Node.PROCESSING_INSTRUCTION_NODE */ 0x7: switch (nodeTypeB) { default: return false } break;
-    case /* --> Node.COMMENT_NODE */                0x8: switch (nodeTypeB) { default: return false } break;
-    case /* --> Node.DOCUMENT_NODE */               0x9: switch (nodeTypeB) { default: return false } break;
-    case /* --> Node.DOCUMENT_TYPE_NODE */          0xA: switch (nodeTypeB) { default: return false } break;
-    case /* --> Node.DOCUMENT_FRAGMENT_NODE */      0xB: switch (nodeTypeB) { default: return false } break;
-    case /* --> Node.NOTATION_NODE */               0xC: return false
-  }
-
-  for (var index = element.childNodes.length; index--; ) {
-    var node = element.childNodes.item(index);
-
-    if (node.nodeType === nodeTypeA)
-    switch (nodeTypeA) {
-      case 0x3: {
-        for (var texts = delimit(node.nodeValue, /\s+/g), subindex = 0, sublength = texts.length; subindex !== sublength; ++subindex)
-        switch (nodeTypeB) {
-          case 0x1:      element.insertBefore(document.createElement("span"), node).innerText = texts[subindex].value + texts[subindex].delimiter; break;
-          case 0x8: void element.insertBefore(document.createComment(texts[subindex].value + texts[subindex].delimiter), node)
-        }
-
-        element.removeChild(node)
-      }
-    }
-  }
-
-  return true
 }
 
 function createComponentCache(component) {
@@ -3354,11 +3316,11 @@ function getElementsByComponent(component) {
           case "script": searched = document.scripts || null
         }
 
-        searched = null === searched ? document.getElementsByTagName(component.tagNames[index]) : searched;
+        searched = null === searched ? typeof document.getElementsByTagName === "function" ? document.getElementsByTagName(component.tagNames[index]) : getDocumentElements() : searched;
 
         for (var subindex = 0, sublength = searched.length; subindex !== sublength; ++subindex)
         try {
-          if (null !== searched[subindex].getAttribute(component.attributeName))
+          if (component.tagNames[index] === searched[subindex].tagName.toLowerCase() && null !== searched[subindex].getAttribute(component.attributeName))
           void componentCache.elements.push(searched[subindex]) // --> searched.item(subindex)
         } catch (error) {}
       }
@@ -3368,6 +3330,19 @@ function getElementsByComponent(component) {
   }
 
   return []
+}
+
+function getElementsByTagName(tagName) {
+  if (typeof document.getElementsByTagName === "function") return document.getElementsByTagName(tagName);
+  var elements = [], subelements = getDocumentElements(), tagName = tagName.toLowerCase();
+
+  // ...
+  for (var index = 0, length = subelements.length; index !== length; ++index) {
+    if (subelements[index].tagName.toLowerCase() === tagName)
+    void elements.push(subelements[index])
+  }
+
+  return elements
 }
 
 function getElementSelector(element) /* TODO (Lapys) -> Does not escape attributes with special characters in their name */ {
@@ -3400,7 +3375,7 @@ function getStyleDeclarationPropertyValue(style, propertyName) {
 
   // ...
   try {
-    if (typeof style.getPropertyValue === "function") value = style.getPropertyValue(propertyName);
+    if (typeof style.getPropertyValue === "function") value = style.getPropertyValue(propertyName); // ->> Rendering was performed in a subtree regardless of `content-visibility`
     else /* if (property !== Symbol.iterator && property !== Symbol.toStringTag) */ {
       if (null === value && !NO_PROPERTY.test(propertyName)      && typeof style[propertyName]      === "string") value = style[propertyName];
       if (null === value && !NO_PROPERTY.test(alt(propertyName)) && typeof style[alt(propertyName)] === "string") value = style[alt(propertyName)]
@@ -3650,6 +3625,45 @@ function reduceComponentCache(element, componentCache) {
   }
 }
 
+function replaceChildNodesByType(element, nodeTypeA, nodeTypeB) /* TODO (Lapys) */ {
+  if (nodeTypeA === nodeTypeB)
+  return true;
+
+  switch (nodeTypeA) {
+    case /* --> Node.ELEMENT_NODE */                0x1: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.ATTRIBUTE_NODE */              0x2: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.TEXT_NODE */                   0x3: switch (nodeTypeB) { case 0x1: case 0x8: break; case 0xB: return true; default: return false } break;
+    case /* --> Node.CDATA_SECTION_NODE */          0x4: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.ENTITY_REFERENCE_NODE */       0x5: return false;
+    case /* --> Node.ENTITY_NODE */                 0x6: return false;
+    case /* --> Node.PROCESSING_INSTRUCTION_NODE */ 0x7: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.COMMENT_NODE */                0x8: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.DOCUMENT_NODE */               0x9: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.DOCUMENT_TYPE_NODE */          0xA: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.DOCUMENT_FRAGMENT_NODE */      0xB: switch (nodeTypeB) { default: return false } break;
+    case /* --> Node.NOTATION_NODE */               0xC: return false
+  }
+
+  for (var index = element.childNodes.length; index--; ) {
+    var node = element.childNodes.item(index);
+
+    if (node.nodeType === nodeTypeA)
+    switch (nodeTypeA) {
+      case 0x3: {
+        for (var texts = delimit(node.nodeValue, /\s+/g), subindex = 0, sublength = texts.length; subindex !== sublength; ++subindex)
+        switch (nodeTypeB) {
+          case 0x1:      element.insertBefore(document.createElement("span"), node).innerText = texts[subindex].value + texts[subindex].delimiter; break;
+          case 0x8: void element.insertBefore(document.createComment(texts[subindex].value + texts[subindex].delimiter), node)
+        }
+
+        element.removeChild(node)
+      }
+    }
+  }
+
+  return true
+}
+
 function timestamp() {
   return new Date().valueOf()
 }
@@ -3857,8 +3871,8 @@ Tooltip.main = function tooltipMain() {
 };
 
 switch (null !== LOOP_HANDLER) /* ->> `LOOP_PROCEDURE` indefinitely repeats on first invocation */ {
-  case typeof requestAnimationFrame === "function": void requestAnimationFrame(function loop() { LOOP_PROCEDURE(), pend(BACKGROUND_PROCEDURE) }); break;  // --> cancelAnimationFrame(…)
-  default:                                          void setInterval          (function loop() { LOOP_PROCEDURE(), pend(BACKGROUND_PROCEDURE) }, 0.001e3) // --> clearInterval       (…)
+  case typeof requestAnimationFrame === "function": void requestAnimationFrame(function loop() { LOOP_PROCEDURE(), pend(BACKGROUND_PROCEDURE) }); break;           // --> cancelAnimationFrame(…)
+  default:                                          void setInterval          (function loop() { LOOP_PROCEDURE(), pend(BACKGROUND_PROCEDURE) }, 0.9e3 || 0.001e3) // --> clearInterval       (…)
 }
 
 if (null === COMPONENTS_HANDLER && typeof MutationObserver === "function")
@@ -3960,6 +3974,14 @@ void poll(window, "beforeprint", function(_) {
 }, {"capture": true, "passive": true});
 
 void poll(window, ["blur", "mouseleave"], function(_) {
+  for (var index = Abbreviation.all.length; index--; ) {
+    var abbreviation = Abbreviation.all.pop();
+
+    while (abbreviation.element.hasChildNodes()) void abbreviation.element.removeChild(abbreviation.element.firstChild);
+    while (abbreviation.nodes.length)            void abbreviation.element.appendChild(abbreviation.nodes.pop())
+  }
+
+  // ...
   for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {
     for (var presets = animates[index].getAttribute(Animate.attributeName).split(/\s+/); presets.length; )
     switch (presets.pop()) {
@@ -3984,7 +4006,43 @@ void poll(window, "load", function start(_) /* --> document.readyState === "comp
           observer.unobserve(entry.target)
         }
       }
-    }, {"delay": 0e3, "root": /* --> document */ null, "rootMargin": "40px 40px 40px 40px", "scrollMargin": "0px 0px 0px 0px", "threshold": /* ->> Singular (trigger when intersecting any percentage) */ [Lazy.threshold], "trackVisibility": /* --> isVisible(…) */ false})
+    }, {"delay": 0e3, "root": /* --> document */ null, "rootMargin": "40px 40px 40px 40px", "scrollMargin": "0px 0px 0px 0px", "threshold": /* ->> Singular (trigger when intersecting any percentage) */ [Lazy.threshold], "trackVisibility": /* --> isVisible(…) */ false});
+
+    for (var abbreviations = getElementsByComponent(Abbreviation), index = abbreviations.length; index--; ) {
+      void poll(abbreviations[index], ["blur", "mouseleave"], function(event) {
+        for (var index = Abbreviation.all.length; index--; ) {
+          var abbreviation = Abbreviation.all[index];
+
+          if (abbreviation.element === event.target) {
+            while (abbreviation.element.hasChildNodes()) void abbreviation.element.removeChild(abbreviation.element.firstChild);
+            while (abbreviation.nodes.length)            void abbreviation.element.appendChild(abbreviation.nodes.pop());
+
+            void Abbreviation.all.splice(index, 1);
+            break
+          }
+        }
+      });
+
+      void poll(abbreviations[index], ["focus", "mouseover"], function(event) {
+        for (var index = Abbreviation.all.length; ; ) {
+          if (--index === -1) {
+            var nodes = []; // --> .childNodes
+
+            // ...
+            while (event.target.hasChildNodes())
+              void nodes.push(event.target.removeChild(event.target.lastChild));
+
+            void Abbreviation.all.push({element: event.target, nodes: nodes});
+            event.target.innerText = ' ' + event.target.getAttribute(Abbreviation.attributeName).replace(TRIM_MATCH, TRIM_PASS) + ' ';
+
+            break
+          }
+
+          if (Abbreviation.all[index] === event.target)
+          break
+        }
+      })
+    }
   } catch (error) { /* --> RangeError | SyntaxError */ }
 
   else void poll(window, ["resize", "scroll"], function promptLazyComponents(_) {
@@ -4004,7 +4062,7 @@ void poll(window, "load", function start(_) /* --> document.readyState === "comp
       }
     }
   }, {"capture": true, "passive": true})
-}, {"capture": true, "once": true, "passive": true});
+}, {"capture": false, "once": true, "passive": true});
 
 void poll(window, "mousemove", function(event) {
   if (ORIENTATION_PORTRAIT !== getDocumentOrientation()) {

@@ -1,5 +1,9 @@
 ## TODO
-- EXPERTISE
+- Minimal SVG background canvas set with JS
+- PTLLS is not the teaching you did
+--- ---
+- EXPERTISE section
+- Low-contrast wallpaper color split in background starry reel
 - NAVIGATION (side) buttons for each section
 - PROJECTS can also be 3D modelling and other stuff too, not just games
 --- ---

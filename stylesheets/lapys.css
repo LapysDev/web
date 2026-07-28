@@ -208,12 +208,16 @@
 
   /* <abbr>, <acronym> */
   abbr[title], acronym[title] {
-    -moz-text-decoration-line : underline;
-    -moz-text-decoration-style: dashed;
-    border-bottom             : none;
-    border-bottom-style       : none;
-    text-decoration-line      : underline;
-    text-decoration-style     : dotted
+    -ah-text-decoration-line     : underline;
+    -ah-text-decoration-style    : dashed;
+    -moz-text-decoration-line    : underline;
+    -moz-text-decoration-style   : dashed;
+    -webkit-text-decoration-line : underline;
+    -webkit-text-decoration-style: dashed;
+    border-bottom                : none;
+    border-bottom-style          : none;
+    text-decoration-line         : underline;
+    text-decoration-style        : dotted
   }
 
   /* <a>, <abbr>, <acronym>, <address>, <applet>, <article>, <aside>, <audio>, <b>, <blockquote>, <body>, <button>, <canvas>, <caption>, <center>, <cite>, <code>, <dd>, <del>, <details>, <dfn>, <div>, <dl>, <dt>, <em>, <embed>, <fieldset>, <figcaption>, <figure>, <footer>, <form>, <header>, <hgroup>, <html>, <i>, <iframe>, <img>, <ins>, <kbd>, <label>, <legend>, <li>, <mark>, <menu>, <nav>, <object>, <ol>, <optgroup>, <output>, <p>, <pre>, <q>, <ruby>, <s>, <samp>, <section>, <select>, <small>, <span>, <strike>, <strong>, <sub>, <summary>, <sup>, <table>, <tbody>, <td>, <textarea>, <tfoot>, <th>, <thead>, <time>, <tr>, <tt>, <u>, <ul>, <var>, <video> */
@@ -571,7 +575,8 @@
   /* <caption> */
   caption {
     -ah-text-align: inherit;
-    text-align    : inherit
+    text-align    : inherit;
+    text-align    : match-parent
   }
 
   /* <cite>, <dfn>, <em>, <i>, <var> */
