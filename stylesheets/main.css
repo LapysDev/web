@@ -1854,7 +1854,7 @@
     /* Portrait (e.g. electronic readers, phones, smart watches, …) ->> Compact */
     @media (max-width: 768px) and (scripting: enabled), (width <= 768px) and (scripting: enabled), print {
       /* DOM Elements > (<html>, <input>) ->> Damn mobile Web text inflation algorithms */
-      html, input { font-size: 0.6rem }
+      html, input { font-size: 10px }
 
       /* Components > (Landscape, Portrait) */
       .landscape { content-visibility: hidden;  display: none !important; empty-cells: hide; visibility: collapse }
