@@ -527,6 +527,7 @@
 
             /* Title */
             #title, [data-\:portal=title] {
+              -ah-vertical-align        : middle;
               -moz-animation-delay      : 0ms;
               -moz-animation-duration   : 650ms;
               -moz-animation-name       : title-entry;
@@ -542,7 +543,8 @@
               animation-delay           : 0ms;
               animation-duration        : 650ms;
               animation-name            : title-entry;
-              font-weight               : 900
+              font-weight               : 900;
+              vertical-align            : middle;
             }
 
             #title {
@@ -613,9 +615,10 @@
 
         /* <span> */
         #tagline span {
-          display       : inline-block;
-          vertical-align: baseline;
-          white-space   : pre-wrap
+          -ah-vertical-align: baseline;
+          display           : inline-block;
+          vertical-align    : baseline;
+          white-space       : pre-wrap
         }
           /* Pseudo > Not */
           #tagline span:not(:hover) { font-variant-emoji: text }
