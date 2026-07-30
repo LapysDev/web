@@ -8,8 +8,8 @@ var PortalReflection = {all: undefined, attributeName: "data-:reflect",    main:
 var Tooltip          = {all: undefined, attributeName: "data-:tooltip",    main: nop, tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                          supported: true, '__proto__': null};
 
 /* Global > ... */
-function BACKGROUND_PROCEDURE() { /* Do something… */                                   BACKGROUND_PROCEDURES[BACKGROUND_PROCEDURES.index = ++BACKGROUND_PROCEDURES.index % BACKGROUND_PROCEDURES.length](); return void BACKGROUND_HANDLER(BACKGROUND_PROCEDURE) }
-function LOOP_PROCEDURE      () { LOOP_PROCEDURES.main(), BACKGROUND_PROCEDURES.main(); LOOP_PROCEDURES      [LOOP_PROCEDURES      .index = ++LOOP_PROCEDURES      .index % LOOP_PROCEDURES      .length](); return void LOOP_HANDLER      (LOOP_PROCEDURE) }
+function BACKGROUND_PROCEDURE() { /* Do something… */                                   for (var index = 0, length = BACKGROUND_PROCEDURES.length; index !== length; ++index) BACKGROUND_PROCEDURES[index]() }
+function LOOP_PROCEDURE      () { LOOP_PROCEDURES.main(), BACKGROUND_PROCEDURES.main(); for (var index = 0, length = LOOP_PROCEDURES      .length; index !== length; ++index) LOOP_PROCEDURES      [index]() }
 
 var WAIT             = {throttled: []};
 var TRIM_MATCH       = /^\s+|\s+$/g, TRIM_PASS = "";
@@ -100,32 +100,42 @@ var ORIENTATION_PORTRAIT      = 0x02;
 var ORIENTATION_PANORAMIC     = 0x04;
 var ORIENTATION_LANDSCAPE     = 0x01;
 var LOOP_PROCEDURES           = createProcedureCollection([nop]);
-var LOOP_HANDLER              = typeof requestAnimationFrame !== "function" ? nop : requestAnimationFrame;
-var MATH_TAU                  = 491701844.0   / 78256779.0;  // --> 2π
-var MATH_SQRT5                = 51841.0       / 23184.0;     // --> √5
-var MATH_SQRT3                = 97.0          / 56.0;        // --> √3
-var MATH_SQRT2                = 665857.0      / 470832.0;    // --> √2
-var MATH_RAD_TO_DEG           = 14086220220.0 / 245850922.0; // --> 180° ÷ π
-var MATH_PI                   = 245850922.0   / 78256779.0;  // ->> Archimedes’ constant
-var MATH_KAPPA                = 0.5522847498307935;          // ->> Ellipse Bézier Tangent --> ⁴⁄₃ × (√2 - 1)
-var MATH_LOG10E               = 0.4342944819032518;          // --> ㏑(e)
-var MATH_LOG2E                = 1.4426950408889634;          // --> ㏒(e)
-var MATH_LN10                 = 2.3025850929940460;          // --> ㏑(10)
-var MATH_LN2                  = 0.6931471805599453;          // --> ㏑(2)
-var MATH_ETA                  = 245850922.0 / 156513558.0;   // --> ½π
-var MATH_E                    = 2.718281828459045;           // ->> Golden Ratio (Natural Logarithm Base)
-var MATH_DEG_TO_RAD           = 245850922.0 / 14086220220.0; // --> π ÷ 180°
+var LOOP_HANDLER              = typeof requestAnimationFrame !== "function" ? nop : requestAnimationFrame; // ->> Must be manually invoked
+var MATH_TAU                  = 491701844.0   / 78256779.0;                                                // --> 2π
+var MATH_SQRT5                = 51841.0       / 23184.0;                                                   // --> √5
+var MATH_SQRT3                = 97.0          / 56.0;                                                      // --> √3
+var MATH_SQRT2                = 665857.0      / 470832.0;                                                  // --> √2
+var MATH_RAD_TO_DEG           = 14086220220.0 / 245850922.0;                                               // --> 180° ÷ π
+var MATH_PI                   = 245850922.0   / 78256779.0;                                                // ->> Archimedes’ constant
+var MATH_KAPPA                = 0.5522847498307935;                                                        // ->> Ellipse Bézier Tangent --> ⁴⁄₃ × (√2 - 1)
+var MATH_LOG10E               = 0.4342944819032518;                                                        // --> ㏑(e)
+var MATH_LOG2E                = 1.4426950408889634;                                                        // --> ㏒(e)
+var MATH_LN10                 = 2.3025850929940460;                                                        // --> ㏑(10)
+var MATH_LN2                  = 0.6931471805599453;                                                        // --> ㏑(2)
+var MATH_ETA                  = 245850922.0 / 156513558.0;                                                 // --> ½π
+var MATH_E                    = 2.718281828459045;                                                         // ->> Golden Ratio (Natural Logarithm Base)
+var MATH_DEG_TO_RAD           = 245850922.0 / 14086220220.0;                                               // --> π ÷ 180°
 var EVENT_PREVENT_DEFAULT     = false;
-var COMPONENTS_HANDLER        = null;
-var COMPONENTS_CACHE          = []; // --> [...createComponentCache(…)]
+var DOM_IMMEDIATE             = 0x0;
+var DOM_DEFERRED              = 0x1;
+var DOM                       = {defer: nop, deferred: []}; // --> {deferred: {action: function, node: Node, targets: Node[]}[]}
+var COMPONENTS_HANDLER        = null;                      // --> [[unreachable]] function *
+var COMPONENTS_CACHE          = [];                        // --> [...createComponentCache(…)]
 var BACKGROUND_PROCEDURES     = createProcedureCollection([function lazy() { Lazy.main() }, function portal() { Portal.main() }, function tooltip() { Tooltip.main() }]);
-var BACKGROUND_HANDLER        = nop;
+var BACKGROUND_HANDLER        = nop; // ->> Does nothing, unlike `LOOP_HANDLER`
 
 var nop       = (function() { try { if (typeof eval === "function") return eval("() => void 0x00") } catch (error) {} return nop })();
 var pend      = typeof queueMicrotask === "function" ? function pend(callback) { return queueMicrotask(callback) } : pend;
 var timestamp = typeof performance === "object" && typeof performance.now === "function" ? function timestamp() { return performance.now() } : typeof performance.webkitNow === "function" ? function timestamp() { return performance.webkitNow() } : timestamp;
 
 /* Function > ... */
+function appendChildNode(node, childNode, domStrategy) {
+  void DOM.deferred.push({action: appendChildNode, node: node, targets: [childNode]});
+  if (domStrategy & DOM_DEFERRED) void pend(DOM.defer); else DOM.defer();
+
+  return childNode
+}
+
 function colorRGBBrightness(color, ratio) {
   return {
     red  : Math.min(Math.max(Math.round(color.red   * ratio), 0x00), 0xFF),
@@ -187,12 +197,9 @@ function createComponentCache(component) {
 
 function createProcedureCollection(procedures) {
   if (undefined !== ({'__proto__': undefined})['__proto__'])
-    return {main: nop, index: 0, '__proto__': procedures};
+    return {main: nop, '__proto__': procedures};
 
-  // ...
-  procedures.index = 0;
-  procedures.main  = nop;
-
+  procedures.main = nop;
   return procedures
 }
 
@@ -941,7 +948,7 @@ function getCSSPropertyValue(element, propertyName, styleRules /* = null */, gro
                         }
 
                         fontSize = containerNode.appendChild(PROBE_ELEMENT = probe("height: 0 !important; position: absolute !important; width: 1rem !important")).offsetWidth;
-                        void       containerNode.removeChild(PROBE_ELEMENT);
+                        void       containerNode.removeChild(PROBE_ELEMENT); // ->> Layout trashing
 
                         if (null !== containerStyle) {
                           if (containerStyleInlined) {
@@ -3407,6 +3414,13 @@ function hasComponent(element, component) {
   return false
 }
 
+function insertBeforeChildNode(node, childNode, targetChildNode, domStrategy) {
+  void DOM.deferred.push({action: insertBeforeChildNode, node: node, targets: [childNode, targetChildNode]});
+  if (domStrategy & DOM_DEFERRED) void pend(DOM.defer); else DOM.defer();
+
+  return childNode
+}
+
 function isCSSVisible(element) /* TODO (Lapys) -> Ignores `clip-path` and `mask` (e.g. `inset(50%)` and `linear-gradient(black 0 0) center / 0 0 no-repeat` up to more complex values respectively) */ {
   var styleDeclaration = getCSSStyleDeclaration(element);
   return !(
@@ -3625,7 +3639,14 @@ function reduceComponentCache(element, componentCache) {
   }
 }
 
-function replaceChildNodesByType(element, nodeTypeA, nodeTypeB) /* TODO (Lapys) */ {
+function removeChildNode(node, childNode, domStrategy) {
+  void DOM.deferred.push({action: removeChildNode, node: node, targets: [childNode]});
+  if (domStrategy & DOM_DEFERRED) void pend(DOM.defer); else DOM.defer();
+
+  return childNode
+}
+
+function replaceChildNodesByType(node, nodeTypeA, nodeTypeB, DOM) /* TODO (Lapys) */ {
   if (nodeTypeA === nodeTypeB)
   return true;
 
@@ -3644,19 +3665,19 @@ function replaceChildNodesByType(element, nodeTypeA, nodeTypeB) /* TODO (Lapys) 
     case /* --> Node.NOTATION_NODE */               0xC: return false
   }
 
-  for (var index = element.childNodes.length; index--; ) {
-    var node = element.childNodes.item(index);
+  for (var index = node.childNodes.length; index--; ) {
+    var childNode = node.childNodes.item(index);
 
-    if (node.nodeType === nodeTypeA)
+    if (childNode.nodeType === nodeTypeA)
     switch (nodeTypeA) {
       case 0x3: {
-        for (var texts = delimit(node.nodeValue, /\s+/g), subindex = 0, sublength = texts.length; subindex !== sublength; ++subindex)
+        for (var texts = delimit(childNode.nodeValue, /\s+/g), subindex = 0, sublength = texts.length; subindex !== sublength; ++subindex)
         switch (nodeTypeB) {
-          case 0x1:      element.insertBefore(document.createElement("span"), node).innerText = texts[subindex].value + texts[subindex].delimiter; break;
-          case 0x8: void element.insertBefore(document.createComment(texts[subindex].value + texts[subindex].delimiter), node)
+          case 0x1:      insertBeforeChildNode(node, document.createElement("span"),                                            childNode, DOM).innerText = texts[subindex].value + texts[subindex].delimiter; break;
+          case 0x8: void insertBeforeChildNode(node, document.createComment(texts[subindex].value + texts[subindex].delimiter), childNode, DOM)
         }
 
-        element.removeChild(node)
+        removeChildNode(node, childNode, DOM)
       }
     }
   }
@@ -3703,7 +3724,7 @@ Animate.main = function animateMain() {
 
   // ...
   while (Animate.magnify.animated.length)
-  Animate.magnify.animated.pop().setAttribute("data-:animated", "");
+  Animate.magnify.reset(Animate.magnify.animated.pop());
 
   while (Animate.magnify.observed.length)
   for (var animateElement = Animate.magnify.observed.pop(), index = Animate.magnify.animated.length; ; ) {
@@ -3730,6 +3751,27 @@ Animate.main = function animateMain() {
       }
     }
   }
+};
+  Animate.magnify.reset = function animateMagnifyReset(element) { element.setAttribute("data-:animated", "") };
+  Animate.tilt3D.reset  = function animateTilt3DReset (element) { element.style.cssText = element.style.cssText.replace(/(^|;)\s*(transform|transform-origin)\s*:\s*(([^;"']|"([^"\\]|\\.)*"|'([^'\\]|\\.)*')*)(?=;|$)/gi, "") };
+
+DOM.defer = function defer() {
+  var undeferred = [];
+
+  // ...
+  for (var index = 0, length = DOM.deferred.length; index !== length; ++index)
+  try {
+    var deferred = DOM.deferred[index];
+
+    switch (deferred.action) {
+      case appendChildNode:       deferred.node.appendChild (deferred.targets[0]);                      break;
+      case insertBeforeChildNode: deferred.node.insertBefore(deferred.targets[0], deferred.targets[1]); break;
+      case removeChildNode:       deferred.node.removeChild (deferred.targets[0])
+    }
+  } catch (error) { void undeferred.push(DOM.deferred[index]) }
+
+  DOM.deferred = undeferred;
+  void waitEvery(LOOP_PROCEDURE, 0.5e2)
 };
 
 Lazy.main = function lazyMain() {
@@ -3797,7 +3839,7 @@ Lazy.main = function lazyMain() {
     break
   }
 };
-  Lazy.next = function next() {
+  Lazy.next = function lazyNext() {
     for (var index = Lazy.observed.length; index--; ) if (Lazy.awaiting === Lazy.observed[index]) { void Lazy.observed.splice(index, 1); break }
     for (var index = Lazy.prompted.length; index--; ) if (Lazy.awaiting === Lazy.prompted[index]) { void Lazy.prompted.splice(index, 1); break }
 
@@ -3825,10 +3867,8 @@ Portal.main = function portalMain() /* ->> Static read-only reflection of target
       ) : isCSSVisible(portalElement) && !isVisible(portalTargetElement)) {
         for (var subindex = Portal.all.length; ; ) {
           if (--subindex === -1) {
-            portalTargetElement.setAttribute(PortalReflection.attributeName, "");
-
-            for (var nodes = Portal.all[Portal.all.push({destination: portalElement, nodes: [], source: portalTargetElement}) - 1].nodes; portalTargetElement.hasChildNodes(); )
-            void nodes.push(portalElement.appendChild(portalTargetElement.firstChild));
+            for (var nodes = Portal.all[Portal.all.push({destination: portalElement, nodes: [], source: portalTargetElement}) - 1].nodes, subindex = 0, sublength = portalTargetElement.childNodes.length; subindex !== sublength; ++subindex)
+            void nodes.push(appendChildNode(portalElement, portalTargetElement.childNodes.item(subindex), DOM_DEFERRED));
 
             break
           }
@@ -3844,7 +3884,7 @@ Portal.main = function portalMain() /* ->> Static read-only reflection of target
           portalTargetElement.removeAttribute(PortalReflection.attributeName);
 
           for (var nodes = Portal.all.splice(subindex, 1)[0].nodes, subindex = 0; nodes.length !== subindex; ++subindex)
-          void portalTargetElement.appendChild(nodes[subindex]);
+          void appendChildNode(portalTargetElement, nodes[subindex], DOM_DEFERRED);
 
           break
         }
@@ -3870,76 +3910,75 @@ Tooltip.main = function tooltipMain() {
   }
 };
 
-switch (null !== LOOP_HANDLER) /* ->> `LOOP_PROCEDURE` indefinitely repeats on first invocation */ {
-  case typeof requestAnimationFrame === "function": void requestAnimationFrame(function loop() { LOOP_PROCEDURE(), pend(BACKGROUND_PROCEDURE) }); break;           // --> cancelAnimationFrame(…)
-  default:                                          void setInterval          (function loop() { LOOP_PROCEDURE(), pend(BACKGROUND_PROCEDURE) }, 0.9e3 || 0.001e3) // --> clearInterval       (…)
-}
+/* ... ---> LOOP_PROCEDURE(…); BACKGROUND_PROCEDURE(…) */
+if (nop !== LOOP_HANDLER) void LOOP_HANDLER(LOOP_PROCEDURE);
+else                      void setInterval (LOOP_PROCEDURE, 0.9e3 || 0.001e3);
+  // ... ->> Update component caches by watching the DOM --> COMPONENTS_HANDLER = function …
+  if (null === COMPONENTS_HANDLER && typeof MutationObserver === "function")
+  try {
+    (new MutationObserver(COMPONENTS_HANDLER = function updateComponentCaches(records, observer) {
+      for (var index = records.length; index--; ) {
+        var record = records[index];
 
-if (null === COMPONENTS_HANDLER && typeof MutationObserver === "function")
-try {
-  (new MutationObserver(COMPONENTS_HANDLER = function updateComponentCaches(records, observer) {
-    for (var index = records.length; index--; ) {
-      var record = records[index];
+        // ...
+        for (var subindex = 0; subindex !== record.addedNodes.length; ++subindex)
+        for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
+          if (hasComponent(record.addedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex].component))
+          extendComponentCache(record.addedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex])
+        }
 
-      // ...
-      for (var subindex = 0; subindex !== record.addedNodes.length; ++subindex)
-      for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
-        if (hasComponent(record.addedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex].component))
-        extendComponentCache(record.addedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex])
+        for (var subindex = 0; subindex !== record.removedNodes.length; ++subindex)
+        for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
+          if (hasComponent(record.removedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex].component))
+          reduceComponentCache(record.removedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex])
+        }
+
+        // ...
+        void LOOP_HANDLER(LOOP_PROCEDURE)
       }
+    })).observe(document.documentElement, {attributeFilter: [], childList: true, subtree: true})
+  } catch (error) /* --> SyntaxError | TypeError */ { COMPONENTS_HANDLER = null }
 
-      for (var subindex = 0; subindex !== record.removedNodes.length; ++subindex)
+  if (null === COMPONENTS_HANDLER) {
+    function resetComponentCaches(event) {
+      event.stopPropagation();
+
       for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
-        if (hasComponent(record.removedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex].component))
-        reduceComponentCache(record.removedNodes[subindex], COMPONENTS_CACHE[componentCacheIndex])
+        COMPONENTS_CACHE[componentCacheIndex].elements.length = 0;
+        COMPONENTS_CACHE[componentCacheIndex].elements        = getElementsByComponent(COMPONENTS_CACHE[componentCacheIndex].component)
       }
     }
-  })).observe(document.documentElement, {attributeFilter: [], childList: true, subtree: true})
-} catch (error) /* --> SyntaxError | TypeError */ { COMPONENTS_HANDLER = null }
 
-if (null === COMPONENTS_HANDLER) {
-  function resetComponentCaches(event) {
-    event.stopPropagation();
+    function updateComponentCaches(event) {
+      COMPONENTS_HANDLER = updateComponentCaches;
+      event.stopPropagation();
 
-    for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
-      COMPONENTS_CACHE[componentCacheIndex].elements.length = 0;
-      COMPONENTS_CACHE[componentCacheIndex].elements        = getElementsByComponent(COMPONENTS_CACHE[componentCacheIndex].component)
+      for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
+        if (hasComponent(event.target, COMPONENTS_CACHE[componentCacheIndex].component))
+        switch (event.type) {
+          case "DOMNodeInserted": extendComponentCache(event.target, COMPONENTS_CACHE[componentCacheIndex]); break;
+          case "DOMNodeRemoved":  reduceComponentCache(event.target, COMPONENTS_CACHE[componentCacheIndex])
+        }
+      }
     }
+
+    // ...
+    void poll(document, "propertychange", resetComponentCaches, {"capture": true, "passive": true});
+
+    if (poll(document, ["DOMNodeInserted", "DOMNodeRemoved"], updateComponentCaches, {"capture": true, "passive": true}) === 2)
+    void removeChildNode(document.documentElement, appendChildNode(document.documentElement, PROBE_ELEMENT, DOM_IMMEDIATE), DOM_IMMEDIATE) // ->> Trigger either Mutation Event
   }
 
-  function updateComponentCaches(event) {
-    COMPONENTS_HANDLER = updateComponentCaches;
-    event.stopPropagation();
+  if (null === COMPONENTS_HANDLER)
+  void LOOP_PROCEDURES.push(function resetComponentCaches() {
+    for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; )
+    COMPONENTS_CACHE[componentCacheIndex].elements.length = 0 // ->> Keep the cache non-stale and perma-live
+  });
+if         (typeof scheduler           === "object")      void scheduler.postTask (function background() { BACKGROUND_PROCEDURE(), void scheduler.yield().then(background) /* --> if (TaskController::aborted) return void TaskController::reason */ }, {delay: 0.0e3, priority: "background" /* --> signal: new TaskController().signal */}); // --> TaskController::abort(…)
+else    if (typeof requestIdleCallback === "function")    void requestIdleCallback(function background() { BACKGROUND_PROCEDURE(), void requestIdleCallback(background, {timeout: 0.0e3}) }, {timeout: 0.0e3});                                                                                                                                // --> cancelIdleCallback   (…)
+else /* if (typeof Worker              === "function") */ BACKGROUND_PROCEDURES.main = BACKGROUND_PROCEDURE;                                                                                                                                                                                                                                   // ->> Called by `LOOP_PROCEDURE()`
 
-    for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; ) {
-      if (hasComponent(event.target, COMPONENTS_CACHE[componentCacheIndex].component))
-      switch (event.type) {
-        case "DOMNodeInserted": extendComponentCache(event.target, COMPONENTS_CACHE[componentCacheIndex]); break;
-        case "DOMNodeRemoved":  reduceComponentCache(event.target, COMPONENTS_CACHE[componentCacheIndex])
-      }
-    }
-  }
-
-  // ...
-  void poll(document, "propertychange", resetComponentCaches, {"capture": true, "passive": true});
-
-  if (poll(document, ["DOMNodeInserted", "DOMNodeRemoved"], updateComponentCaches, {"capture": true, "passive": true}) === 2)
-  void document.documentElement.removeChild(document.documentElement.appendChild(PROBE_ELEMENT)) // ->> Trigger either Mutation Event
-}
-
-if (null === COMPONENTS_HANDLER)
-void LOOP_PROCEDURES.push(function resetComponentCaches() {
-  for (var componentCacheIndex = COMPONENTS_CACHE.length; componentCacheIndex --> 0; )
-  COMPONENTS_CACHE[componentCacheIndex].elements.length = 0 // ->> Keep the cache perma-live and non-stale
-});
-
-switch (null !== BACKGROUND_HANDLER) {
-  case typeof scheduler           === "object":   void scheduler.postTask (function background() { BACKGROUND_PROCEDURE(), void scheduler.yield().then(background) /* --> if (TaskController::aborted) return void TaskController::reason */ }, {delay: 0.0e3, priority: "background" /* --> signal: new TaskController().signal */}); break; // --> TaskController::abort(…)
-  case typeof requestIdleCallback === "function": void requestIdleCallback(function background() { BACKGROUND_PROCEDURE(), void requestIdleCallback(background, {timeout: 0.0e3}) }, {timeout: 0.0e3});                                                                                                                                break; // --> cancelIdleCallback   (…)
-  case typeof Worker              === "function":;                                                                                                                                                                                                                                                                                            // ->> Opted out of Web Workers à la limited DOM parsing
-  default:                                        BACKGROUND_PROCEDURES.main = BACKGROUND_PROCEDURE
-}
-
+// ... ->> Trim redundant DOM whitespace
 if (typeof document.normalize === "function") {
   document.normalize();
 
@@ -3954,163 +3993,180 @@ if (typeof document.normalize === "function") {
   }
 }
 
-void poll(document, "keydown", function(event) {
-  if ((event.keyCode || event.which) === 0x1B) {
-    var element = getDocumentActiveElement();
+/* Event */
+  // Document > ...
+  void poll(document, "keydown", function nofocus(event) {
+    if ((event.keyCode || event.which) === /* ->> Escape */ 0x1B) {
+      var element = getDocumentActiveElement();
 
-    if (null !== element && typeof element.blur === "function")
-    element.blur()
-  }
-}, {"capture": true, "passive": true});
-
-void poll(window, "afterprint", function(_) {
-  Portal.responsive = false;
-  Portal.main()
-}, {"capture": true, "passive": true});
-
-void poll(window, "beforeprint", function(_) {
-  Portal.responsive = true;
-  Portal.main()
-}, {"capture": true, "passive": true});
-
-void poll(window, ["blur", "mouseleave"], function(_) {
-  for (var index = Abbreviation.all.length; index--; ) {
-    var abbreviation = Abbreviation.all.pop();
-
-    while (abbreviation.element.hasChildNodes()) void abbreviation.element.removeChild(abbreviation.element.firstChild);
-    while (abbreviation.nodes.length)            void abbreviation.element.appendChild(abbreviation.nodes.pop())
-  }
-
-  // ...
-  for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {
-    for (var presets = animates[index].getAttribute(Animate.attributeName).split(/\s+/); presets.length; )
-    switch (presets.pop()) {
-      case "magnify": break;
-      case "tilt3d": animates[index].style.cssText = animates[index].style.cssText.replace(/(^|;)\s*(transform|transform-origin)\s*:\s*(([^;"']|"([^"\\]|\\.)*"|'([^'\\]|\\.)*')*)(?=;|$)/gi, "")
+      if (null !== element && typeof element.blur === "function")
+      element.blur()
     }
-  }
-}, {"capture": true, "passive": true});
+  }, {"capture": true, "passive": true});
 
-void poll(window, "load", function start(_) /* --> document.readyState === "complete" */ {
-  Lazy.all          = [];
-  Tooltip.supported = typeof CSS === "object" && typeof CSS.supports === "function" && CSS.supports("content", "attr(title)");
+  void poll(document, ["keydown", "mousemove", "scroll"], function loop() {
+    waitEvery(LOOP_PROCEDURE, 0.5e2)
+  }, {"capture": true, "passive": true});
 
-  if (typeof IntersectionObserver === "function")
-  try {
-    Lazy.observer = new IntersectionObserver(function promptLazyComponents(entries, observer) {
-      for (var index = entries.length; index--; ) {
-        var entry = entries[index];
+  void poll(document, "mouseleave", function noanimate(_) {
+    while (Animate.magnify.animated.length) Animate.magnify.reset(Animate.magnify.animated.pop());
+    while (Animate.magnify.observed.length) Animate.magnify.reset(Animate.magnify.observed.pop());
 
-        if (entry.isIntersecting) {
-          void Lazy.prompted.push(entry.target);
-          observer.unobserve(entry.target)
-        }
-      }
-    }, {"delay": 0e3, "root": /* --> document */ null, "rootMargin": "40px 40px 40px 40px", "scrollMargin": "0px 0px 0px 0px", "threshold": /* ->> Singular (trigger when intersecting any percentage) */ [Lazy.threshold], "trackVisibility": /* --> isVisible(…) */ false});
+    for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {
+      for (var presets = animates[index].getAttribute(Animate.attributeName).split(/\s+/); presets.length; )
+      switch (presets.pop()) { case "magnify": break; case "tilt3d": Animate.tilt3D.reset(animates[index]) }
+    }
+  }, {"capture": true, "passive": true});
 
-    for (var abbreviations = getElementsByComponent(Abbreviation), index = abbreviations.length; index--; ) {
-      void poll(abbreviations[index], ["blur", "mouseleave"], function(event) {
-        for (var index = Abbreviation.all.length; index--; ) {
-          var abbreviation = Abbreviation.all[index];
+  // Window > ...
+  void poll(window, "afterprint",  function noprint(_) { Portal.responsive = false; Portal.main() }, {"capture": true, "passive": true});
+  void poll(window, "beforeprint", function print  (_) { Portal.responsive = true;  Portal.main() }, {"capture": true, "passive": true});
 
-          if (abbreviation.element === event.target) {
-            while (abbreviation.element.hasChildNodes()) void abbreviation.element.removeChild(abbreviation.element.firstChild);
-            while (abbreviation.nodes.length)            void abbreviation.element.appendChild(abbreviation.nodes.pop());
+  void poll(window, "blur", function(_) {
+    for (var index = Abbreviation.all.length; index--; ) {
+      var abbreviation = Abbreviation.all.pop();
 
-            void Abbreviation.all.splice(index, 1);
-            break
+      while (abbreviation.element.hasChildNodes()) void removeChildNode(abbreviation.element, abbreviation.element.firstChild, DOM_IMMEDIATE);
+      while (abbreviation.nodes.length)            void appendChildNode(abbreviation.element, abbreviation.nodes.pop(),        DOM_IMMEDIATE)
+    }
+
+    // ...
+    while (Animate.magnify.animated.length) Animate.magnify.reset(Animate.magnify.animated.pop());
+    while (Animate.magnify.observed.length) Animate.magnify.reset(Animate.magnify.observed.pop());
+
+    for (var animates = getElementsByComponent(Animate), index = animates.length; index--; ) {
+      for (var presets = animates[index].getAttribute(Animate.attributeName).split(/\s+/); presets.length; )
+      switch (presets.pop()) { case "magnify": break; case "tilt3d": Animate.tilt3D.reset(animates[index]) }
+    }
+  }, {"capture": true, "passive": true});
+
+  void poll(window, "load", function start(_) /* --> document.readyState === "complete" */ {
+    Lazy.all          = [];
+    Tooltip.supported = typeof CSS === "object" && typeof CSS.supports === "function" && CSS.supports("content", "attr(title)");
+
+    if (typeof IntersectionObserver === "function")
+    try {
+      Lazy.observer = new IntersectionObserver(function promptLazyComponents(entries, observer) {
+        for (var index = entries.length; index--; ) {
+          var entry = entries[index];
+
+          if (entry.isIntersecting) {
+            void Lazy.prompted.push(entry.target);
+            observer.unobserve(entry.target)
           }
         }
-      });
 
-      void poll(abbreviations[index], ["focus", "mouseover"], function(event) {
-        for (var index = Abbreviation.all.length; ; ) {
-          if (--index === -1) {
-            var nodes = []; // --> .childNodes
+        // ...
+        void LOOP_HANDLER(LOOP_PROCEDURE)
+      }, {"delay": 0e3, "root": /* --> document */ null, "rootMargin": "40px 40px 40px 40px", "scrollMargin": "0px 0px 0px 0px", "threshold": /* ->> Singular (trigger when intersecting any percentage) */ [Lazy.threshold], "trackVisibility": /* --> isVisible(…) */ false});
 
-            // ...
-            while (event.target.hasChildNodes())
-              void nodes.push(event.target.removeChild(event.target.lastChild));
+      for (var abbreviations = getElementsByComponent(Abbreviation), index = abbreviations.length; index--; ) {
+        void poll(abbreviations[index], ["blur", "mouseleave"], function(event) {
+          for (var index = Abbreviation.all.length; index--; ) {
+            var abbreviation = Abbreviation.all[index];
 
-            void Abbreviation.all.push({element: event.target, nodes: nodes});
-            event.target.innerText = ' ' + event.target.getAttribute(Abbreviation.attributeName).replace(TRIM_MATCH, TRIM_PASS) + ' ';
+            if (abbreviation.element === event.target) {
+              while (abbreviation.element.hasChildNodes()) void removeChildNode(abbreviation.element, abbreviation.element.firstChild, DOM_IMMEDIATE);
+              while (abbreviation.nodes.length)            void appendChildNode(abbreviation.element, abbreviation.nodes.pop(),        DOM_IMMEDIATE);
 
+              void Abbreviation.all.splice(index, 1);
+              break
+            }
+          }
+        });
+
+        void poll(abbreviations[index], ["focus", "mouseover"], function(event) {
+          for (var index = Abbreviation.all.length; ; ) {
+            if (--index === -1) {
+              var nodes = []; // --> .childNodes
+
+              // ...
+              while (event.target.hasChildNodes())
+                void nodes.push(removeChildNode(event.target, event.target.lastChild, DOM_IMMEDIATE));
+
+              void Abbreviation.all.push({element: event.target, nodes: nodes});
+              event.target.innerText = ' ' + event.target.getAttribute(Abbreviation.attributeName).replace(TRIM_MATCH, TRIM_PASS) + ' ';
+
+              break
+            }
+
+            if (Abbreviation.all[index] === event.target)
             break
           }
-
-          if (Abbreviation.all[index] === event.target)
-          break
-        }
-      })
-    }
-  } catch (error) { /* --> RangeError | SyntaxError */ }
-
-  else void poll(window, ["resize", "scroll"], function promptLazyComponents(_) {
-    for (var index = Lazy.all.length; index--; ) {
-      var documentBounds    = getDocumentBounds();
-      var lazyElement       = Lazy.all[index];
-      var lazyElementBounds = getElementBounds(lazyElement);
-
-      if (
-        lazyElementBounds.bottom > 0.0                  - +Lazy.threshold &&
-        lazyElementBounds.left   < documentBounds.width + -Lazy.threshold &&
-        lazyElementBounds.right  > 0.0                  - +Lazy.threshold &&
-        lazyElementBounds.top    < documentBounds.height + Lazy.threshold
-      ) for (var subindex = Lazy.prompted.length; ; ) {
-        if (--subindex === -1) { void Lazy.prompted.push(lazyElement); break }
-        if (Lazy.prompted[subindex] === lazyElement) break
+        })
       }
-    }
-  }, {"capture": true, "passive": true})
-}, {"capture": false, "once": true, "passive": true});
+    } catch (error) { /* --> RangeError | SyntaxError */ }
 
-void poll(window, "mousemove", function(event) {
-  if (ORIENTATION_PORTRAIT !== getDocumentOrientation()) {
-    var documentBounds = getDocumentBounds();
-    var magnifiable    = false;
-    var magnified      = false;
+    else void poll(window, ["resize", "scroll"], function promptLazyComponents(_) {
+      for (var index = Lazy.all.length; index--; ) {
+        var documentBounds    = getDocumentBounds();
+        var lazyElement       = Lazy.all[index];
+        var lazyElementBounds = getElementBounds(lazyElement);
 
-    // ... ->> Normalized between [-1.0, +1.0] relative to the document’s viewport
-    Animate.tilt3D.x = ((event.clientX / documentBounds.width)  - 0.5) * 2.0;
-    Animate.tilt3D.y = ((event.clientY / documentBounds.height) - 0.5) * 2.0;
+        if (
+          lazyElementBounds.bottom > 0.0                  - +Lazy.threshold &&
+          lazyElementBounds.left   < documentBounds.width + -Lazy.threshold &&
+          lazyElementBounds.right  > 0.0                  - +Lazy.threshold &&
+          lazyElementBounds.top    < documentBounds.height + Lazy.threshold
+        ) for (var subindex = Lazy.prompted.length; ; ) {
+          if (--subindex === -1) { void Lazy.prompted.push(lazyElement); break }
+          if (Lazy.prompted[subindex] === lazyElement) break
+        }
+      }
+    }, {"capture": true, "passive": true})
+  }, {"capture": false, "once": true, "passive": true});
 
-    for (var node = event.target; null !== node && node.nodeType === 0x1; node = node.parentNode)
-    if (/\bmagnify\b/.test(node.getAttribute(Animate.attributeName))) {
-      magnifiable = true;
-      break
-    }
+  void poll(window, "mousemove", function(event) {
+    if (ORIENTATION_PORTRAIT !== getDocumentOrientation()) {
+      var documentBounds = getDocumentBounds();
+      var magnifiable    = false;
+      var magnified      = false;
 
-    if (magnifiable) {
-      for (var index = Animate.magnify.observed.length; index--; )
-      if (typeof event.target.contains === "function" && event.target.contains(Animate.magnify.observed[index])) {
-        magnified = true;
+      // ... ->> Normalized between [-1.0, +1.0] relative to the document’s viewport
+      Animate.tilt3D.x = ((event.clientX / documentBounds.width)  - 0.5) * 2.0;
+      Animate.tilt3D.y = ((event.clientY / documentBounds.height) - 0.5) * 2.0;
+
+      void waitEvery(Animate.main, 0.5e2);
+
+      for (var node = event.target; null !== node && node.nodeType === 0x1; node = node.parentNode)
+      if (/\bmagnify\b/.test(node.getAttribute(Animate.attributeName))) {
+        magnifiable = true;
         break
       }
 
-      if (!magnified)
-      void Animate.magnify.observed.push(event.target)
+      if (magnifiable) {
+        for (var index = Animate.magnify.observed.length; index--; )
+        if (typeof event.target.contains === "function" && event.target.contains(Animate.magnify.observed[index])) {
+          magnified = true;
+          break
+        }
+
+        if (!magnified)
+        void Animate.magnify.observed.push(event.target)
+      }
     }
+  }, {"capture": true, "passive": true});
 
-    void waitEvery(Animate.main, 0.5e2)
-  }
-}, {"capture": true, "passive": true});
+  void poll(window, "mousewheel", function nooverscroll(event) {
+    for (var legacy = getElementsByComponent(Legacy), index = legacy.length; index--; )
+    if (/\binternet-explorer-\d+\b/.test(legacy[index].getAttribute(Legacy.attributeName))) {
+      for (var scrollingElements = [document.scrollingElement || null, document.documentElement, document.body]; scrollingElements.length; ) {
+        var scrollingElement = scrollingElements.pop();
 
-void poll(window, "mousewheel", function(event) /* ->> Prevent over-scroll bouncing? */ {
-  for (var legacy = getElementsByComponent(Legacy), index = legacy.length; index--; )
-  if (/\binternet-explorer-\d+\b/.test(legacy[index].getAttribute(Legacy.attributeName))) {
-    for (var scrollingElements = [document.scrollingElement || null, document.documentElement, document.body]; scrollingElements.length; ) {
-      var scrollingElement = scrollingElements.pop();
+        if (
+          // ((event.wheelDelta || event.deltaY) > 0.0 && 0 === scrollingElement.scrollTop) ||
+          ((event.wheelDelta || event.deltaY) < 0.0 && scrollingElement.clientHeight === scrollingElement.scrollHeight - scrollingElement.scrollTop)
+        ) { event.preventDefault(); return EVENT_PREVENT_DEFAULT }
+      }
 
-      if (
-        // ((event.wheelDelta || event.deltaY) > 0.0 && 0 === scrollingElement.scrollTop) ||
-        ((event.wheelDelta || event.deltaY) < 0.0 && scrollingElement.clientHeight === scrollingElement.scrollHeight - scrollingElement.scrollTop)
-      ) { event.preventDefault(); return EVENT_PREVENT_DEFAULT }
+      break
     }
+  }, {"capture": true, "passive": false});
 
-    break
-  }
-}, {"capture": true, "passive": false});
+  void poll(window, "resize", function loop(_) {
+    waitEvery(LOOP_PROCEDURE, 0.5e2)
+  }, {"capture": true, "passive": true});
 
-void poll(window, "scroll", function(_) {
-  pend(Animate.main)
-}, {"capture": true, "passive": true});
+  void poll(window, "scroll", function(_) {
+    pend(Animate.main)
+  }, {"capture": true, "passive": true});

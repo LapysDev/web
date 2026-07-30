@@ -3,7 +3,6 @@ var BACKGROUND_REELS             = [BACKGROUND_REEL_STARRY];
 var BACKGROUND_ELEMENT           = getElementById("background");
 var BACKGROUND_CONTEXT           = typeof BACKGROUND_ELEMENT.getContext === "function" ? BACKGROUND_ELEMENT.getContext("2d", {"alpha": true, "colorSpace": "srgb", "desynchronized": true, "willReadFrequently": false}) : null;
 var BACKGROUND_STYLE_DECLARATION = getCSSStyleDeclaration(BACKGROUND_ELEMENT);
-var TAGLINE_ELEMENT              = getElementById("tagline");
 
 // ...
 if (null !== BACKGROUND_CONTEXT) {
@@ -81,38 +80,40 @@ if (null !== BACKGROUND_CONTEXT) {
 
   /* ... */
   resolution();
-  void poll(document, ["DOMContentLoaded", "readystatechange"], function(event) { resolution() }, {"capture": true,  "once": false, "passive": true});
-  void poll(window, "load",                                     function(event) { resolution() }, {"capture": false, "once": false, "passive": true});
-  void poll(window, "resize",                                   function(event) { resolution() }, {"capture": true,  "once": false, "passive": true});
+  void poll(document, ["DOMContentLoaded", "readystatechange"], resolution, {"capture": true,  "once": false, "passive": true});
+  void poll(window, "load",                                     resolution, {"capture": false, "once": false, "passive": true});
+  void poll(window, "resize",                                   resolution, {"capture": true,  "once": false, "passive": true});
 
   if (typeof ResizeObserver === "function")
-  (new ResizeObserver(function(records, observer) { resolution() })).observe(document.documentElement);
+  (new ResizeObserver(resolution)).observe(document.documentElement);
 
   switch (BACKGROUND_REELS[Math.floor(BACKGROUND_REELS.length * Math.random())]) {
-    case BACKGROUND_REEL_STARRY: {
+    case BACKGROUND_REEL_STARRY: /* -!> Speeds are framerate-dependent */ {
       var BACKGROUND_COLOR            = {red: 0x00, green: 0x00, blue: 0x00};
       var COMET_CREATE_INTERVAL       = 5.0e3;
       var COMET_LENGTH_MAXIMUM        = 200;
       var COMET_SIZE                  = 3;
-      var COMET_SPEED                 = 30.0;
-      var PLANETOID_RIPPLE_FALLOFF    = 0.005; // ->> % percent per frame
+      var COMET_SPEED                 = 1.0;
+      var PLANETOID_RIPPLE_FALLOFF    = 0.00050; // ->> % percent per frame
+      var PLANETOID_SPEED             = 0.00005; // ->> % percent per frame
       var REEL_DARK_SCHEME            = typeof matchMedia === "function" ? matchMedia("(prefers-color-scheme: dark)") : {matches: false, onchange: null};
       var REEL_FRAMERATE_STABLE       = 60.0;
-      var STAR_COUNT_MAXIMUM          = 1200;
-      var STAR_COUNT_MINIMUM          = 200;
-      var STAR_PULSE_MINIMUM          = 0.10; // ->> % percent
-      var STAR_PULSE_MINIMUM_ALT      = 0.35; // ->> % percent
-      var STAR_PULSE_SPEED            = 0.01; // ->> % percent
+      var STAR_COUNT_MAXIMUM          = 400;
+      var STAR_COUNT_MINIMUM          = 65;
+      var STAR_CREATE_INTERVAL        = 7.0e3;
+      var STAR_PULSE_MINIMUM          = 0.10;  // ->> % percent
+      var STAR_PULSE_MINIMUM_ALT      = 0.35;  // ->> % percent
+      var STAR_PULSE_SPEED            = 0.001; // ->> % percent
       var STAR_RIPPLE_CLUSTER_MAXIMUM = 8;
-      var STAR_RIPPLE_FALLOFF         = 0.1; // ->> per frame
+      var STAR_RIPPLE_FALLOFF         = 0.001; // ->> per frame
       var STAR_RIPPLE_FORCE_MAXIMUM   = 30.0;
       var STAR_RIPPLE_SIZE            = 200;
       var STAR_SIZE_MAXIMUM           = 1.5;
       var STAR_SIZE_MINIMUM           = 0.5;
-      var STAR_SPEED_MAXIMUM          = 0.25;
-      var STAR_SPEED_MINIMUM          = 0.10;
+      var STAR_SPEED_MAXIMUM          = 0.050;
+      var STAR_SPEED_MINIMUM          = 0.025;
 
-      var cometCreateIntervalRate = 1.00;
+      var cometCreateIntervalRate = 1.0;
       var comets                  = [];
       var planetoids              = [];
       var reelTimeDelta           = 0.0;
@@ -136,7 +137,7 @@ if (null !== BACKGROUND_CONTEXT) {
         void planetoids.push({
           position   : {x: BACKGROUND_ELEMENT.width * Math.random(), y: BACKGROUND_ELEMENT.height * Math.random()},
           ripple     : 0.0,
-          speed      : Math.random() * 0.0005, // ->> % percent per frame
+          speed      : PLANETOID_SPEED * Math.random(),
           size       : Math.min(BACKGROUND_ELEMENT.height, BACKGROUND_ELEMENT.width) * Math.random() * 0.3,
           '__proto__': null
         })
@@ -252,18 +253,11 @@ if (null !== BACKGROUND_CONTEXT) {
           clusterStar.ripple.y = Math.min(+STAR_RIPPLE_FORCE_MAXIMUM, Math.max(-STAR_RIPPLE_FORCE_MAXIMUM, clusterStar.ripple.y + (clusterStarForce * (clusterStar.position.y > ripplePosition.y ? +1 : -1))))
         }
       }
-        function rippleStarsActively () { return rippleStars(7.0) }
-        function rippleStarsPassively() { return rippleStars(4.0) }
+        function rippleStarsActively () { return rippleStars(1.75) }
+        function rippleStarsPassively() { return rippleStars(0.50) }
 
       // ...
-      void createPlanetoids();
-      void poll(BACKGROUND_ELEMENT.parentNode, "click",     function(event) { ripplePosition.x = event.clientX; ripplePosition.y = event.clientY; waitEvery(rippleStarsActively,  0.0e3); waitEvery(createStarsAtRipplePosition, 5.0e3); ripplePlanetoids(0.3) }, {"capture": true, "passive": true});
-      void poll(REEL_DARK_SCHEME,              "change",    function(event) { rereel(event.matches) },                                                                                                                                                            {"capture": true, "passive": true});
-      void poll(BACKGROUND_ELEMENT.parentNode, "mousemove", function(event) { cometCreateIntervalRate += 1.00; ripplePosition.x = event.clientX; ripplePosition.y = event.clientY; waitEvery(rippleStarsPassively, 0.2e3) },                                      {"capture": true, "passive": true});
-      void poll(window,                        "focus",     function(event) { createCometsAtRandomPosition() });
-      void poll(window,                        "scroll",    function(event) { cometCreateIntervalRate += 1.15 },                                                                                                                                                  {"capture": true, "passive": true});
-
-      void LOOP_PROCEDURES.push(function reel() {
+      LOOP_PROCEDURES.main = function reel() {
         var reelPreviousTimestamp = reelTimestamp;
 
         // ...
@@ -275,6 +269,7 @@ if (null !== BACKGROUND_CONTEXT) {
 
         if (REEL_FRAMERATE_STABLE * 2.5 > reelTimeDelta) {
           var reelFilters           = filters();
+          var starPulseMinimum      = REEL_DARK_SCHEME.matches ? STAR_PULSE_MINIMUM : STAR_PULSE_MINIMUM_ALT;
           var starColor             = colorRGBInvertFilters(REEL_DARK_SCHEME.matches ? {red: 0xFF, green: 0xFF, blue: 0xFF} : {red: 0x00, green: 0x00, blue: 0xFF}, reelFilters);
           var planetoidRippleColor  = colorRGBInvertFilters(REEL_DARK_SCHEME.matches ? {red: 0xFF, green: 0xFF, blue: 0xFF} : {red: 0x00, green: 0x00, blue: 0x00}, reelFilters);
           var cometLengthMaximum    = Math.max(BACKGROUND_ELEMENT.width * 0.35, COMET_LENGTH_MAXIMUM);
@@ -282,14 +277,13 @@ if (null !== BACKGROUND_CONTEXT) {
           var backgroundColor       = colorRGBInvertFilters(BACKGROUND_COLOR, reelFilters);
 
           // ...
-          cometCreateIntervalRate = Math.max(cometCreateIntervalRate - (cometCreateIntervalRate !== 1.00 ? 1.75 : 0.00), 1.00);
-
           BACKGROUND_CONTEXT.clearRect(0, 0, BACKGROUND_ELEMENT.width, BACKGROUND_ELEMENT.height);
-          void waitEvery(createCometsAtRandomPosition, COMET_CREATE_INTERVAL / cometCreateIntervalRate);
-          void waitEvery(createStarsAtRandomPosition,  stars.length ? 10.0e3 : 0.0e3);
 
-          // ... ->> Comets
-          for (var index = comets.length; index--; ) {
+          void LOOP_HANDLER(LOOP_PROCEDURE);
+          void waitEvery   (createCometsAtRandomPosition, COMET_CREATE_INTERVAL / (cometCreateIntervalRate = Math.max(cometCreateIntervalRate - (cometCreateIntervalRate !== 1.0 ? 1.75 : 0.0), 1.0)));
+          void waitEvery   (createStarsAtRandomPosition,  STAR_CREATE_INTERVAL  * (stars.length ? 1.0 : 0.0));
+
+          for (var index = comets.length; index--; ) comets: {
             var comet = comets[index];
 
             // ...
@@ -299,7 +293,7 @@ if (null !== BACKGROUND_CONTEXT) {
             }
 
             else {
-              var cometSpeed  = {x: COMET_SPEED * 1.0,                 y: COMET_SPEED * 0.6};
+              var cometSpeed  = {x: COMET_SPEED * reelTimeDelta * 1.0, y: COMET_SPEED * reelTimeDelta * 0.6};
               var cometLength = {x: comet.origin.x - comet.position.x, y: comet.position.y - comet.origin.y};
               var cometAngle  = Math.atan2(cometLength.y, -cometLength.x), cometTangentAngle = Math.asin(COMET_SIZE / Math.sqrt(Math.pow(cometLength.x, 2) + Math.pow(cometLength.y, 2)));
 
@@ -328,10 +322,8 @@ if (null !== BACKGROUND_CONTEXT) {
             }
           }
 
-          // ... ->> Stars
-          for (var index = stars.length; index--; ) {
-            var star             = stars[index];
-            var starPulseMinimum = REEL_DARK_SCHEME.matches ? STAR_PULSE_MINIMUM : STAR_PULSE_MINIMUM_ALT;
+          for (var index = stars.length; index--; ) stars: {
+            var star = stars[index];
 
             // ...
             if ((BACKGROUND_ELEMENT.width <= star.position.x || star.position.x <= 0.0) || (BACKGROUND_ELEMENT.height <= star.position.y || star.position.y <= 0.0)) {
@@ -340,11 +332,11 @@ if (null !== BACKGROUND_CONTEXT) {
             }
 
             else {
-              star.ripple.x                = STAR_RIPPLE_FALLOFF <= Math.abs(star.ripple.x) ? star.ripple.x - (STAR_RIPPLE_FALLOFF * (star.ripple.x > -0.0 ? +1 : -1)) : 0.0;
-              star.ripple.y                = STAR_RIPPLE_FALLOFF <= Math.abs(star.ripple.y) ? star.ripple.y - (STAR_RIPPLE_FALLOFF * (star.ripple.y > -0.0 ? +1 : -1)) : 0.0;
-              star.pulse                   = (star.pulse + (STAR_PULSE_SPEED * Math.random())) % 1.0;
-              star.position.x             += (star.ripple.x ? Math.abs(star.direction.x) < Math.abs(star.ripple.x) ? star.ripple.x : (star.direction.x + star.ripple.x) / 2.0 : star.direction.x) * (star.speed.x * (((Math.abs(star.position.x - (BACKGROUND_ELEMENT.width  / 2.0)) / BACKGROUND_ELEMENT.width)  * 20.0) + 1.0));
-              star.position.y             += (star.ripple.y ? Math.abs(star.direction.y) < Math.abs(star.ripple.y) ? star.ripple.y : (star.direction.y + star.ripple.y) / 2.0 : star.direction.y) * (star.speed.y * (((Math.abs(star.position.y - (BACKGROUND_ELEMENT.height / 2.0)) / BACKGROUND_ELEMENT.height) * 20.0) + 1.0));
+              star.ripple.x                = STAR_RIPPLE_FALLOFF <= Math.abs(star.ripple.x) ? star.ripple.x - (STAR_RIPPLE_FALLOFF * reelTimeDelta * (star.ripple.x > -0.0 ? +1 : -1)) : 0.0;
+              star.ripple.y                = STAR_RIPPLE_FALLOFF <= Math.abs(star.ripple.y) ? star.ripple.y - (STAR_RIPPLE_FALLOFF * reelTimeDelta * (star.ripple.y > -0.0 ? +1 : -1)) : 0.0;
+              star.pulse                   = (star.pulse + (STAR_PULSE_SPEED * reelTimeDelta * Math.random())) % 1.0;
+              star.position.x             += reelTimeDelta * (star.speed.x * (((Math.abs(star.position.x - (BACKGROUND_ELEMENT.width  / 2.0)) / BACKGROUND_ELEMENT.width)  * 20.0) + 1.0)) * (star.ripple.x ? Math.abs(star.direction.x) < Math.abs(star.ripple.x) ? star.ripple.x : (star.direction.x + star.ripple.x) / 2.0 : star.direction.x);
+              star.position.y             += reelTimeDelta * (star.speed.y * (((Math.abs(star.position.y - (BACKGROUND_ELEMENT.height / 2.0)) / BACKGROUND_ELEMENT.height) * 20.0) + 1.0)) * (star.ripple.y ? Math.abs(star.direction.y) < Math.abs(star.ripple.y) ? star.ripple.y : (star.direction.y + star.ripple.y) / 2.0 : star.direction.y);
               BACKGROUND_CONTEXT.fillStyle = colorRGBAToString(starColor, starPulseMinimum + ((star.pulse > 0.5 ? 1.0 - star.pulse : star.pulse) * (1.0 - starPulseMinimum) * 2.0));
 
               BACKGROUND_CONTEXT.beginPath();
@@ -355,17 +347,16 @@ if (null !== BACKGROUND_CONTEXT) {
             }
           }
 
-          // ... ->> Planetoids (rippled in the dark)
-          for (var index = planetoids.length; index--; ) {
+          for (var index = planetoids.length; index--; ) planetoids: {
             var planetoid       = planetoids[index];
             var planetoidRadius = planetoid.size / 2.0;
 
             // ...
-            planetoid.position.x = BACKGROUND_ELEMENT.width > planetoid.position.x - planetoidRadius ? planetoid.position.x + (BACKGROUND_ELEMENT.width * planetoid.speed) : -planetoidRadius;
-            planetoid.ripple     = Math.max(planetoid.ripple - PLANETOID_RIPPLE_FALLOFF, 0.0)
+            planetoid.position.x = BACKGROUND_ELEMENT.width > planetoid.position.x - planetoidRadius ? planetoid.position.x + (BACKGROUND_ELEMENT.width * planetoid.speed * reelTimeDelta) : -planetoidRadius;
+            planetoid.ripple     = Math.max(planetoid.ripple - (PLANETOID_RIPPLE_FALLOFF * reelTimeDelta), 0.0)
           }
 
-          for (var index = planetoids.length; index--; ) {
+          for (var index = planetoids.length; index--; ) planetoids_backlight: {
             var planetoid = planetoids[index];
 
             // ... ->> Back-lighting
@@ -390,7 +381,7 @@ if (null !== BACKGROUND_CONTEXT) {
             }
           }
 
-          for (var index = planetoids.length; index--; ) {
+          for (var index = planetoids.length; index--; ) planetoids_occlusion: {
             var planetoid       = planetoids[index];
             var planetoidRadius = planetoid.size / 2.0;
 
@@ -442,19 +433,32 @@ if (null !== BACKGROUND_CONTEXT) {
           (typeof BACKGROUND_CONTEXT.ellipse === "function" ? function(x, y, radiusX, radiusY, rotation, startAngle, endAngle, counterClockwise) {
             return void BACKGROUND_CONTEXT.ellipse(x, y, radiusX, radiusY, rotation, startAngle, endAngle, counterClockwise)
           } : function(x, y, radiusX, radiusY, rotation, startAngle, endAngle, _) {
-            // var controlOffsetX = MATH_KAPPA * radiusX, controlOffsetY = MATH_KAPPA * radiusY;
+            var controlOffsetX = MATH_KAPPA * radiusX;
+            var controlOffsetY = MATH_KAPPA * radiusY;
 
-            // BACKGROUND_CONTEXT.bezierCurveTo(x + radiusX, y + controlOffsetY, x + controlOffsetX, y + radiusY, x, y + radiusY);
-            // BACKGROUND_CONTEXT.bezierCurveTo(x - controlOffsetX, y + radiusY, x - radiusX, y + controlOffsetY, x - radiusX, y);
-            // BACKGROUND_CONTEXT.bezierCurveTo(x - radiusX, y - controlOffsetY, x - controlOffsetX, y - radiusY, x, y - radiusY);
-            // BACKGROUND_CONTEXT.bezierCurveTo(x + controlOffsetX, y - radiusY, x + radiusX, y - controlOffsetY, x + radiusX, y)
+            BACKGROUND_CONTEXT.bezierCurveTo(x + radiusX, y + controlOffsetY, x + controlOffsetX, y + radiusY, x, y + radiusY);
+            BACKGROUND_CONTEXT.bezierCurveTo(x - controlOffsetX, y + radiusY, x - radiusX, y + controlOffsetY, x - radiusX, y);
+            BACKGROUND_CONTEXT.bezierCurveTo(x - radiusX, y - controlOffsetY, x - controlOffsetX, y - radiusY, x, y - radiusY);
+            BACKGROUND_CONTEXT.bezierCurveTo(x + controlOffsetX, y - radiusY, x + radiusX, y - controlOffsetY, x + radiusX, y)
           })(Math.floor(BACKGROUND_ELEMENT.width / 2.0), BACKGROUND_ELEMENT.height, BACKGROUND_ELEMENT.width / 2.0, BACKGROUND_ELEMENT.height * 0.2, 0.0, 0.0, MATH_TAU, false);
           BACKGROUND_CONTEXT.fill();
 
           BACKGROUND_CONTEXT.globalCompositeOperation = "source-over"
         }
-      });
+      };
 
+      // ...
+      void createPlanetoids();
+      LOOP_PROCEDURES.main();
+
+      // Event > ...
+      void poll(BACKGROUND_ELEMENT.parentNode, "click",     function(event) { ripplePosition.x = event.clientX; ripplePosition.y = event.clientY; waitEvery(rippleStarsActively,  0.0e3); waitEvery(createStarsAtRipplePosition, 1.0e3); ripplePlanetoids(0.3) }, {"capture": true, "passive": true});
+      void poll(BACKGROUND_ELEMENT.parentNode, "mousemove", function(event) { cometCreateIntervalRate += 10.0; ripplePosition.x = event.clientX; ripplePosition.y = event.clientY; waitEvery(rippleStarsPassively, 0.2e3) },                                      {"capture": true, "passive": true});
+
+      void poll(REEL_DARK_SCHEME, "change", function(event) { rereel(event.matches) }, {"capture": true, "passive": true});
+
+      void poll(window, "focus",  function(event) { createCometsAtRandomPosition() },  {"capture": true, "passive": true});
+      void poll(window, "scroll", function(event) { cometCreateIntervalRate += 30.0 }, {"capture": true, "passive": true})
     }
   }
 }
@@ -474,7 +478,3 @@ else {
 
   BACKGROUND_ELEMENT = backgroundElement
 }
-
-// ...
-if (null !== TAGLINE_ELEMENT)
-void replaceChildNodesByType(TAGLINE_ELEMENT, /* --> Node.TEXT_NODE */ 0x3, /* --> Node.ELEMENT_NODE */ 0x1)

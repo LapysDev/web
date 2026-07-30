@@ -375,7 +375,10 @@
   }
 
   /* <address>, <article>, <aside>, <blockquote>, <body>, <center>, <dd>, <details>, <dir>, <div>, <dl>, <dt>, <figcaption>, <figure>, <footer>, <form>, <h1>, <h2>, <h3>, <h4>, <h5>, <h6>, <header>, <hgroup>, <hr>, <html>, <legend>, <listing>, <main>, <marquee>, <menu>, <nav>, <ol>, <p>, <plaintext>, <pre>, <search>, <section>, <summary>, <ul>, <xmp> */
-  address, article, aside, blockquote, body, center, dd, details, dir, div, dl, dt, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, html, legend, listing, main, marquee, menu, nav, ol, p, plaintext, pre, search, section, summary, ul, xmp { display: block }
+  address, article, aside, blockquote, body, center, dd, details, dir, div, dl, dt, figcaption, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, html, legend, listing, main, marquee, menu, nav, ol, p, plaintext, pre, search, section, summary, ul, xmp {
+    display: block;
+    display: block flow-root
+  }
 
   /* <area>, <base>, <basefont>, <datalist>, <head>, <link>, <meta>, <noembed>, <param>, <rp>, <script>, <template>, <title> */
   area, base, basefont, datalist, head, link, meta, noembed, noframes, param, rp, script, style, template, title {
@@ -405,7 +408,8 @@
   /* <body> */
   body {
     line-height: 1.000;
-    height     : 100%
+    height     : 100%;
+    min-height : 100dvh
   }
     /* All */
     body * {
@@ -706,6 +710,7 @@
     font-smooth             : always;
     interpolate-size        : allow-keywords;
     line-height             : 1.150;
+    min-height              : 100%;
     text-box-edge           : cap alphabetic;
     text-box-trim           : none; /* ->> `trim-both` otherwise */
     text-size-adjust        : 100%;

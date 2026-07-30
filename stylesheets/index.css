@@ -7,6 +7,7 @@
   /* Main */
   #main {
     height       : 100%;
+    isolation    : isolate;
     padding-left : 1%;
     padding-right: 1%
   }
@@ -16,6 +17,80 @@
     margin-right: auto;
     width       : 100%
   }
+    /* Pseudo > Before */
+    #main::before {
+      -ah-background-size               : 130px 130px;
+      -khtml-background-size            : 130px 130px;
+      -khtml-opacity                    : 0.1265;
+      -khtml-user-select                : none;
+      -moz-background-size              : 130px 130px;
+      -moz-opacity                      : 0.1265;
+      -moz-transition-duration          : 300ms;
+      -moz-transition-property          : background, background-image, mask-position, -webkit-mask-position;
+      -moz-transition-timing-function   : ease-out;
+      -moz-user-focus                   : ignore;
+      -moz-user-select                  : none;
+      -ms-filter                        : "grayscale(1.00) invert(0.25) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true, Invert=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true)";
+      -ms-touch-select                  : none;
+      -ms-transition-duration           : 300ms;
+      -ms-transition-property           : background, background-image, mask-position, -webkit-mask-position;
+      -ms-transition-timing-function    : ease-out;
+      -ms-user-select                   : none;
+      -o-background-size                : 130px 130px;
+      -o-transition-duration            : 300ms;
+      -o-transition-property            : background, background-image, mask-position, -webkit-mask-position;
+      -o-transition-timing-function     : ease-out;
+      -webkit-background-size           : 130px 130px;
+      -webkit-filter                    : grayscale(1.00) invert(0.25);
+      -webkit-mask-composite            : source-over;
+      -webkit-mask-image                : /* --> ../images/pages/index/sailboat.svg */ url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHZpZXdCb3g9IjAgMCAxNTM2IDE1MzYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0ibTk1OSAyNjVxMS45LTIuNSAzLjktNC43YzUuMS0zLjUgOC44LTYuOSAxMC4zLTkuOHEyLjctMi4xIDUuNi00bC00LjgtMy43YzAtMy45LTUuOC0wLjMtMTUgMC43em0wIDg5MWMzNDAgNTEuNCAzNzgtMjYxIDM3OC0yNjEtMTE2IDU0LTI2MC03MC0yNjAtNzAgOTQtMTAgMTI2LTkwIDEyNi05MC02NC4xIDE0LjMtMTQwLTUxLjItMTQxLTUzLjFzLTc3LTc3LjItMTAzLTE0M3ptLTM2Ny01MzljLTE4MSAyMjAtMTc2IDU3MC0xNzIgNTQ2IDMuOC0yMi43IDE2OC01OS43IDQ3OC0xNi4zdi04NzhxLTEuMSAwLjktMS45IDEuOWMtMiAwLjctMy4xIDEuMi0zLjEgMS40LTIgNTYtMTIwIDEyNS0zMDEgMzQ1eiIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgPHBhdGggZD0ibTEwNjAgMTMwMHYtMS41YzAtNDcuNS0yMC41LTg2LTQ1LjgtODZoLTE3NWMtMTkuNSAwLTM2LjIgMjMtNDIuOCA1NS4zeiIvPgogIDxwYXRoIGQ9Im05MTMgMXMxNy4xIDEwIDI0LjYgMjZjMi41IDUuNSA0IDExLjYgMy4yIDE4LjNsMC4yIDEwLjZ2MTE1N2gtMjh2LTExNjBxMC00LjQgMC4xLTcuOGgtMC4xdjcuOHEwLTQuNCAwLjEtNy44aC0wLjF6IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICA8cGF0aCBkPSJtMTM3OCAxNDAzYzIuMyAxNS42IDQuMSAyMC4xLTI0LjUgMzEuNy00OC43IDE5LjgtOTIuOCA3NS41LTExMSAxMDFoLTc0M2MtNjAuNC0xNi0xMDgtMzYuMi0xMjctNjItNTMuMi03MS43LTY5LTEwMi03OC42LTEyNnptNDUuNC0xNDRjLTQwLjcgNjkuMy00Ny4zIDEwNy00Ni44IDEyOWwtMTA5NC03MC44LTAuOS0yLjJjLTE1LjQtMzcuNS0xNjYtODQtMTY2LTg0bDEyMzkgMTE3YzE3LjgtNjEuNyA2OS04OSA2OS04OXoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogIDxwYXRoIGQ9Im05NTMgMjEwczg5LjMgNi43IDE2Ny01MyA2OC4zLTQ0LjcgOTAtNTVjMCAwLTI1NCAwLjctMjU2IDBzLTEgMTA4LTEgMTA4eiIvPgo8L3N2Zz4K), url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHZpZXdCb3g9IjAgMCAxNTM2IDE1MzYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0ibTk1OSAyNjVxMS45LTIuNSAzLjktNC43YzUuMS0zLjUgOC44LTYuOSAxMC4zLTkuOHEyLjctMi4xIDUuNi00bC00LjgtMy43YzAtMy45LTUuOC0wLjMtMTUgMC43em0wIDg5MWMzNDAgNTEuNCAzNzgtMjYxIDM3OC0yNjEtMTE2IDU0LTI2MC03MC0yNjAtNzAgOTQtMTAgMTI2LTkwIDEyNi05MC02NC4xIDE0LjMtMTQwLTUxLjItMTQxLTUzLjFzLTc3LTc3LjItMTAzLTE0M3ptLTM2Ny01MzljLTE4MSAyMjAtMTc2IDU3MC0xNzIgNTQ2IDMuOC0yMi43IDE2OC01OS43IDQ3OC0xNi4zdi04NzhxLTEuMSAwLjktMS45IDEuOWMtMiAwLjctMy4xIDEuMi0zLjEgMS40LTIgNTYtMTIwIDEyNS0zMDEgMzQ1eiIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgPHBhdGggZD0ibTEwNjAgMTMwMHYtMS41YzAtNDcuNS0yMC41LTg2LTQ1LjgtODZoLTE3NWMtMTkuNSAwLTM2LjIgMjMtNDIuOCA1NS4zeiIvPgogIDxwYXRoIGQ9Im05MTMgMXMxNy4xIDEwIDI0LjYgMjZjMi41IDUuNSA0IDExLjYgMy4yIDE4LjNsMC4yIDEwLjZ2MTE1N2gtMjh2LTExNjBxMC00LjQgMC4xLTcuOGgtMC4xdjcuOHEwLTQuNCAwLjEtNy44aC0wLjF6IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICA8cGF0aCBkPSJtMTM3OCAxNDAzYzIuMyAxNS42IDQuMSAyMC4xLTI0LjUgMzEuNy00OC43IDE5LjgtOTIuOCA3NS41LTExMSAxMDFoLTc0M2MtNjAuNC0xNi0xMDgtMzYuMi0xMjctNjItNTMuMi03MS43LTY5LTEwMi03OC42LTEyNnptNDUuNC0xNDRjLTQwLjcgNjkuMy00Ny4zIDEwNy00Ni44IDEyOWwtMTA5NC03MC44LTAuOS0yLjJjLTE1LjQtMzcuNS0xNjYtODQtMTY2LTg0bDEyMzkgMTE3YzE3LjgtNjEuNyA2OS04OSA2OS04OXoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogIDxwYXRoIGQ9Im05NTMgMjEwczg5LjMgNi43IDE2Ny01MyA2OC4zLTQ0LjcgOTAtNTVjMCAwLTI1NCAwLjctMjU2IDBzLTEgMTA4LTEgMTA4eiIvPgo8L3N2Zz4K);
+      -webkit-mask-position             : center, center;
+      -webkit-mask-repeat               : no-repeat, no-repeat;
+      -webkit-mask-size                 : auto, auto;
+      -webkit-touch-callout             : none;
+      -webkit-transition-duration       : 300ms;
+      -webkit-transition-property       : background, background-image, mask-position, -webkit-mask-position;
+      -webkit-transition-timing-function: ease-out;
+      -webkit-user-drag                 : none;
+      -webkit-user-select               : none;
+      background-attachment             : fixed;
+      background-image                  : url(../images/pages/index/sailboat-pattern.svg);
+      background-repeat                 : repeat;
+      background-size                   : 130px 130px;
+      bottom                            : 0;
+      content                           : "";
+      display                           : block;
+      filter                            : grayscale(1.00) invert(0.25) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true, Invert=true) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true);
+      filter                            : grayscale(1.00) invert(0.25);
+      font-family                       : NUL;
+      height                            : 95%;
+      height                            : 95vh;
+      inset                             : auto 0 0;
+      left                              : 0;
+      margin-bottom                     : auto;
+      margin-left                       : auto;
+      margin-right                      : auto;
+      margin-top                        : auto;
+      mask-composite                    : add;
+      mask-image                        : /* --> ../images/pages/index/sailboat.svg */ url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHZpZXdCb3g9IjAgMCAxNTM2IDE1MzYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0ibTk1OSAyNjVxMS45LTIuNSAzLjktNC43YzUuMS0zLjUgOC44LTYuOSAxMC4zLTkuOHEyLjctMi4xIDUuNi00bC00LjgtMy43YzAtMy45LTUuOC0wLjMtMTUgMC43em0wIDg5MWMzNDAgNTEuNCAzNzgtMjYxIDM3OC0yNjEtMTE2IDU0LTI2MC03MC0yNjAtNzAgOTQtMTAgMTI2LTkwIDEyNi05MC02NC4xIDE0LjMtMTQwLTUxLjItMTQxLTUzLjFzLTc3LTc3LjItMTAzLTE0M3ptLTM2Ny01MzljLTE4MSAyMjAtMTc2IDU3MC0xNzIgNTQ2IDMuOC0yMi43IDE2OC01OS43IDQ3OC0xNi4zdi04NzhxLTEuMSAwLjktMS45IDEuOWMtMiAwLjctMy4xIDEuMi0zLjEgMS40LTIgNTYtMTIwIDEyNS0zMDEgMzQ1eiIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgPHBhdGggZD0ibTEwNjAgMTMwMHYtMS41YzAtNDcuNS0yMC41LTg2LTQ1LjgtODZoLTE3NWMtMTkuNSAwLTM2LjIgMjMtNDIuOCA1NS4zeiIvPgogIDxwYXRoIGQ9Im05MTMgMXMxNy4xIDEwIDI0LjYgMjZjMi41IDUuNSA0IDExLjYgMy4yIDE4LjNsMC4yIDEwLjZ2MTE1N2gtMjh2LTExNjBxMC00LjQgMC4xLTcuOGgtMC4xdjcuOHEwLTQuNCAwLjEtNy44aC0wLjF6IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICA8cGF0aCBkPSJtMTM3OCAxNDAzYzIuMyAxNS42IDQuMSAyMC4xLTI0LjUgMzEuNy00OC43IDE5LjgtOTIuOCA3NS41LTExMSAxMDFoLTc0M2MtNjAuNC0xNi0xMDgtMzYuMi0xMjctNjItNTMuMi03MS43LTY5LTEwMi03OC42LTEyNnptNDUuNC0xNDRjLTQwLjcgNjkuMy00Ny4zIDEwNy00Ni44IDEyOWwtMTA5NC03MC44LTAuOS0yLjJjLTE1LjQtMzcuNS0xNjYtODQtMTY2LTg0bDEyMzkgMTE3YzE3LjgtNjEuNyA2OS04OSA2OS04OXoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogIDxwYXRoIGQ9Im05NTMgMjEwczg5LjMgNi43IDE2Ny01MyA2OC4zLTQ0LjcgOTAtNTVjMCAwLTI1NCAwLjctMjU2IDBzLTEgMTA4LTEgMTA4eiIvPgo8L3N2Zz4K), url(data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjIiIHZpZXdCb3g9IjAgMCAxNTM2IDE1MzYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPHBhdGggZD0ibTk1OSAyNjVxMS45LTIuNSAzLjktNC43YzUuMS0zLjUgOC44LTYuOSAxMC4zLTkuOHEyLjctMi4xIDUuNi00bC00LjgtMy43YzAtMy45LTUuOC0wLjMtMTUgMC43em0wIDg5MWMzNDAgNTEuNCAzNzgtMjYxIDM3OC0yNjEtMTE2IDU0LTI2MC03MC0yNjAtNzAgOTQtMTAgMTI2LTkwIDEyNi05MC02NC4xIDE0LjMtMTQwLTUxLjItMTQxLTUzLjFzLTc3LTc3LjItMTAzLTE0M3ptLTM2Ny01MzljLTE4MSAyMjAtMTc2IDU3MC0xNzIgNTQ2IDMuOC0yMi43IDE2OC01OS43IDQ3OC0xNi4zdi04NzhxLTEuMSAwLjktMS45IDEuOWMtMiAwLjctMy4xIDEuMi0zLjEgMS40LTIgNTYtMTIwIDEyNS0zMDEgMzQ1eiIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgPHBhdGggZD0ibTEwNjAgMTMwMHYtMS41YzAtNDcuNS0yMC41LTg2LTQ1LjgtODZoLTE3NWMtMTkuNSAwLTM2LjIgMjMtNDIuOCA1NS4zeiIvPgogIDxwYXRoIGQ9Im05MTMgMXMxNy4xIDEwIDI0LjYgMjZjMi41IDUuNSA0IDExLjYgMy4yIDE4LjNsMC4yIDEwLjZ2MTE1N2gtMjh2LTExNjBxMC00LjQgMC4xLTcuOGgtMC4xdjcuOHEwLTQuNCAwLjEtNy44aC0wLjF6IiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KICA8cGF0aCBkPSJtMTM3OCAxNDAzYzIuMyAxNS42IDQuMSAyMC4xLTI0LjUgMzEuNy00OC43IDE5LjgtOTIuOCA3NS41LTExMSAxMDFoLTc0M2MtNjAuNC0xNi0xMDgtMzYuMi0xMjctNjItNTMuMi03MS43LTY5LTEwMi03OC42LTEyNnptNDUuNC0xNDRjLTQwLjcgNjkuMy00Ny4zIDEwNy00Ni44IDEyOWwtMTA5NC03MC44LTAuOS0yLjJjLTE1LjQtMzcuNS0xNjYtODQtMTY2LTg0bDEyMzkgMTE3YzE3LjgtNjEuNyA2OS04OSA2OS04OXoiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPgogIDxwYXRoIGQ9Im05NTMgMjEwczg5LjMgNi43IDE2Ny01MyA2OC4zLTQ0LjcgOTAtNTVjMCAwLTI1NCAwLjctMjU2IDBzLTEgMTA4LTEgMTA4eiIvPgo8L3N2Zz4K);
+      mask-mode                         : alpha;
+      mask-position                     : center, center;
+      mask-repeat                       : no-repeat, no-repeat;
+      mask-size                         : auto, auto;
+      opacity                           : 0.1265;
+      pointer-events                    : none;
+      position                          : absolute;
+      right                             : 0;
+      top                               : auto;
+      transition-duration               : 300ms;
+      transition-property               : background, background-image, mask-position, -webkit-mask-position;
+      transition-timing-function        : ease-out;
+      user-select                       : none;
+      width                             : 95%;
+      width                             : 95vw;
+      z-index                           : -1
+    }
+
     /* Background */
     #background {
       -ah-background-size              : 100% 100%;
@@ -91,15 +166,13 @@
     }
 
     /* Background, Hero */
-    #background, #hero {
-      min-height: 55em;
-      min-height: 550px
-    }
+    #background, #hero { min-height: min(40em, 550px) }
 
     /* Expertise */
     #expertise {
+      max-width: 1024px;
       min-width: 240px;
-      width    : 65%
+      width    : 80%
     }
       /* <table> */
       #expertise table {
@@ -242,20 +315,32 @@
           #skills                .entry ul,
           [data-\:portal=skills] .entry ul {
             -ah-vertical-align: inherit;
+            height            : 80%;
             vertical-align    : inherit
           }
             /* <ul> > <li> */
             #skills                .entry li,
             [data-\:portal=skills] .entry li {
-              display    : inline-block;
-              margin-left: 0
+              -ah-text-decoration-line    : none;
+              -moz-text-decoration-line   : none;
+              -webkit-text-decoration-line: none;
+              cursor                      : pointer;
+              display                     : inline-block;
+              height                      : 100%;
+              margin-left                 : 0;
+              text-decoration-line        : none
             }
-              /* Caption */
-              #skills                .entry li div,
-              [data-\:portal=skills] .entry li div { cursor: default }
-                /* Pseudo > Active */
-                #skills                .entry li div:active,
-                [data-\:portal=skills] .entry li div:active { cursor: text }
+              /* All */
+              #skills                .entry li *,
+              [data-\:portal=skills] .entry li * {
+                -ah-text-decoration-line    : inherit;
+                -moz-text-decoration-line   : inherit;
+                -webkit-text-decoration-line: inherit;
+                text-decoration-line        : inherit
+              }
+
+              #skills                .entry li :not(a):not(area):not(button):not(label):not(select):not(select option),
+              [data-\:portal=skills] .entry li :not(a):not(area):not(button):not(label):not(select):not(select option) { cursor: inherit !important }
 
               /* <img> */
               #skills                .entry li img,
@@ -267,14 +352,47 @@
                 color                     : light-dark(rgba(63, 63, 63, 0.25), rgba(127, 127, 127, 0.25));
                 height                    : 40px;
                 height                    : 2.5em;
+                max-height                : 2.5em;
+                max-width                 : 2.5em;
+                overflow                  : hidden;
                 width                     : 40px;
                 width                     : 2.5em
               }
 
+              /* Caption */
+              #skills                .entry li div,
+              [data-\:portal=skills] .entry li div {
+                cursor           : default;
+                font-variant-caps: normal;
+                height           : 100%
+              }
+                /* Pseudo > Active */
+                #skills                .entry li div:active,
+                [data-\:portal=skills] .entry li div:active { cursor: text }
+
+                /* All */
+                #skills                .entry li div *,
+                [data-\:portal=skills] .entry li div * {
+                  -khtml-opacity   : 0.75;
+                  -moz-opacity     : 0.75;
+                  font-variant-caps: inherit;
+                  opacity          : 0.75
+                }
+
+                /* <abbr>, <acronym> */
+                #skills                .entry li div [data-\:abbreviate],
+                #skills                .entry li div abbr,
+                #skills                .entry li div acronym,
+                [data-\:portal=skills] .entry li div [data-\:abbreviate],
+                [data-\:portal=skills] .entry li div abbr,
+                [data-\:portal=skills] .entry li div acronym {
+                  -khtml-opacity: 1.00;
+                  -moz-opacity  : 1.00;
+                  opacity       : 1.00
+                }
+
     /* Expertise, Projects */
-    #expertise, #projects {
-      min-height: 75vh
-    }
+    #expertise, #projects { min-height: 75vh }
 
     /* (Expertise, Socials) > ... */
     #expertise .résumé,
@@ -361,34 +479,36 @@
             /* Avatar */
             #avatar {
               -moz-animation-delay             : 0ms;
-              -moz-animation-duration          : 3000ms;
+              -moz-animation-duration          : 3333ms, 3000ms;
               -moz-animation-iteration-count   : infinite;
-              -moz-animation-name              : avatar;
-              -moz-animation-timing-function   : ease-in-out;
+              -moz-animation-name              : avatar-filter, avatar-transform;
+              -moz-animation-timing-function   : cubic-bezier(0.68, -0.6, 0.32, 1.6), ease-in-out;
               -ms-animation-delay              : 0ms;
-              -ms-animation-duration           : 3000ms;
+              -ms-animation-duration           : 3333ms, 3000ms;
               -ms-animation-iteration-count    : infinite;
-              -ms-animation-name               : avatar;
-              -ms-animation-timing-function    : ease-in-out;
+              -ms-animation-name               : avatar-filter, avatar-transform;
+              -ms-animation-timing-function    : cubic-bezier(0.68, -0.6, 0.32, 1.6), ease-in-out;
               -o-animation-delay               : 0ms;
-              -o-animation-duration            : 3000ms;
+              -o-animation-duration            : 3333ms, 3000ms;
               -o-animation-iteration-count     : infinite;
-              -o-animation-name                : avatar;
-              -o-animation-timing-function     : ease-in-out;
+              -o-animation-name                : avatar-filter, avatar-transform;
+              -o-animation-timing-function     : cubic-bezier(0.68, -0.6, 0.32, 1.6), ease-in-out;
               -webkit-animation-delay          : 0ms;
-              -webkit-animation-duration       : 3000ms;
+              -webkit-animation-duration       : 3333ms, 3000ms;
               -webkit-animation-iteration-count: infinite;
-              -webkit-animation-name           : avatar;
-              -webkit-animation-timing-function: ease-in-out;
+              -webkit-animation-name           : avatar-filter, avatar-transform;
+              -webkit-animation-timing-function: cubic-bezier(0.68, -0.6, 0.32, 1.6), ease-in-out;
               animation-delay                  : 0ms;
-              animation-duration               : 3000ms;
+              animation-duration               : 3333ms, 3000ms;
               animation-iteration-count        : infinite;
-              animation-name                   : avatar;
-              animation-timing-function        : ease-in-out;
+              animation-name                   : avatar-filter, avatar-transform;
+              animation-timing-function        : cubic-bezier(0.68, -0.6, 0.32, 1.6), ease-in-out;
               padding-left                     : 5%;
               padding-right                    : 5%;
+              position                         : relative;
               width                            : 40%;
-              /* will-change: transform, translate, -ah-transform, -ms-transform, -o-transform, -webkit-transform */
+              zoom                             : 1
+              /* will-change: filter, transform, translate, -ah-transform, -ms-filter, -ms-transform, -o-transform, -webkit-filter, -webkit-transform */
             }
               /* <img> */
               #avatar img {
@@ -455,10 +575,10 @@
               #hero .portrait #subtitle { font-size: 40% }
                 /* Pseudo > After */
                 #subtitle::after {
-                  -moz-transition-property   : font-size, opacity;
-                  -ms-transition-property    : font-size, opacity;
-                  -o-transition-property     : font-size, opacity;
-                  -webkit-transition-property: font-size, opacity;
+                  -moz-transition-property   : font-size, opacity, -khtml-opacity, -moz-opacity;
+                  -ms-transition-property    : font-size, opacity, -khtml-opacity, -moz-opacity;
+                  -o-transition-property     : font-size, opacity, -khtml-opacity, -moz-opacity;
+                  -webkit-transition-property: font-size, opacity, -khtml-opacity, -moz-opacity;
                   -khtml-opacity             : 0.0;
                   -moz-opacity               : 0.0;
                   color                      : inherit;
@@ -467,7 +587,7 @@
                   font-size                  : 0%;
                   font-style                 : oblique;
                   opacity                    : 0.0;
-                  transition-property        : font-size, opacity;
+                  transition-property        : font-size, opacity, -khtml-opacity, -moz-opacity;
                   transition-timing-function : linear
                 }
 
@@ -488,6 +608,9 @@
         max-width  : 50%;
         min-width  : 320px
       }
+        /* All */
+        #tagline :first-child { font-weight: bolder }
+
         /* <span> */
         #tagline span {
           display       : inline-block;
@@ -632,8 +755,31 @@
 
 /* At Rules */
   /* Keyframes */
-    /* Avatar */
-    @keyframes avatar {
+    /* Avatar ... */
+    @keyframes avatar-filter {
+      23% {
+        -ms-filter    : "progid:DXImageTransform.Microsoft.DropShadow(Color='#2600FFFF', Enabled=true, OffX=-2.25, OffY=0.00, Positive=true) progid:DXImageTransform.Microsoft.DropShadow(Color='#20FF0000', Enabled=true, OffX=1.50, OffY=0.00, Positive=true)";
+        -webkit-filter: drop-shadow(-2.25px 0 0 rgba(0, 255, 255, 0.15)) drop-shadow(1.50px 0 0 rgba(255, 0, 0, 0.10));
+        filter        : drop-shadow(-2.25px 0 0 rgba(0, 255, 255, 0.15)) drop-shadow(1.50px 0 0 rgba(255, 0, 0, 0.10));
+        filter        : drop-shadow(-2.25px 0 0 rgba(0, 255, 255, 0.15)) drop-shadow(1.50px 0 0 rgba(255, 0, 0, 0.10)) progid:DXImageTransform.Microsoft.DropShadow(Color="#2600FFFF", Enabled=true, OffX=-2.25, OffY=0.00, Positive=true) progid:DXImageTransform.Microsoft.DropShadow(Color="#20FF0000", Enabled=true, OffX=1.50, OffY=0.00, Positive=true)
+      }
+
+      47% {
+        -ms-filter    : "progid:DXImageTransform.Microsoft.DropShadow(Color='#3400FFFF', Enabled=true, OffX=-1.50, OffY=0.00, Positive=true) progid:DXImageTransform.Microsoft.DropShadow(Color='#26FF0000', Enabled=true, OffX=1.50, OffY=0.00, Positive=true)";
+        -webkit-filter: drop-shadow(-1.50px 0 0 rgba(0, 255, 255, 0.20)) drop-shadow(1.50px 0 0 rgba(255, 0, 0, 0.15));
+        filter        : drop-shadow(-1.50px 0 0 rgba(0, 255, 255, 0.20)) drop-shadow(1.50px 0 0 rgba(255, 0, 0, 0.15));
+        filter        : drop-shadow(-1.50px 0 0 rgba(0, 255, 255, 0.20)) drop-shadow(1.50px 0 0 rgba(255, 0, 0, 0.15)) progid:DXImageTransform.Microsoft.DropShadow(Color="#3400FFFF", Enabled=true, OffX=-1.50, OffY=0.00, Positive=true) progid:DXImageTransform.Microsoft.DropShadow(Color="#26FF0000", Enabled=true, OffX=1.50, OffY=0.00, Positive=true)
+      }
+
+      89% {
+        -ms-filter    : "progid:DXImageTransform.Microsoft.DropShadow(Color='#2000FFFF', Enabled=true, OffX=-1.50, OffY=0.00, Positive=true) progid:DXImageTransform.Microsoft.DropShadow(Color='#34FF0000', Enabled=true, OffX=2.25, OffY=0.00, Positive=true)";
+        -webkit-filter: drop-shadow(-1.50px 0 0 rgba(0, 255, 255, 0.10)) drop-shadow(2.25px 0 0 rgba(255, 0, 0, 0.20));
+        filter        : drop-shadow(-1.50px 0 0 rgba(0, 255, 255, 0.10)) drop-shadow(2.25px 0 0 rgba(255, 0, 0, 0.20));
+        filter        : drop-shadow(-1.50px 0 0 rgba(0, 255, 255, 0.10)) drop-shadow(2.25px 0 0 rgba(255, 0, 0, 0.20)) progid:DXImageTransform.Microsoft.DropShadow(Color="#2000FFFF", Enabled=true, OffX=-1.50, OffY=0.00, Positive=true) progid:DXImageTransform.Microsoft.DropShadow(Color="#34FF0000", Enabled=true, OffX=2.25, OffY=0.00, Positive=true)
+      }
+    }
+
+    @keyframes avatar-transform {
       50% {
         -ah-transform    : translate(0, 5px);
         -ms-transform    : translate(0, 5px);
@@ -672,9 +818,26 @@
       }
     }
 
-  /* Media > ... */
-  @media all\0, all\9 {
-    /* Features > Main > (Background, Hero) */
-    #background    { background-color: #0F0F0F }
-    #hero, #hero * { color           : #F0F0F0 }
-  }
+  /* Media */
+    /* Landscape */
+    @media (min-width: 769px) and (scripting: enabled), (width > 768px) and (scripting: enabled) {
+      #main::before {
+        -webkit-mask-position: 75% 50%, 75% 50%;
+        mask-position        : 75% 50%, 75% 50%
+      }
+    }
+
+    /* Portrait */
+    @media (max-width: 768px) and (scripting: enabled), (width <= 768px) and (scripting: enabled), print {
+      #main::before {
+        -webkit-mask-position: -50vw 50%, 50vw 50%;
+        mask-position        : -50vw 50%, 50vw 50%
+      }
+    }
+
+    /* ... */
+    @media all\0, all\9 {
+      /* Features > Main > (Background, Hero) */
+      #background    { background-color: #0F0F0F }
+      #hero, #hero * { color           : #F0F0F0 }
+    }

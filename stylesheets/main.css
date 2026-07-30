@@ -71,21 +71,21 @@
 
   *, ::after, ::before {
     -moz-transition-duration          : 100ms;
-    -moz-transition-property          : opacity;
+    -moz-transition-property          : filter, opacity, -khtml-opacity, -moz-opacity;
     -moz-transition-timing-function   : ease-in-out;
     -ms-transition-duration           : 100ms;
-    -ms-transition-property           : opacity;
+    -ms-transition-property           : filter, opacity, -khtml-opacity, -moz-opacity;
     -ms-transition-timing-function    : ease-in-out;
     -o-transition-duration            : 100ms;
-    -o-transition-property            : opacity;
+    -o-transition-property            : filter, opacity, -khtml-opacity, -moz-opacity;
     -o-transition-timing-function     : ease-in-out;
     -webkit-transition-duration       : 100ms;
-    -webkit-transition-property       : opacity;
+    -webkit-transition-property       : filter, opacity, -khtml-opacity, -moz-opacity;
     -webkit-transition-timing-function: ease-in-out;
     scroll-behavior                   : smooth;
     transition-duration               : 100ms;
     transition-timing-function        : ease-in-out;
-    transition-property               : filter, opacity
+    transition-property               : filter, opacity, -khtml-opacity, -moz-opacity
   }
 
   [data-\:tooltip] { position: relative }
@@ -114,22 +114,24 @@
         -khtml-border-top-left-radius     : 2px;
         -khtml-border-top-right-radius    : 2px;
         -khtml-box-shadow                 : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        -khtml-opacity                    : 0.0;
         -moz-border-bottom-left-radius    : 2px;
         -moz-border-bottom-right-radius   : 2px;
         -moz-border-top-left-radius       : 2px;
         -moz-border-top-right-radius      : 2px;
         -moz-box-shadow                   : 0 0 5px 0 rgba(0, 0, 0, 0.5);
+        -moz-opacity                      : 0.0;
         -ms-filter                        : "progid:DXImageTransform.Microsoft.Gradient(Enabled=true, EndColorstr='#3F3F3F', GradientType=0x0, StartColorstr='#03003F')";
         -moz-transition-delay             : 0ms;
-        -moz-transition-property          : color, height, opacity, top, transform, translate;
+        -moz-transition-property          : color, height, opacity, top, transform, translate, -khtml-opacity, -moz-opacity;
         -moz-user-focus                   : ignore;
         -ms-transform                     : translate(-50%, -50%);
         -ms-transition-delay              : 0ms;
-        -ms-transition-property           : color, height, opacity, top, transform, translate;
+        -ms-transition-property           : color, height, opacity, top, transform, translate, -khtml-opacity, -moz-opacity;
         -o-text-overflow                  : clip;
         -o-transform                      : translate(-50%, -50%);
         -o-transition-delay               : 0ms;
-        -o-transition-property            : color, height, opacity, top, transform, translate;
+        -o-transition-property            : color, height, opacity, top, transform, translate, -khtml-opacity, -moz-opacity;
         -pie-border-radius                : 2px;
         -pie-box-shadow                   : 0 0 5px 0 rgba(0, 0, 0, 0.5);
         -prince-text-wrap                 : nowrap;
@@ -140,7 +142,7 @@
         -webkit-box-shadow                : 0 0 5px 0 rgba(0, 0, 0, 0.5);
         -webkit-transform                 : translate(-50%, -50%);
         -webkit-transition-delay          : 0ms;
-        -webkit-transition-property       : color, height, opacity, top, transform, translate;
+        -webkit-transition-property       : color, height, opacity, top, transform, translate, -khtml-opacity, -moz-opacity;
         background                        :    -moz-linear-gradient(30deg,                                          #03003F 50%,              #0F0F0F,     #03003F);
         background                        :     -ms-linear-gradient(30deg,                                          #03003F 50%,              #0F0F0F,     #03003F);
         background                        :      -o-linear-gradient(30deg,                                          #03003F 50%,              #0F0F0F,     #03003F);
@@ -201,7 +203,7 @@
         transform                         : translate(-50%, -50%);
         transition-behavior               : allow-discrete;
         transition-delay                  : 0ms;
-        transition-property               : color, height, opacity, top, transform, translate;
+        transition-property               : color, height, opacity, top, transform, translate, -khtml-opacity, -moz-opacity;
         translate                         : none; /* --> -50% -50% */
         white-space                       : nowrap;
         z-index                           : -1
@@ -221,6 +223,8 @@
         /* Pseudo > Before */
         [data-\:tooltip]:hover::before {
           -ah-transform              : translate(-50%, -100%);
+          -khtml-opacity             : 1.0;
+          -moz-opacity               : 1.0;
           -moz-transition-delay      : 500ms;
           -moz-transition-duration   : 300ms;
           -ms-transform              : translate(-50%, -100%);
@@ -400,7 +404,7 @@
     background-attachment: fixed;
     background-blend-mode: screen;
     background-clip      : border-box;
-    background-color     : rgba(240, 240, 240, 0.50);
+    background-color     : rgba(240, 240, 240, 0.0);
     background-color     : light-dark(rgba(0, 0, 0, 0.05), rgba(3, 0, 63, 0.05));
     background-image     : /* --> ../icons/…/background-pattern-2.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcAQMAAABIw03XAAAABlBMVEVHcEz///+flKJDAAAAAnRSTlMACQ9PdZwAAAAiSURBVHicncwxEQAADMLAOEBCrVY6x8xGhh8DYwr3jdYjBrX1ApuUMU0LAAAAAElFTkSuQmCC);
     background-image     : /* --> ../icons/…/background-pattern-1.png */ url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABAAQMAAACQp+OdAAAABlBMVEVHcEwAAACfKoRRAAAAAnRSTlMACQ9PdZwAAABlSURBVHic1ZCxDYAwDASDUqRkBEbJaDBaRmEESgqUA+mtp6ZCcXWNz/9OaYSZzoB8BZQeMBOwsAkqTbCyC+CQBiTKIFGBHhoIDRLVB9pn8LqFPuGjjuFgb1SHdx0XdGU/wW/5b25QF1ENbUN/sgAAAABJRU5ErkJggg==);
@@ -504,6 +508,13 @@
     -webkit-text-emphasis-color  : currentColor;
     animation-duration           : 300ms;
     animation-fill-mode          : both;
+    background                   :    -moz-linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
+    background                   :     -ms-linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
+    background                   :      -o-linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
+    background                   :        -webkit-gradient(linear, left top, left bottom, from(rgba(16, 16, 48, 0.5)), to(rgba(0, 0, 0, 0.5)));
+    background                   : -webkit-linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
+    background                   :         linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
+    background-attachment        : fixed;
     background-color             : transparent;
     border-block-color           : currentColor;
     border-block-end-color       : currentColor;
@@ -693,6 +704,9 @@
     /* All */
     svg|* { -webkit-svg-shadow: 0px 0px 3px rgba(0, 0, 0, 0.25) }
 
+  /* <td> */
+  td { overflow-wrap: normal }
+
 /* Components */
   /* Animate */
   [data-\:animate] { /* will-change: transform, -ah-transform, -ms-transform, -o-transform, -webkit-transform */ }
@@ -838,15 +852,15 @@
   .button,
   .button[data-\:animated] {
     -moz-transition-duration   : 300ms;
-    -moz-transition-property   : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
+    -moz-transition-property   : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -khtml-opacity, -moz-opacity, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
     -ms-transition-duration    : 300ms;
-    -ms-transition-property    : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
+    -ms-transition-property    : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -khtml-opacity, -moz-opacity, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
     -o-transition-duration     : 300ms;
-    -o-transition-property     : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
+    -o-transition-property     : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -khtml-opacity, -moz-opacity, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
     -webkit-transition-duration: 300ms;
-    -webkit-transition-property: background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
+    -webkit-transition-property: background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -khtml-opacity, -moz-opacity, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform;
     transition-duration        : 300ms;
-    transition-property        : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform
+    transition-property        : background-color, color, opacity, outline-color, outline-offset, outline-width, transform, -ah-transform, -khtml-opacity, -moz-opacity, -ms-transform, -o-transform, -webkit-box-reflect, -webkit-transform
   }
 
   .button[href],
@@ -1029,6 +1043,9 @@
   /* Legible */
   .legible, h1, h2, h3, h4, h5, h6 { text-rendering: optimizeLegibility }
 
+  /* Main */
+  #main { display: flow-root }
+
   /* Mirrored */
   h1,
   .button:focus,
@@ -1043,17 +1060,17 @@
 
   /* Monochrome ... */
   .monochrome {
-    -ms-filter    : "grayscale(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)";
+    -ms-filter    : "grayscale(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true)";
     -webkit-filter: grayscale(1.0);
     filter        : grayscale(1.0);
-    filter        : grayscale(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)
+    filter        : grayscale(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true)
   }
 
   .monochrome-invert {
-    -ms-filter    : "grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true, Invert=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)";
+    -ms-filter    : "grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true, Invert=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true)";
     -webkit-filter: grayscale(1.0) invert(1.0);
     filter        : grayscale(1.0) invert(1.0);
-    filter        : grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true, Invert=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)
+    filter        : grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.BasicImage(Enabled=true, GrayScale=true, Invert=true) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true)
   }
 
   /* No Font */
@@ -1200,27 +1217,16 @@
   }
 
   /* Reveal */
-  @property --reveal-onshow-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
-  @property --reveal-onshow-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
-  @property --reveal-onshow-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
-
-  @property --reveal-onshow_hover-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
-  @property --reveal-onshow_hover-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
-  @property --reveal-onshow_hover-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
-
-  @keyframes reveal-onshow {
-    from { --reveal-onshow-opacity: 0; --reveal-onshow-scale: 0.85; --reveal-onshow-translate-y: 12.5% }
-    to   { --reveal-onshow-opacity: 1; --reveal-onshow-scale: 1.00; --reveal-onshow-translate-y: 0.0% }
-  }
-
   .reveal-onshow {
     --reveal-onshow_hover-opacity    : 0;
     --reveal-onshow_hover-scale      : 0.85;
     --reveal-onshow_hover-translate-y: 12.5%;
+    -khtml-opacity                   : max(var(--reveal-onshow-opacity), var(--reveal-onshow_hover-opacity));
     -moz-animation-duration          : 1ms;
     -moz-animation-fill-mode         : both;
     -moz-animation-name              : reveal-onshow;
     -moz-animation-timing-function   : ease-in;
+    -moz-opacity                     : max(var(--reveal-onshow-opacity), var(--reveal-onshow_hover-opacity));
     -moz-transition-property         : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
     -ms-animation-duration           : 1ms;
     -ms-animation-fill-mode          : both;
@@ -1240,6 +1246,7 @@
     animation-duration               : 1ms;
     animation-fill-mode              : both;
     animation-name                   : reveal-onshow;
+    animation-range                  : entry 10% entry 100%;
     animation-range                  : entry 10% cover 25%;
     animation-timeline               : view();
     animation-timing-function        : ease-in;
@@ -1275,24 +1282,24 @@
 
   /* Silhouette ... */
   .silhouette, .silhouette-medium /* ->> `currentColor` presumably opaque */ {
-    -ms-filter    : "drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=3)";
+    -ms-filter    : "drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0) progid:DXImageTransform.Microsoft.Glow(Color='#7F7F7F', Enabled=true, Strength=3)";
     -webkit-filter: drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0);
     filter        : drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0);
-    filter        : drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=3)
+    filter        : drop-shadow(-3px 0 0) drop-shadow(0 -3px 0) drop-shadow(0 3px 0) drop-shadow(3px 0 0) progid:DXImageTransform.Microsoft.Glow(Color="#7F7F7F", Enabled=true, Strength=3)
   }
 
   .silhouette-thick /* ->> `currentColor` presumably opaque */ {
-    -ms-filter    : "drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=5)";
+    -ms-filter    : "drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0) progid:DXImageTransform.Microsoft.Glow(Color='#7F7F7F', Enabled=true, Strength=5)";
     -webkit-filter: drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0);
     filter        : drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0);
-    filter        : drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=5)
+    filter        : drop-shadow(-5px 0 0) drop-shadow(0 -5px 0) drop-shadow(0 5px 0) drop-shadow(5px 0 0) progid:DXImageTransform.Microsoft.Glow(Color="#7F7F7F", Enabled=true, Strength=5)
   }
 
   .silhouette-thin /* ->> Based on `color` */ {
-    -ms-filter    : "drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=1)";
+    -ms-filter    : "drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0) progid:DXImageTransform.Microsoft.Glow(Color='#7F7F7F', Enabled=true, Strength=1)";
     -webkit-filter: drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0);
     filter        : drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0);
-    filter        : drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0) progid:DXImageTransform.Microsoft.Glow(Color=#7F7F7F, Enabled=true, Strength=1)
+    filter        : drop-shadow(-1px 0 0) drop-shadow(0 -1px 0) drop-shadow(0 1px 0) drop-shadow(1px 0 0) progid:DXImageTransform.Microsoft.Glow(Color="#7F7F7F", Enabled=true, Strength=1)
   }
 
 /* At Rules */
@@ -1700,19 +1707,18 @@
     }
 
   @font-face /* ->> Rajdhani -@> Indian Type Foundry (Devanagari: Satya Rajpurohit, Jyotish Sonowal, Shiva Nalleperumal) */ {
-    /*font-display           : swap;*/
     font-family            : Rajdhani;
     font-feature-settings  : normal;
     font-variant-alternates: initial;
     font-weight            : 400;
-    src                    : local('🙂'), url(../fonts/rajdhani.woff2) format("woff2"), url(../fonts/rajdhani.woff) format("woff"), url(../fonts/rajdhani.ttf) format("truetype");
+    src                    : local('🙂'), url(../fonts/rajdhani.woff) format("woff"), url(../fonts/rajdhani.ttf) format("truetype");
     unicode-range          : U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
   }
     @font-face {
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 100 300;
-      src          : local('🙂'), url(../fonts/rajdhani-light.woff2) format("woff2"), url(../fonts/rajdhani-light.woff) format("woff"), url(../fonts/rajdhani-light.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/rajdhani-light.woff) format("woff"), url(../fonts/rajdhani-light.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
@@ -1720,7 +1726,7 @@
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 500;
-      src          : local('🙂'), url(../fonts/rajdhani-medium.woff2) format("woff2"), url(../fonts/rajdhani-medium.woff) format("woff"), url(../fonts/rajdhani-medium.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/rajdhani-medium.woff) format("woff"), url(../fonts/rajdhani-medium.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
@@ -1728,7 +1734,7 @@
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 600;
-      src          : local('🙂'), url(../fonts/rajdhani-semibold.woff2) format("woff2"), url(../fonts/rajdhani-semibold.woff) format("woff"), url(../fonts/rajdhani-semibold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/rajdhani-semibold.woff) format("woff"), url(../fonts/rajdhani-semibold.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
@@ -1736,7 +1742,7 @@
       font-display : swap;
       font-family  : Rajdhani;
       font-weight  : 700 900;
-      src          : local('🙂'), url(../fonts/rajdhani-bold.woff2) format("woff2"), url(../fonts/rajdhani-bold.woff) format("woff"), url(../fonts/rajdhani-bold.ttf) format("truetype");
+      src          : local('🙂'), url(../fonts/rajdhani-bold.woff) format("woff"), url(../fonts/rajdhani-bold.ttf) format("truetype");
       unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD, U+0900-097F
     }
 
@@ -1824,9 +1830,10 @@
     }
 
     /* Reveal … */
-    @keyframes reveal-onshow2 {
-      from { opacity: 0; scale: 0.85; translate: 0 12.5% }
-      to   { opacity: 1; scale: 1.00; translate: 0 0.0% }
+    @keyframes reveal-onshow {
+      from /* entry 10% */             { --reveal-onshow-opacity: 0; --reveal-onshow-scale: 0.85; --reveal-onshow-translate-y: 12.5% }
+      to   /* entry 100%, cover 25% */ { --reveal-onshow-opacity: 1; --reveal-onshow-scale: 1.00; --reveal-onshow-translate-y: 0.0% }
+      scroll 100%                      { --reveal-onshow-opacity: 1; --reveal-onshow-scale: 1.00; --reveal-onshow-translate-y: 0.0% }
     }
 
   /* Media */
@@ -1861,17 +1868,17 @@
     @media (prefers-color-scheme: dark) {
       /* Features > Monochrome ... */
       .monochrome {
-        -ms-filter    : "grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)";
+        -ms-filter    : "grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true)";
         -webkit-filter: grayscale(1.0) invert(1.0);
         filter        : grayscale(1.0) invert(1.0);
-        filter        : grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)
+        filter        : grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true)
       }
 
       .monochrome-invert {
-        -ms-filter    : "grayscale(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)";
+        -ms-filter    : "grayscale(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true)";
         -webkit-filter: grayscale(1.0);
         filter        : grayscale(1.0);
-        filter        : grayscale(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color=#FFFFFFFF, Enabled=true)
+        filter        : grayscale(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color="#FFFFFFFF", Enabled=true)
       }
     }
 
@@ -1974,8 +1981,10 @@
       }
 
       [data-\:tooltip]:hover::before {
-        opacity: 0.0;
-        z-index: -1
+        -khtml-opacity: 0.0;
+        -moz-opacity  : 0.0;
+        opacity       : 0.0;
+        z-index       : -1
       }
     }
 
@@ -2000,8 +2009,10 @@
       .legacy-internet-explorer {}
 
       [data-\:tooltip]:hover::before {
-        opacity: 0.0;
-        z-index: -1
+        -khtml-opacity: 0.0;
+        -moz-opacity  : 0.0;
+        opacity       : 0.0;
+        z-index       : -1
       }
     }
 
@@ -2013,6 +2024,16 @@
     margin: 12mm;
     size  : A4 portrait
   }
+
+  /* Property */
+    /* Reveal ... */
+    @property --reveal-onshow-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
+    @property --reveal-onshow-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
+    @property --reveal-onshow-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
+
+    @property --reveal-onshow_hover-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
+    @property --reveal-onshow_hover-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
+    @property --reveal-onshow_hover-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
 
   /* View Transition */
   @view-transition { navigation: auto }
