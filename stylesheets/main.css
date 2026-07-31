@@ -12,7 +12,7 @@
   * {
     -ah-transform-origin       : center;
     -moz-text-decoration-color : inherit;
-    -moz-text-size-adjust      : 100% !important;
+    -moz-text-size-adjust      : none !important;
     -moz-transform-origin      : center;
     -ms-transform-origin       : center;
     -o-transform-origin        : center;
@@ -22,7 +22,7 @@
     -webkit-mask-repeat-y      : no-repeat;
     -webkit-tap-highlight-color: inherit;
     -webkit-text-emphasis-color: inherit;
-    -webkit-text-size-adjust   : 100% !important;
+    -webkit-text-size-adjust   : none !important;
     -webkit-touch-callout      : none;
     -webkit-transform-origin   : center;
     -webkit-transform-origin-x : center;
@@ -65,7 +65,7 @@
     table-layout               : fixed;
     text-decoration-color      : inherit;
     text-emphasis-color        : inherit;
-    text-size-adjust           : 100% !important;
+    text-size-adjust           : none !important;
     transform-origin           : center
   }
 
@@ -1216,52 +1216,6 @@
     white-space      : nowrap
   }
 
-  /* Reveal */
-  .reveal-onshow {
-    --reveal-onshow_hover-opacity    : 0;
-    --reveal-onshow_hover-scale      : 0.85;
-    --reveal-onshow_hover-translate-y: 12.5%;
-    -khtml-opacity                   : max(var(--reveal-onshow-opacity), var(--reveal-onshow_hover-opacity));
-    -moz-animation-duration          : 1ms;
-    -moz-animation-fill-mode         : both;
-    -moz-animation-name              : reveal-onshow;
-    -moz-animation-timing-function   : ease-in;
-    -moz-opacity                     : max(var(--reveal-onshow-opacity), var(--reveal-onshow_hover-opacity));
-    -moz-transition-property         : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
-    -ms-animation-duration           : 1ms;
-    -ms-animation-fill-mode          : both;
-    -ms-animation-name               : reveal-onshow;
-    -ms-animation-timing-function    : ease-in;
-    -ms-transition-property          : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
-    -o-animation-duration            : 1ms;
-    -o-animation-fill-mode           : both;
-    -o-animation-name                : reveal-onshow;
-    -o-animation-timing-function     : ease-in;
-    -o-transition-property           : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
-    -webkit-animation-duration       : 1ms;
-    -webkit-animation-fill-mode      : both;
-    -webkit-animation-name           : reveal-onshow;
-    -webkit-animation-timing-function: ease-in;
-    -webkit-transition-property      : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
-    animation-duration               : 1ms;
-    animation-fill-mode              : both;
-    animation-name                   : reveal-onshow;
-    animation-range                  : entry 10% entry 100%;
-    animation-range                  : entry 10% cover 25%;
-    animation-timeline               : view();
-    animation-timing-function        : ease-in;
-    opacity                          :   max(var(--reveal-onshow-opacity),     var(--reveal-onshow_hover-opacity));
-    scale                            :   max(var(--reveal-onshow-scale),       var(--reveal-onshow_hover-scale));
-    translate                        : 0 min(var(--reveal-onshow-translate-y), var(--reveal-onshow_hover-translate-y));
-    transition-property              : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y
-  }
-    /* Pseudo > Hover */
-    .reveal-onshow:hover {
-      --reveal-onshow_hover-opacity    : 1;
-      --reveal-onshow_hover-scale      : 1.00;
-      --reveal-onshow_hover-translate-y: 0.0%
-    }
-
   /* Section */
   [role~=banner],
   [role~=region] {
@@ -1843,22 +1797,74 @@
       * { forced-color-adjust: none }
     }
 
-    /* Hover, Pointer */
-    @media (hover: hover) and (pointer: fine) {}
-
     /* Landscape (e.g. desktops, handhelds, laptops, TVs, …) ->> Cozy */
     @media (min-width: 769px) and (scripting: enabled), (width > 768px) and (scripting: enabled) {
-      /* Do something… */
+      /* At Rules > Media > (Hover, Pointer) */
+      @media (any-hover: hover) and (any-pointer: fine), (hover: hover) and (pointer: fine) {
+        /* Features > Reveal ... */
+        .reveal-onshow {
+          --reveal-onshow_hover-opacity    : 0;
+          --reveal-onshow_hover-scale      : 0.85;
+          --reveal-onshow_hover-translate-y: 12.5%;
+          -khtml-opacity                   : max(var(--reveal-onshow-opacity), var(--reveal-onshow_hover-opacity));
+          -moz-animation-duration          : 1ms;
+          -moz-animation-fill-mode         : both;
+          -moz-animation-name              : reveal-onshow;
+          -moz-animation-timing-function   : ease-in;
+          -moz-opacity                     : max(var(--reveal-onshow-opacity), var(--reveal-onshow_hover-opacity));
+          -moz-transition-property         : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
+          -ms-animation-duration           : 1ms;
+          -ms-animation-fill-mode          : both;
+          -ms-animation-name               : reveal-onshow;
+          -ms-animation-timing-function    : ease-in;
+          -ms-transition-property          : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
+          -o-animation-duration            : 1ms;
+          -o-animation-fill-mode           : both;
+          -o-animation-name                : reveal-onshow;
+          -o-animation-timing-function     : ease-in;
+          -o-transition-property           : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
+          -webkit-animation-duration       : 1ms;
+          -webkit-animation-fill-mode      : both;
+          -webkit-animation-name           : reveal-onshow;
+          -webkit-animation-timing-function: ease-in;
+          -webkit-transition-property      : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
+          animation-duration               : 1ms;
+          animation-fill-mode              : both;
+          animation-name                   : reveal-onshow;
+          animation-range                  : entry 10% entry 100%;
+          animation-range                  : entry 10% cover 25%;
+          animation-timeline               : view();
+          animation-timing-function        : ease-in;
+          opacity                          :   max(var(--reveal-onshow-opacity),     var(--reveal-onshow_hover-opacity));
+          scale                            :   max(var(--reveal-onshow-scale),       var(--reveal-onshow_hover-scale));
+          translate                        : 0 min(var(--reveal-onshow-translate-y), var(--reveal-onshow_hover-translate-y));
+          transition-property              : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y
+        }
+          /* Pseudo > Hover */
+          .reveal-onshow:hover {
+            --reveal-onshow_hover-opacity    : 1;
+            --reveal-onshow_hover-scale      : 1.00;
+            --reveal-onshow_hover-translate-y: 0.0%
+          }
+      }
     }
 
     /* Portrait (e.g. electronic readers, phones, smart watches, …) ->> Compact */
     @media (max-width: 768px) and (scripting: enabled), (width <= 768px) and (scripting: enabled), print {
       /* DOM Elements > (<html>, <input>) ->> Damn mobile Web text inflation algorithms */
-      html, input { font-size: 10px }
+      html, input {
+        font-size: 1.5vmax;
+        font-size: max(1.5vmax, 2.0vmin);
+        font-size: 10px;
+      }
 
       /* Components > (Landscape, Portrait) */
       .landscape { content-visibility: hidden;  display: none !important; empty-cells: hide; visibility: collapse }
       .portrait  { content-visibility: visible; display: initial;         empty-cells: show; visibility: initial }
+
+      /* At Rules > Media > Prefers Color Scheme > (Dark, Light) */
+      @media (prefers-color-scheme: dark)  { body { background-color: rgba(9,   9,   16,  1.00) } }
+      @media (prefers-color-scheme: light) { body { background-color: rgba(240, 240, 240, 1.00) } }
     }
 
     /* Prefers Color Scheme > Dark */
