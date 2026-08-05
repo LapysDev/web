@@ -17,6 +17,7 @@
   * {
     border-style  : dashed;
     border-width  : 0.5px;
+    corner-shape  : round; /* --> superellipse(1) */
     outline-offset: 0px;
     outline-style : dashed !important;
     outline-width : 1px    !important

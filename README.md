@@ -7,7 +7,7 @@
 - Legacy: Internet Explorer 8-, Mozilla, Netscape, and Safari look ugly
 - Mobile: Samsung Browser looks ugly
 
-- Internet Explorer: Icon is squashed, lazy images do not load
+- Internet Explorer: lazy images do not load
 --- ---
 - Dragged `document.links` elements animate a view transition for Preview components
 - Minified script and stylesheet resources

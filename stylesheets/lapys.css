@@ -29,6 +29,10 @@
     -webkit-user-modify                : read-only;
     animation-timing-function          : linear;
     box-decoration-break               : clone;
+    corner-bottom-left-shape           : round;
+    corner-bottom-right-shape          : round;
+    corner-top-left-shape              : round;
+    corner-top-right-shape             : round;
     image-orientation                  : inherit;
     image-rendering                    : inherit;
     image-resolution                   : inherit;
@@ -283,6 +287,7 @@
     -ms-font-feature-settings                 : inherit;
     -ms-line-break                            : inherit;
     -ms-text-kashida-space                    : inherit;
+    -ms-text-size-adjust                      : inherit;
     -ms-text-underline-position               : inherit;
     -ms-word-wrap                             : inherit;
     -ro-barcode-font-family                   : inherit;
@@ -702,10 +707,12 @@
     -ah-justify-nbsp        : true;
     -ah-word-wrap           : normal;
     -moz-osx-font-smoothing : grayscale;
+    -moz-text-size-adjust   : none;
+    -ms-text-size-adjust    : none;
     -ms-word-wrap           : normal;
     -webkit-font-smoothing  : subpixel-antialiased;
     -webkit-text-security   : none;
-    -webkit-text-size-adjust: 100%;
+    -webkit-text-size-adjust: none;
     direction               : ltr; /* ->> `unicode-bidi` not overriden for Document Type Definition (DTD) designers */
     font-smooth             : always;
     interpolate-size        : allow-keywords;
@@ -713,11 +720,12 @@
     min-height              : 100%;
     text-box-edge           : cap alphabetic;
     text-box-trim           : none; /* ->> `trim-both` otherwise */
-    text-size-adjust        : 100%;
+    text-size-adjust        : none;
     text-spacing-trim       : trim-start;
     text-wrap               : /* wrap */ balance;
     text-wrap               : /* wrap */ pretty;
     text-wrap               : /* wrap */ stable;
+    transition-behavior     : allow-discrete;
     zoom                    : 1.000
   }
 
@@ -817,6 +825,7 @@
         -ms-appearance                : button;
         -ms-font-feature-settings     : inherit;
         -ms-text-kashida-space        : inherit;
+        -ms-text-size-adjust          : inherit;
         -ms-text-underline-position   : inherit;
         -ro-barcode-font-family       : inherit;
         -ro-barcode-font-size         : inherit;
@@ -877,6 +886,7 @@
         -ms-appearance             : button;
         -ms-font-feature-settings  : inherit;
         -ms-text-kashida-space     : inherit;
+        -ms-text-size-adjust       : inherit;
         -ms-text-underline-position: inherit;
         appearance                 : button;
         background-color           : whitesmoke;

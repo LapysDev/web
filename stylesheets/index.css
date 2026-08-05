@@ -173,8 +173,7 @@
     /* Expertise */
     #expertise {
       max-width: 1024px;
-      min-width: 240px;
-      width    : 80%
+      min-width: 240px
     }
       /* <table> */
       #expertise table {
@@ -188,6 +187,7 @@
         border-bottom-left-radius : 9px;
         border-bottom-right-radius: 9px;
         border-collapse           : separate;
+        border-spacing            : 0;
         border-top-left-radius    : 9px;
         border-top-right-radius   : 9px;
         display                   : table;
@@ -238,6 +238,10 @@
             border-top-style          : solid;
             border-top-width          : 1px;
             box-sizing                : border-box;
+            corner-bottom-left-shape  : round;
+            corner-bottom-right-shape : round;
+            corner-top-left-shape     : round;
+            corner-top-right-shape    : round;
             display                   : inline-block;
             float                     : left;
             height                    : 1.750em;
@@ -298,16 +302,25 @@
             word-break    : break-word
           }
 
-          /* Timeline > <div> */
-          #expertise .résumé .entry .timeline div {
-            border-left: 1px solid;
-            height        : 50%;
-            padding-bottom: 5%;
-            padding-top   : 5%
-          }
+        /* Entry, Timeline */
+        #expertise .résumé .entry,
+        #expertise .résumé .timeline {
+          padding-bottom: 1.5%;
+          padding-top   : 3%
+        }
+
+        #expertise .résumé tr:nth-of-type(2n + 2) .entry,
+        #expertise .résumé tr:nth-of-type(2n + 2) .timeline { background-color: rgba(127, 127, 127, 0.1) }
+
+        /* Timeline > <div> */
+        #expertise .résumé .timeline div {
+          border-left: 1px solid;
+          height        : 50%;
+          padding-bottom: 5%;
+          padding-top   : 5%
+        }
 
       /* Skills */
-        /* Entry */
         #skills                .entry,
         [data-\:portal=skills] .entry {
           -ah-vertical-align: top;
@@ -321,24 +334,99 @@
             vertical-align    : inherit
           }
             /* <ul> > <li> */
+            #skills .entry li {
+              --skill_hover-opacity            : 0;
+              --skill_hover-translate-y        : 25%;
+              -khtml-opacity                   : max(var(--skill-opacity), var(--skill_hover-opacity));
+              -moz-animation-duration          : 1ms;
+              -moz-animation-fill-mode         : both;
+              -moz-animation-name              : reveal-skill;
+              -moz-animation-timing-function   : ease-out;
+              -ms-animation-duration           : 1ms;
+              -ms-animation-fill-mode          : both;
+              -ms-animation-name               : reveal-skill;
+              -ms-animation-timing-function    : ease-out;
+              -o-animation-duration            : 1ms;
+              -o-animation-fill-mode           : both;
+              -o-animation-name                : reveal-skill;
+              -o-animation-timing-function     : ease-out;
+              -moz-opacity                     : max(var(--skill-opacity), var(--skill_hover-opacity));
+              -webkit-animation-duration       : 1ms;
+              -webkit-animation-fill-mode      : both;
+              -webkit-animation-name           : reveal-skill;
+              -webkit-animation-timing-function: ease-out;
+              animation-duration               : auto;
+              animation-fill-mode              : both;
+              animation-name                   : reveal-skill;
+              animation-range-end              : cover 100%;
+              animation-range-end              : cover /* --> round(nearest, …) */ calc((sibling-index() - 1) / (sibling-count() - 1) * 100%);
+              animation-range-start            : entry 0%;
+              animation-timeline               : view(block);
+              animation-timing-function        : ease-out;
+              opacity                          :   max(var(--skill-opacity),     var(--skill_hover-opacity));
+              translate                        : 0 min(var(--skill-translate-y), var(--skill_hover-translate-y));
+              transition-property              : --skill_hover-opacity, --skill_hover-translate-y
+            }
+
+            #skills .entry li:nth-of-type(1) { animation-range-end: cover 0% }
+            #skills .entry li:nth-of-type(2) { animation-range-end: cover 17% }
+            #skills .entry li:nth-of-type(3) { animation-range-end: cover 33% }
+            #skills .entry li:nth-of-type(4) { animation-range-end: cover 50% }
+            #skills .entry li:nth-of-type(5) { animation-range-end: cover 67% }
+            #skills .entry li:nth-of-type(6) { animation-range-end: cover 83% }
+            #skills .entry li:nth-of-type(7) { animation-range-end: cover 100% }
+
+            #skills tr:nth-of-type(2n + 1) .entry li                { animation-range-end: cover /* --> round(nearest, …) */ calc(((sibling-count() - sibling-index()) / (sibling-count() - 1)) * 100%) }
+            #skills tr:nth-of-type(2n + 1) .entry li:nth-of-type(1) { animation-range-end: cover 100% }
+            #skills tr:nth-of-type(2n + 1) .entry li:nth-of-type(2) { animation-range-end: cover 83% }
+            #skills tr:nth-of-type(2n + 1) .entry li:nth-of-type(3) { animation-range-end: cover 67% }
+            #skills tr:nth-of-type(2n + 1) .entry li:nth-of-type(4) { animation-range-end: cover 50% }
+            #skills tr:nth-of-type(2n + 1) .entry li:nth-of-type(5) { animation-range-end: cover 33% }
+            #skills tr:nth-of-type(2n + 1) .entry li:nth-of-type(6) { animation-range-end: cover 17% }
+            #skills tr:nth-of-type(2n + 1) .entry li:nth-of-type(7) { animation-range-end: cover 0% }
+
             #skills                .entry li,
             [data-\:portal=skills] .entry li {
               -ah-text-decoration-line    : none;
               -moz-text-decoration-line   : none;
+              -prince-text-wrap           : wrap;
               -webkit-text-decoration-line: none;
               cursor                      : pointer;
               display                     : inline-block;
               height                      : 100%;
               margin-left                 : 0;
-              text-decoration-line        : none
+              text-decoration-line        : none;
+              text-wrap                   : wrap;
+              text-wrap-mode              : wrap;
+              white-space                 : normal
             }
+              /* Pseudo */
+                /* After */
+                #skills                .entry li::after,
+                [data-\:portal=skills] .entry li::after { content: none }
+
+                /* Hover */
+                #skills .entry li:hover {
+                  --skill_hover-opacity     : 1;
+                  --skill_hover-translate-y : 0%;
+                  -moz-animation-duration   : 100ms;
+                  -ms-animation-duration    : 100ms;
+                  -o-animation-duration     : 100ms;
+                  -webkit-animation-duration: 100ms;
+                  animation-duration        : 100ms
+                }
+
               /* All */
               #skills                .entry li *,
               [data-\:portal=skills] .entry li * {
                 -ah-text-decoration-line    : inherit;
                 -moz-text-decoration-line   : inherit;
                 -webkit-text-decoration-line: inherit;
-                text-decoration-line        : inherit
+                display                     : inline-block;
+                scale                       : 1;
+                text-decoration-line        : inherit;
+                transform                   : none;
+                width                       : 100%
               }
 
               #skills                .entry li :not(a):not(area):not(button):not(label):not(select):not(select option),
@@ -347,18 +435,18 @@
               /* <img> */
               #skills                .entry li img,
               [data-\:portal=skills] .entry li img {
-                -pie-border-radius        : 9px;
-                border-bottom-left-radius : 9px;
-                border-bottom-right-radius: 9px;
-                border-top-right-radius   : 9px;
+                -pie-border-radius        : 3px;
+                border-bottom-left-radius : 3px;
+                border-bottom-right-radius: 3px;
+                border-top-right-radius   : 3px;
                 color                     : light-dark(rgba(63, 63, 63, 0.25), rgba(127, 127, 127, 0.25));
                 height                    : 40px;
-                height                    : 2.5em;
+                margin-bottom             : 15%;
+                margin-top                : 15%;
                 max-height                : 2.5em;
                 max-width                 : 2.5em;
                 overflow                  : hidden;
-                width                     : 40px;
-                width                     : 2.5em
+                width                     : 40px
               }
 
               /* Caption */
@@ -378,7 +466,12 @@
                   -khtml-opacity   : 0.75;
                   -moz-opacity     : 0.75;
                   font-variant-caps: inherit;
-                  opacity          : 0.75
+                  opacity          : 0.75;
+                  overflow-wrap    : normal;
+                  text-wrap-style  : pretty;
+                  word-break       : normal;
+                  word-wrap        : normal;
+                  width            : auto
                 }
 
                 /* <abbr>, <acronym> */
@@ -388,9 +481,11 @@
                 [data-\:portal=skills] .entry li div [data-\:abbreviate],
                 [data-\:portal=skills] .entry li div abbr,
                 [data-\:portal=skills] .entry li div acronym {
-                  -khtml-opacity: 1.00;
-                  -moz-opacity  : 1.00;
-                  opacity       : 1.00
+                  -khtml-opacity      : 1.00;
+                  -moz-opacity        : 1.00;
+                  color               : light-dark(#3F3F3F, #F0F0F0);
+                  opacity             : 1.00;
+                  white-space-collapse: preserve-spaces
                 }
 
     /* Expertise, Projects */
@@ -514,6 +609,7 @@
             }
               /* <img> */
               #avatar img {
+                height    : 100%;
                 max-height: 50vw;
                 max-width : 50vw;
                 min-height: 200px;
@@ -565,7 +661,8 @@
                 color                    : inherit;
                 font-weight              : inherit;
                 interpolate-size         : allow-keywords;
-                margin                   : 0
+                margin                   : 0;
+                transition-behavior      : allow-discrete
               }
 
               /* Subtitle */
@@ -685,23 +782,28 @@
         -moz-border-top-left-radius       : 50%;
         -moz-border-top-right-radius      : 50%;
         -moz-transition-duration          : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
-        -moz-transition-property          : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        -moz-transition-property          : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, corner-bottom-left-shape, corner-bottom-right-shape, corner-top-left-shape, corner-top-right-shape, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
         -ms-transition-duration           : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
-        -ms-transition-property           : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        -ms-transition-property           : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, corner-bottom-left-shape, corner-bottom-right-shape, corner-top-left-shape, corner-top-right-shape, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
         -o-transition-duration            : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
-        -o-transition-property            : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        -o-transition-property            : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, corner-bottom-left-shape, corner-bottom-right-shape, corner-top-left-shape, corner-top-right-shape, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
         -pie-border-radius                : 50%;
         -webkit-border-bottom-left-radius : 50%;
         -webkit-border-bottom-right-radius: 50%;
         -webkit-border-top-left-radius    : 50%;
         -webkit-border-top-right-radius   : 50%;
         -webkit-transition-duration       : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
-        -webkit-transition-property       : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        -webkit-transition-property       : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, corner-bottom-left-shape, corner-bottom-right-shape, corner-top-left-shape, corner-top-right-shape, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
         border-bottom-left-radius         : 50%;
         border-bottom-right-radius        : 50%;
         border-collapse                   : separate;
+        border-spacing                    : 0;
         border-top-left-radius            : 50%;
         border-top-right-radius           : 50%;
+        corner-bottom-left-shape          : round;
+        corner-bottom-right-shape         : round;
+        corner-top-left-shape             : round;
+        corner-top-right-shape            : round;
         display                           : inline-table;
         font-size                         : 200%;
         height                            : 2.00em;
@@ -715,7 +817,7 @@
         outline-width                     : 1px;
         scale                             : 1.0;
         transition-duration               : 100ms, 100ms, 200ms, 100ms, 100ms, 200ms;
-        transition-property               : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
+        transition-property               : border-bottom-left-radius, border-bottom-right-radius, border-color, border-top-left-radius, border-top-right-radius, corner-bottom-left-shape, corner-bottom-right-shape, corner-top-left-shape, corner-top-right-shape, height, line-height, transform, width, -ah-transform, -ms-transform, -o-transform, -webkit-transform;
         width                             : 2.00em
       }
 
@@ -741,7 +843,11 @@
             border-bottom-left-radius : 9px;
             border-bottom-right-radius: 9px;
             border-top-left-radius    : 9px;
-            border-top-right-radius   : 9px
+            border-top-right-radius   : 9px;
+            corner-bottom-left-shape  : inherit;
+            corner-bottom-right-shape : inherit;
+            corner-top-left-shape     : inherit;
+            corner-top-right-shape    : inherit
           }
 
           /* Hover */
@@ -815,6 +921,13 @@
       }
     }
 
+    /* Reveal Skill */
+    @keyframes reveal-skill {
+      from        { --skill-opacity: 0; --skill-translate-y: 25% }
+      to          { --skill-opacity: 1; --skill-translate-y: 0% }
+      scroll 100% { --skill-opacity: 1; --skill-translate-y: 0% }
+    }
+
     /* Title Entry */
     @keyframes title-entry {
       from {
@@ -846,3 +959,9 @@
       #background    { background-color: #0F0F0F }
       #hero, #hero * { color           : #F0F0F0 }
     }
+
+  /* Property > Skill */
+  @property --skill-opacity     { inherits: false; initial-value: 0;   syntax: "<number>" }
+  @property --skill-translate-y { inherits: false; initial-value: 25%; syntax: "<percentage>" }
+    @property --skill_hover-opacity     { inherits: false; initial-value: 0;   syntax: "<number>" }
+    @property --skill_hover-translate-y { inherits: false; initial-value: 25%; syntax: "<percentage>" }

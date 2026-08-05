@@ -14,6 +14,7 @@
     -moz-text-decoration-color : inherit;
     -moz-text-size-adjust      : none !important;
     -moz-transform-origin      : center;
+    -ms-text-size-adjust       : none !important;
     -ms-transform-origin       : center;
     -o-transform-origin        : center;
     -webkit-box-sizing         : border-box;
@@ -50,6 +51,10 @@
     color                      : light-dark(#3F3F3F, #F0F0F0);
     color-scheme               : inherit;
     column-rule-color          : inherit;
+    corner-bottom-left-shape   : squircle; /* --> superellipse(2) */
+    corner-bottom-right-shape  : squircle;
+    corner-top-left-shape      : squircle;
+    corner-top-right-shape     : squircle;
     cursor                     : inherit;
     fill                       : inherit;
     flood-color                : inherit;
@@ -508,12 +513,12 @@
     -webkit-text-emphasis-color  : currentColor;
     animation-duration           : 300ms;
     animation-fill-mode          : both;
-    background                   :    -moz-linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
-    background                   :     -ms-linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
-    background                   :      -o-linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
-    background                   :        -webkit-gradient(linear, left top, left bottom, from(rgba(16, 16, 48, 0.5)), to(rgba(0, 0, 0, 0.5)));
-    background                   : -webkit-linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
-    background                   :         linear-gradient(                                    rgba(16, 16, 48, 0.5),     rgba(0, 0, 0, 0.5));
+    background                   :    -moz-linear-gradient(150deg,                              rgba(16, 0, 48, 0.5),     rgba(0, 0, 0, 0.0));
+    background                   :     -ms-linear-gradient(150deg,                              rgba(16, 0, 48, 0.5),     rgba(0, 0, 0, 0.0));
+    background                   :      -o-linear-gradient(150deg,                              rgba(16, 0, 48, 0.5),     rgba(0, 0, 0, 0.0));
+    background                   :        -webkit-gradient(linear, left top, right bottom, from(rgba(16, 0, 48, 0.5)), to(rgba(0, 0, 0, 0.0)));
+    background                   : -webkit-linear-gradient(150deg,                              rgba(16, 0, 48, 0.5),     rgba(0, 0, 0, 0.0));
+    background                   :         linear-gradient(150deg,                              rgba(16, 0, 48, 0.5),     rgba(0, 0, 0, 0.0));
     background-attachment        : fixed;
     background-color             : transparent;
     border-block-color           : currentColor;
@@ -823,6 +828,10 @@
     border-top-style                  : outset;
     border-top-width                  : 1px;
     box-sizing                        : border-box;
+    corner-bottom-left-shape          : bevel;
+    corner-bottom-right-shape         : bevel;
+    corner-top-left-shape             : bevel;
+    corner-top-right-shape            : bevel;
     display                           : inline-block;
     filter                            : brightness(1.0);
     filter                            : brightness(1.0) progid:DXImageTransform.Microsoft.Gradient(Enabled=true, EndColor=0xE63F3F3F, EndColorStr="#E63F3F3F", StartColor=0xE63F3F3F, StartColorStr="#E63F3F3F");
@@ -1794,13 +1803,16 @@
     /* Forced Colors */
     @media (forced-colors: active) {
       /* DOM Elements > All */
-      * { forced-color-adjust: none }
+      * {
+        -ms-high-contrast-adjust: none;
+        forced-color-adjust     : none
+      }
     }
 
     /* Landscape (e.g. desktops, handhelds, laptops, TVs, …) ->> Cozy */
     @media (min-width: 769px) and (scripting: enabled), (width > 768px) and (scripting: enabled) {
-      /* At Rules > Media > (Hover, Pointer) */
-      @media (any-hover: hover) and (any-pointer: fine), (hover: hover) and (pointer: fine) {
+      /* At Rules > Media > ... */
+      @media (any-hover: hover) and (any-pointer: fine) and (prefers-reduced-motion: no-preference), (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
         /* Features > Reveal ... */
         .reveal-onshow {
           --reveal-onshow_hover-opacity    : 0;
@@ -1828,11 +1840,12 @@
           -webkit-animation-name           : reveal-onshow;
           -webkit-animation-timing-function: ease-in;
           -webkit-transition-property      : --reveal-onshow_hover-opacity, --reveal-onshow_hover-scale, --reveal-onshow_hover-translate-y;
-          animation-duration               : 1ms;
+          animation-duration               : auto;
           animation-fill-mode              : both;
           animation-name                   : reveal-onshow;
-          animation-range                  : entry 10% entry 100%;
-          animation-range                  : entry 10% cover 25%;
+          animation-range-end              : entry 100%;
+          animation-range-end              : cover 25%;
+          animation-range-start            : entry 10%;
           animation-timeline               : view();
           animation-timing-function        : ease-in;
           opacity                          :   max(var(--reveal-onshow-opacity),     var(--reveal-onshow_hover-opacity));
@@ -1869,7 +1882,7 @@
 
     /* Prefers Color Scheme > Dark */
     @media (prefers-color-scheme: dark) {
-      /* Features > Monochrome ... */
+      /* Components > Monochrome ... */
       .monochrome {
         -ms-filter    : "grayscale(1.0) invert(1.0) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true) progid:DXImageTransform.Microsoft.MaskFilter(Color='#FFFFFFFF', Enabled=true)";
         -webkit-filter: grayscale(1.0) invert(1.0);
@@ -1962,7 +1975,6 @@
         animation-iteration-count         : 0           !important;
         animation-name                    : none        !important;
         animation-play-state              : paused      !important;
-        animation-range                   : 0% 0%       !important;
         animation-range-end               : 0%          !important;
         animation-range-start             : 0%          !important;
         animation-timeline                : none        !important;
@@ -1976,6 +1988,8 @@
         transition-property               : none        !important;
         transition-timing-function        : step-end    !important /* --> cubic-bezier(0.0, 1.0, 0.0, 1.0) */
       }
+
+      *, ::after, ::before { scroll-behavior: auto }
 
       /* Components > ... */
       .button {
@@ -2028,15 +2042,33 @@
     size  : A4 portrait
   }
 
-  /* Property */
-    /* Reveal ... */
-    @property --reveal-onshow-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
-    @property --reveal-onshow-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
-    @property --reveal-onshow-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
-
+  /* Property > Reveal ... */
+  @property --reveal-onshow-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
+  @property --reveal-onshow-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
+  @property --reveal-onshow-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
     @property --reveal-onshow_hover-opacity     { inherits: false; initial-value: 0;     syntax: "<number>" }
     @property --reveal-onshow_hover-scale       { inherits: false; initial-value: 0.85;  syntax: "<number>" }
     @property --reveal-onshow_hover-translate-y { inherits: false; initial-value: 12.5%; syntax: "<percentage>" }
+
+  /* Supports > Dynamic Range Limit */
+  @supports (dynamic-range-limit: constrained) {
+    /* DOM Elements */
+      /* <canvas>, <img>, <video> */
+        /* Pseudo > Fullscreen */
+        canvas:fullscreen,
+        img:fullscreen,
+        video:fullscreen { dynamic-range-limit: no-limit }
+
+      /* <html> */
+      html { dynamic-range-limit: standard }
+
+    /* Features > HDR ... */
+    .hdr-close-standard            { dynamic-range-limit: dynamic-range-limit-mix(standard 80%, constrained 20%) }
+    .hdr-constrained, .hdr-gallery { dynamic-range-limit: constrained }
+    .hdr-featured, .hdr-restrained { dynamic-range-limit: no-limit; dynamic-range-limit: dynamic-range-limit-mix(constrained 75%, no-limit 25%) }
+    .hdr-moderate                  {                                dynamic-range-limit: dynamic-range-limit-mix(constrained 50%, no-limit 50%) }
+    .hdr-subtle                    {                                dynamic-range-limit: dynamic-range-limit-mix(standard    70%, no-limit 30%) }
+  }
 
   /* View Transition */
   @view-transition { navigation: auto }
