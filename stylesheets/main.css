@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/*@import        "test.css";*/ /* ->> Debug only… */
+/*@import        "test.css";*/
 @namespace     "http://www.w3.org/1999/xhtml";
 @namespace svg "http://www.w3.org/2000/svg";
 
@@ -249,7 +249,7 @@
           transition-delay           : 500ms;
           transition-duration        : 300ms;
           translate                  : none; /* --> -50% -100% */
-          z-index                    : 2147483647
+          z-index                    : 2147483646
         }
 
       /* Language */
@@ -610,6 +610,18 @@
     outline: none
   }
 
+  /* <input>, <select>, <textarea> */
+  input[type=email    /* i */],
+  input[type=file     /* i */],
+  input[type=number   /* i */],
+  input[type=password /* i */],
+  input[type=search   /* i */],
+  input[type=tel      /* i */],
+  input[type=text     /* i */],
+  input[type=url      /* i */],
+  select,
+  textarea { field-sizing: content }
+
   /* <li> */
   li::after { content: ' ' }
 
@@ -701,6 +713,9 @@
   /* <pre>, <samp> */
   pre, samp { font-variant-emoji: text }
 
+  /* <select> */
+  select[multiple] { field-sizing: fixed }
+
   /* <svg> */
   svg|svg {
     image-rendering : smooth;
@@ -763,6 +778,7 @@
       -o-transform     : scale(1.05);
       -webkit-transform: scale(1.05);
       transform        : scale(1.05);
+      z-index          : 2147483647
       /* will-change: scale, transform, -ah-transform, -ms-transform, -o-transform, -webkit-transform */
     }
 

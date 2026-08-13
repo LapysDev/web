@@ -330,6 +330,7 @@
           #skills                .entry ul,
           [data-\:portal=skills] .entry ul {
             -ah-vertical-align: inherit;
+            display           : table;
             height            : 80%;
             vertical-align    : inherit
           }
@@ -387,18 +388,27 @@
 
             #skills                .entry li,
             [data-\:portal=skills] .entry li {
+              -ah-flex-shrink             : 0;
               -ah-text-decoration-line    : none;
               -moz-text-decoration-line   : none;
               -prince-text-wrap           : wrap;
+              -webkit-flex-shrink         : 0;
               -webkit-text-decoration-line: none;
               cursor                      : pointer;
               display                     : inline-block;
+              display                     : table-cell;
+              flex-shrink                 : 0;
               height                      : 100%;
               margin-left                 : 0;
+              min-width                   : -moz-max-content;
+              min-width                   : -webkit-max-content;
+              min-width                   : intrinsic;
+              min-width                   : max-content;
               text-decoration-line        : none;
               text-wrap                   : wrap;
               text-wrap-mode              : wrap;
-              white-space                 : normal
+              white-space                 : normal;
+              width                       : auto
             }
               /* Pseudo */
                 /* After */

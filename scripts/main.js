@@ -8,8 +8,8 @@ var PortalReflection = {all: undefined, attributeName: "data-:reflect",    main:
 var Tooltip          = {all: undefined, attributeName: "data-:tooltip",    main: nop, tagNames: ['*'],                                                                                                                                                                                                                                                                                                                                                          supported: true, '__proto__': null};
 
 /* Global > ... */
-function BACKGROUND_PROCEDURE() { /* Do something… */                                   for (var index = 0, length = BACKGROUND_PROCEDURES.length; index !== length; ++index) BACKGROUND_PROCEDURES[index]() }
-function LOOP_PROCEDURE      () { LOOP_PROCEDURES.main(), BACKGROUND_PROCEDURES.main(); for (var index = 0, length = LOOP_PROCEDURES      .length; index !== length; ++index) LOOP_PROCEDURES      [index]() }
+function BACKGROUND_PROCEDURE() { /* Do something… */ /*BACKGROUND_PROCEDURES()*/ }
+function LOOP_PROCEDURE      () { BACKGROUND_PROCEDURES(); LOOP_PROCEDURES() }
 
 var WAIT             = {throttled: []};
 var TRIM_MATCH       = /^\s+|\s+$/g, TRIM_PASS = "";
@@ -93,13 +93,10 @@ var STYLE_SHORTHANDS = [
   {name: "white-space",            composition: delimit("white-space-collapse        text-wrap-mode"                                                                                                                                                                                                .replace(/\s+/g, ' '), /[,\/\s\0]+/g)}
 ],  STYLE_RULES               = getCSSStyleRules(null, document, false);
 var STYLE_GROUPING_PREDICATES = {container: {name: [], query: []}, layer: null, media: null, scope: [], supports: null};
+var PROBE_ELEMENT             = document.createElement("canvas", {customElementRegistry: null} || {is: null});
 var POLLS                     = {attached: [], preventDefault: function() { this.defaultPrevented = true; this.returnValue = false }, stopImmediatePropagation: function() { this.cancelBubble = true }, stopPropagation: function() { this.cancelBubble = true }};
-var PROBE_ELEMENT             = document.createElement("canvas", {"customElementRegistry": null} /* ->> or {"is": null} */);
-var ORIENTATION_SQUARE        = 0x03; // --> ORIENTATION_LANDSCAPE | ORIENTATION_PORTRAIT
-var ORIENTATION_PORTRAIT      = 0x02;
-var ORIENTATION_PANORAMIC     = 0x04;
-var ORIENTATION_LANDSCAPE     = 0x01;
-var LOOP_PROCEDURES           = createProcedureCollection([nop]);
+var ORIENTATION_SQUARE        = /* --> ORIENTATION_LANDSCAPE | ORIENTATION_PORTRAIT */ 0x03, ORIENTATION_PORTRAIT = 0x02, ORIENTATION_PANORAMIC = 0x04, ORIENTATION_LANDSCAPE = 0x01;
+var LOOP_PROCEDURES           = new FunctionDelegate(nop);
 var LOOP_HANDLER              = typeof requestAnimationFrame !== "function" ? nop : requestAnimationFrame; // ->> Must be manually invoked
 var MATH_TAU                  = 491701844.0   / 78256779.0;                                                // --> 2π
 var MATH_SQRT5                = 51841.0       / 23184.0;                                                   // --> √5
@@ -121,12 +118,68 @@ var DOM_DEFERRED              = 0x1;
 var DOM                       = {defer: nop, deferred: []}; // --> {deferred: {action: function, node: Node, targets: Node[]}[]}
 var COMPONENTS_HANDLER        = null;                      // --> [[unreachable]] function *
 var COMPONENTS_CACHE          = [];                        // --> [...createComponentCache(…)]
-var BACKGROUND_PROCEDURES     = createProcedureCollection([function lazy() { Lazy.main() }, function portal() { Portal.main() }, function tooltip() { Tooltip.main() }]);
+var BACKGROUND_PROCEDURES     = new FunctionDelegate(function lazy() { Lazy.main() }, function portal() { Portal.main() }, function tooltip() { Tooltip.main() });
 var BACKGROUND_HANDLER        = nop; // ->> Does nothing, unlike `LOOP_HANDLER`
 
-var nop       = (function() { try { if (typeof eval === "function") return eval("() => void 0x00") } catch (error) {} return nop })();
+var nop       = new FunctionExpression();
 var pend      = typeof queueMicrotask === "function" ? function pend(callback) { return queueMicrotask(callback) } : pend;
 var timestamp = typeof performance === "object" && typeof performance.now === "function" ? function timestamp() { return performance.now() } : typeof performance.webkitNow === "function" ? function timestamp() { return performance.webkitNow() } : timestamp;
+
+/* Class --- TODO (Lapys) */
+  // Function Delegate --> delegate void foo() @https://learn.microsoft.com/dotnet/csharp/programming-guide/delegates
+  function FunctionDelegate() {
+    function delegate() {
+      delegate.main();
+
+      for (var index = 0, length = delegate.prototype.length; index !== length; ++index)
+      delegate.prototype[index].apply(this, arguments)
+    }
+
+    // ...
+    delegate['__proto__'] = FunctionDelegate.prototype;
+    delegate.main         = nop;
+    delegate.prototype    = []; // ->> Privatize internal data elsewhere
+
+    for (var index = 0, length = arguments.length; index !== length; ++index)
+    void delegate.prototype.push(arguments[index]);
+
+    // ...
+    return delegate
+  }
+    FunctionDelegate.prototype = {
+      '__proto__': null,
+      main       : null,
+      add        : function add(delegates) {
+        for (var index = 0, length = arguments.length; index !== length; ++index)
+        if (arguments[index] instanceof FunctionDelegate) {
+          for (var subindex = 0, sublength = arguments[index].prototype.length; subindex !== sublength; ++subindex)
+          void this.prototype.push(arguments[index].prototype[subindex])
+        } else void this.prototype.push(arguments[index]);
+
+        return this.prototype.length
+      }
+    };
+
+  // Function Expression --> x => y
+  function FunctionExpression() {
+    var expression = null;
+
+    if (typeof Function === "function")
+    try {
+      var length = arguments.length;
+      var source = length ? ") => { " + arguments[--length] + " }" : ") => void 0x00";
+
+      // ... ->> `Function::apply(…)` not needed
+      expression = Function.apply(null, arguments);
+
+      while (length--)
+      source = (length ? ", " : "") + arguments[length] + source;
+
+      expression = Function.apply(null, ["return (" + source])()
+    } catch (error) {}
+
+    return expression
+  }
 
 /* Function > ... */
 function appendChildNode(node, childNode, domStrategy) {
@@ -3856,6 +3909,9 @@ Portal.main = function portalMain() /* ->> Static read-only reflection of target
       var portalTargetElement = getElementById(portalTargetId);
 
       // ...
+      if (null === portalTargetElement)
+      continue;
+
       if (Portal.responsive ? (
         /(^|\s)landscape(\s|$)/.test(portalElement      .className) ?
         /(^|\s)portrait(\s|$)/ .test(portalTargetElement.className) :
